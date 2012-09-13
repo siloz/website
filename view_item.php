@@ -201,7 +201,18 @@
 								<table width='100%'>
 									<tr>
 										<td align=left>
+											<?php
+											if ($_SESSION['is_logged_in']) {
+											?>
 											<button onclick="window.location = 'index.php?task=payment&id=<?php echo $item->id;?>'">Buy This Item</button>
+											<?php
+											} else {
+											?>
+											<button onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">Buy This Item</button>
+											
+											<?php
+											}
+											?>
 										</td>
 										<td align=right>
 											<button>Offer Another Amount</button>
