@@ -88,6 +88,7 @@
 							}						
 							else {
 								document.getElementById("login_status").innerHTML = "<font color='red'><b><br/>Error: Invalid username/password</b></font>";
+								document.getElementById('password').value = "";								
 							}
 						}
 					);

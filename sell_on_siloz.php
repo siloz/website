@@ -23,8 +23,19 @@ else {
 			$err .= "Item title must not be empty. <br/>";
 		}
 		if (strlen(trim($price)) == 0) {
-			$err .= "Item price must not be empty. <br/>";
+			$err .= "Item's price must not be empty. <br/>";
 		}
+		else if (!is_numeric($price)) {
+			$err .= "Item's price is not a valid number.<br/>";
+		}
+		else if (floatval($price) < 0) {
+			$err .= "Item's price is negative.<br/>";
+		}
+		else if (floatval($price) > 100000000) {
+			$err .= "Item's price exceeds the allowed maximum. For more information, contact siloz through the link in our footer. <br/>";
+		}
+		
+		$joined = true;
 		if (strlen($err) == 0) {
 			$sql = "INSERT INTO items(silo_id, user_id, title, price, item_cat_id, description, status) VALUES (?,?,?,?,?,?,?);";
 			$stmt->prepare($sql);			
@@ -36,6 +47,9 @@ else {
 			$actual_id = $db->insert_id;
 			$id = "02".time()."0".$actual_id;
 			
+			$sql = "UPDATE items SET id = '$id' WHERE item_id = $actual_id";
+			mysql_query($sql);
+						
 			for ($i=1; $i<=4; ++$i) {
 				if ($_FILES['item_photo_'.$i]['name'] != '') {
 					$ext = end(explode('.', strtolower($_FILES['item_photo_'.$i]['name'])));
@@ -51,6 +65,7 @@ else {
 
 						$sql = "SELECT * FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
 						if (mysql_num_rows(mysql_query($sql)) == 0) {
+							$joined = false;
 							$sql = "INSERT INTO silo_membership(silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
 							mysql_query($sql);
 						}
@@ -63,15 +78,26 @@ else {
 			}			
 		}
 		if (strlen($err) == 0) {
-			$subject = "Thank you for joining ".$silo->name;
-			$message = "<br/>Congratulations on joining silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
-			$message .= "<h3>Getting Started</h3>";
-			$message .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser’s need for member.  Click <a href='".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
-			$message .= "We thank you for participating in your silo and for using siloz.com.<br/><br/>
-						Sincerely,<br/><br/>
-						Siloz Staff.";			
-		    email_with_template($user->email, $subject, $message);
-			
+			if ($joined) { //Already joined
+				$subject = "Thank you for pledging for ".$silo->name;
+				$message = "<br/>You have pledged on silo <b>".$silo->name."</b> with your item - <b>$title</b> ($price$).<br/><br/>";
+				$message .= "Remember: you can share the silo you joined/pledged on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser’s need for member.  Click <a href='".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
+				$message .= "We thank you for participating in silo ".$silo->name." and for using siloz.com.<br/><br/>
+							Sincerely,<br/><br/>
+							Siloz Staff.";			
+			    email_with_template($user->email, $subject, $message);
+			}
+			else {
+				$subject = "Thank you for joining ".$silo->name;
+				$message = "<br/>Congratulations on joining silo <b>".$silo->name."</b> with your item - <b>$title</b> ($price$).<br/><br/>";
+				$message .= "<h3>Getting Started</h3>";
+				$message .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser’s need for member.  Click <a href='".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
+				$message .= "We thank you for participating in your silo and for using siloz.com.<br/><br/>
+							Sincerely,<br/><br/>
+							Siloz Staff.";			
+			    email_with_template($user->email, $subject, $message);
+				
+			}
 			echo "<script>window.location = 'index.php?task=view_silo&id=$silo_id';</script>";			
 		}
 	}

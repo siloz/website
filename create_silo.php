@@ -94,13 +94,16 @@ else {
 			$err .= "End date must not be empty. <br/>";
 		}
 		if (strlen(trim($goal)) == 0) {
-			$err .= 'Goal must be set.<br/>';		
+			$err .= "Silo's goal must be set.<br/>";		
 		}	
 		else if (!is_numeric($goal)) {
-			$err .= 'Goal is not a valid number.<br/>';
+			$err .= "Silo's goal is not a valid number.<br/>";
 		}
 		else if (floatval($goal) < 0) {
-			$err .= 'Goal is negative.<br/>';
+			$err .= "Silo's goal is negative.<br/>";
+		}
+		else if (floatval($goal) > 100000000) {
+			$err .= "Silo's goal exceeds the allowed maximum.<br/>";
 		}
 		$adr = urlencode($address);
 		$url = "http://maps.google.com/maps/geo?q=".$adr;
@@ -139,7 +142,11 @@ else {
 					$sql = "UPDATE silos SET photo_file = '$id.jpg', id = '$id' WHERE silo_id = $actual_id";
 					mysql_query($sql);
 				}
-			}						
+			}	
+			else {
+				$sql = "UPDATE silos SET id = '$id' WHERE silo_id = $actual_id";
+				mysql_query($sql);				
+			}					
 		}
 		
 		if (strlen($err) == 0) {

@@ -90,17 +90,22 @@ function populate_item_info(item_id) {
  	else {
 		$username = $_SESSION['username'];		
 		$err = '';
-
 		if (param_post('task') == 'update_account') {				
 			$old_password = param_post('old_password');
 			$new_password = param_post('new_password');
 			$retype_new_password = param_post('retype_new_password');		
 			$fullname = param_post('fullname');
-			$email = param_post('email');
+			$email = trim(param_post('email'));
 			$address = param_post('address');
 			$zip_code = param_post('zip_code');
 			$phone = param_post('phone');
-	
+
+			$sql = "SELECT * FROM users WHERE username='$username'";
+			$res = mysql_query($sql);
+			$row = mysql_fetch_array($res);
+			$photo_file = $row['photo_file'];
+			$id = $row['id'];
+			
 			if (strlen(trim($username)) == 0) {
 				$err .= 'Username must not be empty.<br/>';		
 			}
@@ -116,13 +121,14 @@ function populate_item_info(item_id) {
 			else if (!is_valid_email($email)) {
 				$err .= 'Email address is invalid.<br/>';		
 			}
+			else {
+				$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM users WHERE email = '$email' AND username <> '$username'"));
+				if ($tmp[0] > 0) {
+					$err .= "Email '$email' is already registered.<br/>";
+				}
+			}
 		
 			if (strlen($err) == 0) {				
-				$sql = "SELECT * FROM users WHERE username='$username'";
-				$res = mysql_query($sql);
-				$row = mysql_fetch_array($res);
-				$photo_file = $row['photo_file'];
-				$id = $row['id'];
 				if ($old_password != '' || $new_password != '' || $retype_new_password != '') {
 					if ($old_password != $row['password']) {
 						$err .= "Current password is not correct.";

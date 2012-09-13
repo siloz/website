@@ -69,6 +69,10 @@
 					$sql = "UPDATE users SET photo_file = '$id.jpf', id = '$id' WHERE user_id = $actual_id";
 					mysql_query($sql);
 				}
+			}
+			else {
+				$sql = "UPDATE users SET id = '$id' WHERE user_id = $actual_id";
+				mysql_query($sql);				
 			}			
 		}
 		

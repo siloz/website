@@ -235,6 +235,47 @@
 			if ($_SESSION['is_logged_in']) {			
 		?>
 			<button type="submit" style="font-size: 12px;" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Pledge/Sell for this Silo</button>						
+			
+			<script>
+				function record_donation() {
+					$.post(<?php echo "'".API_URL."'"; ?>, 
+						{	
+							request: 'record_donation',
+							silo_id: <?php echo $silo->id; ?>,
+							user_id: <?php echo $current_user['id']; ?>,
+							reference: document.forms['_donations'].invoice.value,
+							amount: document.forms['_donations'].amount.value
+						}, 
+						function (xml) {
+						}
+					);
+				}
+			</script>
+			<?php
+				$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
+			?>
+			<form name="_donations" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+				<br/>
+				<table>
+					<tr>
+						<td align="center">
+							<input type="hidden" name="cmd" value="_donations">
+							<input type="hidden" name="business" value="<?php echo $silo->paypal_account;?>">
+							<input type="hidden" name="item_name" value="<?php echo "Donation for silo ".$silo->name;?>">
+							<input type="hidden" name="currency_code" value="USD">
+							<input type="hidden" name="lc" value="US">
+							<input type="hidden" name="no_note" value="0">
+							<input type="hidden" name="invoice" value="<?php echo $ref;?>">
+							$ <input type="text" name="amount" style="width: 65px;height: 25px;" value="10.00">
+						</td>
+						<td>								
+							<input type="image" style="border: 0; width: 92px; height: 26px;background: #fff;" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" onclick="record_donation();">
+							<input type="hidden" name="return" value="http://www.siloz.com/alpha/index.php?task=view_silo&donations=confirm&id=<?php echo $silo->id."&ref=$ref";?>" >							
+							<input type="hidden" name="cancel_return" value="http://www.siloz.com/alpha/index.php?task=view_silo&donations=cancel&id=<?php echo $silo->id."&ref=$ref";?>" >							
+						</td>
+					</tr>
+				</table>
+			</form>
 		<?php
 			}
 			else {
@@ -242,7 +283,7 @@
 		<button type="submit" style="font-size: 11px; width:200px;" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Pledge/Sell for this Silo</button>						
 		<br/>
 		<br/>
-		<button type="submit" style="font-size: 11px; width:200px;" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate to this Silo</button>								
+		<button type="submit" style="font-size: 11px; width:200px;" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="donate_to_siloz">Donate to this Silo</button>								
 		<?php
 			}
 		?>
