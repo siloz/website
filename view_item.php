@@ -1,11 +1,12 @@
 <?php
 	$item_id = param_get('id');
-	
+	require("include/autoload.class.php");
 	if ($item_id == '') {
 		echo "<script>window.location = 'index.php';</script>";			
 	}
 	else {		
 		$item = new Item($item_id);
+		$item->Update();
 		$seller = $item->owner;
 		$silo = $item->silo;
 ?>
@@ -277,6 +278,11 @@
 					<tr>
 						<td colspan=2><hr/></td>
 					</tr>					
+				</table>
+				<table>
+					<tr>
+						<td><?php include("include/UI/flag_box.php"); ?></td>
+					</tr>
 				</table>	
 			</div>
 		</td>

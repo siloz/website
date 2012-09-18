@@ -105,6 +105,8 @@ function CheckIfUserFlaggedSilo($user_id,$silo_id){
 	else{return false;}
 }
 
+
+
 /* CheckIfUserFlaggedSilo($user_id,$item_id)
  * // check if a user has already flagged a silo
  * @param $user_id;
@@ -124,6 +126,8 @@ function CheckIfUserFlaggedItem($user_id,$item_id){
 	if($x->count >= 1){return true;}
 	else{return false;}
 }
+
+
 
 }
 ?>

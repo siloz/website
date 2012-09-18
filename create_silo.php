@@ -119,18 +119,37 @@ else {
 			
 		
 		if (strlen($err) == 0) {
-			$sql = "INSERT INTO silos(admin_id, name, shortname, paypal_account, financial_account, bank_name, bank_account_number, bank_routing_number, org_name, ein, issue_receipts, title, phone_number, address, longitude, latitude, silo_cat_id, start_date, end_date, goal, purpose, description, admin_notice) VALUES
-(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			$stmt->prepare($sql);
-			$stmt->bind_param("sssssssssssssssssssssss", $admin_id, $name, $shortname,$paypal_account, $financial_account_type,$bank_name,$bank_account_number, $bank_routing_number,$org_name, $ein, $issue_receipts, $title,$phone_number, $address, $longitude, $latitude, $silo_cat_id, date('Y-m-d',strtotime($start_date)), date('Y-m-d',strtotime($end_date)), $goal, htmlentities($purpose, ENT_QUOTES), htmlentities($description, ENT_QUOTES), htmlentities($admin_notice, ENT_QUOTES));
-			$stmt->execute();
-			$stmt->close();
+			$Silo = new Silo();
+			$Silo->admin_id = $admin_id;
+			$Silo->name = $name;
+			$Silo->shortname = $shortname;
+			$Silo->paypal_account = $paypal_account;
+			$Silo->financial_account = $financial_account;
+			$Silo->bank_name = $bank_name;
+			$Silo->bank_account_name = $bank_account_name;
+			$Silo->bank_account_number = $bank_account_number;
+			$Silo->bank_routing_number = $bank_routing_number;
+			$Silo->org_name = $org_name;
+			$Silo->ein = $ein;
+			$Silo->issue_receipts = $issue_receipts;
+			$Silo->title = $title;
+			$Silo->phone_number = $phone_number;
+			$Silo->address = $address;
+			$Silo->longitude = $longitude;
+			$Silo->latitude = $latitude;
+			$Silo->silo_cat_id = $silo_cat_id;
+			$Silo->start_date = $start_date;
+			$Silo->schedule_end_date = $end_date;
+			$Silo->goal = $goal;
+			$Silo->admin_notice = $admin_notice;
+			
+			$actual_id = $Silo->Save();
+			
+			
 			
 			$allowedExts = array("png", "jpg", "jpeg", "gif");
-			$actual_id = $db->insert_id;
-			$id = "01".time()."0".$actual_id;
-			$sql = "UPDATE silos SET id='$id' WHERE silo_id=$actual_id";			
-			mysql_query($sql);
+			
+			
 			if ($_FILES['silo_photo']['name'] != '') {
 				$ext = end(explode('.', strtolower($_FILES['silo_photo']['name'])));
 				if (!in_array($ext, $allowedExts)) {
@@ -139,8 +158,8 @@ else {
 				else {
 					$photo = new Photo();
 					$photo->upload($_FILES['silo_photo']['tmp_name'], 'silos', $id.".jpg");
-					$sql = "UPDATE silos SET photo_file = '$id.jpg', id = '$id' WHERE silo_id = $actual_id";
-					mysql_query($sql);
+					$Silo->photo_file = $id.".jpg";
+					$Silo->Save();
 				}
 			}	
 			else {

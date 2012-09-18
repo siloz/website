@@ -71,6 +71,8 @@ class Silo {
 		$this->description = $res['description'];
 		$this->admin_notice = $res['admin_notice'];
 		$this->photo_file = $res['photo_file'];
+		$this->flag_radar_id = $res['flag_radar_id'];
+		$this->schedule_end_date = $res['schedule_end_date'];
 
 		$this->silo_cat_id = $res['silo_cat_id'];
 		$this->type = $res['type'];
@@ -187,6 +189,137 @@ class Silo {
 		$today = date('Y-m-d')."";
 		//return $this->end_date < $today;
 		return false;
+	}
+	
+	/*getMemberIds()
+	 *
+	 *
+	 * @return array($member_ids)
+	 * @author james kenny //sep 8th,2012
+	 */
+	function getMemberIds($silo_id = false){
+		if($silo_id){$silo_id = $this->silo_id;}
+		$query = 
+			"select user_id from silo_membership where silo_id = '"
+			.mysql_real_escape_string($silo_id)."';"
+		;
+		$result - mysql_query($result);
+		if(mysql_affected_rows >= 1){
+			while($row = mysql_fetch_object($result)){
+				$x[] = $row->user_id;
+			}
+			return $x;
+		}else{return false;}
+	}
+	
+	function Save(){
+		if($this->id){
+			return $this->Update();
+		}else{
+			return $this->Insert();
+		}
+	}
+	
+	private function Update(){
+		$query = (
+			"UPDATE `silos` "
+			."SET "
+			."`name` = '".mysql_real_escape_string($this->name)."', "
+			."`shortname` = '".mysql_real_escape_string($this->shortname)."', "
+			."`silo_cat_id` = '".mysql_real_escape_string($this->silo_cat_id)."', "
+			."`paypal_account` = '".mysql_real_escape_string($this->paypal_account)."', "
+			."`financial_account` = '".mysql_real_escape_string($this->financial_account)."', "
+			."`bank_name` = '".mysql_real_escape_string($this->bank_account)."', "
+			."`bank_account_number` = '".mysql_real_escape_string($this->bank_account_number)."', "
+			."`bank_routing_number` = '".mysql_real_escape_string($this->bank_routing_number)."', "
+			."`org_name` = '".mysql_real_escape_string($this->org_name)."', "
+			."`ein` = '".mysql_real_escape_string($this->ein)."', "
+			."`issue_receipts` = '".mysql_real_escape_string($this->issue_receipts)."', "
+			."`title` = '".mysql_real_escape_string($this->title)."', "
+			."`phone_number` = '".mysql_real_escape_string($this->phone_number)."', "
+			."`address` = '".mysql_real_escape_string($this->address)."', "
+			."`longitude` = '".mysql_real_escape_string($this->longitude)."', "
+			."`latitude` = '".mysql_real_escape_string($this->latitude)."', "
+			."`start_date` = '".mysql_real_escape_string($this->start_date)."', "
+			."`goal` = '".mysql_real_escape_string($this->goal)."', "
+			."`purpose` = '".mysql_real_escape_string($this->purpose)."', "
+			."`description` = '".mysql_real_escape_string($this->description)."', "
+			."`admin_notice` = '".mysql_real_escape_string($this->admin_notice)."', "
+			."`photo_file` = '".mysql_real_escape_string($this->photo_file)."', "
+			."`flag_radar_id` = '".mysql_real_escape_string($this->flag_radar_id)."', "
+			."`schedule_end_date` = '".mysql_real_escape_string($this->schedule_end_date)."', "
+			."`end_date` = '".mysql_real_escape_string($this->end_date)."' "
+			."WHERE "
+			."`id` = '".mysql_real_escape_string($this->id)."' "
+		);
+		mysql_query($query);
+		if(mysql_affected_rows() >= 1){return $this->id;}
+		else{return false;}
+	
+	}
+	
+	private function Insert(){
+		$query = (
+			"INSERT INTO "
+			."`silos` "
+			."(`admin_id`,`name`,`shortname`,`silo_cat_id`,`paypal_account`,`financial_account`,"
+			."`bank_name`,`bank_account_number`,`bank_routing_number`,`org_name`,`ein`,"
+			."`issue_receipts`,`title`,`phone_number`,`address`,`longitude`,`latitude`,"
+			."`start_date`,`goal`,`purpose`,`description`,`admin_notice`,`photo_file`,"
+			."`flag_radar_id`,`schedule_end_date`,`end_date`,`created_date`) "
+			."VALUES "
+			."("
+				."'".mysql_real_escape_string($this->admin_id)."',"
+				."'".mysql_real_escape_string($this->name)."',"
+				."'".mysql_real_escape_string($this->shortname)."',"
+				."'".mysql_real_escape_string($this->silo_cat_id)."',"
+				."'".mysql_real_escape_string($this->paypal_account)."',"
+				."'".mysql_real_escape_string($this->finacial_account)."',"
+				."'".mysql_real_escape_string($this->bank_name)."',"
+				."'".mysql_real_escape_string($this->bank_account_number)."',"
+				."'".mysql_real_escape_string($this->bank_routing_number)."',"
+				."'".mysql_real_escape_string($this->org_name)."',"
+				."'".mysql_real_escape_string($this->ein)."',"
+				."'".mysql_real_escape_string($this->issue_receipts)."',"
+				."'".mysql_real_escape_string($this->title)."',"
+				."'".mysql_real_escape_string($this->phone_number)."',"
+				."'".mysql_real_escape_string($this->address)."',"
+				."'".mysql_real_escape_string($this->longitude)."',"
+				."'".mysql_real_escape_string($this->latitude)."',"
+				."'".mysql_real_escape_string($this->start_date)."',"
+				."'".mysql_real_escape_string($this->goal)."',"
+				."'".mysql_real_escape_string($this->purpose)."',"
+				."'".mysql_real_escape_string($this->description)."',"
+				."'".mysql_real_escape_string($this->admin_notice)."',"
+				."'".mysql_real_escape_string($this->photo_file)."',"
+				."'".mysql_real_escape_string($this->flag_radar_id)."',"
+				."'".mysql_real_escape_string($this->schedule_end_date)."',"
+				."'".mysql_real_escape_string($this->end_date)."',"
+				."'".mysql_real_escape_string(date('Y-m-d H:i:s'))."' "						
+			.")"
+		);
+		mysql_query($query);
+		$actual_id = mysql_insert_id();
+		$id = "01".time()."0".$actual_id;
+		$this->id = $id;
+		$query = 
+			"UPDATE `silos` SET `id` = '"
+			.mysql_real_escape_string($id)
+			."' WHERE `silo_id` = '"
+			.mysql_real_escape_string($actual_id)."' "
+		;
+		mysql_query($query);
+		return $actual_id;
+			
+	}
+	
+
+	//probably not going to need this
+	private function AddDays($int){
+		$query = "select (NOW() + INTERVAL ".mysql_real_escape_string($int)." DAY) as time;";
+		$result = mysql_query($query);
+		$x = mysql_fetch_object($result);
+		return $x->time;
 	}
 }
 ?>

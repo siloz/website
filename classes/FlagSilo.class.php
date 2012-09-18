@@ -53,7 +53,8 @@ function Populate($id){
  * 
  * @todo get by date for radar
  */
-function GetIds($value,$key = false){
+function GetIds($value,$key = false,$other_value = false){
+	$this->id_count = 0;
 	switch(strtolower($key)){
 		case "user":
 		case "user_id":
@@ -62,13 +63,21 @@ function GetIds($value,$key = false){
 		case "flag_id":
 		case "flagid": $key = "flag_id"; break;
 		case "ip": $key = "ip"; break;
+		case "same_flag":
+		case "silo_same_flag": $key = "silo_id"; $append = "flag_id"; break;
 		default: $key = "silo_id"; break;
 	}
 	$query = 
-		"select id from flag where ".$key." = ".mysql_real_escape_string($value)."';"
+		"SELECT `id` FROM `flag_silo` WHERE `".$key."` = '".mysql_real_escape_string($value)."' "
 	;
+	if($append && $other_value){
+		$query .= (
+			"AND `".$append."` = '".mysql_real_escape_string($other_value)."' "
+		);
+	}
 	$result = mysql_query($query);
-	if(mysql_affected_rows() >= 1){
+	$this->id_count = mysql_affected_rows();
+	if($this->id_count >= 1){
 		while($row = mysql_fetch_object($result)){
 			$x[] = $row->id;
 		}
@@ -88,20 +97,21 @@ function GetIds($value,$key = false){
  *
  */
 function Insert($user_id,$silo_id,$flag_id,$ip){
-	$Flag = new Flag();
-	if($Flag->CheckIfUserFlaggedSilo($user_id,$silo_id)){return "flagged";}
+	//if($Flag->CheckIfUserFlaggedSilo($user_id,$silo_id)){return "flagged";}
 	$query = 
 		"insert into flag_silo "
-		."(silo_id,user_id,flag_id,ip) "
+		."(silo_id,user_id,flag_id,active,ip) "
 		."values "
 		."('"
 		.mysql_real_escape_string($silo_id)."','"
 		.mysql_real_escape_string($user_id)."','"
 		.mysql_real_escape_string($flag_id)."','"
+		."1','"
 		.mysql_real_escape_string($ip)."');"
 	;
 	$result = mysql_query($query);
 	$id = mysql_insert_id();
+	Radar::Silo($silo_id,$flag_id,"flags");
 	if($id >= 1){return $id;}
 	else{return false;} 
 }

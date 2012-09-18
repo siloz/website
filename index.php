@@ -1,17 +1,5 @@
 <?php 
-	session_start();
-	require_once('utils.php');
-	require_once('config.php');
-	require_once('classes/silo.class.php');
-	require_once('classes/item.class.php');	
-	require_once('classes/user.class.php');
-	require_once('classes/photo.class.php');
-
-	require_once('include/geoplugin.class.php');
-	require_once('include/captcha/securimage.php');
-	require_once('include/OpenInviter/openinviter.php');
-
-	setlocale(LC_MONETARY, 'en_US');
+	require_once("include/autoload.class.php");
 	
 	$geoplugin = new geoPlugin();
 	$geoplugin->locate();
@@ -49,7 +37,7 @@
 	if (param_get('task') == 'logout') {
 		$_SESSION = array();
 		session_destroy();
-		echo "<script>window.location = 'index.php';</script>";		
+		echo "<script type='text/javascript'>window.location = 'index.php';</script>";		
 	}		
 	
 ?>

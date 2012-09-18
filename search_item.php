@@ -26,7 +26,8 @@
 		$query .= "&category=".param_get('category');		
 		$search_clause .= " AND item_cat_id = ".param_get('category');
 	}
-
+	$search_clause .= " AND end_date = '0000-00-00 00:00:00' ";
+	
 	$from =	param_get('from') == '' ? 1 : intval(param_get('from'));;
 	$to = param_get('to') == '' ? 12 : intval(param_get('to'));		
 	$offset = $to - $from + 1;

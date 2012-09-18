@@ -18,13 +18,16 @@ else {
 		$price = param_post('price');
 		$item_cat_id = param_post('item_cat_id');
 		$description = param_post('description');
+		$vouch_type_id = param_post('vouch');
 		
+		//test for form errors //comment added sept 8th 2012 james kenny
 		if (strlen(trim($title)) == 0) {
 			$err .= "Item title must not be empty. <br/>";
 		}
 		if (strlen(trim($price)) == 0) {
 			$err .= "Item's price must not be empty. <br/>";
 		}
+<<<<<<< HEAD
 		else if (!is_numeric($price)) {
 			$err .= "Item's price is not a valid number.<br/>";
 		}
@@ -36,7 +39,18 @@ else {
 		}
 		
 		$joined = true;
+=======
+		//added sept 8th 2012 james kenny
+		//make sure they selct their association with the silo
+		if(!$vouch_type_id){
+			$err .= "Please use tell us how you are associated with this Silo<br />";
+		}
+>>>>>>> radar
 		if (strlen($err) == 0) {
+			//added vouch sept 8th, 2012 james kenny
+			if(!$Vouch){$Vouch = new Vouch();}
+			$Vouch->Save($silo->silo_id,$user_id,$vouch_type_id);
+			
 			$sql = "INSERT INTO items(silo_id, user_id, title, price, item_cat_id, description, status) VALUES (?,?,?,?,?,?,?);";
 			$stmt->prepare($sql);			
 			$status = "Pledged";
@@ -186,6 +200,31 @@ else {
 								<td><input name="item_photo_4" type="file" style="width: 200px;height: 20px;"/></td>
 							</tr>
 						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> Siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of a silo on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  The data from the the survey (below) will be compiled and displayed on a silo's page, and is only a index to the silo's probable legitimacy.  By using Siloz, members (those pledging and donating to silos), agree to hold siloz harmless and not liable for fraud, misrepresentation, tortuous acts committed by a silo administrator, and crimes incidental to the sale of items.</p>
+				</td>
+				</tr>
+				<?php
+					//php block added september 8th, 2012 james kenny
+					if(!$VouchType){$VouchType = new VouchType();}
+					$vouchTypeIds = $VouchType->GetIds();
+					if(!$Vouch){$Vouch = new Vouch();}
+					$userLastVouchType = $Vouch->GetUsersLastVouchId($user_id,$silo->silo_id);
+				?>
+				<tr>
+					<td style="line-height:1.0em; margin:0; padding:0;">
+						<?php 
+							foreach($vouchTypeIds as $vid){
+								$VouchType->Populate($vid); 
+								if($userLastVouchType === $vid){$selected = "checked='checked' ";}
+								else{$selected = '';}
+								?>
+								<input type="radio" name="vouch" value="<?php echo $vid ;?>" <?php echo $selected ;?>/><?php echo $VouchType->text; ?><br />
+							<?php }
+						?>
 					</td>
 				</tr>	
 				<tr>

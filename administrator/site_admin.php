@@ -1,4 +1,5 @@
 <?php
+	ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website"); 
 	require_once('utils.php');
 	require_once('config.php');
 	setlocale(LC_MONETARY, 'en_US');

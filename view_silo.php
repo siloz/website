@@ -10,13 +10,10 @@
 	else {
 		$silo = new Silo($id);
 		$silo_id = $silo->silo_id;
-		
 		$today = date('Y-m-d')."";
 		$silo_ended = $silo->end_date < $today;
 		$admin = $silo->admin;
-		
 ?>
-
 <div class="contact_seller" id="contact_admin">
 	<div id="contact_admin_drag" style="float: right">
 		<img id="contact_admin_exit" src="images/close.png"/>
@@ -315,8 +312,18 @@
 		    	});
 		  	}
 		</script>
-		<div style="word-wrap: break-word; width: 200px;"><?php echo preg_replace("/\n/","<br>",html_entity_decode($silo->admin_notice))." ";?></div>
-		
+
+		<script type="text/javascript">
+
+		</script>
+		<?php
+			//added sept 8th,2012 james kenny
+			
+		?>
+		<div style="word-wrap: break-word; width: 200px;">
+			<?php echo preg_replace("/\n/","<br>",html_entity_decode($silo->admin_notice))." ";?>
+		</div> <br />
+		<?php include("include/UI/flag_box.php"); ?>
 		</td>
 	</tr>
 </table>
@@ -406,7 +413,12 @@
 					$n = 0;
 				}					
 			}
-			echo "</table>";		
+			echo "</table>";
+			$is_silo_admin =  true;
+			if($is_silo_admin){
+				include("include/UI/silo_view_admin_items.php");
+			}
+					
 		}
 		
 		//VIEW DONATIONS

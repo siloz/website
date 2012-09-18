@@ -31,7 +31,7 @@ function _construct($id=false){
 function Populate($id){
 	$query = 
 		"select id,item_id as itemId,user_id as userId,flag_id as flagId,created,ip "
-		."from flag_item where id = '".mysql_real_ecape_string($id)."';"
+		."from flag_item where id = '".mysql_real_escape_string($id)."';"
 	;
 	$result = mysql_query($query);
 	if(mysql_affected_rows() >= 1){
@@ -53,7 +53,8 @@ function Populate($id){
  * 
  * @todo get by date for radar
  */
-function GetIds($value,$key = false){
+function GetIds($value,$key = false,$other_value = false){
+	$this->count = 0;
 	switch(strtolower($key)){
 		case "user":
 		case "user_id":
@@ -62,13 +63,21 @@ function GetIds($value,$key = false){
 		case "flag_id":
 		case "flagid": $key = "flag_id"; break;
 		case "ip": $key = "ip"; break;
+		case "item_same_flag": $key = "item_id"; $append = "flag_id"; break;
 		default: $key = "item_id"; break;
 	}
+	
 	$query = 
-		"select id from flag where ".$key." = ".mysql_real_escape_string($value)."';"
+		"SELECT `id` FROM `flag_item` WHERE `".$key."` = '".mysql_real_escape_string($value)."' "
 	;
+	if($append && $other_value){
+		$query .= (
+			"AND `".$append."` = '".mysql_real_escape_string($other_value)."' "
+		);
+	}
 	$result = mysql_query($query);
-	if(mysql_affected_rows() >= 1){
+	$this->count = mysql_affected_rows();
+	if($this->count >= 1){
 		while($row = mysql_fetch_object($result)){
 			$x[] = $row->id;
 		}
@@ -89,19 +98,22 @@ function GetIds($value,$key = false){
  */
 function Insert($item_id,$user_id,$flag_id,$ip){
 	$Flag = new Flag();
-	if($Flag->CheckIfUserFlaggedItem($user_id,$item_id)){ return "flagged"; }
+	//if($Flag->CheckIfUserFlaggedItem($user_id,$item_id)){ return "flagged"; }
 	$query = 
 		"insert into flag_item "
-		."(item_id,user_id,flag_id,ip) "
+		."(item_id,user_id,flag_id,ip,active) "
 		."values "
 		."('"
-		.mysql_real_escape_string($item_id)."','"
-		.mysql_real_escape_string($user_id)."','"
-		.mysql_real_escape_string($flag_id)."','"
-		.mysql_real_escape_string($ip)."');"
+			.mysql_real_escape_string($item_id)."','"
+			.mysql_real_escape_string($user_id)."','"
+			.mysql_real_escape_string($flag_id)."','"
+			.mysql_real_escape_string($ip)."',"
+			."'1'"
+		.");"
 	;
 	$result = mysql_query($query);
 	$id = mysql_insert_id();
+	Radar::Item($item_id,$flag_id,"flags");
 	if($id >= 1){return $id;}
 	else{return false;} 
 }
