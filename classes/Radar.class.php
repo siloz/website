@@ -20,7 +20,6 @@ function Silo($silo_id,$flag_id,$cause){
 		$exist = $FlagRadar->PopulateBySiloStatus($silo_id,$flag_id,$status);
 		if($FlagSilo->id_count >= 5){
 			//check if the silo has already been warned
-			
 			$warned_id = $FlagRadar->CheckSiloWarnedBeforeCancel($silo_id,$flag_id);
 			if($warned_id){
 					$FlagRadar->hidden = "1";
@@ -92,6 +91,23 @@ function Item($item_id,$flag_id,$cause){
 			}
 		}// end status check
 	}
+}
+
+function NewSiloUser($silo_id){
+	//$Silo = new Silo($silo_id);
+	$Vouch = new Vouch();
+	$known = (
+		$Vouch->GetHasResearchedCount($silo_id)
+		+
+		$Vouch->GetHasResearchedAndKnownCount($silo_id)
+		+
+		$Vouch->GetHasResearchedCount($silo_id)
+	);
+	$unknown = $Vouch->GetUknownCount($silo_id);
+	
+	$check = ($unknown/$known);
+	$avg = (1 - $check);
+	error_log("AVERAGE: ".$avg);
 }
 
 /**
@@ -185,7 +201,7 @@ private function CheckIfSiloWarnedBeforeCancel($silo_id,$flag_id){
 function CancelItem($item_id,$radar_id){
 	$I = new Item($item_id);
 	$I->end_date = date("Y-m-d H:i:s");
-	$I->status = "flagged";
+	$I->status = "canceled";
 	$I->flag_radar_id = $radar_id;
 	return $I->Save();
 }
@@ -205,7 +221,7 @@ function CancelSilo($silo_id,$radar_id){
 		}
 	}
 	$Silo = new Silo($silo_id);
-	$Silo->end_date = date("Y-m-d H:i:s");
+	$Silo->status = "flagged";
 	$Silo->flag_radar_id = $radar_id;
 	$Silo->Save();
 }
@@ -218,7 +234,7 @@ function RestoreSilo($silo_id,$radar_id){
 			}
 		}
 		$Silo = new Silo($silo_id);
-		$Silo->end_date = "0000-00-00 00:00:00";
+		$Silo->status = "active";
 		$Silo->flag_radar_id = $radar_id;
 		$Silo->Save();
 }

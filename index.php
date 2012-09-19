@@ -141,13 +141,15 @@
 						$task = param_post('task');
 					$search = param_get('search');
 					if ($task == 'validate_registration') {
-						$id = param_get('id');
+						$User = new User(param_get('id'));
+
 						$code = param_get('code');
-						if (mysql_num_rows(mysql_query("SELECT * FROM users WHERE id = $id AND validation_code = $code")) > 0) {
-							mysql_query("UPDATE users SET validation_code = -1 WHERE id = $id");
+						$activate = $User->ValidateRegistration($_REQUEST["id"],$code);
+						error_log("ACTIVATE: ".$activate);
+						if ($activate === "success"){
 							$headline = "Your account has been activated, please login!";
 						}
-						else if (mysql_num_rows(mysql_query("SELECT * FROM users WHERE id = $id AND validation_code = -1")) > 0) {
+						else if ($activate === "active") {
 							$headline = "Your account was already activated, please login!";							
 						}
 						if ($headline != "")

@@ -29,7 +29,7 @@
 	else {
 		$search_clause .= " AND silo_cat_id IN (SELECT silo_cat_id FROM silo_categories WHERE type='Community')";		
 	}
-	$search_clause .= " AND end_date = '0000-00-00 00:00:00' ";
+	$search_clause .= " AND status = 'active' ";
 	$from =	param_get('from') == '' ? 1 : intval(param_get('from'));;
 	$to = param_get('to') == '' ? 12 : intval(param_get('to'));		
 	$offset = $to - $from + 1;

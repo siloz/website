@@ -26,9 +26,9 @@
 		$query .= "&category=".param_get('category');		
 		$search_clause .= " AND item_cat_id = ".param_get('category');
 	}
-	$search_clause .= " AND end_date = '0000-00-00 00:00:00' ";
+	$search_clause .= " AND status = 'pledged' ";
 	
-	$from =	param_get('from') == '' ? 1 : intval(param_get('from'));;
+	$from =	param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? 12 : intval(param_get('to'));		
 	$offset = $to - $from + 1;
 	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE deleted_date = 0 $search_clause"));
@@ -136,7 +136,7 @@
 <?php
 	foreach ($items as $item) {
 ?>		
-<script>		
+<script type="text/javascript">		
 		id = '<?php echo $item->id;?>';
 		items.push(id);
 		longitude = <?php echo $item->silo->longitude;?>;

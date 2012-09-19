@@ -12,7 +12,12 @@ class User {
 	public $user_type;
 	public $joined_date;
 	public $photo_file;
-	function __construct($id) {
+	
+	function __construct($id){
+		if($id){return $this->Populate($id);}
+	}
+	
+	function Populate($id) {
 		if (is_array($id)) {
 			$res = $id;
 		}
@@ -35,6 +40,7 @@ class User {
 		$this->user_type = $res['user_type'];
 		$this->joined_date = $res['joined_date'];
 		$this->photo_file = $res['photo_file'];
+		$this->status = $res['status'];
 	}
 	
 	public function getCurrentSilo() {
@@ -82,5 +88,85 @@ class User {
 		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$this->username."</b></a></div><b>Member Since:</b>".$date."<br/><img height=100px width=135px src=uploads/members/300px/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold/Donated: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
 		return $cell;		
 	}
+	
+	public function Save(){
+		if($this->id){return $this->Update();}
+		else{return $this->Insert();}
+	}
+	
+	private function Insert(){
+		$query = (
+			"INSERT INTO `users` "
+			."(`username`,`password`,`fullname`,`phone`,`email`,`address`,`zip_code`,"
+			."`user_type`,`joined_date`,`validation_code`,`status`) "
+			."VALUES "
+			."("
+				."'".mysql_real_escape_string($this->username)."',"
+				."'".mysql_real_escape_string($this->password)."',"
+				."'".mysql_real_escape_string($this->fullname)."',"
+				."'".mysql_real_escape_string($this->phone)."',"
+				."'".mysql_real_escape_string($this->email)."',"
+				."'".mysql_real_escape_string($this->address)."',"
+				."'".mysql_real_escape_string($this->zip_code)."',"
+				."'".mysql_real_escape_string($this->user_type)."',"
+				."'".mysql_real_escape_string(date("Y-m-d H:i:s"))."',"
+				."'".mysql_real_escape_string($this->validation_code)."',"
+				."'pending'"
+				
+			.")"
+		);
+		mysql_query($query);
+		$actual_id = mysql_insert_id();
+		if($actual_id){
+			$this->id = "00".time()."0".$actual_id;
+			$query = "UPDATE `users` SET `id` = '".$this->id."' WHERE `user_id` = '".$actual_id."'";
+			mysql_query($query);
+			
+			return $actual_id;
+		}else{return false;}
+		
+	}
+	
+	private function Update(){
+		$query = (
+			"UPDATE `users` "
+			."SET "
+			."`username` = '".mysql_real_escape_string($this->username)."',"
+			."`fullname` = '".mysql_real_escape_string($this->fullname)."',"
+			."`phone` = '".mysql_real_escape_string($this->phone)."',"
+			."`email` = '".mysql_real_escape_string($this->email)."',"
+			."`address` = '".mysql_real_escape_string($this->address)."',"
+			."`zip_code` = '".mysql_real_escape_string($this->zip_code)."',"
+			."`user_type` = '".mysql_real_escape_string($this->user_type)."',"
+			."`status` = '".mysql_real_escape_string($this->status)."',"
+			."`validation_code` = '".mysql_real_escape_string($this->validation_code)."'"
+		);
+		mysql_query($query);
+		if(mysql_affected_rows() >= 1){return $this->user_id;}
+		else{return false;}
+	}
+	
+	public function ValidateRegistration($id,$code){
+		$query = (
+			"UPDATE `users` SET `validation_code` = '-1', "
+			."`status` = 'active' "
+			."WHERE `id` = '".mysql_real_escape_string($id)."' "
+			."AND `validation_code` = '".mysql_real_escape_string($code)."' "
+		);
+		error_log($query);
+		mysql_query($query);
+		if(mysql_affected_rows() >= 1){return "success";}
+		else{
+			$query = (
+				"SELECT `activation_code` FROM `users` "
+				."WHERE `id` = '".mysql_real_escape_string($id)."' "
+				."AND `validation_code` = '-1'"
+			);
+			mysql_query($query);
+			if(mysql_affected_rows() >= 1){return "active";}
+			else{return false;}
+		}
+	}
+	
 }
 ?>

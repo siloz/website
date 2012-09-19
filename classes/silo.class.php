@@ -75,6 +75,7 @@ class Silo {
 		$this->schedule_end_date = $res['schedule_end_date'];
 
 		$this->silo_cat_id = $res['silo_cat_id'];
+		$this->status = $res['status'];
 		$this->type = $res['type'];
 		$this->subtype = $res['subtype'];
 		$this->subsubtype = $res['subsubtype'];
@@ -245,6 +246,7 @@ class Silo {
 			."`purpose` = '".mysql_real_escape_string($this->purpose)."', "
 			."`description` = '".mysql_real_escape_string($this->description)."', "
 			."`admin_notice` = '".mysql_real_escape_string($this->admin_notice)."', "
+			."`status` = '".mysql_real_escape_string($this->status)."', "
 			."`photo_file` = '".mysql_real_escape_string($this->photo_file)."', "
 			."`flag_radar_id` = '".mysql_real_escape_string($this->flag_radar_id)."', "
 			."`schedule_end_date` = '".mysql_real_escape_string($this->schedule_end_date)."', "
@@ -252,6 +254,7 @@ class Silo {
 			."WHERE "
 			."`id` = '".mysql_real_escape_string($this->id)."' "
 		);
+		error_log("XXXXXXXXXXXXXXXXXXXXXXXXX   ".$query);
 		mysql_query($query);
 		if(mysql_affected_rows() >= 1){return $this->id;}
 		else{return false;}

@@ -172,15 +172,15 @@ class Item {
 			."`items` "
 			."WHERE "
 			."`".$key."` = '".mysql_real_escape_string($value)."' "
-			."AND `sold_date`= '0000-00-00 00:00:00' "
 		);
 		if(!$overide){
-			$query .= ("AND `end_date` = '0000-00-00 00:00:00' ");
+			$query .= ("AND `status`= 'pledged' ");
 		
 		}
 		if($overide && $append){
 			$query .= "AND `".$append."` = '".mysql_real_escape_string($overide)."' ";
 		}
+		error_log("ITEM->GETIDS() ".$query);
 		$result = mysql_query($query);
 		if(mysql_affected_rows() >= 1){
 			while($row = mysql_fetch_object($result)){$x[] = $row->item_id;}
@@ -224,5 +224,46 @@ class Item {
 		return Common::MysqlQuery($query);
 	}
 	
+	public function Insert(){
+		$query = (
+			"INSERT INTO `items` "
+			."("
+				."user_id,silo_id,title,price,item_cat_id,description,status,"
+				."link,photo_file_1,photo_file_2,photo_file_3,photo_file_4,added_date,"
+				."sold_date,sent_date,received_date,deleted_date"
+			.")VALUES("
+				."'".mysql_real_escape_string($this->user_id)."',"
+				."'".mysql_real_escape_string($this->silo_id)."',"
+				."'".mysql_real_escape_string($this->title)."',"
+				."'".mysql_real_escape_string($this->price)."',"
+				."'".mysql_real_escape_string($this->item_cat_id)."',"
+				."'".mysql_real_escape_string($this->description)."',"
+				."'active',"
+				."'".mysql_real_escape_string($this->link)."',"
+				."'".mysql_real_escape_string($this->photo_file_1)."',"
+				."'".mysql_real_escape_string($this->photo_file_2)."',"
+				."'".mysql_real_escape_string($this->photo_file_3)."',"
+				."'".mysql_real_escape_string($this->photo_file_4)."',"
+				."'".mysql_real_escape_string($this->added_date)."',"
+				."'".mysql_real_escape_string($this->sold_date)."',"
+				."'".mysql_real_escape_string($this->sent_date)."',"
+				."'".mysql_real_escape_string($this->received_date)."',"
+				."'".mysql_real_escape_string($this->deleted_date)."'"
+			.")"
+		);
+		mysql_query($query);
+		$this->item_id = mysql_insert_id();
+		$id = "01".time()."0".$this->item_id;
+		$this->id = $id;
+		$query = 
+			"UPDATE `items` SET `id` = '"
+			.mysql_real_escape_string($id)
+			."' WHERE `item_id` = '"
+			.mysql_real_escape_string($this->item_id)."' "
+		;
+		mysql_query($query);
+		return $this->item_id;
+		
+	}		
 }
 ?>

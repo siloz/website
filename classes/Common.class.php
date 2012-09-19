@@ -69,7 +69,7 @@ function AddSubtractTime($int,$operation,$object){
 	}
 	$t = $object;
 	//uncomment the next line for testing changes the intervals to minutes
-	//$t = "MINUTE";
+	$t = "MINUTE";
 	$query = "select (NOW() ".$o." INTERVAL 1 ".$t.") as time;";
 	$result = mysql_query($query);
 	$x = mysql_fetch_object($result);

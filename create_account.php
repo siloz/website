@@ -52,12 +52,21 @@
 					
 		$code = rand(100000, 999999);
 		if (strlen($err) == 0) {
-			$sql = "INSERT INTO users(username, password, fullname, email, address, zip_code, phone, validation_code) VALUES ('$username', '$password', '$fullname', '$email', '$address', '$zipcode', '$phone', '$code')";
-			mysql_query($sql);
+			$User = new User();
+			$User->username = $username;
+			$User->password = $password;
+			$User->fullname = $fullname;
+			$User->email = $email;
+			$User->address = $address;
+			$User->zip_code = $zipcode;
+			$User->phone = $phone;
+			$User->validation_code = $code;
+			$User->Save();
+			
+			
+			
 			
 			$allowedExts = array("png", "jpg", "jpeg", "gif");
-			$actual_id = mysql_insert_id();
-			$id = "00".time()."0".$actual_id;
 			if ($_FILES['member_photo']['name'] != '') {
 				$ext = end(explode('.', strtolower($_FILES['member_photo']['name'])));
 				if (!in_array($ext, $allowedExts)) {
@@ -65,19 +74,16 @@
 				}
 				else {
 					$photo = new Photo();
-					$photo->upload($_FILES['member_photo']['tmp_name'], 'members', $id.".jpg");
-					$sql = "UPDATE users SET photo_file = '$id.jpf', id = '$id' WHERE user_id = $actual_id";
-					mysql_query($sql);
+					$photo->upload($_FILES['member_photo']['tmp_name'], 'members', $User->id.".jpg");
+					$User->photo_file = $User->id.".jpf";
+					$User->Save();
 				}
 			}
-			else {
-				$sql = "UPDATE users SET id = '$id' WHERE user_id = $actual_id";
-				mysql_query($sql);				
-			}			
+						
 		}
 		
 		if (strlen($err) != 0) {			
-			mysql_query("DELETE FROM users WHERE id = $id");			
+			mysql_query("DELETE FROM users WHERE id = '".$User->id.".");			
 		}
 		else {
 			$err = "Please check your email for validation code!";
@@ -85,7 +91,7 @@
 			$subject = "New user registration at siloz.com - Validation code";
 			$message = "<h3>Account Validation</h3>";
 			$message .= "You created an account on siloz.com!  Please click on the link below to verify your email address.<br/><br/>";
-			$message .= "http://www.siloz.com/alpha/index.php?task=validate_registration&id=$id&code=$code <br/><br/>";
+			$message .= "http://www.siloz.com/alpha/index.php?task=validate_registration&id=".$User->id."&code=".$code." <br/><br/>";
 			$message .= "Welcome to siloz!";
 			email_with_template($email, $subject, $message);
 		}
