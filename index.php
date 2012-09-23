@@ -54,10 +54,10 @@
 		<link rel="stylesheet" tyle="text/css" href="css/jquery-ui-1.8.16.css"/>
 		<link rel="stylesheet" href="include/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
 		<link rel='stylesheet' type='text/css' href='include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
+		<script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>	
+		<script type="text/javascript" src="js/jquery-ui-1.8.16.min.js"></script> 
 		<script type="text/javascript" src="include/fancybox/source/jquery.fancybox.pack.js?v=2.1.0"></script>			
-		<script type='text/javascript' src='include/OpenInviter/more_examples/js/jquery.fancybox-1.3.4.pack.js'></script>			
-	    <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>	
-		<script type="text/javascript" src="js/jquery-ui-1.8.16.min.js"></script> 				
+		<script type='text/javascript' src='include/OpenInviter/more_examples/js/jquery.fancybox-1.3.4.pack.js'></script>							
 		<script type="text/javascript" src="js/popup-window.js"></script>	  
 	    <script type="text/javascript" src="js/jquery.placeholder.js"></script>		
 	    <script type="text/javascript" src="js/jquery.jconfirmation.js"></script>				

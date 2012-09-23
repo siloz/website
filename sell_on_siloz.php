@@ -27,7 +27,6 @@ else {
 		if (strlen(trim($price)) == 0) {
 			$err .= "Item's price must not be empty. <br/>";
 		}
-<<<<<<< HEAD
 		else if (!is_numeric($price)) {
 			$err .= "Item's price is not a valid number.<br/>";
 		}
@@ -39,13 +38,11 @@ else {
 		}
 		
 		$joined = true;
-=======
 		//added sept 8th 2012 james kenny
 		//make sure they selct their association with the silo
 		if(!$vouch_type_id){
 			$err .= "Please use tell us how you are associated with this Silo<br />";
 		}
->>>>>>> radar
 		if (strlen($err) == 0) {
 			//added vouch sept 8th, 2012 james kenny
 			if(!$Vouch){$Vouch = new Vouch();}

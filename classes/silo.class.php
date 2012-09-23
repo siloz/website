@@ -254,7 +254,6 @@ class Silo {
 			."WHERE "
 			."`id` = '".mysql_real_escape_string($this->id)."' "
 		);
-		error_log("XXXXXXXXXXXXXXXXXXXXXXXXX   ".$query);
 		mysql_query($query);
 		if(mysql_affected_rows() >= 1){return $this->id;}
 		else{return false;}
