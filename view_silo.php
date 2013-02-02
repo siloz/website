@@ -276,7 +276,7 @@
 			echo '<div style="padding-bottom: 5px;"></div>';
 
 			if (!$num) {
-    				echo "There isn't anything on this silo feed yet.";
+    				echo "This silo feed is empty. Any activity for this silo will be posted here to keep everyone involved up to date.";
   			}
 
 			while ($result = mysql_fetch_array($feed)) {
@@ -372,6 +372,7 @@
 				}					
 			}
 			echo "</table>";
+			if ($total_records == "0") { echo "There are currently no members in this silo. Only users who pledge an item to this silo are considered members."; }
 		}
 		
 		//VIEW ITEMS
@@ -429,6 +430,8 @@
 				}					
 			}
 			echo "</table>";
+
+			if ($total_records == "0") { echo "There are currently no items in this silo. Once an item is pledged to this silo, it will be added to this list."; }
 	
 		}
 
