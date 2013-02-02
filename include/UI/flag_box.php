@@ -9,9 +9,11 @@
  }elseif($_REQUEST["task"] === "view_silo"){
  	$flag_box_type = "silo";
  }
+
  $Vouch = new Vouch();
  $Flag = new Flag();
  $flag_ids = $Flag->GetIds();
+
 ?>
 <script type="text/javascript">
 function submit_flag(flag_id){
@@ -91,8 +93,11 @@ function hide_flag_box(){
 			
 			<?php if($flag_box_type === "silo"){ 
 				$flag_count = $Flag->GetSiloFlaggedCount($silo->silo_id);
+				$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
+				$pctV = $vouchTotal/($silo->getTotalItems());
+				$pctVouch = round($pctV * 100);
 			?>
-			<span class="blue">Security:</span> Pledge or donate only to those silos whose administrator and whose organization or cause you have either personal knowledge of, or have researched.<span class="blue"><?php echo $Vouch->GetHasPersonallyKnownCount($silo->silo_id);?> members</span> of this silo personally know this organization or cause and its silo administrator, <span class="blue"><?php echo $Vouch->GetHasResearchedCount($silo->silo_id);?> members</span> of this silo have researched this organization or cause and its silo administrator, and <span class="blue"><?php echo $Vouch->GetHasResearchedAndKnownCount($silo->silo_id);?> members</span> of this silo have researched, AND have personal knowledge of same.
+			<div class="voucherText"><?=$pctVouch?>% (<?=$vouchTotal?> members) of those who pledged items to this silo either know, or have researched, this Administrator - or both!
 			<?php }elseif($flag_box_type === "item"){ 
 				$flag_count = $Flag->GetItemFlaggedCount($item->item_id);
 			?>
@@ -101,16 +106,19 @@ function hide_flag_box(){
 		</td>
 		<td></td>
 	</tr>
+			<?php if($flag_box_type === "silo"){ ?>
 	<tr class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);">
-		<td class="flag_text">
-			<h2 class="blue">Flag this <?php echo ucfirst($flag_box_type); ?></h2>
-			<p class="blue">This <?php echo ucfirst($flag_box_type); ?> has <?php echo $flag_count ?> flags</p>
+		<td width="30%" align="right">
+			<font size="1">Flag this silo</font>
+		</td>
+		<td width="5%" align="left">
+			<img height="40px" width="auto" src="img/flag.png" alt="Flag this item" />
 		</td>
 		<td>
-			<img height="40px" width="auto" src="img/flag.png" alt="Flag this item" />
-			
+			<font size="1"><b>ID: <?=($silo->id)?></b></font>
 		</td>
 	</tr>
+<?php } ?>
 </table>
 <table class="flag_box" id="flag_box">
 	<tr>

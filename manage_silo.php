@@ -37,6 +37,11 @@ function updateStatus (e, item_id) {
 			return $current;
 		}		
 	}
+	$Silo = new Silo();
+	$silo_id = $Silo->GetUserSiloId($_SESSION['user_id']);
+	$Silo->Populate($silo_id);
+	
+	
 	
 	if (param_post('delete_item') != '') {
 		$item_id = param_post('item_id');
@@ -136,13 +141,13 @@ function updateStatus (e, item_id) {
 				$err .= 'PayPal account is invalid.<br/>';		
 			}
 
-			if ($financial_account_type != 'PayPal' &&  (strlen(trim($bank_account_number)) == 0 || strlen(trim($bank_routing_number)) == 0)) {
+			if (!$paypal_account &&  (strlen(trim($bank_account_number)) == 0 || strlen(trim($bank_routing_number)) == 0)) {
 				$err .= "Empty Bank Account/Routing number. <br/>";
 			}		
-			if ($bank_account_number != $reenter_bank_account_number && $bank_account_number != $silo->bank_account_number) {
+			if ($bank_account_number != $reenter_bank_account_number && $bank_account_number != $Silo->bank_account_number) {
 				$err .= 'Bank Account number does not match.<br/>';		
 			}
-			if ($bank_routing_number != $reenter_bank_routing_number && $bank_routing_number != $silo->bank_routing_number) {
+			if ($bank_routing_number != $reenter_bank_routing_number && $bank_routing_number != $Silo->bank_routing_number) {
 				$err .= 'Bank Routing number does not match.<br/>';		
 			}
 			
@@ -172,12 +177,11 @@ function updateStatus (e, item_id) {
 				$err .= 'Invalid address.<br/>';
 			}
 
-			if (strlen($err) == 0) {				
-				$sql = "UPDATE silos SET name=?, shortname=?, paypal_account=?, financial_account=?, bank_name=?, bank_account_number=?, bank_routing_number=?, org_name=?, phone_number=?, address=?, longitude=?, latitude=?, end_date = ?, description = ?, admin_notice = ? WHERE id = ".$silo->id;
-				$stmt->prepare($sql);
-				$stmt->bind_param("sssssssssssssss", $name, $shortname, $paypal_account, $financial_account_type,$bank_name,$bank_account_number, $bank_routing_number,$org_name, $phone_number, $address, $longitude, $latitude, date('Y-m-d',strtotime($end_date)), htmlentities($description, ENT_QUOTES), htmlentities($admin_notice, ENT_QUOTES));
-				$stmt->execute();
-				$stmt->close();
+			if (strlen($err) == 0) {
+							
+
+				include("include/set_silo_params.php");
+				
 				if ($_FILES['silo_photo']['name'] != '') {
 					$allowedExts = array("png", "jpg", "jpeg", "gif");							
 					$ext = end(explode('.', strtolower($_FILES['silo_photo']['name'])));
@@ -185,20 +189,23 @@ function updateStatus (e, item_id) {
 						$err .= $_FILES['silo_photo']['name']." is invalid file type.";
 					}
 					else {
-						$photo_file = $silo->id.".jpg";
+						$photo_file = $Silo->id.".jpg";
 						$photo = new Photo();
 						$photo->upload($_FILES['silo_photo']['tmp_name'], 'silos', $photo_file);
-						$sql = "UPDATE silos SET photo_file = '$photo_file' WHERE id = '".$silo->id."'";
+						$sql = "UPDATE silos SET photo_file = '$photo_file' WHERE id = '".$Silo->id."'";
 						mysql_query($sql);
 					}
-				}
-				$silo = $admin->getCurrentSilo();				
+				}				
 			}
 		}
-		if ($silo == null) {
-			echo "<script>window.location = 'index.php?task=create_silo';</script>";			
+		$Silo = new Silo();
+		$silo_id = $Silo->GetUserSiloId($_SESSION['user_id']);
+		$Silo = new Silo($silo_id);
+		if ($Silo == null) {
+			
+			echo "<script> window.location = 'index.php?task=create_silo';</script>";			
 		}
-		$sql = "SELECT * FROM items WHERE deleted_date = 0 AND status = 'Funds Sent' AND silo_id = ".$silo->silo_id." ORDER BY sent_date DESC";
+		$sql = "SELECT * FROM items WHERE deleted_date = 0 AND status = 'Funds Sent' AND silo_id = ".$Silo->silo_id." ORDER BY sent_date DESC";
 		$sent_items = mysql_query($sql);
 		$num_notifications = mysql_num_rows($sent_items);
 		$view = param_get('view');		
@@ -211,27 +218,23 @@ function updateStatus (e, item_id) {
 <div class="heading" style="padding-bottom:5px;">
 	<table width="940px" style="border-spacing: 0px;">
 		<tr>
-			<td width="600px">
-				<span style='font-size: 16px; font-weight: bold'><?php echo $silo->name ?></span>
+			<td width="700px">
+				<span style='font-size: 16px; font-weight: bold'><?php echo $Silo->name ?></span>
 			</td>
 			<td align="center">
-				<input type="submit" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff" value="Preview" onclick="window.open('index.php?task=view_silo&id=<?php echo $silo->id; ?>', '_blank')"/>
+				<a href="index.php?task=manage_silo_admin" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Administrate</a>
 			</td>	
 			<td align="center">
 				<span style="color: #fff">|</span>
 			</td>					
 			<td align="center">
-				<input type="submit" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff" value="Invite &amp; Promote" onclick="window.open('index.php?task=invite_promote&id=<?php echo $silo->id; ?>', '_blank')"/>				
+				<a href="index.php?task=view_silo&id=<?php echo $Silo->id; ?>" target="_blank" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Preview</a>
 			</td>
 			<td align="center">
 				<span style="color: #fff">|</span>
 			</td>
 			<td align="center">
-				<form action="business_card.php" method="post" target="_blank">
-					<input type="hidden" name="id" value="<?php echo $silo->id;?>" />
-					<input type="submit" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff" value="Print Promotional Cards" />
-				</form>
-			</td>
+				<a href="index.php?task=manage_silo" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff">Home</a>
 		</tr>
 	</table>
 </div>
@@ -239,12 +242,11 @@ function updateStatus (e, item_id) {
 <table width="100%">
 	<tr>
 		<td>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=home&id=<?php echo $silo->id;?>'">Home</button>			
+			<button type="button" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=home&id=<?php echo $Silo->id;?>'">Home</button>			
 			<button type="button" style="font-size: 12px; <?php echo ($view == 'feed' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=feed'">Feed</button>
 			<button type="button" style="font-size: 12px; <?php echo ($view == 'notifications' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=notifications'">Notifications <?php if ($num_notifications > 0) echo "(".$num_notifications.")"; ?></button>				
 			<button type="button" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=members'">Members</button>
 			<button type="button" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=items'">Items</button>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'donations' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=donations'">Donations</button>				
 			<button type="button" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=manage_silo&view=map'">Map</button>
 		</td>
 		<td valign="center" align="right">
@@ -284,19 +286,19 @@ function updateStatus (e, item_id) {
 <hr/>				
 
 <?php
+	
 	if ($view == 'home') {
 		if (strlen($err) > 0) {
 			echo "<br/><font color='red'><b>ERROR: ".$err."</b></font>";
-		}
+		}	
 ?>
-
 <form enctype="multipart/form-data"  name="manage_silo_form" class="manage_silo_form" method="POST">
 		<input type="hidden" name="task" value="manage_silo"/>
 		
 		<table cellpadding="10px">
 			<tr>
 				<td valign="top" width="300px">
-					<img src="<?php echo 'uploads/silos/300px/'.$silo->photo_file;?>" width="300px"/>
+					<img src="<?php echo 'uploads/silos/300px/'.$Silo->photo_file;?>" width="300px"/>
 					<br/><br/>
 					<b>Upload new photo: </b><input name="silo_photo" type="file"/>
 					<br/><br/>
@@ -305,13 +307,13 @@ function updateStatus (e, item_id) {
 							<td><b>Start Date: </b></td>
 							<td>
 							<?php
-								echo $silo->start_date;
-								echo "<input type=hidden name=start_date value='".$silo->start_date."' />";										
+								echo $Silo->start_date;
+								echo "<input type=hidden name=start_date value='".$Silo->start_date."' />";										
 							?>
 							</td>
 						</tr>
 						<tr>
-							<td><b>End Date: </b></td><td><input type="text" name="end_date" id="end_date" style="width : 100px" value='<?php echo $silo->end_date; ?>' class=".ui-datepicker"/></td>
+							<td><b>End Date: </b></td><td><input type="text" name="end_date" id="end_date" style="width : 100px" value='<?php echo $Silo->end_date; ?>' class=".ui-datepicker"/></td>
 							<script>
 								$(function() {
 									$( "#end_date" ).datepicker();
@@ -325,7 +327,7 @@ function updateStatus (e, item_id) {
 							<td><b>Goal: </b></td>
 							<td>
 							<?php 
-								echo money_format('%(#10n', floatval($silo->goal));
+								echo money_format('%(#10n', floatval($Silo->goal));
 							?>
 							</td>
 						</tr>
@@ -333,7 +335,7 @@ function updateStatus (e, item_id) {
 							<td><b>Pledged: </b></td>
 							<td>
 								<?php
-									echo money_format('%(#10n', $silo->getPledgedAmount());
+									echo money_format('%(#10n', $Silo->getPledgedAmount());
 								?>
 							</td>
 						</tr>
@@ -341,8 +343,8 @@ function updateStatus (e, item_id) {
 							<td><b>Collected: </b></td>
 							<td>
 								<?php
-									$collected = $silo->getCollectedAmount();
-									$pct = round($collected*100.0/floatval($silo->goal),1);															
+									$collected = $Silo->getCollectedAmount();
+									$pct = round($collected*100.0/floatval($Silo->goal),1);															
 									echo money_format('%(#10n', $collected)." (reached $pct %)";
 								?>								
 							</td>
@@ -359,7 +361,7 @@ function updateStatus (e, item_id) {
 							<td><b>Deadline: </b></td>
 							<td>
 								<?php
-									$pct_day = round(100*max(0,(time() - strtotime($silo->start_date))*1.0/(strtotime($silo->end_date) - strtotime($silo->start_date))));
+									$pct_day = round(100*max(0,(time() - strtotime($Silo->start_date))*1.0/(strtotime($Silo->end_date) - strtotime($Silo->start_date))));
 
 									echo "<div style='width: 220px; height: 15px; border: 1px solid #2F8ECB;'><div style='width: $pct_day%; height:15px; background: #2F8ECB;'></div></div>"
 								?>
@@ -375,25 +377,25 @@ function updateStatus (e, item_id) {
 						<tr>
 							<td colspan=2 valign="center">
 								<?php 
-									echo "<span style='font-size:14px; font-weight: bold;'>".$silo->type." > ".$silo->subtype." > ".$silo->subsubtype."</span>";
+									echo "<span style='font-size:14px; font-weight: bold;'>".$Silo->type." > ".$Silo->subtype." > ".$Silo->subsubtype."</span>";
 								?>
 								<button type="submit" name="update" value="Update" style="float:right">Update Silo</button>
 							</td>	
 						</tr>
 						<tr>
 							<td valign="center" style="width: 120px;"><b>Silo Full Name: </b></td>
-							<td><input type="text" name="name" style="width : 480px" value='<?php echo $silo->name; ?>'/></td>
+							<td><input type="text" name="name" style="width : 480px" value='<?php echo $Silo->name; ?>'/></td>
 						</tr>
 						<tr>
 							<td valign="center"><b>Silo Short Name: </b></td>
-							<td><input type="text" name="shortname" style="width : 480px" value='<?php echo $silo->shortname; ?>'/></td>
+							<td><input type="text" name="shortname" style="width : 480px" value='<?php echo $Silo->shortname; ?>'/></td>
 						</tr>						
 						<tr>
 							<td>
 								<b>Address:</b>
 							</td>
 							<td>
-								<input type="text" name="address" style="width : 480px" value='<?php echo $silo->address; ?>'/>
+								<input type="text" name="address" style="width : 480px" value='<?php echo $Silo->address; ?>'/>
 							</td>
 						</tr>
 						<tr>
@@ -401,7 +403,7 @@ function updateStatus (e, item_id) {
 								<b>Organization:</b><br/>
 							</td>
 							<td>
-								<input type="text" name="org_name" style="width : 480px" value='<?php echo $silo->org_name; ?>'/>
+								<input type="text" name="org_name" style="width : 480px" value='<?php echo $Silo->org_name; ?>'/>
 							</td>
 						</tr>
 						<tr>
@@ -409,7 +411,7 @@ function updateStatus (e, item_id) {
 								<b>PayPal Account:</b>
 							</td>
 							<td>
-								<input type="text" name="paypal_account" style="width : 150px" value='<?php echo $silo->paypal_account; ?>'/>
+								<input type="text" name="paypal_account" style="width : 150px" value='<?php echo $Silo->paypal_account; ?>'/>
 							</td>
 						</tr>	
 						<tr>
@@ -417,8 +419,8 @@ function updateStatus (e, item_id) {
 								<b>Bank Account:</b>
 							</td>
 							<td>
-								Checking <input type="radio" name="financial_account_type" value="Checking" style="width: 50px" <?php if ($silo->financial_account=='Checking')  echo 'checked';?>/>
-								Saving <input type="radio" name="financial_account_type" value="Saving" style="width: 50px" <?php if ($silo->financial_account=='Saving')  echo 'checked';?>/>													
+								Checking <input type="radio" name="financial_account_type" value="Checking" style="width: 50px" <?php if ($Silo->financial_account=='Checking')  echo 'checked';?>/>
+								Saving <input type="radio" name="financial_account_type" value="Saving" style="width: 50px" <?php if ($Silo->financial_account=='Saving')  echo 'checked';?>/>													
 							</td>
 						</tr>
 						<tr>
@@ -426,7 +428,7 @@ function updateStatus (e, item_id) {
 								<b>Bank Name:</b>
 							</td>
 							<td>
-								<input type="text" name="bank_name" id="bank_name" style="width : 300px; font-weight: bold" value='<?php echo $silo->bank_name; ?>'/>
+								<input type="text" name="bank_name" id="bank_name" style="width : 300px; font-weight: bold" value='<?php echo $Silo->bank_name; ?>'/>
 							</td>
 						</tr>
 						<tr>
@@ -434,7 +436,7 @@ function updateStatus (e, item_id) {
 								<b>Account Number:</b>
 							</td>
 							<td>
-								<input type="text" name="bank_account_number" id="bank_account_number" style="width : 120px; font-weight: bold; margin-top:2px;" value='<?php echo mask($silo->bank_account_number); ?>'/> Re-enter <input type="text" name="reenter_bank_account_number" id="reenter_bank_account_number" style="width : 120px; font-weight: bold; margin-top: 2px;"/>
+								<input type="text" name="bank_account_number" id="bank_account_number" style="width : 120px; font-weight: bold; margin-top:2px;" value='<?php echo mask($Silo->bank_account_number); ?>'/> Re-enter <input type="text" name="reenter_bank_account_number" id="reenter_bank_account_number" style="width : 120px; font-weight: bold; margin-top: 2px;"/>
 							</td>
 						</tr>
 						<tr>
@@ -442,7 +444,7 @@ function updateStatus (e, item_id) {
 								<b>Routing Number:</b>
 							</td>
 							<td>
-								<input type="text" name="bank_routing_number" id="bank_routing_number" style="width : 120px; font-weight: bold; margin-top: 2px;" value='<?php echo mask($silo->bank_routing_number); ?>'/> Re-enter <input type="text" name="reenter_bank_routing_number" id="reenter_bank_routing_number" style="width : 120px; font-weight: bold; margin-top: 2px;"/>
+								<input type="text" name="bank_routing_number" id="bank_routing_number" style="width : 120px; font-weight: bold; margin-top: 2px;" value='<?php echo mask($Silo->bank_routing_number); ?>'/> Re-enter <input type="text" name="reenter_bank_routing_number" id="reenter_bank_routing_number" style="width : 120px; font-weight: bold; margin-top: 2px;"/>
 							</td>
 						</tr>						
 						<tr>
@@ -450,7 +452,7 @@ function updateStatus (e, item_id) {
 								<b>Phone Number:</b>
 							</td>
 							<td>
-								<input type="text" name="phone_number" style="width : 150px" value='<?php echo $silo->phone_number; ?>'/>
+								<input type="text" name="phone_number" style="width : 150px" value='<?php echo $Silo->phone_number; ?>'/>
 							</td>
 						</tr>
 
@@ -461,7 +463,7 @@ function updateStatus (e, item_id) {
 						<tr>
 							<td colspan=2><b>Purpose: </b>
 							<?php
-								echo $silo->purpose;
+								echo $Silo->purpose;
 							?>
 							</td>
 						</tr>																		
@@ -472,12 +474,12 @@ function updateStatus (e, item_id) {
 							<td valign=top>
 								<b>Description:</b>
 								<br/>
-								<textarea style="width: 390px; height: 150px" name="description" ><?php echo $silo->description;?></textarea>					
+								<textarea style="width: 390px; height: 150px" name="description" ><?php echo $Silo->description;?></textarea>					
 							</td>
 							<td valign=top>
 								<b>Admin Notices:</b>
 								<br/>
-								<textarea style="width: 200px; height: 150px" name="admin_notice" ><?php echo $silo->admin_notice;?></textarea>					
+								<textarea style="width: 200px; height: 150px" name="admin_notice" ><?php echo $Silo->admin_notice;?></textarea>					
 							</td>
 						</tr>
 					</table>						

@@ -11,9 +11,15 @@
 }
 
 #logo {
+	height: 65px;
+	margin-left:5px;
+}
+
+#logoMain {
 	height: 80px;
 	margin-left:5px;
 }
+
 a.status, a.status:active, a.status:visited {
 	font-weight: bold;
 	color: #2f8dcb;

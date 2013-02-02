@@ -9,6 +9,8 @@ class User {
 	public $email;
 	public $address;
 	public $zip_code;
+	public $longitude;
+	public $latitude;
 	public $user_type;
 	public $joined_date;
 	public $photo_file;
@@ -37,12 +39,14 @@ class User {
 		$this->email = $res['email'];
 		$this->address = $res['address'];
 		$this->zip_code = $res['zip_code'];
+		$this->longitude = $res['longitude'];
+		$this->latitude = $res['latitude'];
 		$this->user_type = $res['user_type'];
 		$this->joined_date = $res['joined_date'];
 		$this->photo_file = $res['photo_file'];
 		$this->status = $res['status'];
 	}
-	
+
 	public function getCurrentSilo() {
 		$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE admin_id = ".$this->user_id." AND end_date >= '".date('Y-m-d')."'";
 		$res = mysql_query($sql);
@@ -66,13 +70,13 @@ class User {
 		return floatval($res[0]);
 	}
 	
-	public static function getMembers($silo_id, $order_by) {
+	public static function getMembers($silo_id, $order_by, $limit) {
 		$order_by_clause = "";
 		if ($order_by == 'name')
 			$order_by_clause = " ORDER BY username $sort_order ";
 		if ($order_by == 'date')
 			$order_by_clause = " ORDER BY joined_date $sort_order ";			
-		$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id) $order_by_clause";
+		$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id) $order_by_clause $limit";
 		$members = array();
 		$tmp = mysql_query($sql);
 		while ($res = mysql_fetch_array($tmp)) {
@@ -85,7 +89,7 @@ class User {
 	public function getMemberCell($silo_id) {
 		$date = substr($this->joined_date,5,2).'/'.substr($this->joined_date,8,2).'/'.substr($this->joined_date,2,2);		
 		$cell = "<td><div class=plate id='user_".$this->id."' style='color: #000;'><table width=100% height=100%><tr valign=top><td>";
-		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$this->username."</b></a></div><b>Member Since:</b>".$date."<br/><img height=100px width=135px src=uploads/members/300px/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold/Donated: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
+		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$this->username."</b></a></div><b>Member Since: </b>".$date."<br/><img height=100px width=135px src=uploads/members/300px/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
 		return $cell;		
 	}
 	
@@ -97,7 +101,7 @@ class User {
 	private function Insert(){
 		$query = (
 			"INSERT INTO `users` "
-			."(`username`,`password`,`fullname`,`phone`,`email`,`address`,`zip_code`,"
+			."(`username`,`password`,`fullname`,`phone`,`email`,`address`,`zip_code`,`longitude`,`latitude`,"
 			."`user_type`,`joined_date`,`validation_code`,`status`) "
 			."VALUES "
 			."("
@@ -108,6 +112,8 @@ class User {
 				."'".mysql_real_escape_string($this->email)."',"
 				."'".mysql_real_escape_string($this->address)."',"
 				."'".mysql_real_escape_string($this->zip_code)."',"
+				."'".mysql_real_escape_string($this->longitude)."',"
+				."'".mysql_real_escape_string($this->latitude)."',"
 				."'".mysql_real_escape_string($this->user_type)."',"
 				."'".mysql_real_escape_string(date("Y-m-d H:i:s"))."',"
 				."'".mysql_real_escape_string($this->validation_code)."',"
@@ -137,9 +143,12 @@ class User {
 			."`email` = '".mysql_real_escape_string($this->email)."',"
 			."`address` = '".mysql_real_escape_string($this->address)."',"
 			."`zip_code` = '".mysql_real_escape_string($this->zip_code)."',"
+			."`longitude` = '".mysql_real_escape_string($this->longitude)."',"
+			."`latitude` = '".mysql_real_escape_string($this->latitude)."',"
 			."`user_type` = '".mysql_real_escape_string($this->user_type)."',"
 			."`status` = '".mysql_real_escape_string($this->status)."',"
 			."`validation_code` = '".mysql_real_escape_string($this->validation_code)."'"
+			."WHERE `user_id` = '".$actual_id."' "
 		);
 		mysql_query($query);
 		if(mysql_affected_rows() >= 1){return $this->user_id;}

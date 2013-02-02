@@ -6,6 +6,7 @@ else {
 	$user_id = $_SESSION['user_id'];	
 	$user = new User($user_id);
 	$title = "";
+	$avail = "";
 	$price = "";
 	$item_cat_id = "0";
 	$description = "";
@@ -15,10 +16,13 @@ else {
 		$silo_id = param_post('silo_id');
 		$silo = new Silo($silo_id);
 		$title = param_post('title');
+		$avail = param_post('avail');
 		$price = param_post('price');
 		$item_cat_id = param_post('item_cat_id');
 		$description = param_post('description');
 		$vouch_type_id = param_post('vouch');
+		$address = param_post('address');
+		$zip = param_post('zip');
 		
 		//test for form errors //comment added sept 8th 2012 james kenny
 		if (strlen(trim($title)) == 0) {
@@ -36,6 +40,26 @@ else {
 		else if (floatval($price) > 100000000) {
 			$err .= "Item's price exceeds the allowed maximum. For more information, contact siloz through the link in our footer. <br/>";
 		}
+		if (strlen(trim($avail)) > 30) {
+			$err .= "Please limit your availablitiy to 30 characters.";
+		}
+		if (strlen(trim($description)) > 500) {
+			$err .= "Please limit your description to 500 characters.";
+		}
+
+		$adr = urlencode($address);
+		$zip_code = urlencode($zip);
+		$url = "http://maps.google.com/maps/geo?q=".$adr."".$zip_code;
+		$xml = file_get_contents($url);
+		$geo_json = json_decode($xml, TRUE);
+		if ($geo_json['Status']['code'] == '200') {
+			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+			$new_adr = $geo_json['Placemark'][0]['address'];
+			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$long = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+		} else {
+			$err .= 'Invalid address.<br/>';
+		}
 		
 		$joined = true;
 		//added sept 8th 2012 james kenny
@@ -44,6 +68,7 @@ else {
 			$err .= "Please use tell us how you are associated with this Silo<br />";
 		}
 		if (strlen($err) == 0) {
+
 			//added vouch sept 8th, 2012 james kenny
 			if(!$Vouch){$Vouch = new Vouch();}
 			$Vouch->Save($silo->silo_id,$user_id,$vouch_type_id);
@@ -51,15 +76,25 @@ else {
 			$sql = "INSERT INTO items(silo_id, user_id, title, price, item_cat_id, description, status) VALUES (?,?,?,?,?,?,?);";
 			$stmt->prepare($sql);			
 			$status = "Pledged";
-			$stmt->bind_param("sssssss", $silo->silo_id, $user_id, $title,$price,$item_cat_id, htmlentities($description, ENT_QUOTES), $status);
+			$stmt->bind_param("sssssss", $silo->silo_id, $user_id, $title, $price,$item_cat_id, htmlentities($description, ENT_QUOTES), $status);
 			$stmt->execute();
 			$stmt->close();
 			$allowedExts = array("png", "jpg", "jpeg", "gif");
 			$actual_id = $db->insert_id;
 			$id = "02".time()."0".$actual_id;
 			
-			$sql = "UPDATE items SET id = '$id' WHERE item_id = $actual_id";
+			$sql = "UPDATE items SET id = '$id', avail = '$avail', longitude = '$long', latitude = '$lat' WHERE item_id = $actual_id";
 			mysql_query($sql);
+
+			$sqladr = "UPDATE users SET address = '$new_adr' WHERE user_id = $user_id";
+			mysql_query($sqladr);
+
+			$Feed = new Feed();
+			$Feed->silo_id = $silo->silo_id;
+			$Feed->user_id = $user_id;
+			$Feed->item_id = $actual_id;
+			$Feed->status = $status;
+			$Feed->Save();
 						
 			for ($i=1; $i<=4; ++$i) {
 				if ($_FILES['item_photo_'.$i]['name'] != '') {
@@ -128,7 +163,9 @@ else {
 		<p>Please enter your item details below, and upload up to 4 images for your item.</p>
 		<form enctype="multipart/form-data"  name="sell_on_siloz" class="my_account_form" method="POST">
 			<input type="hidden" name="task" value="sell_on_siloz"/>
-			<input type="hidden" name="silo_id" value="<?php echo $silo->id;?>"/>						
+			<input type="hidden" name="silo_id" value="<?php echo $silo->id;?>"/>
+			<input type="hidden" name="address" value="<?php echo $user->address;?>"/>					
+			<input type="hidden" name="zip" value="<?php echo $user->zip_code;?>"/>					
 			<table width="80%" cellpadding="10px" align="center">
 				<tr>
 					<td colspan="2" align="center">
@@ -145,7 +182,11 @@ else {
 							<tr>
 								<td><b>Listing Title</b> </td>
 								<td><input type="text" name="title" style="width : 300px" value='<?php echo $title; ?>'/></td>
-							</tr>		
+							</tr>
+							<tr>
+								<td><b>Seller Availability</b> </td>
+								<td><input type="text" name="avail" style="width : 300px" value='<?php echo $avail; ?>'/></td>
+							</tr>
 							<tr>
 								<td><b>Price</b> </td>
 								<td><input type="text" name="price" style="width : 100px" value='<?php echo $price; ?>'/></td>
@@ -200,10 +241,11 @@ else {
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> Siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of a silo on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  The data from the the survey (below) will be compiled and displayed on a silo's page, and is only a index to the silo's probable legitimacy.  By using Siloz, members (those pledging and donating to silos), agree to hold siloz harmless and not liable for fraud, misrepresentation, tortuous acts committed by a silo administrator, and crimes incidental to the sale of items.</p>
+				<td>
+					<p style="line-height:1.0em; margin:0; padding:0;"><b>The data from the survey (below) will be compiled and displayed on a silo's page, and is only an index to the silo's probable legitimacy.</b></p><br>
 				</td>
 				</tr>
+
 				<?php
 					//php block added september 8th, 2012 james kenny
 					if(!$VouchType){$VouchType = new VouchType();}
@@ -223,7 +265,12 @@ else {
 							<?php }
 						?>
 					</td>
-				</tr>	
+				</tr>
+				<tr>
+				<td><br>
+						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of information posted on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  By using siloz, members you agree to hold siloz harmless and not liable for  fraud, misrepresentation, tortious acts committed by a silo administrator, and crimes incidental to the sale of items.</p>
+				</td>
+				</tr>
 				<tr>
 					<td colspan="2" align="center">
 						<button type="submit" name="submit" value="Finish">Finish</button>

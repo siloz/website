@@ -1,5 +1,5 @@
-<div id="logo">
-	<a href="index.php" style="text-decoration:none"><img src="images/logo.png"/></a>			
+<div id="logoMain">
+	<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
 </div>
 <div align="right" style="margin-top: -60px; margin-right: 10px; font-size: 12px; line-height: 25px;">
 	<a href="index.php?search=item" class="bold_text" style="text-decoration:none">Proceed to Main Site...</a>
@@ -11,33 +11,31 @@
 	<tr>
 		<td width="10px"></td>
 		<td valign="top">
-			<img src="images/dreamtime.jpg"/>
+    <div id="sliderFrame">
+        <div id="slider">
+            <img src="images/splash/civic.jpg" alt="Civic" />
+            <img src="images/splash/education.jpg" alt="Education" />
+            <img src="images/splash/neighborhood.jpg" alt="Neighborhood" />
+            <img src="images/splash/non_profits.jpg" alt="Non-profit Organizations" />
+            <img src="images/splash/public_university.jpg" alt="Public University" />
+            <img src="images/splash/religious.jpg" alt="Religious" />
+            <img src="images/splash/youth_sports.jpg" alt="Local Youth Sports" />
+        </div>
+    </div>
 		</td>
-		<td width="20px"></td>
+		<td width="25px"></td>
 		<td valign="top">
-			<p style="margin:0px; color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular Community silo Types</p>
-			<p style="margin:5px 0px; color: #2F8ECB; font-size: 16px;">church, school, youth sports team, playground/park, more...</p>
-			<img src="images/row1.jpg"/>
-			<p style="margin:12px 0px 0px 0px; color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular Personal silo Types</p>
-			<p style="margin:5px 0px; color: #2F8ECB; font-size: 16px;">wedding, funeral, relocation funds, baby shower, more...</p>
-			<img src="images/row2.jpg"/>
+			<!-- donate button -->
+				<a href="index.php?search=silo"><div class="donate"></div></a>
+			<!-- shop button -->
+				<a href="index.php?search=item"><div class="shop"></div></a>
+				<div class="break"></div>
+			<!-- start silo button -->
+				<a href="index.php?search=item"><div class="startsilo"></div></a>
 		</td>
 	</tr>
 </table>
 <br/>
-<table width="100%">
-	<tr>
-		<td width="33%" align=center>
-			<a href="index.php?search=item"><img src="images/shop_items.png"/></a>
-		</td>
-		<td width="33%" align=center>
-			<a href="index.php?search=silo"><img src="images/donate_silos.png"/></a>	
-		</td>
-		<td width="33%" align=center>
-			<a href="index.php?search=item"><img src="images/start_silo.png"/></a>	
-		</td>	
-	</tr>
-</table>
 <br/>
 <div style="margin-left: 10px;">
 	<script>
@@ -55,12 +53,12 @@
 	}
 	</script>
 	
-<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular silos near <span style="color: #f60;">Oakland, California</span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular silos near <span style="color: #f60;"><?=$userCity?>, <?=$userState?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
 <?php
-$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 ORDER BY silo_id DESC LIMIT 6";
+$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 ORDER BY silo_id DESC LIMIT 5";
 $tmp = mysql_query($sql);		
 
-$siloz_html = "<table cellpadding='5px' style='border-spacing: 0px'><tr>";
+$siloz_html = "<table cellpadding='5px' style='border-spacing: 7px'><tr>";
 while ($s = mysql_fetch_array($tmp)) {	
 	$silo = new Silo($s['id']);
 	$siloz_html .= "<td>";				
@@ -71,7 +69,7 @@ $siloz_html .= "</tr></table>";
 echo $siloz_html;
 ?>
 
-<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Items for Sale near <span style="color: #f60;">Oakland, California</span> <a href="index.php?search=item" class="bold_text">view more</a></p>
+<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Items for Sale near <span style="color: #f60;"><?=$geoplugin->city?>, <?=$geoplugin->region?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
 <?php
 $sql = "SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE deleted_date = 0 ORDER BY id DESC LIMIT 6";
 $tmp = mysql_query($sql);
@@ -85,3 +83,32 @@ $items_html .= "</tr></table>";
 echo $items_html;
 ?>
 </div>
+</div>
+
+<div id="quick_start_bg">
+
+<table width="100%" class="quick_start">
+	<tr>
+	<td valign="top" width="47%">
+		<h2>Who can start a silo?</h2>
+		<p>siloz is for community - and never private - fundraisers.  To administrate a silo, you must officially represent any of the following: a school (faculty or staff, or a student funding a school cause), a religious organization, a youth sports team or league, a civic or neighborhood organization, or a non-profit that both a) has a physical office where the silo is run, and b) that has some outreach in that same area.  You cannot spend any money raised on personal expenses, and must disclose a public address and telephone number.  Additionally, members will be asked to certify (vouch for) your standing.  We have additional basic security measures.</p>
+		<h2>How Does it Work?</h2>
+		<p>Administrators are equipped with on-line (Facebook Connect, email address book), and off-line (ability to print sign-up sheets and business cards, which can then be printed on perforated, card-stock paper, and torn, to make business cards) to get your fundraiser started.  It will last for 1 to 3 weeks.  Your supporters, and the general public, can donate items that sell on the site.  They may also shop for them.  At the end of the silo, we pay you either through PayPal, or through an electronic check.  After some time (up to 60 days), we ask silo administrators to upload photos showing how raised money was spent, at some point (up to 60 days).</p>
+	</td>
+	<td width="6%"></td>
+	<td valign="top" width="47%">
+		<h2>How are items bought and sold?</h2>
+		<p>A silo's supporters donate items.  The public shops for those items, and makes payment online.  Nothing is shipped on the site.  Items are picked up locally.  You are not permitted to shop for items in a region too distant from your home address.  At the end of the silo, the silo administrator is paid (see above).</p>
+		<h2>Are Donated Items Tax-Deductible?</h2>
+		<p>We can verify the 501(c)3 status of any silo.  Donations to non-profits, churches and schools are always tax-deductible.  Neighborhood and civic organizations and youth sports programs may be able to offer tax-deductions.  Tax-deductible silos are labeled.</p>
+		<h2>Is siloz Safe?</h2>
+		<p>We provide 'vouching' score information, Facebook Connect information, contact information, and complete transparency of a silo, in the interest of keeping reducing fraud.  When making purchases, try to meet in public with your item.  Never agree to ship an item.  siloz is not liable for crimes incidental to use, but will cooperate with law enforcement, where possible, when laws have been broken.  For more information, see our Terms of Use and FAQ.</p>
+	</td>
+	</tr>
+</table>
+
+<div id="bottom_menu">
+	<a href="index.php?task=contact_us" class="normal_text">Contact Us</a> | <a href="index.php?task=about_us" class="normal_text">About Us</a> | <a href="index.php?task=tos" class="normal_text">Terms of Use</a> | <a href="index.php?task=faq" class="normal_text">FAQ</a> | <a href="index.php?task=getting_started" class="normal_text">Getting Started</a>
+</div>
+</div>
+<br>

@@ -22,12 +22,12 @@
 			$res = mysql_query($sql);
 			if (mysql_num_rows($res) == 0) {
 	?>
-				<a href="index.php?task=create_silo" class="bold_text">start/manage silo</a>
+				<a href="index.php?task=create_silo" class="bold_text">start a silo</a>
 	<?php
 			}
 			else {
 	?>
-				<a href="index.php?task=manage_silo" class="bold_text">start/manage silo</a>				
+				<a href="index.php?task=manage_silo" class="bold_text">manage your silo</a>				
 	<?php
 			}
 	?>
@@ -107,7 +107,7 @@
 		<hr/>
 -->		
 		<h2>Forgot your username/password?</h2>
-		<button type="button" onclick="index.php?task=reset_password">Reset Password</button>			
+		<a href="index.php?task=reset_password"><button>Reset Password</button></a>			
 		<br/><br/>
 		<hr/>
 		<h2>Create a Siloz Account</h2>
@@ -121,7 +121,7 @@
 <!-- <div align="right" style="margin-top: -30px; margin-right: 10px; font-size: 12px; line-height: 25px;">
 	Raise money by accepting items, pledged items - all online. Start a silo now!
 </div> -->
-<div id="status" align="right" style="width: 965px; margin-top: -40px; position: absolute;">
+<div id="status" align="right" style="width: 965px; margin-top: -22px; position: absolute;">
 <?php
 	if ($_SESSION['is_logged_in']) {
 		echo "Hello <b>".$_SESSION['username'].",</b> you are logged in! <a href='index.php?task=logout' class='status'>Logout</a>";
@@ -130,6 +130,9 @@
 ?>
 </div>
 <div>
+
+<?php if ((param_get('search') == 'item') || (param_get('search') == 'silo')) {
+?>
 	<table width="975px" style="">
 		<tr>
 			
@@ -137,7 +140,7 @@
 				Search: &nbsp;&nbsp;&nbsp;
 				<a href="index.php?search=item" <?php if (param_get('search') == 'item') echo "class=main_menu_current"; ?>>Items</a> &nbsp;&nbsp;&nbsp;
 				<a href="index.php?search=silo" <?php if (param_get('search') == 'silo') echo "class=main_menu_current"; ?>>Silos</a>	&nbsp;&nbsp;&nbsp;	
-				Near: <a href="#">Oakland, CA</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
+				Near: <a href="#"><?=$userCity?>, <?=$userState?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
 					<?php
 						if (!$is_search || strlen(trim(param_get('keywords'))) == 0)
 							echo "<input type='text' name='keywords' placeholder='Keyword' style='width: 200px;; background: #fff;'/>";
@@ -147,14 +150,14 @@
 					<select name="category" size="1" placeholder="Categories" style="width: 150px; background: #fff;">
 						<?php
 							if (param_get('search') == 'silo') {
-								$sql = "SELECT * FROM `silo_categories` ORDER BY silo_cat_id";
+								$sql = "SELECT * FROM silo_categories ORDER BY silo_cat_id";
 								$s = mysql_query($sql);
 								echo "<option value=''>Category</option>";											
 								while ($row = mysql_fetch_array($s)) {
 									if ($is_search && param_get('category') == $row['silo_cat_id'])												
-										echo "<option value=".$row['silo_cat_id']." selected>".$row['type']." - ".$row['subtype']." - ".$row['subsubtype']."</option>";
+										echo "<option value=".$row['silo_cat_id']." selected>".$row['type']."</option>";
 									else
-										echo "<option value=".$row['silo_cat_id'].">".$row['type']." - ".$row['subtype']." - ".$row['subsubtype']."</option>";												
+										echo "<option value=".$row['silo_cat_id'].">".$row['type']."</option>";												
 								}
 							}
 							else if (param_get('search') == 'item') {
@@ -203,6 +206,11 @@
 			
 		</tr>
 	</table>
+
+<?php
+	}
+else { }
+?>
 </div>
 
 </form>

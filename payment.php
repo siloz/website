@@ -39,6 +39,20 @@
 
 		if ($result->success) {
 		    $paykey = strtoupper($result->transaction->id);
+		    
+		    $ItemPurchase = new ItemPurchase();
+		    $ItemPurchase->paykey = $paykey;
+		    $ItemPurchase->item_id = $item->item_id;
+		    $ItemPurchase->silo_id = $item->silo_id;
+		    $ItemPurchase->user_id = $_SESSION["user_id"];
+		    $ItemPurchase->ip = Common::RemoteIp();
+		    $ItemPurchase->amount = $_POST["amount"];
+		    $ItemPurchase->status = "pending";
+		    if($ItemPurchase->Save()){
+		    	$item->status = "paid";
+		    	$item->Save();
+		    }
+		    
 			$buyer_email = "<h2>What Happens Now?</h2>";
 			$buyer_email .= "Congratulations! You have made payment for <b>".$item->title."</b>, which helps the silo ".$item->silo->name.". Now you have one week to meet the seller and collect your item, completing the purchase.  Your PayKey, below, <b>acts as cash</b>, and is provided to, or withheld from, the seller, to make or decline a purchase.<br/><br/>";
 			$buyer_email .= "<b>The PayKey for item \"".$item->title."\" is ".$paykey."</b><br/><br/>";
@@ -146,7 +160,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Expiration Year<td>
+					<td>Expiration Year here<td>
 					<td>
 						<select name="credit_card[expiration_year]">
 							<option value="12">12</option>

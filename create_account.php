@@ -44,12 +44,26 @@
 		}
 		
 		$captcha = param_post('ct_captcha');
-      	$securimage = new Securimage();
+      		$securimage = new Securimage();
 
       	if ($securimage->check($captcha) == false) {        
 			$err .= "Incorrect security code entered.<br/>";
 		}
-					
+
+		$adr = urlencode($address);
+		$zip = urlencode($zipcode);
+		$url = "http://maps.google.com/maps/geo?q=".$adr."".$zip;
+		$xml = file_get_contents($url);
+		$geo_json = json_decode($xml, TRUE);
+		if ($geo_json['Status']['code'] == '200') {
+			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+			$new_adr = $geo_json['Placemark'][0]['address'];
+			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$long = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+		} else {
+			$err .= 'Invalid address.<br/>';
+		}
+	
 		$code = rand(100000, 999999);
 		if (strlen($err) == 0) {
 			$User = new User();
@@ -57,13 +71,13 @@
 			$User->password = $password;
 			$User->fullname = $fullname;
 			$User->email = $email;
-			$User->address = $address;
+			$User->address = $new_adr;
 			$User->zip_code = $zipcode;
+			$User->longitude = $long;
+			$User->latitude = $lat;
 			$User->phone = $phone;
 			$User->validation_code = $code;
 			$User->Save();
-			
-			
 			
 			
 			$allowedExts = array("png", "jpg", "jpeg", "gif");
@@ -91,9 +105,12 @@
 			$subject = "New user registration at siloz.com - Validation code";
 			$message = "<h3>Account Validation</h3>";
 			$message .= "You created an account on siloz.com!  Please click on the link below to verify your email address.<br/><br/>";
-			$message .= "http://www.siloz.com/alpha/index.php?task=validate_registration&id=".$User->id."&code=".$code." <br/><br/>";
+			$message .= "http://www.siloz.com/website/index.php?task=validate_registration&id=".$User->id."&code=".$code." <br/><br/>";
 			$message .= "Welcome to siloz!";
 			email_with_template($email, $subject, $message);
+
+			echo "'<img src="$_FILES['member_photo']['tmp_name']" id="cropbox" />'";
+
 		}
 	}
 ?>

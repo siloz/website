@@ -5,9 +5,12 @@ class Item {
 	public $silo_id;
 	public $id;
 	public $title;
+	public $avail;
 	public $price;
 	public $item_cat_id;
 	public $description;
+	public $longitude;
+	public $latitude;
 	public $status;
 	public $link;
 	public $added_date;
@@ -33,15 +36,18 @@ class Item {
 		if ($id[0] == '0')		
 			$res = mysql_fetch_array(mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE id = '$id'"));
 		else
-			$res = mysql_fetch_array(mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE item_id = $id"));
+			$res = mysql_fetch_array(mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE item_id = '$id'"));
 		$this->item_id = $res['item_id'];
 		$this->user_id = $res['user_id'];
 		$this->silo_id = $res['silo_id'];
 		$this->id = $res['id'];
 		$this->title = $res['title'];
+		$this->avail = $res['avail'];
 		$this->price = $res['price'];
 		$this->item_cat_id = $res['item_cat_id'];
 		$this->description = $res['description'];
+		$this->longitude = $res['longitude'];
+		$this->latitude = $res['latitude'];
 		$this->status = $res['status'];
 		$this->link = $res['link'];
 		
@@ -88,10 +94,13 @@ class Item {
 			self::Update();
 		}
 		
-		
-		
 		$this->silo = new Silo($this->silo_id);
 		$this->owner = new User($this->user_id);
+
+		$resItem = mysql_fetch_array(mysql_query("SELECT * FROM items WHERE silo_id = '$this->silo_id'"));
+		$this->itemLong = $resItem['longitude'];
+		$this->itemLat = $resItem['latitude'];
+
 	}
 	
 	function getOwner() {
@@ -112,8 +121,8 @@ class Item {
 	}
 	
 	function getPlate() {		
-		$cell = "<div class=plate id=item_".$this->id."><a href='index.php?task=view_item&id=".$this->id."' onmouseover=highlight_item('".$this->id."')  onmouseout=unhighlight_item('".$this->id."')>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a></div><img height=100px width=135px src=uploads/items/300px/".$this->photo_file_1." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Helps: </b><a href=index.php?task=view_silo&id=".$this->silo->id.">".$this->silo->getShortName(35)."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$this->price."</b></span></td><td align=right><a href='index.php?task=view_item&id=".$this->id."'><i><b>more...</b></i></a></td></tr></table></a></div>";
+		$cell = "<div class=plateItem id=item_".$this->id."><a href='index.php?task=view_item&id=".$this->id."' onmouseover=highlight_item('".$this->id."')  onmouseout=unhighlight_item('".$this->id."')>";
+		$cell .= "<table width=100% height=100%><tr valign='top'><td><div style='margin-top: 5px; height: 15px'><img height=100px width=135px src=uploads/items/300px/".$this->photo_file_1." style='margin-bottom: 3px'></div></td></tr><tr valign='bottom'><td align=center align=center><div style='margin-bottom: 3px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->price."</b></span></div></td></tr></table></a></div>";
 		return $cell;
 	}
 	
@@ -132,13 +141,13 @@ class Item {
 			return $this->photo_file_4;
 	}
 	
-	public static function getItems($silo_id, $order_by) {
+	public static function getItems($silo_id, $order_by, $limit) {
 		$order_by_clause = "";
 		if ($order_by == 'name')
 			$order_by_clause = " ORDER BY username $sort_order ";
 		if ($order_by == 'date')
 			$order_by_clause = " ORDER BY joined_date $sort_order ";			
-		$sql = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE deleted_date = 0 AND silo_id = $silo_id $order_by_clause";
+		$sql = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE deleted_date = 0 AND silo_id = $silo_id $order_by_clause $limit";
 		$items = array();
 		$tmp = mysql_query($sql);
 		while ($res = mysql_fetch_array($tmp)) {
@@ -150,8 +159,8 @@ class Item {
 	
 	public function getItemCell() {
 		$cell = "<td><div class=plate id='item_".$this->id."' style='color: #000;'>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$this->id."'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/300px/".$this->photo_file_1." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Status: </b>".$this->status."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$this->owner->username."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$this->price."</b></span></td><td align=right><a href='index.php?task=view_item&id=".$this->id. "'><i><b>more...</b></i></a></td></tr></table></div></td>";							
-		return $cell;		
+		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$this->id."'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/300px/".$this->photo_file_1." style='margin-bottom: 3px'><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$this->owner->username."</a></div></td></tr><tr valign=bottom><td align=center align=center><span style='color: #f60'><b>$".$this->price."</b></span></td></tr></table></div></td>";							
+		return $cell;
 	}
 	
 	public function GetIds($value,$key = false,$overide = false){
@@ -188,6 +197,26 @@ class Item {
 		}else{return false;}
 		
 	}
+
+    function getDistance($lat1, $lng1, $lat2, $lng2, $miles = true)
+    {
+    $pi80 = M_PI / 180;
+    $lat1 *= $pi80;
+    $lng1 *= $pi80;
+    $lat2 *= $pi80;
+    $lng2 *= $pi80;
+     
+    $r = 6372.797; // mean radius of Earth in km
+    $dlat = $lat2 - $lat1;
+    $dlng = $lng2 - $lng1;
+    $a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlng / 2) * sin($dlng / 2);
+    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+    $km = $r * $c;
+     
+    $miles = ($miles ? ($km * 0.621371192) : $km);
+
+	if ($miles < 75) { return true; } else { return false; } 
+    }
 	
 	public function Save(){
 		if($this->id){
@@ -202,6 +231,7 @@ class Item {
 			"UPDATE `items` "
 			."SET "
 			."`title` = '".mysql_real_escape_string($this->title)."', "
+			."`avail` = '".mysql_real_escape_string($this->avail)."', "
 			."`price` = '".mysql_real_escape_string($this->price)."', "
 			."`item_cat_id` = '".mysql_real_escape_string($this->item_cat_id)."', "
 			."`description` = '".mysql_real_escape_string($this->description)."', "
@@ -228,13 +258,14 @@ class Item {
 		$query = (
 			"INSERT INTO `items` "
 			."("
-				."user_id,silo_id,title,price,item_cat_id,description,status,"
+				."user_id,silo_id,title,avail,price,item_cat_id,description,status,"
 				."link,photo_file_1,photo_file_2,photo_file_3,photo_file_4,added_date,"
 				."sold_date,sent_date,received_date,deleted_date"
 			.")VALUES("
 				."'".mysql_real_escape_string($this->user_id)."',"
 				."'".mysql_real_escape_string($this->silo_id)."',"
 				."'".mysql_real_escape_string($this->title)."',"
+				."'".mysql_real_escape_string($this->avail)."',"
 				."'".mysql_real_escape_string($this->price)."',"
 				."'".mysql_real_escape_string($this->item_cat_id)."',"
 				."'".mysql_real_escape_string($this->description)."',"

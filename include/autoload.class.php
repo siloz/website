@@ -8,6 +8,7 @@
 	require_once('classes/user.class.php');
 	require_once('classes/photo.class.php');
 	
+	require_once('classes/feed.class.php');
 	require_once("classes/Vouch.class.php");
 	require_once("classes/VouchType.class.php");
 	
@@ -19,6 +20,7 @@
 	
 	# the radar functions
 	require_once("classes/Radar.class.php");
+	require_once("classes/ItemPurchase.class.php");
 	
 	require_once("classes/Formatter.class.php");
 	require_once("classes/Common.class.php");

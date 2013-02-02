@@ -8,7 +8,8 @@ else {
 	if (mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = ".$_SESSION['user_id']." AND end_date >= '".$today."'")) > 0) {
 		echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
 	}	
-	if (param_post('publish') == 'Publish') {	
+	if (param_post('publish') == 'Publish') {
+			
 		$admin_id = $_SESSION['user_id'];
 		$name = param_post('name');
 		$shortname = trim(param_post('shortname'));		
@@ -26,13 +27,15 @@ else {
 		$phone_number = param_post('phone_number');
 		$address = param_post('address');
 		$silo_cat_id = param_post('silo_cat_id');
-		$start_date = $today;
-		$end_date = param_post('end_date');				
+		$start_date = $today;				
 		$goal = param_post('goal');
 		$purpose = param_post('purpose');
-		$description = param_post('description');
-		$admin_notice = param_post('admin_notice');
-
+		if($_REQUEST["duration"]){
+			$end_date = Common::AddDays($_REQUEST["duration"]);
+			
+		}
+		
+		
 		if (strlen(trim($name)) == 0) {
 			$err .= 'Silo name must not be empty.<br/>';		
 		}
@@ -51,7 +54,7 @@ else {
 		if (mysql_num_rows(mysql_query($sql)) > 0) {
 			$err .= "Silo's short name is already used by another silo. <br/>";
 		}
-		if ($silo_cat_id == '-1') {
+		if ($silo_cat_id == '') {
 			$err .= 'Please select a Silo type.<br/>';		
 		}		
 		if (strlen(trim($org_name)) == 0) {
@@ -81,7 +84,9 @@ else {
 		if (strlen(trim($phone_number)) == 0) {
 			$err .= "Phone number must not be empty. <br/>";
 		}
-		
+		if (strlen(trim($purpose)) > 250) {
+			$err .= "The organization purpose is more than 250 characters.<br/>";
+		}
 		if (strlen(trim($end_date)) > 0 && strlen(trim($start_date)) > 0) {
 			if (strtotime($end_date) - strtotime($start_date) > 30*24*60*60) {
 				$err .= "A Silo can only run up to 30 days. <br/>";
@@ -119,31 +124,12 @@ else {
 			
 		
 		if (strlen($err) == 0) {
+			$status = "active";
 			$Silo = new Silo();
 			$Silo->admin_id = $admin_id;
-			$Silo->name = $name;
-			$Silo->shortname = $shortname;
-			$Silo->paypal_account = $paypal_account;
-			$Silo->financial_account = $financial_account;
-			$Silo->bank_name = $bank_name;
-			$Silo->bank_account_name = $bank_account_name;
-			$Silo->bank_account_number = $bank_account_number;
-			$Silo->bank_routing_number = $bank_routing_number;
-			$Silo->org_name = $org_name;
-			$Silo->ein = $ein;
-			$Silo->issue_receipts = $issue_receipts;
-			$Silo->title = $title;
-			$Silo->phone_number = $phone_number;
-			$Silo->address = $address;
-			$Silo->longitude = $longitude;
-			$Silo->latitude = $latitude;
-			$Silo->silo_cat_id = $silo_cat_id;
-			$Silo->start_date = $start_date;
-			$Silo->schedule_end_date = $end_date;
-			$Silo->goal = $goal;
-			$Silo->admin_notice = $admin_notice;
 			
-			$actual_id = $Silo->Save();
+			include("include/set_silo_params.php");
+			$actual_id = $silo_id;
 			
 			
 			
@@ -161,17 +147,16 @@ else {
 					$Silo->photo_file = $id.".jpg";
 					$Silo->Save();
 				}
-			}	
-			else {
-				$sql = "UPDATE silos SET id = '$id' WHERE silo_id = $actual_id";
-				mysql_query($sql);				
 			}					
 		}
 		
 		if (strlen($err) == 0) {
 			?>
 			<script>
+				alert("shot");
 				window.location = 'index.php?task=manage_silo';
+				
+				
 			</script>
 			<?php
 		}
@@ -210,143 +195,15 @@ else {
 			<tr>
 				<td valign="top">Silo Type <font color='red'>*</font></td>
 				<td>
-					<?php
-						echo "<script>var categories = new Array();";
-						$sql = "SELECT * FROM silo_categories ORDER BY type, subtype, subsubtype";
-						$res = mysql_query($sql);
-						while ($row = mysql_fetch_array($res)) {
-							echo "var cat = new Array('".$row['type']."', '".$row['subtype']."', '".$row['subsubtype']."', '".$row['silo_cat_id']."');";
-							echo "categories.push(cat);";
-						}							
-						echo "</script>";
-					?>													
-					<input name="silo_cat_id" id="silo_cat_id" type="hidden" value="<?php if (intval($silo_cat_id) > 0) echo $silo_cat_id; else echo '-1';?>" />
-					<?php
-						$silo_cat = array();
-						if (intval($silo_cat_id) > 0) {					
-							$silo_cat = mysql_fetch_array(mysql_query("SELECT * FROM silo_categories WHERE silo_cat_id = $silo_cat_id"));
-						}
-					?>
-					
-					<select name="type" id="type" style="width: 300px">
-						<option value="">Select Silo type</option>
-						<option value="Community" <?php if ($silo_cat['type'] == 'Community') echo "selected";?> >Community</option>
-						<option value="Personal" <?php if ($silo_cat['type'] == 'Personal') echo "selected";?>>Personal</option>
+					<select id="silo_cat_id" name="silo_cat_id">
+						<option value="">-- Please Select --</option>
+						<option value="1">Education</option>
+						<option value="2">Local Youth Sports</option>
+						<option value="3">Neighborhood and Civic</option>
+						<option value="4">Other</option>
+						<option value="5">Non-Profit Organizations</option>
+						<option value="6">Religious</option>
 					</select>
-					<br/>
-					<select name="subtype" id="subtype" style="width: 300px; margin-top: 2px;">
-						<?php 
-							if (intval($silo_cat_id) > 0) {
-								$subtypes = mysql_query("SELECT DISTINCT subtype FROM silo_categories WHERE type = '".$silo_cat['type']."'");
-								while ($subtype = mysql_fetch_array($subtypes)) {
-									if ($subtype[0] == $silo_cat['subtype'])
-										echo "<option value='$subtype[0]' selected>$subtype[0]</option>";
-									else
-										echo "<option value='$subtype[0]'>$subtype[0]</option>";									
-								}
-							}
-							else {
-						?>
-						<option value="">---</option>
-						<?php
-							}
-						?>
-					</select>
-					<br/>
-					<select name="subsubtype" id="subsubtype" style="width: 300px; margin-top: 2px;">
-						<?php 
-							if (intval($silo_cat_id) > 0) {
-								$subsubtypes = mysql_query("SELECT DISTINCT subsubtype FROM silo_categories WHERE type = '".$silo_cat['type']."' AND subtype='".$silo_cat['subtype']."'");
-								while ($subsubtype = mysql_fetch_array($subsubtypes)) {
-									if ($subsubtype[0] == $silo_cat['subsubtype'])
-										echo "<option value='$subsubtype[0]' selected>$subsubtype[0]</option>";
-									else
-										echo "<option value='$subsubtype[0]'>$subsubtype[0]</option>";									
-								}
-							}
-							else {
-						?>
-						<option value="">---</option>
-						<?php
-							}
-						?>
-					</select>					
-					<script>
-						$("#type").change(function() {
-							var current_type = document.getElementById("type").value;
-							if (current_type == 'Personal') {
-								document.getElementById("org_name").value = "Personal Silo by <?php echo $user['fullname']; ?>";
-								document.getElementById("address").value = "<?php echo $user['address'];?>";
-								document.getElementById("paypal_account").value = "<?php echo $user['email'];?>";
-								document.getElementById("title").value = "Administrator";
-								document.getElementById("phone_number").value = "<?php echo $user['phone'];?>";
-
-								document.getElementById("org_name").disabled = true;
-								document.getElementById("address").disabled = true;
-								document.getElementById("title").disabled = true;
-								document.getElementById("phone_number").disabled = true;
-							}
-							else {
-								// document.getElementById("org_name").value = "";
-								// document.getElementById("paypal_account").value = "";
-								// document.getElementById("address").value = "";
-								// document.getElementById("title").value = "";
-								// document.getElementById("phone_number").value = "";
-
-								document.getElementById("org_name").disabled = false;
-								document.getElementById("address").disabled = false;
-								document.getElementById("title").disabled = false;
-								document.getElementById("phone_number").disabled = false;								
-							}
-							var subtype = document.getElementById("subtype");
-							subtype.options.length = 0;
-							var i;
-							var j = 0;
-							subtype.options[0] = new Option("Select a Category", "", true);
-							j++;
-							var current_subtype = "";
-							for (i = 0; i < categories.length; i++) {
-								if (categories[i][0] == current_type && categories[i][1] != current_subtype) {
-									subtype.options[j] = new Option(categories[i][1], categories[i][1]);
-									current_subtype = categories[i][1];
-									j += 1;
-								}
-							}
-							document.getElementById("subsubtype").options.length = 1;
-							document.getElementById("subsubtype").options[0] = new Option("---", "");							
-						});
-
-						$("#subtype").change(function() {
-							var current_type = document.getElementById("type").value;
-							var current_subtype = document.getElementById("subtype").value;
-							var subsubtype = document.getElementById("subsubtype");
-							subsubtype.options.length = 0;
-							var i;
-							var j = 0;
-							subsubtype.options[0] = new Option("Select...", "", true);
-							j++;							
-							var current_subsubtype = "";
-							for (i = 0; i < categories.length; i++) {
-								if (categories[i][0] == current_type && categories[i][1] == current_subtype && categories[i][2] != current_subsubtype) {
-									subsubtype.options[j] = new Option(categories[i][2], categories[i][2]);
-									current_subsubtype = categories[i][2];
-									j += 1;
-								}
-							}
-						});
-						
-						$("#subsubtype").change(function() {
-							var current_type = document.getElementById("type").value;
-							var current_subtype = document.getElementById("subtype").value;
-							var current_subsubtype = document.getElementById("subsubtype").value;
-							for (i = 0; i < categories.length; i++) {
-								if (categories[i][0] == current_type && categories[i][1] == current_subtype && categories[i][2] == current_subsubtype) {
-									document.getElementById("silo_cat_id").value = categories[i][3];
-								}
-							}
-						});						
-							
-					</script>
 				</td>			
 			</tr>
 			<tr>
@@ -441,30 +298,26 @@ else {
 				<td><input type="text" name="phone_number" id="phone_number" style="width : 150px" value='<?php echo $phone_number; ?>'/></td>			
 			</tr>						
 			<tr>
-				<td>End date <font color='red'>*</font></td>
-				<td><input type="text" name="end_date" id="end_date" style="width : 150px" value='<?php echo $end_date; ?>' class=".ui-datepicker"/></td>			
-				
-				<script>
-					$(function() {
-						$( "#end_date" ).datepicker();
-					});
-				</script>
+				<td>Duration <font color='red'>*</font></td>
+				<td>
+					<?php
+						if(!$_REQUEST["duration"]){$_REQUEST["duration"] = 3;} 
+						for($i=1; $i<4; $i++){
+							$days = ($i * 7); 
+							if($_REQUEST["duration"] == $days){$checked = "checked=\"checked\"";}
+							else{$checked = '';}
+					?>
+						<input type="radio" name="duration" id="duration"  value="<?= $days ;?>" <?= $checked ;?> /><?= $i ;?> Week
+					 <?php } ?>
+				</td>			
 			</tr>
 			<tr>
 				<td>Goal <font color='red'>*</font></td>
 				<td><input type="text" name="goal" style="width : 150px" value='<?php echo $goal; ?>'/> USD</td>			
 			</tr>
 			<tr>
-				<td>Purpose <font color='red'>*</font></td>
+				<td>Organization and fundraiser purpose <font color='red'>*</font></td>
 				<td><textarea name="purpose" style="width : 300px; height: 50px"/><?php echo $purpose; ?></textarea></td>			
-			</tr>
-			<tr>
-				<td>Description <font color='red'>*</font></td>
-				<td><textarea name="description" style="width : 300px; height: 100px"/><?php echo $description; ?></textarea></td>			
-			</tr>
-			<tr>
-				<td>Admin notice <font color='red'>*</font></td>
-				<td><textarea name="admin_notice" style="width : 300px; height: 100px"/><?php echo $admin_notice; ?></textarea></td>			
 			</tr>
 			<tr>			
 				<td>Photo </td>

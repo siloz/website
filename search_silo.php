@@ -1,4 +1,9 @@
 <?php
+	$silosPerPage = "10";
+	$silosPerRow = 5;
+
+	$view = param_get('view');
+
 	$search_clause = "";
 	$query = "";
 	
@@ -27,32 +32,46 @@
 		$search_clause .= " AND silo_cat_id = ".param_get('category');
 	}
 	else {
-		$search_clause .= " AND silo_cat_id IN (SELECT silo_cat_id FROM silo_categories WHERE type='Community')";		
+		$search_clause .= " AND silo_cat_id IN (SELECT silo_cat_id FROM silo_categories)";		
 	}
 	$search_clause .= " AND status = 'active' ";
-	$from =	param_get('from') == '' ? 1 : intval(param_get('from'));;
-	$to = param_get('to') == '' ? 12 : intval(param_get('to'));		
+	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
+	$to = param_get('to') == '' ? $silosPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
+
+	$new_sort_order = '';
+	$sort_order = param_get('sort_order');
+	$img1_path = 'images/none.png';
+	$img2_path = 'images/none.png';			
+	$order_by = param_get('sort_by');
+	$order_by_clause = "";
+	if ($order_by == 'goal')
+		$order_by_clause = " ORDER BY goal $sort_order ";
+	elseif ($order_by == 'date')
+		$order_by_clause = " ORDER BY start_date $sort_order ";
+	else {
+		$order_by_clause = " ORDER BY silo_id DESC ";
+	}
 
 	$sql = "SELECT COUNT(*) FROM silos WHERE 1 > 0 $search_clause";
 	$tmp = mysql_fetch_array(mysql_query($sql));
-	$count_silos = $tmp[0];	
+	$count_silos = $tmp[0];
 
-	$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 $search_clause ORDER BY silo_id DESC LIMIT ".($from-1).", $offset";
+	$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
 	
 	$tmp = mysql_query($sql);		
 	$closed_silos = array();
 	
-	$siloz_html = "<table cellpadding='3px' style='border-spacing: 0px'><tr>";
+	$siloz_html = "<table cellpadding='10px' style='border-spacing: 0px'><tr>";
 	$i = 0;
 	
 	while ($s = mysql_fetch_array($tmp)) {	
 		$i ++;
 		$silo = new Silo($s['id']);
-		if ($i % 4 == 1 && $i > 1) {
+		if ($i % $silosPerRow == 1 && $i > 1) {
 			$siloz_html .= "</tr><tr>";
 		}
-		else if ($i % 4 == 1) {
+		else if ($i % $silosPerRow == 1) {
 			$siloz_html .= "<tr>";
 		}
 		$siloz_html .= "<td>";				
@@ -61,99 +80,179 @@
 		$closed_silos[] = $silo;		
 	}
 	$siloz_html .= "</tr></table></div>";
+
 	$prev = "";
-	if ($from >= 13)
-		$prev = "<a href=index.php?search=silo&from=".($from-12)."&to=".($from-1)."$query class=status><img src='images/prev_arrow.png' height='15px'></a>";
+	if ($from >= $silosPerPage)
+		$prev = "<a href=index.php?search=silo&from=".($from-$silosPerPage)."&to=".($from-1)."$query class=status><img src='images/prev_arrow.png' height='15px'> <font color='#fff'>Prev</font></a> &nbsp;&nbsp;";
 	$next = "";
 	if ($to < $count_silos)
-	 	$next = "<a href=index.php?search=silo&from=".($to+1)."&to=".min($to + 12, $count_silos)."$query class=status><img src='images/next_arrow.png' height='15px'></a>";	
+	 	$next = "<a href=index.php?search=silo&from=".($to+1)."&to=".min($to + $silosPerPage, $count_silos)."$query class=status><font color='#fff'>Next</font> <img src='images/next_arrow.png' height='15px'></a>"
 ?>
 
-<table>
-	<tr>
-		<td valign='top' width="610px">
-			<div id="result_nav" style="width: 610px;" class="heading">
-				<table width='100%'><tr><td width='20%' align='left'><?php echo $prev;?></td><td width='60%' align='center'><b>Viewing <?php echo $from;?> to <?php echo min($to, $count_silos)." of $count_silos silos in your area...";?></b></td><td width='20%' align=right><?php echo $next?></td></tr></table>				
-			</div>
-			<div id="silos" style="width: 600;"><?php echo $siloz_html;?></div>			
-		</td>
-		<td valign='top' width="10px">
-		</td>		
-		<td valign='top' width="340px">
-			<div style="width: 340px; text-align:center" class="heading">
-				Detail of highlighted silo...
-			</div>			
-			<div class="silo_preview" id="silo_preview"></div>
-			<div style="color: #000; padding-top: 5px; font-weight: bold; text-align:center">Silo location</div>
-			<div id="map_canvas" style="width: 340px; height: 170px;"></div>			
-		</td>
-	</tr>
-</table>
+<?php
+if ($view == "map") {
+?>
 
+<div id="result_nav" class="heading">
+<table width="100%">
+<tr>
+	<td width="67%" align="right" valign="top">
+		<b>This map is showing <?=$count_silos?> siloz that are fundraising in your area</b>
+	</td>
+	<td align="right">
+		<i>View:</i> <a href="index.php?search=silo&view=map">Map</a> | <a href="index.php?search=silo" style="text-decoration:none;">Grid</a>
+	</td>
+</tr>
+</table>
+</div>
+
+<div id='map_canvas' style='width: 930px; height: 400px; margin: 20px;'></div>
+
+<br>
+
+<?php
+//Get silos for map
+$qry = mysql_query("SELECT * FROM silos");
+$num = mysql_num_rows($qry);
+
+    echo "<script> var locations = [";
+
+        while ($map = mysql_fetch_array($qry)){
+
+        echo "['" . $map['title'] . "', " . $map['longitude'] . ", " . $map['latitude'] . "],";
+
+        }
+
+    echo " ];</script>";
+
+?>
+</div>
 
 <script  type="text/javascript">
-		silo_previews = {};
-		positions = {};
-		silos = new Array();
-		function unhighlight_silo(id) {			
-		}
-		function highlight_silo(id) {
-			for (var i=0; i<silos.length;i++) {
-				document.getElementById("silo_"+silos[i]).style.background = "#E6F2FB";				
-				document.getElementById("silo_"+silos[i]).style.borderColor = "#E6F2FB";				
-			}
-			document.getElementById("silo_"+id).style.background = "#fff";			
-			document.getElementById("silo_"+id).style.borderColor = "#84bfe5";			
-			document.getElementById("silo_preview").innerHTML = silo_previews[id];
-			var myOptions = {
-					mapTypeId: google.maps.MapTypeId.ROADMAP,
-					disableDefaultUI: true,
-			        navigationControl: true,
-			        navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-			        draggable: true,
-			        scaleControl: false,
-					scrollwheel: true
-					};
-			var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);		    
-			var bounds = new google.maps.LatLngBounds();
-			
-			pos = positions[id];
-			bounds.extend(pos);
 
-	       	var silo_marker = new google.maps.Marker({
-	           	map: map,
-				animation: google.maps.Animation.DROP,
-				icon: 'images/orange_circle.png',
-	           	position: pos
-	       	});
-		 	google.maps.event.addListener(silo_marker, 'click', (function(marker, id) {
-		        return function() {
-		        }
-		      })(silo_marker, id));								
-
-			map.fitBounds(bounds);
-			zoomChangeBoundsListener = google.maps.event.addListener(map, 'bounds_changed', function(event) {
-			            if (this.getZoom() > 14) // Change max/min zoom here
-			                this.setZoom(14);	
-			});
-			
-		    silo_marker.setAnimation(google.maps.Animation.BOUNCE);				
-		}
-</script>
-<?php
-	foreach ($closed_silos as $silo) {
-?>		
-<script>		
-		id = <?php echo "'".$silo->id."'";?>;
-		silos.push(id);
-		longitude = <?php echo $silo->longitude;?>;
-		latitude = <?php echo $silo->latitude;?>;
-
-		silo_previews[id] = "<?php echo $silo->getPreview();?>";		
-		pos = new google.maps.LatLng(longitude, latitude);
-		positions[id] = pos;	
-</script>		
-<?php
+function initialize() {
+var styles = [
+	{
+		featureType: 'water',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#84BFE5' },
+			{ saturation: 37 },
+			{ lightness: -7 },
+			{ visibility: 'on' }
+		]
+	},{
+		featureType: 'landscape.man_made',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#FFFFFF' },
+			{ saturation: -100 },
+			{ lightness: 100 },
+			{ visibility: 'on' }
+		]
+	},{
+		featureType: 'road.highway',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#FFC92F' },
+			{ saturation: 100 },
+			{ lightness: -7 },
+			{ visibility: 'on' }
+		]
+	},{
+		featureType: 'road.arterial',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#FFE18C' },
+			{ saturation: 100 },
+			{ lightness: 2 },
+			{ visibility: 'on' }
+		]
 	}
+];
+
+siloLong = <?=$silo->longitude?>;
+siloLat = <?=$silo->latitude?>;
+
+var siloLocation = new google.maps.LatLng(siloLong, siloLat);
+var options = {
+	mapTypeControlOptions: {
+		mapTypeIds: [ 'Styled']
+	},
+	center: siloLocation,
+	zoom: 3,
+	maxZoom: 13,
+	mapTypeId: 'Styled'
+};
+
+var div = document.getElementById('map_canvas');
+var map = new google.maps.Map(div, options);
+var styledMapType = new google.maps.StyledMapType(styles, { name: 'Silo Map' });
+map.mapTypes.set('Styled', styledMapType);
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+            	marker = new google.maps.Marker({
+            	position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            	map: map,
+		animation: google.maps.Animation.DROP
+            });
+}
+
+infoWindow.open(map);
+}
+
+function loadScript() {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
+  document.body.appendChild(script);
+}
+
+window.onload = loadScript;
+
+</script>
+
+<?php
+}
 ?>
-<script>highlight_silo(<?php echo "'".$closed_silos[0]->id."'";?>)</script>
+
+<div id="result_nav" class="heading">
+	<table width="100%" valign=”top”>
+	<tr>
+	<td width="10%">
+	<?=$prev?> <?=$next?>
+	</td>
+	<td width="50%" align="right" valign="top">
+		<b>Viewing <?=$count_silos?> siloz that are fundraising in your area</b>
+	</td>
+	<td align="right">
+		<?php
+				if ($sort_order == 'asc') {
+					$new_sort_order = '&sort_order=desc';
+					if ($order_by == 'date')
+						$img2_path = 'images/up.png';
+					else if ($order_by != '')
+						$img1_path = 'images/up.png';
+				}
+				else {
+					$new_sort_order = '&sort_order=asc';										
+					if ($order_by == 'date')
+						$img2_path = 'images/down.png';
+					else if ($order_by != '')
+						$img1_path = 'images/down.png';
+				}
+					echo "<b>sort by <a href=index.php?search=silo&sort_by=goal$new_sort_order style='text-decoration:none;'> price <img src=$img1_path></a> or <a href=index.php?search=silo&sort_by=date$new_sort_order style='text-decoration:none;'> list date <img src=$img2_path></a></b>";
+			?> &nbsp; &nbsp;
+		<i>View:</i> <a href="index.php?search=silo&view=map" style="text-decoration:none;">Map</a> | <a href="index.php?search=silo">Grid</a>
+	</td>
+	</tr>
+			</table>
+			</div>
+<table>
+	<tr>
+		<td valign='top' width="800px">
+			<div id="silos" style="width: 800;"><?php echo $siloz_html;?></div>
+	</tr>
+</table>

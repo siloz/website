@@ -1,4 +1,8 @@
 <?php
+	$feedPerPage = "3";
+	$usersPerPage = "12";
+	$itemsPerPage = "12";
+
 	$id = param_get('id');
 	
 	$view = param_get('view');
@@ -13,6 +17,7 @@
 		$today = date('Y-m-d')."";
 		$silo_ended = $silo->end_date < $today;
 		$admin = $silo->admin;
+
 ?>
 <div class="contact_seller" id="contact_admin">
 	<div id="contact_admin_drag" style="float: right">
@@ -82,28 +87,37 @@
 		</script>		
 	</div>
 </div>
-	
-<div class="heading">
-	<table width="100%">
-		<tr>
-			<td>
-				<?php echo $silo->getTitle(); ?>
-			</td>
-			<td align="right">
-				<span style="font-size: 11px">Pledges and donations to this silo are tax-deductible! <a href="#" style="color: #fff;"><i>more...</i></a></span>
-			</td>
-	</table>
-</div>
 
-<table width="100%">
+<table align="right" width="72%">
 	<tr>
 		<td>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=home&id=<?php echo $silo->id;?>'">Home</button>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'feed' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=feed&id=<?php echo $silo->id;?>'">Feed</button>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'">Members</button>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'">View Items</button>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'donations' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=donations&id=<?php echo $silo->id;?>'">Donations</button>
-			<button type="button" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
+			<div class="donations">Items donationed to this silo are tax-deductible!</div>
+
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&id=<?php echo $silo->id;?>'">Feed</button>
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'">Members</button>
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'">Items</button>
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
+			
+			<div class="icons"><img class="space" src="images/fb.png" onclick='postToFeed();'/>
+			<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
+		<?php
+			if ($_SESSION['is_logged_in']) {			
+		?>
+			<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
+
+			<?php
+				$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
+			?>
+
+		<?php
+			}
+			else {
+		?>
+		<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
+		<?php
+			}
+		?>
+
 		</td>
 		<td valign="center" align="right">
 			<?php
@@ -126,172 +140,73 @@
 					else if ($order_by != '')
 						$img1_path = 'images/down.png';
 				}
-				if ($view == 'items') {
+				if ($view == 'item') {
 					echo "<b>sort by <a href=index.php?task=view_silo&view=items&sort_by=price$new_sort_order&id=".$silo->id." class=simplebluelink>price <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=items&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>list date <img src=$img2_path></a></b>";
 				}
-				else if ($view == 'members') {
+				else if ($view == 'member') {
 					echo "<b>sort by <a href=index.php?task=view_silo&view=members&sort_by=name$new_sort_order&id=".$silo->id." class=simplebluelink>username <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=members&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>join date <img src=$img2_path></a></b>";
-				}
-				else if ($view == 'donations') {
-					echo "<b>sort by <a href=index.php?task=view_silo&view=donations&sort_by=amount$new_sort_order&id=".$silo->id." class=simplebluelink>amount <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=donations&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>date <img src=$img2_path></a></b>";
 				}
 			?>
 		</td>
 	</tr>
 </table>
 
-
-<hr/>				
-	<?php
-		if ($view == 'home') {
-?>
 <table cellpadding="5px">
 	<tr>
-		<td valign="top" width="250px">
-			<img src=<?php echo 'uploads/silos/300px/'.$silo->photo_file;?> width="250px"/>
-			<br/><br/>
-			<table>
-				<tr>
-					<td valign="top"><b>ID: </b></td><td valign="top"><b><?php echo $silo->id; ?></b></td>
-				</tr>				
-				<tr>
-					<td><b>Date Range: </b></td><td><?php echo $silo->start_date;?> <b>to</b> <?php echo $silo->end_date;?></td>
-				</tr>
-				<tr>
-					<td><b>Goal: </b></td><td><?php echo money_format('%(#10n', floatval($silo->goal));?></td>
-				</tr>
-				<tr>
-					<td><b>Pledged: </b></td>
-					<td>
-						<?php
-							echo money_format('%(#10n', $silo->getPledgedAmount());
-						?>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top"><b>Collected: </b></td>
-					<td>
-						<?php
-							$collected = $silo->getCollectedAmount();
-							$pct = round($collected*100.0/floatval($silo->goal),1);															
-							echo money_format('%(#10n', $collected)." <br/>(reached $pct %)";
-						?>								
-					</td>
-				</tr>
-				<tr>
-					<td><b>Progress: </b></td>
-					<td>
-						<?php
-							echo "<div style='width: 160px; height: 12px; border: 1px solid #2F8ECB;'><div style='width: $pct%; height:12px; background: #2F8ECB;'></div></div>"
-						?>
-					</td>
-				</tr>
-				<tr>
-					<td><b>Deadline: </b></td>
-					<td>
-						<?php
-							$pct_day = 100*min(1,max(0,(time() - strtotime($silo->start_date))/(strtotime($silo->end_date) - strtotime($silo->start_date))));
+		<td valign="top" align="middle" width="260px">
+					<?php
+						$collected = $silo->getCollectedAmount();
+						$pct = round($collected*100.0/floatval($silo->goal),1);
+						$end_date = $silo->end_date;
+						$end = strtotime("$end_date");
+						$now = time();
+						$timeleft = $end-$now;
+						$daysleft = ceil($timeleft/86400);
 						
-							echo "<div style='width: 160px; height: 12px; border: 1px solid #2F8ECB;'><div style='width: $pct_day%; height:12px; background: #2F8ECB;'></div></div>"
-						?>
-					</td>
-				</tr>				
+						if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
+					?>
+		<div class='siloInfo'>
+			<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
+			<img src=<?php echo 'uploads/silos/300px/'.$silo->photo_file;?> width='250px'/>
+			<div class='bio'>
+
+			<div class='floatL'><b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?> (<?=$pct?>%)</div>
+			<div class='floatR'><b><?=$daysleft?> <?=$dayplural?> Left</b></div>
+			<div class='floatL'><div class='padding'><b>Progress:</b> &nbsp;&nbsp;&nbsp;<div style='float: right; width: 160px; height: 12px; border: 1px solid #2F8ECB;'><div style='float: left; width: <?=$pct;?>%; height:12px; background: #2F8ECB;'></div></div></div></div>
+			<div class='padding'>&nbsp;</div>
+			<p><a href='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'><?php echo $silo->getTotalMembers();?> Members</a>, <a href='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'><?php echo $silo->getTotalItems();?> Items Pledged</a></p>
+			<div class='floatL'><b>Organization:</b> <?php echo $silo->name; ?></div>
+			<div class='floatL'><b>Purpose:</b> <?php echo $silo->getPurpose();?></div>
+			<div class='floatL'><b>Category:</b> <?php echo $silo->type;?></div>
+			<div class='padding2'>&nbsp;</div>
+			<table class='floatL'>
+			<tr>
+			<td>
+				<img src=<?php echo 'uploads/members/300px/'.$admin->photo_file;?> width='90px'/><br>
+				<button type='button' class='buttonEmail'>Email Admin.</button>
+			</td>
+			<td width='6%'></td>
+			<td>
+				<b>Silo Admin:</b> <br> <?php echo $admin->fullname; ?><br>
+				<b>Title:</b> <?php echo $silo->title; ?><br>
+				<b>Official Address:</b> <br> <?php echo $silo->address; ?><br>
+				<b>Telephone:</b> <?php echo $silo->phone_number; ?>
+			</td>
+			</tr>
 			</table>
+			<div class='floatL'><div class='voucher'>Research a silo and administrator</div></div>
+			<div class='floatL'><?php include('include/UI/flag_box.php'); ?></div>
+
+		</div>
+		</div>
 		</td>
 		
-		<td valign="top" width="160px" align="center">			
-			<img src=<?php echo 'uploads/members/300px/'.$admin->photo_file;?> width="160px"/><br/><br/>
-			<b>Silo Admin: </b><?php echo $admin->fullname; ?><br/><br/>
-			<b>Title: </b><?php echo $silo->title; ?><br/><br/>
-			<b>Organization Name: </b><br/><?php echo $silo->name; ?><br/><br/>		
-			<button type="button" onclick="popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);" style="font-size: 12px;">Contact Admin</button>						
-					
-		</td>
-		
-		
-		<td valign="top" width="320px" align="justify">
-			<b>Silo Type: </b> <?php echo $silo->subtype." (".$silo->subsubtype.")"; ?>
-			<br/><br/>
-			Has <a href="index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>"><?php echo $silo->getTotalMembers();?> Members</a>, <a href="index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>"><?php echo $silo->getTotalItems();?> Items Pledged</a><br/><br/>
-			<b>Purpose: </b> <?php echo $silo->getPurpose();?>
-			<br/>
-			<br/>
-			<b>Organization Description</b>: 
-				<?php 
-					echo $silo->getDescription();
-				?>
-			<br/><br/>
-			<b>Official Address:</b> <?php echo $silo->address; ?>
-			<br/><br/>
-			<b>Telephone Number:</b> <?php echo $silo->phone_number; ?>
-			<br/>
-		</td>
-		
-		<td valign="top" width="200px" align="justify">
-		<?php
-			if ($_SESSION['is_logged_in']) {			
-		?>
-			<button type="submit" style="font-size: 12px;" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Pledge/Sell for this Silo</button>						
-			
-			<script>
-				function record_donation() {
-					$.post(<?php echo "'".API_URL."'"; ?>, 
-						{	
-							request: 'record_donation',
-							silo_id: <?php echo $silo->id; ?>,
-							user_id: <?php echo $current_user['id']; ?>,
-							reference: document.forms['_donations'].invoice.value,
-							amount: document.forms['_donations'].amount.value
-						}, 
-						function (xml) {
-						}
-					);
-				}
-			</script>
-			<?php
-				$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
-			?>
-			<form name="_donations" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-				<br/>
-				<table>
-					<tr>
-						<td align="center">
-							<input type="hidden" name="cmd" value="_donations">
-							<input type="hidden" name="business" value="<?php echo $silo->paypal_account;?>">
-							<input type="hidden" name="item_name" value="<?php echo "Donation for silo ".$silo->name;?>">
-							<input type="hidden" name="currency_code" value="USD">
-							<input type="hidden" name="lc" value="US">
-							<input type="hidden" name="no_note" value="0">
-							<input type="hidden" name="invoice" value="<?php echo $ref;?>">
-							$ <input type="text" name="amount" style="width: 65px;height: 25px;" value="10.00">
-						</td>
-						<td>								
-							<input type="image" style="border: 0; width: 92px; height: 26px;background: #fff;" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" onclick="record_donation();">
-							<input type="hidden" name="return" value="http://www.siloz.com/alpha/index.php?task=view_silo&donations=confirm&id=<?php echo $silo->id."&ref=$ref";?>" >							
-							<input type="hidden" name="cancel_return" value="http://www.siloz.com/alpha/index.php?task=view_silo&donations=cancel&id=<?php echo $silo->id."&ref=$ref";?>" >							
-						</td>
-					</tr>
-				</table>
-			</form>
-		<?php
-			}
-			else {
-		?>
-		<button type="submit" style="font-size: 11px; width:200px;" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Pledge/Sell for this Silo</button>						
-		<br/>
-		<br/>
-		<button type="submit" style="font-size: 11px; width:200px;" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="donate_to_siloz">Donate to this Silo</button>								
-		<?php
-			}
-		?>
 		<div id='fb-root'></div>
 		<script src='http://connect.facebook.net/en_US/all.js'></script>
-		<p><img src="images/facebook.jpg" onclick='postToFeed();'/></p>
 		<?php
 			$url = ACTIVE_URL."/index.php?task=view_silo&id=$silo->id";
 			$photo_url = ACTIVE_URL.'/uploads/silos/300px/'.$silo->photo_file;
 			$name = $silo->name;
-			$description = substr($silo->description, 0, 200)."...";
 		?>
 
 		<script> 
@@ -312,85 +227,146 @@
 		    	});
 		  	}
 		</script>
-
-		<script type="text/javascript">
-
-		</script>
-		<?php
-			//added sept 8th,2012 james kenny
-			
-		?>
-		<div style="word-wrap: break-word; width: 200px;">
-			<?php echo preg_replace("/\n/","<br>",html_entity_decode($silo->admin_notice))." ";?>
-		</div> <br />
-		<?php include("include/UI/flag_box.php"); ?>
 		</td>
 	</tr>
 </table>
 
+<div class="info-container">
 <?php
-		}
-		if ($view == 'feed') {
-			//NEW MEMBER
-			$r = mysql_fetch_array(mysql_query("SELECT user_id, joined_date FROM silo_membership WHERE silo_id = $silo_id ORDER BY joined_date DESC LIMIT 1"));			
-			$s = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$r['user_id']));			
-			$t = mysql_fetch_array(mysql_query("SELECT COUNT(DISTINCT user_id) FROM silo_membership WHERE silo_id = $silo_id"));			
-			if ($r != null) {
-				$new_mem_photo = "<img src='uploads/members/100px/".$s['photo_file']."' width='100px'>";
-				$new_mem_info = $s['fullname']." has joined this Silo. Thanks ".$s['fullname']." for joining! This Silo now has ".$t[0]." members.";
-				$date = date('M d, Y', strtotime($r['joined_date']));
-				$time = date('h:i A T', strtotime($r['joined_date']));
-			}
-			else {
-				$new_mem_photo = "";
-				$new_mem_info = "<font size=2>No member has joined yet</font>";
-				$date = date('M d, Y');
-				$time = date('h:i A T');
-			}
-			$new_mem_date = "$date<br/>$time<br/>";
-			echo "<div class=nicebox><table width=940px><tr><td width=120px valign=top><font size=3><b>New Member</b></font></td><td width=120px valign=top>$new_mem_photo</td><td width=120px valign=top></td><td width=460px valign=top>$new_mem_info</td><td width=120px valign=top align=right>$new_mem_date</td></tr></table></div><br/>";
-			
-			
-			//FUNDS COLLECTED
-			$admin_photo = "<img src='uploads/members/100px/".$admin->photo_file."' width='100px'/>";
-			$tmp = mysql_query("SELECT user_id, SUM(price) as total_received FROM items WHERE silo_id = $silo_id AND status = 'Funds Received' GROUP BY user_id ORDER BY added_date DESC LIMIT 3");
-			$n = 0;
-			$funds_info = "";
-			while ($r = mysql_fetch_array($tmp)) {
-				$s = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$r['user_id']));
-				$funds_info .= $s['fullname']." has sent ".money_format('%(#10n', floatval($r['total_received'])).", ";				
-			}
-			if ($funds_info == "")
-				$funds_info .= "No fund has been collected yet.";
-			else
-				$funds_info .= "... bringing the <b>Silo total to ".money_format('%(#10n', floatval($s2[0]))." collected</b>. Thanks everyone!";
-			$date = date('M d, Y');
-			$time = date('h:i A T');
-			$funds_date = "$date<br/>$time<br/>";			
-			echo "<div class=nicebox><table width=940px><tr><td width=120px valign=top><font size=3><b>Funds Collected</b></font></td><td width=120px valign=top>$admin_photo</td><td width=120px valign=top></td><td width=460px valign=top>$funds_info</td><td width=120px valign=top align=right>$funds_date</td></tr></table></div><br/>";
+		if ($view == 'home') {
+			$count = "SELECT COUNT(*) as num FROM feed WHERE silo_id = '$silo_id'";
+			$countRow = mysql_fetch_array(mysql_query($count));
+			$total_records = $countRow[num];
+			$total_pages = ceil($total_records / $feedPerPage);
 
-			$milestone_info = "No milestone has been reached!";
-			$pct_round = "";
-			if ($pct >= 10) {
-				$pct_round = (round($pct/10)*10)."%";
-				$milestone_info = "<b>Silo has reached $pct_round of its Goal!</b><br/>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+			if (param_get('page')) {
+				$page  = param_get('page');
+			} 
+			else { 
+				$page = 1;
+			};
+
+			$start_from = ($page-1) * $feedPerPage; 
+
+			$feed = mysql_query("SELECT * FROM feed WHERE silo_id = '$silo_id' ORDER BY date DESC LIMIT $start_from, $feedPerPage");
+			$num = mysql_num_rows($feed);
+
+			if ($total_pages < 2) {}
+			else	{
+					if ($page != "1") {
+						$prev = $page - 1;
+						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page &nbsp; &nbsp;';
+					}
+
+				for ($i=1; $i<=$total_pages; $i++) {			
+
+					if ($i != $page) {
+						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$i.'" style="text-decoration: none" class="blue">' . $i . '</a> &nbsp;';
+					} 
+					else {
+						echo '<font class="orange">'.$i.'</font> &nbsp;';
+					}
+				};
+					if ($page != $total_pages) {
+						$next = $page + 1;
+						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >>';
+					}
 			}
-			echo "<div class=nicebox><table width=940px><tr><td width=120px valign=top><font size=3><b>Milestone Reached</b></font></td><td width=120px valign=top>$admin_photo</td><td width=120px valign=center align=center><font size=6><b>$pct_round</b></font></td><td width=460px valign=top>$milestone_info</td><td width=120px valign=top align=right>$funds_date</td></tr></table></div>";
-			
+
+			echo '<div style="padding-bottom: 5px;"></div>';
+
+			if (!$num) {
+    				echo "There isn't anything on this silo feed yet.";
+  			}
+
+			while ($result = mysql_fetch_array($feed)) {
+
+				//Get and set info for feed
+				$user = new User($result['user_id']);
+				$userCell = $user->getMemberCell($silo_id);
+				$item = new Item($result['item_id']);
+				$itemCell = $item->getItemCell($silo_id);
+				$siloCell = $silo->getPlate($silo_id);
+
+				$date = date('M d, Y', strtotime($result['date']));
+				$time = date('h:i A T', strtotime($result['date']));
+				$type = $result['type'];
+				$goal_reached = $result['goal_reached'];
+				$total_raised = floatval($collected);
+
+				if ($type == "Pledged") {
+					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$user->fullname has pledged $item->title.</b></font></td></tr>
+							<tr><td valign=bottom><a href='index.php?task=view_item&id=$item->id' target='_blank'><font class=orange>Check it out</font></a> <font class=blue>and spread the word if you know any buyers!</blue></td></tr></table></td>";
+					$cellInfo .= "$userCell";
+					$cellInfo .= "$itemCell";
+					$cellInfo .= "<td width=20% valign=top align=center>$date<br>$time</td></tr></table></div><br/>";
+				}
+				if ($type == "Sold") {
+					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$user->fullname has sold $item->title.</b></font></td></tr>
+							<tr><td valign=bottom><font class=blue>The total amount raised for this silo is now $$total_raised!</blue></td></tr></table></td>";
+					$cellInfo .= "$userCell";
+					$cellInfo .= "$itemCell";
+					$cellInfo .= "<td width=20% valign=top align=center>$date<br>$time</td></tr></table></div><br/>";
+				}
+				if ($type == "Goal") {
+					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=top><font class='blue' size='4'><b>Silo $silo->name reached $goal_reached% of its goal!</b></font></td>";
+					$cellInfo .= "<td>$siloCell</td>";
+					$cellInfo .= "<td width=20% valign=top align=center>$date<br>$time</td></tr></table></div><br/>";
+				}
+			echo $cellInfo;
+			}
 		}
-		
-		
+
 		//VIEW MEMBERS
 		if ($view == 'members') {
-			$users = User::getMembers($silo_id, $order_by);
-			echo "<table cellpadding='3px'>";
+			$count = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id)";
+			$countRow = mysql_num_rows(mysql_query($count));
+			$total_records = $countRow;
+			$total_pages = ceil($total_records / $usersPerPage);
+
+			if (param_get('page')) {
+				$page  = param_get('page');
+			} 
+			else { 
+				$page = 1;
+			};
+
+			$start_from = ($page-1) * $usersPerPage;
+
+			if ($total_pages < 2) {}
+			else	{
+					if ($page != "1") {
+						$prev = $page - 1;
+						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page &nbsp; &nbsp;';
+					}
+
+				for ($i=1; $i<=$total_pages; $i++) {			
+
+					if ($i != $page) {
+						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$i.'" style="text-decoration: none" class="blue">' . $i . '</a> &nbsp;';
+					} 
+					else {
+						echo '<font class="orange">'.$i.'</font> &nbsp;';
+					}
+				};
+					if ($page != $total_pages) {
+						$next = $page + 1;
+						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >>';
+					}
+			}
+
+			echo '<div style="padding-bottom: 5px;"></div>';
+
+			$limit = "LIMIT $start_from, $usersPerPage";
+			$users = User::getMembers($silo_id, $order_by, $limit);
+			echo "<table cellpadding='10px'>";
 			$n = 0;
 			foreach ($users as $user) {
 				if ($n == 0)
 					echo "<tr>";
 				echo $user->getMemberCell($silo_id);					
 				$n++;
-				if ($n == 6) {
+				if ($n == 4) {
 					echo "</tr>";
 					$n = 0;
 				}					
@@ -400,55 +376,179 @@
 		
 		//VIEW ITEMS
 		if ($view == 'items') {
-			$items = Item::getItems($silo_id, $order_by);
+			$count = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE deleted_date = 0 AND silo_id = $silo_id";
+			$countRow = mysql_num_rows(mysql_query($count));
+			$total_records = $countRow;
+			$total_pages = ceil($total_records / $itemsPerPage);
+
+			if (param_get('page')) {
+				$page  = param_get('page');
+			} 
+			else { 
+				$page = 1;
+			};
+
+			$start_from = ($page-1) * $itemsPerPage;
+
+			if ($total_pages < 2) {}
+			else	{
+					if ($page != "1") {
+						$prev = $page - 1;
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page &nbsp; &nbsp;';
+					}
+
+				for ($i=1; $i<=$total_pages; $i++) {			
+
+					if ($i != $page) {
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$i.'" style="text-decoration: none" class="blue">' . $i . '</a> &nbsp;';
+					} 
+					else {
+						echo '<font class="orange">'.$i.'</font> &nbsp;';
+					}
+				};
+					if ($page != $total_pages) {
+						$next = $page + 1;
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >>';
+					}
+			}
+
+			echo '<div style="padding-bottom: 5px;"></div>';
+
+			$limit = "LIMIT $start_from, $itemsPerPage";
+			$items = Item::getItems($silo_id, $order_by, $limit);
 			$n = 0;
-			echo "<table cellpadding='3px'>";			
+			echo "<table cellpadding='10px'>";			
 			foreach ($items as $item) {
 				if ($n == 0)
 					echo "<tr>";							
 				echo $item->getItemCell($silo_id);					
 				$n++;
-				if ($n == 6) {
+				if ($n == 4) {
 					echo "</tr>";
 					$n = 0;
 				}					
 			}
 			echo "</table>";
-			$is_silo_admin =  true;
-			if($is_silo_admin){
-				include("include/UI/silo_view_admin_items.php");
-			}
-					
+	
 		}
-		
-		//VIEW DONATIONS
-		if ($view == 'donations') {
-			$order_by_clause = "";
-			if ($order_by == 'amount')
-				$order_by_clause = " ORDER BY amount $sort_order ";
-			if ($order_by == 'date')
-				$order_by_clause = " ORDER BY sent_date $sort_order ";						
-			$sql = "SELECT * FROM donations INNER JOIN users USING (user_id) WHERE deleted_date = 0 AND silo_id = $silo_id $order_by_clause";
-			$donations = mysql_query($sql);
-			$n = 0;
-			echo "<table cellpadding='3px'>";			
-			while ($don = mysql_fetch_array($donations)) {
-				if ($n == 0)
-					echo "<tr>";
-				$donation_id = $don['donation_id'];
-				$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$don['user_id']));
-				$cell = "<td><div class=plate id='item_".$don['donation_id']."' style='color: #000;'>";
-				$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><b>Donation Plate Title</b></div><img height=100px width=135px src=uploads/members/100px/".$user['photo_file']." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Status: </b>".$don['status']."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$user['user_id']."'>".$user['username']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$don['amount']."</b></span></td><td align=right><i><b>more...</b></i></td></tr></table></div></td>";							
-				echo $cell;					
-				$n++;
-				if ($n == 6) {
-					echo "</tr>";
-					$n = 0;
-				}					
-			}
-			echo "</table>";		
+
+		//VIEW Map
+		if ($view == 'map') {
+			echo "<div id='map_canvas' style='width: 675px; height: 590px;'></div>";
 		}
 	?>
 <?php
 	}
 ?>
+
+<?php
+//Get items in silo for map
+$qry = mysql_query("SELECT * FROM items WHERE silo_id = $silo_id");
+$num = mysql_num_rows($qry);
+
+    echo "<script> var locations = [";
+
+        while ($map = mysql_fetch_array($qry)){
+
+        echo "['" . $map['title'] . "', " . $map['longitude'] . ", " . $map['latitude'] . "],";
+
+        }
+
+    echo " ];</script>";
+
+?>
+</div>
+
+<script  type="text/javascript">
+
+function initialize() {
+var styles = [
+	{
+		featureType: 'water',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#84BFE5' },
+			{ saturation: 37 },
+			{ lightness: -7 },
+			{ visibility: 'on' }
+		]
+	},{
+		featureType: 'landscape.man_made',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#FFFFFF' },
+			{ saturation: -100 },
+			{ lightness: 100 },
+			{ visibility: 'on' }
+		]
+	},{
+		featureType: 'road.highway',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#FFC92F' },
+			{ saturation: 100 },
+			{ lightness: -7 },
+			{ visibility: 'on' }
+		]
+	},{
+		featureType: 'road.arterial',
+		elementType: 'all',
+		stylers: [
+			{ hue: '#FFE18C' },
+			{ saturation: 100 },
+			{ lightness: 2 },
+			{ visibility: 'on' }
+		]
+	}
+];
+
+siloLong = <?=$silo->longitude?>;
+siloLat = <?=$silo->latitude?>;
+
+var siloLocation = new google.maps.LatLng(siloLong, siloLat);
+var options = {
+	mapTypeControlOptions: {
+		mapTypeIds: [ 'Styled']
+	},
+	center: siloLocation,
+	zoom: 8,
+	maxZoom: 13,
+	mapTypeId: 'Styled'
+};
+
+var div = document.getElementById('map_canvas');
+var map = new google.maps.Map(div, options);
+var styledMapType = new google.maps.StyledMapType(styles, { name: 'Silo Map' });
+map.mapTypes.set('Styled', styledMapType);
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+            	marker = new google.maps.Marker({
+            	position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            	map: map,
+		animation: google.maps.Animation.DROP
+            });
+}
+
+infoWindow = new google.maps.InfoWindow();
+    infoWindow.setOptions({
+        content: "<div align='center'><img src='uploads/silos/300px/<?=$silo->photo_file?>' width=100px id='current_item_photo'/></div>",
+        position: siloLocation,
+    });
+
+infoWindow.open(map);
+}
+
+function loadScript() {
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
+  document.body.appendChild(script);
+}
+
+window.onload = loadScript;
+
+</script>
+
+<div style="padding-bottom: 60px;"></div>

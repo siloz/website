@@ -1,3 +1,23 @@
+#quick_start_bg {
+	background: #808080;
+	margin: auto;
+	width: 975px;
+	padding: 5px 10px 25px 10px;	
+}
+
+.quick_start {
+	color: #fff;
+}
+
+.quick_start h2 {
+	color: #ffb380;
+	font-size: 12pt;
+}
+
+.quick_start p {
+	font-size: 9pt;
+}
+
 #bottom_menu {
 	text-align: center;
 	margin-top: 10px;

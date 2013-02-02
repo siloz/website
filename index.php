@@ -3,6 +3,8 @@
 	
 	$geoplugin = new geoPlugin();
 	$geoplugin->locate();
+	$userCity = $geoplugin->city;
+	$userState = $geoplugin->region;
 	
 	$headline = "";
 	$conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
@@ -52,9 +54,10 @@
 		<link rel="stylesheet" type="text/css" href="css/siloz_header.css" />	
 		<link rel="stylesheet" type="text/css" href="css/siloz_footer.css" />	
 		<link rel="stylesheet" tyle="text/css" href="css/jquery-ui-1.8.16.css"/>
+    		<link href="themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="include/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
 		<link rel='stylesheet' type='text/css' href='include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
-		<script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>	
+		<script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>	
 		<script type="text/javascript" src="js/jquery-ui-1.8.16.min.js"></script> 
 		<script type="text/javascript" src="include/fancybox/source/jquery.fancybox.pack.js?v=2.1.0"></script>			
 		<script type='text/javascript' src='include/OpenInviter/more_examples/js/jquery.fancybox-1.3.4.pack.js'></script>							
@@ -74,10 +77,11 @@
 				$('.confirmation').jConfirmAction({question : "Are you sure to delete?", yesAnswer : "Yes", cancelAnswer : "No"});		
 			});
 	  	</script>
-	
+    		<script src="themes/1/js-image-slider.js" type="text/javascript"></script>
+
 		<?php
 			//SPECIAL REDIRECT CASES
-			$task = param_get('task');			
+			$task = param_get('task');
 			$silo_shortname = param_get('shortname');						
 			if ($task == 'view_silo' && $silo_shortname != '') {
 				$sql = "SELECT * FROM silos WHERE shortname = '$silo_shortname';";		
@@ -185,7 +189,11 @@
 			?>
 			<div id="footer">
 				<?php
-					include('footer.php');
+					if (count($_GET) == 0 && count($_POST) == 0) {
+					} 
+					else {
+						include('footer.php'); 
+					}
 				?>
 			</div>
 		</div>

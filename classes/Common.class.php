@@ -69,12 +69,21 @@ function AddSubtractTime($int,$operation,$object){
 	}
 	$t = $object;
 	//uncomment the next line for testing changes the intervals to minutes
-	$t = "MINUTE";
-	$query = "select (NOW() ".$o." INTERVAL 1 ".$t.") as time;";
+	//$t = "MINUTE";
+	$query = "select (NOW() ".$o." INTERVAL ".$int." ".$t.") as time;";
+	error_log($query);
 	$result = mysql_query($query);
 	$x = mysql_fetch_object($result);
 	return $x->time;
 } // end AddSubtractTime($int,$operation,$object)
+
+function RemoteIp(){
+	return $_SERVER["REMOTE_ADDR"];
+}
+
+function MoneyFormat($amount){
+	return money_format("%.0n", floatval($amount));
+}
 
 }// end class
 ?>
