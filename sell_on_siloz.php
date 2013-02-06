@@ -104,10 +104,36 @@ else {
 						break;
 					}
 					else {
-						$photo = new Photo();
-						$photo->upload($_FILES['item_photo_'.$i]['tmp_name'], 'items', $id."_".$i.".jpg");
-						$sql = "UPDATE items SET photo_file_$i = '$id"."_"."$i.jpg', id = '$id' WHERE item_id = $actual_id";
-						mysql_query($sql);
+						$filename = $_FILES['item_photo_1']['name'];
+						$temporary_name = $_FILES['item_photo_1']['tmp_name'];
+						$mimetype = $_FILES['item_photo_1']['type'];
+						$filesize = $_FILES['item_photo_1']['size'];
+
+						switch($mimetype) {
+
+    							case "image/jpg":
+
+    							case "image/jpeg":
+
+        						$i = imagecreatefromjpeg($temporary_name);
+
+       						break;
+
+    							case "image/gif":
+
+        						$i = imagecreatefromgif($temporary_name);
+
+        						break;
+
+    							case "image/png":
+
+        						$i = imagecreatefrompng($temporary_name);
+
+        						break;
+						}
+
+						unlink($temporary_name);
+						imagejpeg($i,"uploads/".$id."_1.jpg",80);
 
 						$sql = "SELECT * FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
 						if (mysql_num_rows(mysql_query($sql)) == 0) {
@@ -144,7 +170,9 @@ else {
 			    email_with_template($user->email, $subject, $message);
 				
 			}
-			echo "<script>window.location = 'index.php?task=view_silo&id=$silo_id';</script>";			
+			if (strlen($err) == 0) {
+				$success = "true";
+			}
 		}
 	}
 	else {
@@ -155,11 +183,94 @@ else {
 		else {
 			$silo = new Silo($id);
 		}
-	}		
+	}
+
+	if (param_post('crop') == 'Crop') {
+		$id = trim(param_post('item_id'));
+		$crop = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'_1.jpg';
+		$name = 'uploads/items/'.$id.'_1.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_1 = '".$id."_1.jpg' WHERE id = '$id'");
+	}
+
+	if ($crop == "true") {
+		echo "<script>window.location = 'index.php?task=view_item&id=".$id."';</script>";
+	}	
 ?>
+
+		<script language="Javascript">
+
+			$(function(){
+
+				$('#cropbox').Jcrop({
+					aspectRatio: 4/3,
+					onSelect: updateCoords
+				});
+
+			});
+
+			function updateCoords(c)
+			{
+				$('#x').val(c.x);
+				$('#y').val(c.y);
+				$('#w').val(c.w);
+				$('#h').val(c.h);
+			};
+
+			function checkCoords()
+			{
+				if (parseInt($('#w').val())) return true;
+				alert('Please select a crop region then press submit.');
+				return false;
+			};
+
+		</script>
+
 		<div class="heading">
 			<b>Join this Silo: <?php echo "<a href=".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id.">".$silo->name."</a></b> (".$silo->type." Silo)";?>
 		</div>
+
+<?php
+if ($success && $filename) {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish pledging your item, please crop the image you uploaded below:<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$id?>_1.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$id?>" />
+			<button type="submit" name="crop" value="Crop">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+elseif ($success && !$filename) { echo "<script>window.location = 'index.php?task=view_item&id=".$id."';</script>"; }
+?>
+
 		<p>Please enter your item details below, and upload up to 4 images for your item.</p>
 		<form enctype="multipart/form-data"  name="sell_on_siloz" class="my_account_form" method="POST">
 			<input type="hidden" name="task" value="sell_on_siloz"/>

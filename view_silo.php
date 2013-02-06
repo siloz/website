@@ -167,7 +167,7 @@
 					?>
 		<div class='siloInfo'>
 			<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
-			<img src=<?php echo 'uploads/silos/300px/'.$silo->photo_file;?> width='250px'/>
+			<img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/>
 			<div class='bio'>
 
 			<div class='floatL'><b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?> (<?=$pct?>%)</div>
@@ -182,7 +182,7 @@
 			<table class='floatL'>
 			<tr>
 			<td>
-				<img src=<?php echo 'uploads/members/300px/'.$admin->photo_file;?> width='90px'/><br>
+				<img src=<?php echo 'uploads/members/'.$admin->photo_file;?> width='90px'/><br>
 				<button type='button' class='buttonEmail'>Email Admin.</button>
 			</td>
 			<td width='6%'></td>
@@ -205,7 +205,7 @@
 		<script src='http://connect.facebook.net/en_US/all.js'></script>
 		<?php
 			$url = ACTIVE_URL."/index.php?task=view_silo&id=$silo->id";
-			$photo_url = ACTIVE_URL.'/uploads/silos/300px/'.$silo->photo_file;
+			$photo_url = ACTIVE_URL.'/uploads/silos/'.$silo->photo_file;
 			$name = $silo->name;
 		?>
 
@@ -255,7 +255,7 @@
 			else	{
 					if ($page != "1") {
 						$prev = $page - 1;
-						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page &nbsp; &nbsp;';
+						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page</a> &nbsp; &nbsp;';
 					}
 
 				for ($i=1; $i<=$total_pages; $i++) {			
@@ -268,8 +268,8 @@
 					}
 				};
 					if ($page != $total_pages) {
-						$next = $page + 1;
-						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >>';
+						$next = 2;
+						echo '<a href="index.php?task=view_silo&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >></a>';
 					}
 			}
 
@@ -337,7 +337,7 @@
 			else	{
 					if ($page != "1") {
 						$prev = $page - 1;
-						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page &nbsp; &nbsp;';
+						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page</a> &nbsp; &nbsp;';
 					}
 
 				for ($i=1; $i<=$total_pages; $i++) {			
@@ -351,7 +351,7 @@
 				};
 					if ($page != $total_pages) {
 						$next = $page + 1;
-						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >>';
+						echo '<a href="index.php?task=view_silo&view=members&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >></a>';
 					}
 			}
 
@@ -395,7 +395,7 @@
 			else	{
 					if ($page != "1") {
 						$prev = $page - 1;
-						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page &nbsp; &nbsp;';
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page</a> &nbsp; &nbsp;';
 					}
 
 				for ($i=1; $i<=$total_pages; $i++) {			
@@ -409,7 +409,7 @@
 				};
 					if ($page != $total_pages) {
 						$next = $page + 1;
-						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >>';
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >></a>';
 					}
 			}
 
@@ -536,7 +536,7 @@ map.mapTypes.set('Styled', styledMapType);
 
 infoWindow = new google.maps.InfoWindow();
     infoWindow.setOptions({
-        content: "<div align='center'><img src='uploads/silos/300px/<?=$silo->photo_file?>' width=100px id='current_item_photo'/></div>",
+        content: "<div align='center'><img src='uploads/silos/<?=$silo->photo_file?>' width=100px id='current_item_photo'/></div>",
         position: siloLocation,
     });
 

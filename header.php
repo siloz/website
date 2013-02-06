@@ -140,7 +140,7 @@
 				Search: &nbsp;&nbsp;&nbsp;
 				<a href="index.php?search=item" <?php if (param_get('search') == 'item') echo "class=main_menu_current"; ?>>Items</a> &nbsp;&nbsp;&nbsp;
 				<a href="index.php?search=silo" <?php if (param_get('search') == 'silo') echo "class=main_menu_current"; ?>>Silos</a>	&nbsp;&nbsp;&nbsp;	
-				Near: <a href="#"><?=$userCity?>, <?=$userState?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
+				Near: <a href="#"><?=$userLocation?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
 					<?php
 						if (!$is_search || strlen(trim(param_get('keywords'))) == 0)
 							echo "<input type='text' name='keywords' placeholder='Keyword' style='width: 200px;; background: #fff;'/>";

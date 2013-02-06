@@ -186,7 +186,7 @@ class Silo {
 		$html .= "Ends: ".$this->end_date."<br/>";
 		$pct_day = 100*min(1,(time() - strtotime($this->start_date))/(strtotime($this->end_date) - strtotime($this->start_date)));
 		$html .= "<b>Deadline:</b><div style='width: 120px; height: 10px; border: 1px solid #2F8ECB;'><div style='width: $pct_day%; height:10px; background: #2F8ECB;'></div></div>";
-		$html .= "</td><td><img height=100px width=135px src=uploads/silos/300px/".$this->photo_file."></td></tr>";
+		$html .= "</td><td><img height=100px width=135px src=uploads/silos/".$this->photo_file."></td></tr>";
 		$html .= "<tr><td colspan=2><b>Purpose:</b> ".$this->getPurpose()."<br/><br/><b>Administrator:</b> ".$admin->username."<br/><br/>";
 		$html .= "<b>Official address:</b>".$this->address."</td></tr>";
 		$html .= "</table>";
@@ -216,7 +216,7 @@ class Silo {
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
 		$cell = "<div class=plateSilo id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<table align='center' width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/300px/".$this->photo_file." style='margin-bottom: 3px'></center><tr valign=bottom><td><div style='text-align: center; color: #000;'><b>Goal:</b> <span style='color: #f60'>$".round($this->goal)." ($pct%)</span></td></tr><tr><td align='center'>$daysleft $dayplural Left</td><tr></table></a></div>";							
+		$cell .= "<table align='center' width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><tr valign=bottom><td><div style='text-align: center; color: #000;'><b>Goal:</b> <span style='color: #f60'>$".round($this->goal)." ($pct%)</span></td></tr><tr><td align='center'>$daysleft $dayplural Left</td><tr></table></a></div>";							
 		return $cell;
 	}
 	

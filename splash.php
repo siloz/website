@@ -53,10 +53,15 @@
 	}
 	</script>
 	
-<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular silos near <span style="color: #f60;"><?=$userCity?>, <?=$userState?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
 <?php
-$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 ORDER BY silo_id DESC LIMIT 5";
-$tmp = mysql_query($sql);		
+$long = -117.1572551;
+$lat = 32.7153292;
+
+$sqlDist = " ( 3959 * acos( cos( radians($long) ) * cos( radians( silos.latitude ) ) * cos( radians( silos.longitude ) - radians($lat) ) + sin( radians($long) ) * sin( radians( silos.latitude ) ) ) ) ";
+
+$sql = "SELECT *, $sqlDist AS distance FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 ORDER BY distance LIMIT 5";
+$tmp = mysql_query($sql);
 
 $siloz_html = "<table cellpadding='5px' style='border-spacing: 7px'><tr>";
 while ($s = mysql_fetch_array($tmp)) {	
@@ -69,7 +74,7 @@ $siloz_html .= "</tr></table>";
 echo $siloz_html;
 ?>
 
-<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Items for Sale near <span style="color: #f60;"><?=$geoplugin->city?>, <?=$geoplugin->region?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
+<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Items for Sale near <span id="enterLocation_item" style="display: none;"></span> <span id="userLocation_item" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_item()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
 <?php
 $sql = "SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE deleted_date = 0 ORDER BY id DESC LIMIT 6";
 $tmp = mysql_query($sql);
@@ -112,3 +117,23 @@ echo $items_html;
 </div>
 </div>
 <br>
+
+<script>
+function changeLocation_silo()
+{
+  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
+  $('#enterLocation_silo').append( str );
+  userLocation_silo.style.display = 'none';
+  enterLocation_silo.style.display = 'inline-block';
+
+}
+
+function changeLocation_item()
+{
+  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
+  $('#enterLocation_item').append( str );
+  userLocation_item.style.display = 'none';
+  enterLocation_item.style.display = 'inline-block';
+
+}
+</script>

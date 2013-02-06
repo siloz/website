@@ -134,7 +134,7 @@ function populate_item_info(item_id) {
 						$err .= "Current password is not correct.";
 					}					
 					else if ($new_password == '') {
-					 	$err .= "New password must be empty.";
+					 	$err .= "New password must not be empty.";
 					}
 					else {
 						$sql = "UPDATE users SET fullname = '$fullname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone', password='$new_password' WHERE id = $id";
@@ -147,11 +147,37 @@ function populate_item_info(item_id) {
 								$err .= $_FILES['member_photo']['name']." is invalid file type.";
 							}
 							else {
-								$photo = new Photo();
-								$photo->upload($_FILES['member_photo']['tmp_name'], 'members', $id.".jpg");
-								$sql = "UPDATE users SET photo_file = '$id.jpg' WHERE id = $id";
-								$photo_file = $id.".jpg";								
-								mysql_query($sql);
+							$filename = $_FILES['member_photo']['name'];
+							$temporary_name = $_FILES['member_photo']['tmp_name'];
+							$mimetype = $_FILES['member_photo']['type'];
+							$filesize = $_FILES['member_photo']['size'];
+
+							switch($mimetype) {
+
+    								case "image/jpg":
+
+    								case "image/jpeg":
+
+        							$i = imagecreatefromjpeg($temporary_name);
+
+       							break;
+
+    								case "image/gif":
+
+        							$i = imagecreatefromgif($temporary_name);
+
+        							break;
+
+    								case "image/png":
+
+        							$i = imagecreatefrompng($temporary_name);
+
+        							break;
+							}
+
+							unlink($temporary_name);
+							imagejpeg($i,"uploads/".$User->id.".jpg",80);
+
 							}
 						}						
 					}
@@ -166,18 +192,39 @@ function populate_item_info(item_id) {
 							$err .= $_FILES['member_photo']['name']." is invalid file type.";
 						}
 						else {
-							$photo = new Photo();
-							$photo->upload($_FILES['member_photo']['tmp_name'], 'members', $id.".jpg");
-							$sql = "UPDATE users SET photo_file = '$id.$ext' WHERE id = $id";
-							$photo_file = $id.".jpg";								
-							mysql_query($sql);
+							$filename = $_FILES['member_photo']['name'];
+							$temporary_name = $_FILES['member_photo']['tmp_name'];
+							$mimetype = $_FILES['member_photo']['type'];
+							$filesize = $_FILES['member_photo']['size'];
+
+							switch($mimetype) {
+
+    								case "image/jpg":
+
+    								case "image/jpeg":
+
+        							$i = imagecreatefromjpeg($temporary_name);
+
+       							break;
+
+    								case "image/gif":
+
+        							$i = imagecreatefromgif($temporary_name);
+
+        							break;
+
+    								case "image/png":
+
+        							$i = imagecreatefrompng($temporary_name);
+
+        							break;
+							}
+
+							unlink($temporary_name);
+							imagejpeg($i,"uploads/".$id.".jpg",80);
 						}
 					}					
 				}		
-			}
-		
-			if (strlen($err) == 0) {
-				$err = "Your account has been updated!";
 			}
 		}
 		else {
@@ -191,16 +238,101 @@ function populate_item_info(item_id) {
 			$phone = $row['phone'];
 			$photo_file = $row['photo_file'];
 		}
+
+	if (param_post('crop') == 'Crop') {
+		$id = trim(param_post('user_id'));
+		$crop = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'.jpg';
+		$name = 'uploads/members/'.$id.'.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+	}
+
+	$updatemsg = "Your account has been updated!";
 ?>
+
+		<script language="Javascript">
+
+			$(function(){
+
+				$('#cropbox').Jcrop({
+					aspectRatio: 4/3,
+					onSelect: updateCoords
+				});
+
+			});
+
+			function updateCoords(c)
+			{
+				$('#x').val(c.x);
+				$('#y').val(c.y);
+				$('#w').val(c.w);
+				$('#h').val(c.h);
+			};
+
+			function checkCoords()
+			{
+				if (parseInt($('#w').val())) return true;
+				alert('Please select a crop region then press submit.');
+				return false;
+			};
+
+		</script>
+
 <div class="heading">
 	<b>Your Account</b><?php echo " (".$_SESSION['username'].")"?>
 </div>
 <br/>
 
+<?php
+if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filename)) {
+?>
+		<center>
+				<h1>New Profile Photo - My Account</h1>
+		To finish uploading your new photo, please crop the image you uploaded below:<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$id?>.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="user_id" value="<?=$id?>" />
+			<button type="submit" name="crop" value="Crop">Crop</button>
+		</form>
+		</center>
+		<br>
+		<br>
+<?php
+die;
+}
+?>
 	<?php
 		if (strlen($err) > 0) {
 			echo "<font color='red'><b>".$err."</b></font><br/>";
 		}
+		
+		if ((param_post('task') == 'update_account') && !$filename && strlen($err) == 0) { 
+			echo "<font color='red'><b>".$updatemsg."</b></font><br/>";
+		}
+		elseif ($crop == "true") { 
+			echo "<font color='red'><b>".$updatemsg."</b></font><br/>";
+		}
+
 	?>
 	<form enctype="multipart/form-data"  name="my_account_form" class="my_account_form" method="POST">
 		<input type="hidden" name="task" value="update_account"/>		
@@ -209,7 +341,7 @@ function populate_item_info(item_id) {
 				<td valign="top" width="250px">
 					<table>						
 						<tr>			
-							<td align="center"><img src=<?php echo 'uploads/members/300px/'.$photo_file;?> width="250px"></td>
+							<td align="center"><img src=<?php echo 'uploads/members/'.$photo_file;?> width="250px"></td>
 						</tr>
 						<tr>
 							<td><input name="member_photo" type="file" style="height: 20px"/></td>
@@ -293,7 +425,7 @@ function populate_item_info(item_id) {
 			if ($item->status == 'Pledged')
 				$delete_html = "<form name='f$item_id' id='f$item_id' method='post' action=''><input type='hidden' name='item_id' value='$item_id'><input type='hidden' name='delete_item' value='delete_$item_id'><a href='javascript:document.f$item_id.submit()' class='confirmation'><img src=images/delete.png style='margin-top: -5px; margin-left:-5px; margin-right: 5px;'></a>";			
 			$cell = "<td><div class=plate id='item_$item_id' style='color: #000; font-size: 11px; height: 200px;'>";			
-			$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'>$delete_html<a href='index.php?task=view_item&id=$item_id'><b>".substr($item->title, 0, 40)."</b></a></form></div><img height=100px width=135px src=uploads/items/300px/".$item->photo_file_1." style='margin-bottom: 3px'><div style='font-size: 11px; color: #000;'><button type='button' onclick=\"popup_show('edit_item', 'edit_item_drag', 'edit_item_exit', 'screen-center', 0, 0);populate_item_info('".$item_id."');\" style='margin-left:65px; margin-top: -35px; position: absolute;'>Edit Item</button><b>Status: </b>".getStatusDropDown($item_id, $item->status)."<br/><b>Benefiting: </b><a href='index.php?task=view_silo&id=".$item->silo->id."'>".substr($item->silo->name,0,30)."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$item->price."</b></span></td><td align=right><a href='index.php?task=view_item&id=$item_id'><i><b>more...</b></i></a></td></tr></table></div></td>";							
+			$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'>$delete_html<a href='index.php?task=view_item&id=$item_id'><b>".substr($item->title, 0, 40)."</b></a></form></div><img height=100px width=135px src=uploads/items/".$item->photo_file_1." style='margin-bottom: 3px'><div style='font-size: 11px; color: #000;'><button type='button' onclick=\"popup_show('edit_item', 'edit_item_drag', 'edit_item_exit', 'screen-center', 0, 0);populate_item_info('".$item_id."');\" style='margin-left:65px; margin-top: -35px; position: absolute;'>Edit Item</button><b>Status: </b>".getStatusDropDown($item_id, $item->status)."<br/><b>Benefiting: </b><a href='index.php?task=view_silo&id=".$item->silo->id."'>".substr($item->silo->name,0,30)."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$item->price."</b></span></td><td align=right><a href='index.php?task=view_item&id=$item_id'><i><b>more...</b></i></a></td></tr></table></div></td>";							
 			echo $cell;					
 			$n++;
 			if ($n == 6) {
@@ -337,10 +469,36 @@ function populate_item_info(item_id) {
 					break;
 				}
 				else {
-					$photo = new Photo();
-					$photo->upload($_FILES['item_photo_'.$i]['tmp_name'], 'items', $item_id."_".$i.".jpg");
-					$sql = "UPDATE items SET photo_file_$i = '$item_id"."_"."$i.jpg' WHERE id = $item_id";
-					mysql_query($sql);
+							$filename = $_FILES['item_photo_1']['name'];
+							$temporary_name = $_FILES['item_photo_1']['tmp_name'];
+							$mimetype = $_FILES['item_photo_1']['type'];
+							$filesize = $_FILES['item_photo_1']['size'];
+
+							switch($mimetype) {
+
+    								case "image/jpg":
+
+    								case "image/jpeg":
+
+        							$i = imagecreatefromjpeg($temporary_name);
+
+       							break;
+
+    								case "image/gif":
+
+        							$i = imagecreatefromgif($temporary_name);
+
+        							break;
+
+    								case "image/png":
+
+        							$i = imagecreatefrompng($temporary_name);
+
+        							break;
+							}
+
+							unlink($temporary_name);
+							imagejpeg($i,"uploads/".$item_id."_1.jpg",80);
 				}					
 			}
 			
@@ -350,11 +508,61 @@ function populate_item_info(item_id) {
 			$stmt->execute();
 			$stmt->close();			
 		}
-		if (strlen($err) == 0) {
+	}
+
+	if (param_post('crop') == 'Crop-Item') {
+		$id = trim(param_post('item_id'));
+		$crop_item = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'_1.jpg';
+		$name = 'uploads/items/'.$id.'_1.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+	}
+
+		if ($crop_item == "true") {
 			echo "<script>window.location = 'index.php?task=my_account';</script>";			
 		}
-	}		
-?>	
+
+	$itemmsg = "Your item has been updated!";
+?>
+
+<?php
+if ((param_post('submit') == 'Update') && (strlen($err) == 0) && ($filename)) {
+?>
+		<center>
+				<h1>New Item Photo</h1>
+		To finish uploading your new photo for your item, please crop the image you uploaded below:<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$item_id?>.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$item_id?>" />
+			<button type="submit" name="crop" value="Crop-Item">Crop</button>
+		</form>
+		</center>
+		<br>
+		<br>
+<?php
+}
+?>
+
 <div class="edit_item" id="edit_item" style="width: 800px">
 	<div id="edit_item_drag" style="float: right">
 		<img id="edit_item_exit" src="images/close.png"/>

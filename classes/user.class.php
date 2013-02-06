@@ -89,7 +89,7 @@ class User {
 	public function getMemberCell($silo_id) {
 		$date = substr($this->joined_date,5,2).'/'.substr($this->joined_date,8,2).'/'.substr($this->joined_date,2,2);		
 		$cell = "<td><div class=plate id='user_".$this->id."' style='color: #000;'><table width=100% height=100%><tr valign=top><td>";
-		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$this->username."</b></a></div><b>Member Since: </b>".$date."<br/><img height=100px width=135px src=uploads/members/300px/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
+		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$this->username."</b></a></div><b>Member Since: </b>".$date."<br/><img height=100px width=135px src=uploads/members/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
 		return $cell;		
 	}
 	

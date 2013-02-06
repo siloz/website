@@ -257,7 +257,7 @@ function updateStatus (e, item_id) {
 					?>
 		<div class='siloInfo'>
 			<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
-			<img src=<?php echo 'uploads/silos/300px/'.$silo->photo_file;?> width='250px'/>
+			<img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/>
 			<div class='bio'>
 
 			<div class='floatL'><b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?> (<?=$pct?>%)</div>
@@ -272,7 +272,7 @@ function updateStatus (e, item_id) {
 			<table class='floatL'>
 			<tr>
 			<td>
-				<img src=<?php echo 'uploads/members/300px/'.$admin->photo_file;?> width='90px'/><br>
+				<img src=<?php echo 'uploads/members/'.$admin->photo_file;?> width='90px'/><br>
 				<button type='button' class='buttonEmail'>Email Admin.</button>
 			</td>
 			<td width='6%'></td>

@@ -189,11 +189,36 @@ function updateStatus (e, item_id) {
 						$err .= $_FILES['silo_photo']['name']." is invalid file type.";
 					}
 					else {
-						$photo_file = $Silo->id.".jpg";
-						$photo = new Photo();
-						$photo->upload($_FILES['silo_photo']['tmp_name'], 'silos', $photo_file);
-						$sql = "UPDATE silos SET photo_file = '$photo_file' WHERE id = '".$Silo->id."'";
-						mysql_query($sql);
+							$filename = $_FILES['silo_photo']['name'];
+							$temporary_name = $_FILES['silo_photo']['tmp_name'];
+							$mimetype = $_FILES['silo_photo']['type'];
+							$filesize = $_FILES['silo_photo']['size'];
+
+							switch($mimetype) {
+
+    								case "image/jpg":
+
+    								case "image/jpeg":
+
+        							$i = imagecreatefromjpeg($temporary_name);
+
+       							break;
+
+    								case "image/gif":
+
+        							$i = imagecreatefromgif($temporary_name);
+
+        							break;
+
+    								case "image/png":
+
+        							$i = imagecreatefrompng($temporary_name);
+
+        							break;
+							}
+
+							unlink($temporary_name);
+							imagejpeg($i,"uploads/".$silo->id.".jpg",80);
 					}
 				}				
 			}
@@ -210,10 +235,57 @@ function updateStatus (e, item_id) {
 		$num_notifications = mysql_num_rows($sent_items);
 		$view = param_get('view');		
 		if ($view == '')
-			$view = 'home';	
+			$view = 'home';
+
+	if (param_post('crop') == 'Crop') {
+		$id = trim(param_post('silo_id'));
+		$crop = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'.jpg';
+		$name = 'uploads/silos/'.$id.'.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+	}
+
+	$updatemsg = "Your silo has been updated!";
 ?>
 
+		<script language="Javascript">
 
+			$(function(){
+
+				$('#cropbox').Jcrop({
+					aspectRatio: 4/3,
+					onSelect: updateCoords
+				});
+
+			});
+
+			function updateCoords(c)
+			{
+				$('#x').val(c.x);
+				$('#y').val(c.y);
+				$('#w').val(c.w);
+				$('#h').val(c.h);
+			};
+
+			function checkCoords()
+			{
+				if (parseInt($('#w').val())) return true;
+				alert('Please select a crop region then press submit.');
+				return false;
+			};
+
+		</script>
 
 <div class="heading" style="padding-bottom:5px;">
 	<table width="940px" style="border-spacing: 0px;">
@@ -238,6 +310,34 @@ function updateStatus (e, item_id) {
 		</tr>
 	</table>
 </div>
+
+<?php
+if ((param_post('update') == 'Update') && (strlen($err) == 0) && ($filename)) {
+?>
+		<center>
+				<h1>New Silo Photo</h1>
+		To finish uploading your new photo for your silo, please crop the image you uploaded below:<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$Silo->id?>.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="silo_id" value="<?=$Silo->id?>" />
+			<button type="submit" name="crop" value="Crop">Crop</button>
+		</form>
+		</center>
+		<br>
+		<br>
+<?php
+die;
+}
+?>
 
 <table width="100%">
 	<tr>
@@ -279,6 +379,14 @@ function updateStatus (e, item_id) {
 				else if ($view == 'donations') {
 					echo "<b>sort by <a href=index.php?task=manage_silo&view=donations&sort_by=goal$new_sort_order&id=$silo_id class=simplebluelink>goal <img src=$img1_path></a> or <a href=index.php?task=manage_silo&view=donations&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>date <img src=$img2_path></a></b>";
 				}
+				else if ($view == 'home') {
+					if ((param_post('update') == 'Update') && !$filename && strlen($err) == 0) { 
+						echo "<font color='red'><b>".$updatemsg."</b></font><br/>";
+					}
+					elseif ($crop == "true") { 
+						echo "<font color='red'><b>".$updatemsg."</b></font><br/>";
+					}
+				}
 			?>
 		</td>
 	</tr>
@@ -298,7 +406,7 @@ function updateStatus (e, item_id) {
 		<table cellpadding="10px">
 			<tr>
 				<td valign="top" width="300px">
-					<img src="<?php echo 'uploads/silos/300px/'.$Silo->photo_file;?>" width="300px"/>
+					<img src="<?php echo 'uploads/silos/'.$Silo->photo_file;?>" width="300px"/>
 					<br/><br/>
 					<b>Upload new photo: </b><input name="silo_photo" type="file"/>
 					<br/><br/>
@@ -496,7 +604,7 @@ function updateStatus (e, item_id) {
 				$s = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$r['user_id']));			
 				$t = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM silo_membership WHERE silo_id = $silo_id"));			
 				if ($r != null) {
-					$new_mem_photo = "<img src='uploads/members/100px/".$s['photo_file']."' width='100px'>";
+					$new_mem_photo = "<img src='uploads/members/".$s['photo_file']."' width='100px'>";
 					$new_mem_info = $s['fullname']." has joined this Silo. Thanks ".$s['fullname']." for joining! This Silo now has ".$t[0]." members.";
 					$date = date('M d, Y', strtotime($r['joined_date']));
 					$time = date('h:i A T', strtotime($r['joined_date']));
@@ -515,7 +623,7 @@ function updateStatus (e, item_id) {
 				$sql = "SELECT * FROM users WHERE user_id=$user_id";
 				$res = mysql_query($sql);
 				$user = mysql_fetch_array($res);
-				$admin_photo = "<img src='uploads/members/100px/".$user['photo_file']."' width='100px'/>";
+				$admin_photo = "<img src='uploads/members/".$user['photo_file']."' width='100px'/>";
 				$tmp = mysql_query("SELECT user_id, SUM(price) as total_received FROM items WHERE silo_id = $silo_id AND status = 'Funds Received' GROUP BY user_id ORDER BY added_date DESC LIMIT 3");
 				$n = 0;
 				$funds_info = "";
@@ -572,7 +680,7 @@ function updateStatus (e, item_id) {
 						$collected = 0;
 					$date = substr($row['joined_date'],5,2).'/'.substr($row['joined_date'],8,2).'/'.substr($row['joined_date'],2,2);
 					$cell = "<td><div class=plate id='user_".$row['user_id']."' style='color: #000; font-size: 11px;'><table width=100% height=100%><tr valign=top><td>";
-					$cell .= "<form name='f$user_id' id='f$user_id' method='post' action=''><input type='hidden' name='user_id' value='$user_id'><input type='hidden' name='silo_id' value='$silo_id'><input type='hidden' name='delete_user' value='delete_$user_id'><a href='javascript:document.f$user_id.submit()' class='confirmation'><img src=images/delete.png style='margin-top: -5px; margin-left:-5px; margin-right: 5px;'></a><a href='index.php?task=view_user&id=$user_id'> <b>".$row['username']."</b></a></form><b>Member Since:</b>".$date."<br/><img height=100px width=135px src=uploads/members/100px/".$row['photo_file']." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$pledged."</span><br/><b>Sold/Donated: </b><span style='color: #f60'>$".$collected."</span><br/>View Items: <a href='index.php?task=view_user&id=".$row['user_id']."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=$user_id'>All Silos</a></td></table></div></td>";
+					$cell .= "<form name='f$user_id' id='f$user_id' method='post' action=''><input type='hidden' name='user_id' value='$user_id'><input type='hidden' name='silo_id' value='$silo_id'><input type='hidden' name='delete_user' value='delete_$user_id'><a href='javascript:document.f$user_id.submit()' class='confirmation'><img src=images/delete.png style='margin-top: -5px; margin-left:-5px; margin-right: 5px;'></a><a href='index.php?task=view_user&id=$user_id'> <b>".$row['username']."</b></a></form><b>Member Since:</b>".$date."<br/><img height=100px width=135px src=uploads/members/".$row['photo_file']." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$pledged."</span><br/><b>Sold/Donated: </b><span style='color: #f60'>$".$collected."</span><br/>View Items: <a href='index.php?task=view_user&id=".$row['user_id']."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=$user_id'>All Silos</a></td></table></div></td>";
 					echo $cell;					
 					$n++;
 					if ($n == 6) {
@@ -630,7 +738,7 @@ function updateStatus (e, item_id) {
 					$donation_id = $don['donation_id'];
 					$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$don['user_id']));
 					$cell = "<td><div class=plate id='item_".$don['donation_id']."' style='color: #000;'>";
-					$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><b>Donation Plate Title???</b></div><img height=100px width=135px src=uploads/members/100px/".$user['photo_file']." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Status: </b>".$don['status']."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$user['user_id']."'>".$user['username']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$don['amount']."</b></span></td><td align=right><i><b>more...</b></i></td></tr></table></div></td>";							
+					$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><b>Donation Plate Title???</b></div><img height=100px width=135px src=uploads/members/".$user['photo_file']." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Status: </b>".$don['status']."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$user['user_id']."'>".$user['username']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$don['amount']."</b></span></td><td align=right><i><b>more...</b></i></td></tr></table></div></td>";							
 					echo $cell;					
 					$n++;
 					if ($n == 6) {

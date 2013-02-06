@@ -184,7 +184,7 @@
 						<td valign="top" width="290px">
 							<?php
 								if ($item->photo_file_1 != '')
-									echo "<img src='uploads/items/300px/".$item->photo_file_1."' width=280px id='current_item_photo'/> &nbsp;&nbsp;";
+									echo "<img src='uploads/items/".$item->photo_file_1."' width=280px id='current_item_photo'/> &nbsp;&nbsp;";
 							?>
 							<br/>
 							<?php
@@ -315,7 +315,7 @@
 	<a href='index.php?task=view_silo&id=<?php echo $silo->id;?>'>
 		<div class='siloInfo'>
 			<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
-			<div align="center"><img src=<?php echo 'uploads/silos/300px/'.$silo->photo_file;?> width='250px'/></div></a>
+			<div align="center"><img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/></div></a>
 			<div class='bio'>
 
 			<div class='floatL'><b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?> (<?=$pct?>%)</div>
@@ -330,7 +330,7 @@
 			<table class='floatL'>
 			<tr>
 			<td>
-				<img src=<?php echo 'uploads/members/300px/'.$admin->photo_file;?> width='90px'/><br>
+				<img src=<?php echo 'uploads/members/'.$admin->photo_file;?> width='90px'/><br>
 				<button type='button' class='buttonEmail'>Email Admin.</button>
 			</td>
 			<td width='6%'></td>
@@ -418,7 +418,7 @@ map.mapTypes.set('Styled', styledMapType);
 
 infoWindow = new google.maps.InfoWindow();
     infoWindow.setOptions({
-        content: "<div align='center'><img src='uploads/items/300px/<?=$item->photo_file_1?>' width=100px id='current_item_photo'/></div>",
+        content: "<div align='center'><img src='uploads/items/<?=$item->photo_file_1?>' width=100px id='current_item_photo'/></div>",
         position: myLocation,
     });
 

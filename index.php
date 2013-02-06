@@ -1,10 +1,67 @@
 <?php 
 	require_once("include/autoload.class.php");
-	
-	$geoplugin = new geoPlugin();
-	$geoplugin->locate();
-	$userCity = $geoplugin->city;
-	$userState = $geoplugin->region;
+
+if ($_SESSION['is_logged_in']) {
+	$sql = "SELECT * FROM users WHERE username='".$_SESSION['username']."'";
+	$res = mysql_query($sql);		
+	$current_user = mysql_fetch_array($res);
+	$zip = $current_user['zip_code'];
+
+	$url = "http://maps.google.com/maps/geo?q=".$zip;
+	$xml = file_get_contents($url);
+	$geo_json = json_decode($xml, TRUE);
+	if ($geo_json['Status']['code'] == '200') {
+		$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+		$new_adr = $geo_json['Placemark'][0]['address'];
+		$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
+		$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+		$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+		$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+	} else {
+		$err .= 'Invalid address.<br/>';
+	}
+}
+else {
+	if ((!isset($_COOKIE['UserCity'])) && (!isset($_COOKIE['UserState']))) {
+		$geoplugin = new geoPlugin();
+		$geoplugin->locate();
+		$userCity = $geoplugin->city;
+		$userState = $geoplugin->region;
+
+		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
+		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
+	}
+	else {
+		$userCity = $_COOKIE['UserCity'];
+		$userState = $_COOKIE['UserState'];
+	}
+
+	if (param_post('location') == 'Update') {
+		$zip = urlencode(param_post('zip'));
+
+		$url = "http://maps.google.com/maps/geo?q=".$zip;
+		$xml = file_get_contents($url);
+		$geo_json = json_decode($xml, TRUE);
+		if ($geo_json['Status']['code'] == '200') {
+			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+			$new_adr = $geo_json['Placemark'][0]['address'];
+			$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
+			$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+		} else {
+			$err .= 'Invalid address.<br/>';
+		}
+
+		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
+		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
+
+		header("Location: index.php");
+		exit;
+	}
+}
+
+	$userLocation = $userCity.", ".$userState;
 	
 	$headline = "";
 	$conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
@@ -31,11 +88,6 @@
 		} 
 	}
 
-	if ($_SESSION['is_logged_in']) {
-		$sql = "SELECT * FROM users WHERE username='".$_SESSION['username']."'";
-		$res = mysql_query($sql);		
-		$current_user = mysql_fetch_array($res);		
-	}
 	if (param_get('task') == 'logout') {
 		$_SESSION = array();
 		session_destroy();
@@ -77,6 +129,12 @@
 				$('.confirmation').jConfirmAction({question : "Are you sure to delete?", yesAnswer : "Yes", cancelAnswer : "No"});		
 			});
 	  	</script>
+
+		<script src="jCrop/js/jquery.min.js"></script>
+		<script src="jCrop/js/jquery.Jcrop.js"></script>
+		<link rel="stylesheet" href="jCrop/css/jquery.Jcrop.css" type="text/css" />
+		<link rel="stylesheet" href="demo_files/demos.css" type="text/css" />
+
     		<script src="themes/1/js-image-slider.js" type="text/javascript"></script>
 
 		<?php

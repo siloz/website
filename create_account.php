@@ -84,15 +84,40 @@
 			if ($_FILES['member_photo']['name'] != '') {
 				$ext = end(explode('.', strtolower($_FILES['member_photo']['name'])));
 				if (!in_array($ext, $allowedExts)) {
-					$err .= $_FILES['member_photo']['name']." is invalid file.<br/>";
-				}
-				else {
-					$photo = new Photo();
-					$photo->upload($_FILES['member_photo']['tmp_name'], 'members', $User->id.".jpg");
-					$User->photo_file = $User->id.".jpf";
-					$User->Save();
+					$err .= $_FILES['member_photo']['name']." is an invalid file type.<br/>";
 				}
 			}
+
+			$filename = $_FILES['member_photo']['name'];
+			$temporary_name = $_FILES['member_photo']['tmp_name'];
+			$mimetype = $_FILES['member_photo']['type'];
+			$filesize = $_FILES['member_photo']['size'];
+
+			switch($mimetype) {
+
+    				case "image/jpg":
+
+    				case "image/jpeg":
+
+        			$i = imagecreatefromjpeg($temporary_name);
+
+       			break;
+
+    				case "image/gif":
+
+        			$i = imagecreatefromgif($temporary_name);
+
+        			break;
+
+    				case "image/png":
+
+        			$i = imagecreatefrompng($temporary_name);
+
+        			break;
+			}
+
+			unlink($temporary_name);
+			imagejpeg($i,"uploads/".$User->id.".jpg",80);
 						
 		}
 		
@@ -100,7 +125,6 @@
 			mysql_query("DELETE FROM users WHERE id = '".$User->id.".");			
 		}
 		else {
-			$err = "Please check your email for validation code!";
 			$success = true;
 			$subject = "New user registration at siloz.com - Validation code";
 			$message = "<h3>Account Validation</h3>";
@@ -108,11 +132,61 @@
 			$message .= "http://www.siloz.com/website/index.php?task=validate_registration&id=".$User->id."&code=".$code." <br/><br/>";
 			$message .= "Welcome to siloz!";
 			email_with_template($email, $subject, $message);
-
-			echo "'<img src="$_FILES['member_photo']['tmp_name']" id="cropbox" />'";
-
 		}
 	}
+
+	if (param_post('crop') == 'Crop') {
+		$id = trim(param_post('user_id'));
+		$crop = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'.jpg';
+		$name = 'uploads/members/'.$id.'.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE users SET photo_file = '$id.jpg' WHERE id = '$id'");
+	}
+?>
+
+		<script language="Javascript">
+
+			$(function(){
+
+				$('#cropbox').Jcrop({
+					aspectRatio: 4/3,
+					onSelect: updateCoords
+				});
+
+			});
+
+			function updateCoords(c)
+			{
+				$('#x').val(c.x);
+				$('#y').val(c.y);
+				$('#w').val(c.w);
+				$('#h').val(c.h);
+			};
+
+			function checkCoords()
+			{
+				if (parseInt($('#w').val())) return true;
+				alert('Please select a crop region then press submit.');
+				return false;
+			};
+
+		</script>
+
+<?php
+if (!$success && !$crop) {
 ?>
 <form enctype="multipart/form-data"  name="create_account" class="create_account_form" method="POST">
 	<input type="hidden" name="task" value="create_account"/>
@@ -133,9 +207,6 @@
 				?>
 			</td>
 		</tr>
-<?php
-if (!$success) {
-?>
 		<tr>
 			<td>Username <font color='red'>*</font></td>
 			<td><input type="text" name="username" style="width : 200px" value='<?php echo $username; ?>'/></td>			
@@ -201,9 +272,53 @@ if (!$success) {
 				<button type="submit" name="register" value="Register">Register</button>
 			</td>
 		</tr>
-<?php
-}
-?>
 	</table>
 	</div>
 </form>
+
+<?php
+}
+if ($success && $filename) {
+?>
+	<div class="create_account_form" style="width: 800px; margin: auto;">
+		<center>
+				<h1>Create a Siloz Account</h1>
+		To complete you account creation, please crop the image you uploaded below:<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$User->id?>.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="user_id" value="<?=$User->id?>" />
+			<button type="submit" name="crop" value="Crop">Crop</button>
+		</form>
+		</center>
+	</div>
+<?php
+}
+elseif ($success && !$filename) { $crop = "true"; }
+if ($crop == "true") {
+?>
+	<div class="create_account_form" style="width: 400px">
+	<table style="margin:auto">
+		<tr>
+			<td colspan="2" align="center">
+				<h1>Create a Siloz Account</h1>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<center><font color='red'><b>An activation link has been sent to your e-mail address. Please click on it to finish your registration!</b></font></center>
+			</td>
+		</tr>
+	</table>
+	</div>
+<?php
+}
+?>
