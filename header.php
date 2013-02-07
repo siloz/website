@@ -1,3 +1,31 @@
+<?php
+	if (param_post('location') == 'Update-header') {
+		$zip = urlencode(param_post('zip'));
+
+		$url = "http://maps.google.com/maps/geo?q=".$zip;
+		$xml = file_get_contents($url);
+		$geo_json = json_decode($xml, TRUE);
+		if ($geo_json['Status']['code'] == '200') {
+			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+			$new_adr = $geo_json['Placemark'][0]['address'];
+			$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
+			$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+		} else {
+			$err .= 'Invalid Zip Code.<br/>';
+		}
+
+		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
+		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
+		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
+		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
+
+		header('Location: '.$_SERVER['REQUEST_URI']);
+		exit;
+	}
+?>
+
 <script type="text/javascript">
 	function create_silo_need_login() {
 		popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);
@@ -114,6 +142,24 @@
 		<button type="button" onclick="create_account_with_purpose()">Create Account</button>			
 	</div>
 </div>
+
+<div class="login" id="location" style="width: 300px;">
+	<div id="location_drag" style="float:right">
+		<img id="location_exit" src="images/close.png"/>
+	</div>
+	<div>
+	<?php if (!$_SESSION['is_logged_in']) { ?>
+		<form action="" method="POST">
+			<input type="hidden" name="purpose" value=""/>
+			<h2>Update your location below:</h2>
+			<input onclick=this.value="" type="text" value="Enter Zip Code" name="zip">
+			<br/><br>	
+			<button type="submit" name="location" value="Update-header">Update</button>
+		</form>
+	<?php } else { echo "<b>Your location was obtained through your account when you signed up. <br><br> To change your location, please update your account information.</b>"; } ?>
+	</div>
+</div>
+
 <form id="search_form" name="search_form">
 <div id="logo">
 	<a href="index.php" style="text-decoration:none"><img src="images/logo.png"/></a>			
@@ -133,6 +179,7 @@
 
 <?php if ((param_get('search') == 'item') || (param_get('search') == 'silo')) {
 ?>
+
 	<table width="975px" style="">
 		<tr>
 			
@@ -140,7 +187,7 @@
 				Search: &nbsp;&nbsp;&nbsp;
 				<a href="index.php?search=item" <?php if (param_get('search') == 'item') echo "class=main_menu_current"; ?>>Items</a> &nbsp;&nbsp;&nbsp;
 				<a href="index.php?search=silo" <?php if (param_get('search') == 'silo') echo "class=main_menu_current"; ?>>Silos</a>	&nbsp;&nbsp;&nbsp;	
-				Near: <a href="#"><?=$userLocation?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
+				Near: <a href="javascript:popup_show('location', 'location_drag', 'location_exit', 'screen-center', 0, 0);" class="bold_text"><?=$userLocation?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
 					<?php
 						if (!$is_search || strlen(trim(param_get('keywords'))) == 0)
 							echo "<input type='text' name='keywords' placeholder='Keyword' style='width: 200px;; background: #fff;'/>";
@@ -214,3 +261,14 @@ else { }
 </div>
 
 </form>
+
+<script>
+function changeLocation()
+{
+  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
+  $('#enterLocation').append( str );
+  userLocation.style.display = 'none';
+  enterLocation.style.display = 'inline-block';
+
+}
+</script>

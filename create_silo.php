@@ -116,8 +116,8 @@ else {
 		$geo_json = json_decode($xml, TRUE);
 		if ($geo_json['Status']['code'] == '200') {
 			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-			$latitude = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$longitude = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+			$longitude = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$latitude = $geo_json['Placemark'][0]['Point']['coordinates'][1];
 		} else {
 			$err .= 'Invalid address.<br/>';
 		}

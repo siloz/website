@@ -193,7 +193,7 @@
 									if ($fn == "'no_image.jpg'")
 										$fn = "no_image.jpg";
 									if ($fn != '' && $fn != "no_image.jpg")
-										echo "<img src='uploads/items/100px/$fn' width=65px onclick=\"document.getElementById('current_item_photo').src='uploads/items/300px/$fn';\" /> &nbsp;";
+										echo "<img src='uploads/items/$fn' width=65px onclick=\"document.getElementById('current_item_photo').src='uploads/items/$fn';\" /> &nbsp;";
 								}									
 							?>							
 						</td>
@@ -397,9 +397,10 @@ var styles = [
 		]
 	}
 ];
-long = <?=$item->longitude?>;
 lat = <?=$item->latitude?>;
-var myLocation = new google.maps.LatLng(long, lat);
+long = <?=$item->longitude?>;
+
+var myLocation = new google.maps.LatLng(lat, long);
 var options = {
 	mapTypeControlOptions: {
 		mapTypeIds: [ 'Styled']

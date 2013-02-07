@@ -50,14 +50,14 @@
 	elseif ($order_by == 'date')
 		$order_by_clause = " ORDER BY start_date $sort_order ";
 	else {
-		$order_by_clause = " ORDER BY silo_id DESC ";
+		$order_by_clause = " ORDER BY distance ";
 	}
 
 	$sql = "SELECT COUNT(*) FROM silos WHERE 1 > 0 $search_clause";
 	$tmp = mysql_fetch_array(mysql_query($sql));
 	$count_silos = $tmp[0];
 
-	$sql = "SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
+	$sql = "SELECT *, $sqlDist AS distance FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
 	
 	$tmp = mysql_query($sql);		
 	$closed_silos = array();
@@ -119,7 +119,7 @@ $num = mysql_num_rows($qry);
 
         while ($map = mysql_fetch_array($qry)){
 
-        echo "['" . $map['title'] . "', " . $map['longitude'] . ", " . $map['latitude'] . "],";
+        echo "['" . $map['title'] . "', " . $map['latitude'] . ", " . $map['longitude'] . "],";
 
         }
 
@@ -171,10 +171,10 @@ var styles = [
 	}
 ];
 
-siloLong = <?=$silo->longitude?>;
 siloLat = <?=$silo->latitude?>;
+siloLong = <?=$silo->longitude?>;
 
-var siloLocation = new google.maps.LatLng(siloLong, siloLat);
+var siloLocation = new google.maps.LatLng(siloLat, siloLong);
 var options = {
 	mapTypeControlOptions: {
 		mapTypeIds: [ 'Styled']

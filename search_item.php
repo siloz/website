@@ -52,10 +52,10 @@
 	elseif ($order_by == 'date')
 		$order_by_clause = " ORDER BY added_date $sort_order ";
 	else {
-		$order_by_clause = " ORDER BY id DESC ";
+		$order_by_clause = " ORDER BY distance ";
 	}
 
-	$sql = "SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE deleted_date = 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
+	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE deleted_date = 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
 	$tmp = mysql_query($sql);
 	$items_html = "<table cellpadding='6px'><tr>";
 	$i = 0;
@@ -113,7 +113,7 @@ $num = mysql_num_rows($qry);
 
         while ($map = mysql_fetch_array($qry)){
 
-        echo "['" . $map['title'] . "', " . $map['longitude'] . ", " . $map['latitude'] . "],";
+        echo "['" . $map['title'] . "', " . $map['latitude'] . ", " . $map['longitude'] . "],";
 
         }
 
@@ -165,10 +165,10 @@ var styles = [
 	}
 ];
 
-siloLong = 33.761272;
-siloLat = -84.390556;
+siloLat = 33.761272;
+siloLong = -84.390556;
 
-var siloLocation = new google.maps.LatLng(siloLong, siloLat);
+var siloLocation = new google.maps.LatLng(siloLat, siloLong);
 var options = {
 	mapTypeControlOptions: {
 		mapTypeIds: [ 'Styled']

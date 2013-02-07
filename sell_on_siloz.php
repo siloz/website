@@ -46,6 +46,15 @@ else {
 		if (strlen(trim($description)) > 500) {
 			$err .= "Please limit your description to 500 characters.";
 		}
+		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_2']['name']) ) {
+			$err .= "Please submit a second image for your item or remove the third image.";
+		}
+		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_4']['name']) && ((!$_FILES['item_photo_2']['name']) || (!$_FILES['item_photo_3']['name']))  ) {
+			$err .= "Please submit a second and third image for your item or remove the fourth image.";
+		}
+		if ( (!$_FILES['item_photo_1']['name']) && (($_FILES['item_photo_2']['name']) || ($_FILES['item_photo_3']['name']) || ($_FILES['item_photo_4']['name']))  ) {
+			$err .= "Please submit your image in the first slot before adding more images.";
+		}
 
 		$adr = urlencode($address);
 		$zip_code = urlencode($zip);
@@ -55,8 +64,8 @@ else {
 		if ($geo_json['Status']['code'] == '200') {
 			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
 			$new_adr = $geo_json['Placemark'][0]['address'];
-			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$long = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+			$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
 		} else {
 			$err .= 'Invalid address.<br/>';
 		}
@@ -104,10 +113,11 @@ else {
 						break;
 					}
 					else {
-						$filename = $_FILES['item_photo_1']['name'];
-						$temporary_name = $_FILES['item_photo_1']['tmp_name'];
-						$mimetype = $_FILES['item_photo_1']['type'];
-						$filesize = $_FILES['item_photo_1']['size'];
+						$filename = $_FILES['item_photo_'.$i]['name'];
+						$temporary_name = $_FILES['item_photo_'.$i]['tmp_name'];
+						$mimetype = $_FILES['item_photo_'.$i]['type'];
+						$filesize = $_FILES['item_photo_'.$i]['size'];
+						$uploaded = $i;
 
 						switch($mimetype) {
 
@@ -115,25 +125,25 @@ else {
 
     							case "image/jpeg":
 
-        						$i = imagecreatefromjpeg($temporary_name);
+        						$img = imagecreatefromjpeg($temporary_name);
 
        						break;
 
     							case "image/gif":
 
-        						$i = imagecreatefromgif($temporary_name);
+        						$img = imagecreatefromgif($temporary_name);
 
         						break;
 
     							case "image/png":
 
-        						$i = imagecreatefrompng($temporary_name);
+        						$img = imagecreatefrompng($temporary_name);
 
         						break;
 						}
 
 						unlink($temporary_name);
-						imagejpeg($i,"uploads/".$id."_1.jpg",80);
+						imagejpeg($img,"uploads/".$id."_".$i.".jpg",80);
 
 						$sql = "SELECT * FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
 						if (mysql_num_rows(mysql_query($sql)) == 0) {
@@ -185,9 +195,8 @@ else {
 		}
 	}
 
-	if (param_post('crop') == 'Crop') {
+	if (param_post('crop') == 'Crop1') {
 		$id = trim(param_post('item_id'));
-		$crop = true;
 		$targ_w = 300;
 		$targ_h = 225;
 		$jpeg_quality = 90;
@@ -204,6 +213,75 @@ else {
 		unlink($src);
 
 		mysql_query("UPDATE items SET photo_file_1 = '".$id."_1.jpg' WHERE id = '$id'");
+
+		if ($_POST['upload2']) { $crop = "2"; } else { $crop = "true"; }
+		if ($_POST['upload3']) { $upl3 = "3"; }
+		if ($_POST['upload4']) { $upl4 = "4"; }
+
+	}
+	elseif (param_post('crop') == 'Crop2') {
+		$id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'_2.jpg';
+		$name = 'uploads/items/'.$id.'_2.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_2 = '".$id."_2.jpg' WHERE id = '$id'");
+
+		if ($_POST['upload3']) { $crop = "3"; } else { $crop = "true"; }
+		if ($_POST['upload4']) { $upl4 = "4"; }
+	}
+	elseif (param_post('crop') == 'Crop3') {
+		$id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'_3.jpg';
+		$name = 'uploads/items/'.$id.'_3.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_3 = '".$id."_3.jpg' WHERE id = '$id'");
+
+		if ($_POST['upload4']) { $crop = "4"; } else { $crop = "true"; }
+	}
+	elseif (param_post('crop') == 'Crop4') {
+		$id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'_4.jpg';
+		$name = 'uploads/items/'.$id.'_4.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_4 = '".$id."_4.jpg' WHERE id = '$id'");
+
+		$crop = "true";
 	}
 
 	if ($crop == "true") {
@@ -244,11 +322,11 @@ else {
 		</div>
 
 <?php
-if ($success && $filename) {
+if ($success && $_FILES['item_photo_1']['name']) {
 ?>
 		<center>
 				<h1>Create a Silo</h1>
-		To finish pledging your item, please crop the image you uploaded below:<br><br>
+		To finish pledging your item, please crop all of the images you uploaded below (Image 1):<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$id?>_1.jpg" id="cropbox" />
 		
@@ -261,7 +339,12 @@ if ($success && $filename) {
 			<input type="hidden" id="w" name="w" />
 			<input type="hidden" id="h" name="h" />
 			<input type="hidden" name="item_id" value="<?=$id?>" />
-			<button type="submit" name="crop" value="Crop">Crop</button>
+
+		<?php if ($_FILES['item_photo_2']['name']) { echo '<input type="hidden" name="upload2" value="2" />'; } ?>
+		<?php if ($_FILES['item_photo_3']['name']) { echo '<input type="hidden" name="upload3" value="3" />'; } ?>
+		<?php if ($_FILES['item_photo_4']['name']) { echo '<input type="hidden" name="upload4" value="4" />'; } ?>
+
+			<button type="submit" name="crop" value="Crop1">Crop</button>
 		</form>
 		</center>
 		<br><br>
@@ -269,6 +352,90 @@ if ($success && $filename) {
 die;
 }
 elseif ($success && !$filename) { echo "<script>window.location = 'index.php?task=view_item&id=".$id."';</script>"; }
+?>
+
+<?php
+if ($crop == "2") {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish pledging your item, please crop the image you uploaded below (Image 2):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$id?>_2.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$id?>" />
+		<?php if ($upl3) { echo '<input type="hidden" name="upload3" value="3" />'; } ?>
+		<?php if ($upl4) { echo '<input type="hidden" name="upload4" value="4" />'; } ?>
+			<button type="submit" name="crop" value="Crop2">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+?>
+
+<?php
+if ($crop == "3") {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish pledging your item, please crop the image you uploaded below (Image 3):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$id?>_3.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$id?>" />
+		<?php if ($upl4) { echo '<input type="hidden" name="upload4" value="4" />'; } ?>
+			<button type="submit" name="crop" value="Crop3">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+?>
+
+<?php
+if ($crop == "4") {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish pledging your item, please crop the image you uploaded below (Image 4):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$id?>_4.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$id?>" />
+			<button type="submit" name="crop" value="Crop4">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
 ?>
 
 		<p>Please enter your item details below, and upload up to 4 images for your item.</p>

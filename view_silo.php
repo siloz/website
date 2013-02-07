@@ -453,7 +453,7 @@ $num = mysql_num_rows($qry);
 
         while ($map = mysql_fetch_array($qry)){
 
-        echo "['" . $map['title'] . "', " . $map['longitude'] . ", " . $map['latitude'] . "],";
+        echo "['" . $map['title'] . "', " . $map['latitude'] . ", " . $map['longitude'] . "],";
 
         }
 
@@ -505,10 +505,10 @@ var styles = [
 	}
 ];
 
-siloLong = <?=$silo->longitude?>;
 siloLat = <?=$silo->latitude?>;
+siloLong = <?=$silo->longitude?>;
 
-var siloLocation = new google.maps.LatLng(siloLong, siloLat);
+var siloLocation = new google.maps.LatLng(siloLat, siloLong);
 var options = {
 	mapTypeControlOptions: {
 		mapTypeIds: [ 'Styled']

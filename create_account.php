@@ -58,8 +58,8 @@
 		if ($geo_json['Status']['code'] == '200') {
 			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
 			$new_adr = $geo_json['Placemark'][0]['address'];
-			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$long = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+			$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
 		} else {
 			$err .= 'Invalid address.<br/>';
 		}

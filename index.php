@@ -12,13 +12,12 @@ if ($_SESSION['is_logged_in']) {
 	$geo_json = json_decode($xml, TRUE);
 	if ($geo_json['Status']['code'] == '200') {
 		$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-		$new_adr = $geo_json['Placemark'][0]['address'];
 		$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
 		$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-		$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-		$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+		$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+		$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
 	} else {
-		$err .= 'Invalid address.<br/>';
+		$err .= 'Invalid Zip Code.<br/>';
 	}
 }
 else {
@@ -27,13 +26,19 @@ else {
 		$geoplugin->locate();
 		$userCity = $geoplugin->city;
 		$userState = $geoplugin->region;
+		$userLong = $geoplugin->longitude;
+		$userLat = $geoplugin->latitude;
 
 		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
 		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
+		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
+		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
 	}
 	else {
 		$userCity = $_COOKIE['UserCity'];
 		$userState = $_COOKIE['UserState'];
+		$userLong = $_COOKIE['UserLong'];
+		$userLat = $_COOKIE['UserLat'];
 	}
 
 	if (param_post('location') == 'Update') {
@@ -47,21 +52,24 @@ else {
 			$new_adr = $geo_json['Placemark'][0]['address'];
 			$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
 			$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-			$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+			$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
 		} else {
-			$err .= 'Invalid address.<br/>';
+			$err .= 'Invalid Zip Code.<br/>';
 		}
 
 		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
 		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
+		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
+		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
 
 		header("Location: index.php");
 		exit;
 	}
 }
-
 	$userLocation = $userCity.", ".$userState;
+
+	$sqlDist = " ( 3959 * acos( cos( radians($userLong) ) * cos( radians( longitude ) ) * cos( radians( latitude ) - radians($userLat) ) + sin( radians($userLong) ) * sin( radians( longitude ) ) ) ) ";
 	
 	$headline = "";
 	$conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
