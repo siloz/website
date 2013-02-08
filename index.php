@@ -5,20 +5,34 @@ if ($_SESSION['is_logged_in']) {
 	$sql = "SELECT * FROM users WHERE username='".$_SESSION['username']."'";
 	$res = mysql_query($sql);		
 	$current_user = mysql_fetch_array($res);
-	$zip = $current_user['zip_code'];
+	$zip_enc = urlencode($current_user['zip_code']);
 
-	$url = "http://maps.google.com/maps/geo?q=".$zip;
+	$url = "http://maps.google.com/maps/geo?q=".$zip_enc;
 	$xml = file_get_contents($url);
 	$geo_json = json_decode($xml, TRUE);
 	if ($geo_json['Status']['code'] == '200') {
-		$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-		$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
-		$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-		$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-		$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
-	} else {
-		$err .= 'Invalid Zip Code.<br/>';
-	}
+			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+
+			if ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName']) {
+				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
+				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			}
+			elseif ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName']) {
+				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName'];
+				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			}
+			elseif ($geo_json['Placemark'][0]['address']) {
+				$userLocation = $geo_json['Placemark'][0]['address'];
+			}
+			else { echo "Location not found"; }
+			
+			$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+
+		} else {
+			echo 'Invalid Zip Code.<br/>';
+			die;
+		}
 }
 else {
 	if ((!isset($_COOKIE['UserCity'])) && (!isset($_COOKIE['UserState']))) {
@@ -49,13 +63,26 @@ else {
 		$geo_json = json_decode($xml, TRUE);
 		if ($geo_json['Status']['code'] == '200') {
 			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-			$new_adr = $geo_json['Placemark'][0]['address'];
-			$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
-			$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+
+			if ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName']) {
+				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
+				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			}
+			elseif ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName']) {
+				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName'];
+				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
+			}
+			elseif ($geo_json['Placemark'][0]['address']) {
+				$userLocation = $geo_json['Placemark'][0]['address'];
+			}
+			else { echo "Location not found"; }
+			
 			$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
 			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+
 		} else {
-			$err .= 'Invalid Zip Code.<br/>';
+			echo 'Invalid Zip Code.<br/>';
+			die;
 		}
 
 		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
@@ -92,6 +119,9 @@ else {
 			}
 			else {
 				$headline = "ERROR: Your account is not activated yet. Please check your email!";
+			}
+			if ($row['admin'] == yes) {
+				$_SESSION['admin_access'] = true;
 			}
 		} 
 	}

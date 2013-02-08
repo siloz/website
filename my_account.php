@@ -50,7 +50,8 @@ function populate_item_info(item_id) {
 
 </script>
 
-<?php	
+<?php
+//If account info is updated
 	function getStatusDropDown($item_id, $current) {
 		if ($current == "Funds Received" || $current == "Funds Sent")
 			return $current;
@@ -260,6 +261,188 @@ function populate_item_info(item_id) {
 
 	$updatemsg = "Your account has been updated!";
 ?>
+<?php
+// If item is updated
+	$err = "";
+	if (param_post('item') == 'Update') {			
+		$item_id = param_post('item_id');
+		$title = param_post('title');
+		$price = param_post('price');
+		$item_cat_id = param_post('item_cat_id');
+		$description = param_post('description');
+	
+		if (strlen(trim($title)) == 0) {
+			$err .= "Item title must not be empty. <br/>";
+		}
+		if (strlen(trim($price)) == 0) {
+			$err .= "Item price must not be empty. <br/>";
+		}
+		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_2']['name']) ) {
+			$err .= "Please submit a second image for your item or remove the third image.";
+		}
+		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_4']['name']) && ((!$_FILES['item_photo_2']['name']) || (!$_FILES['item_photo_3']['name']))  ) {
+			$err .= "Please submit a second and third image for your item or remove the fourth image.";
+		}
+		if ( (!$_FILES['item_photo_1']['name']) && (($_FILES['item_photo_2']['name']) || ($_FILES['item_photo_3']['name']) || ($_FILES['item_photo_4']['name']))  ) {
+			$err .= "Please submit your image in the first slot before adding more images.";
+		}
+	
+		if (strlen($err) == 0) {
+			for ($i=1; $i<=4; ++$i) {
+				if ($_FILES['item_photo_'.$i]['name'] != '') {
+					$allowedExts = array("png", "jpg", "jpeg", "gif");
+					$ext = end(explode('.', strtolower($_FILES['item_photo_'.$i]['name'])));
+					if (!in_array($ext, $allowedExts)) {
+						$err .= $_FILES['item_photo_'.$i]['name']." is invalid file type.<br/>";
+						break;
+					}
+					else {
+						$filename = $_FILES['item_photo_'.$i]['name'];
+						$temporary_name = $_FILES['item_photo_'.$i]['tmp_name'];
+						$mimetype = $_FILES['item_photo_'.$i]['type'];
+						$filesize = $_FILES['item_photo_'.$i]['size'];
+						$uploaded = $i;
+
+						switch($mimetype) {
+
+    							case "image/jpg":
+
+    							case "image/jpeg":
+
+        						$img = imagecreatefromjpeg($temporary_name);
+
+       						break;
+
+    							case "image/gif":
+
+        						$img = imagecreatefromgif($temporary_name);
+
+        						break;
+
+    							case "image/png":
+
+        						$img = imagecreatefrompng($temporary_name);
+
+        						break;
+						}
+
+						unlink($temporary_name);
+						imagejpeg($img,"uploads/".$item_id."_".$i.".jpg",80);
+					}
+				}				
+			}
+			
+			$sql = "UPDATE items SET title=?, price=?, item_cat_id=?, description = ? WHERE id = '$item_id';";
+			$stmt->prepare($sql);			
+			$stmt->bind_param("ssss", $title, $price,$item_cat_id, htmlentities($description, ENT_QUOTES));
+			$stmt->execute();
+			$stmt->close();
+
+			if ($filename) {
+				$success = "true";
+			}
+			else {
+				$updmsg = "true";
+			}
+		}
+	}
+
+	if (param_post('crop') == 'Crop1') {
+		$item_id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$item_id.'_1.jpg';
+		$name = 'uploads/items/'.$item_id.'_1.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_1 = '".$item_id."_1.jpg' WHERE id = '$item_id'");
+
+		if ($_POST['upload2']) { $icrop = "2"; } else { $icrop = "true"; }
+		if ($_POST['upload3']) { $upl3 = "3"; }
+		if ($_POST['upload4']) { $upl4 = "4"; }
+
+	}
+	elseif (param_post('crop') == 'Crop2') {
+		$item_id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$item_id.'_2.jpg';
+		$name = 'uploads/items/'.$item_id.'_2.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_2 = '".$item_id."_2.jpg' WHERE id = '$item_id'");
+
+		if ($_POST['upload3']) { $icrop = "3"; } else { $icrop = "true"; }
+		if ($_POST['upload4']) { $upl4 = "4"; }
+	}
+	elseif (param_post('crop') == 'Crop3') {
+		$item_id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$item_id.'_3.jpg';
+		$name = 'uploads/items/'.$item_id.'_3.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_3 = '".$item_id."_3.jpg' WHERE id = '$item_id'");
+
+		if ($_POST['upload4']) { $icrop = "4"; } else { $icrop = "true"; }
+	}
+	elseif (param_post('crop') == 'Crop4') {
+		$item_id = trim(param_post('item_id'));
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$item_id.'_4.jpg';
+		$name = 'uploads/items/'.$item_id.'_4.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		mysql_query("UPDATE items SET photo_file_4 = '".$item_id."_4.jpg' WHERE id = '$item_id'");
+
+		$icrop = "true";
+	}
+
+
+	if ($icrop == "true") {
+		echo "<script>window.location = 'index.php?task=my_account';</script>";			
+	}
+
+	$itemmsg = "Your item has been updated!";
+?>
 
 		<script language="Javascript">
 
@@ -295,6 +478,7 @@ function populate_item_info(item_id) {
 <br/>
 
 <?php
+//If account info updated
 if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filename)) {
 ?>
 		<center>
@@ -321,6 +505,123 @@ if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filenam
 die;
 }
 ?>
+
+<?php
+if ($success && $_FILES['item_photo_1']['name']) {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish editing your item, please crop all of the images you uploaded below (Image 1):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$item_id?>_1.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$item_id?>" />
+
+		<?php if ($_FILES['item_photo_2']['name']) { echo '<input type="hidden" name="upload2" value="2" />'; } ?>
+		<?php if ($_FILES['item_photo_3']['name']) { echo '<input type="hidden" name="upload3" value="3" />'; } ?>
+		<?php if ($_FILES['item_photo_4']['name']) { echo '<input type="hidden" name="upload4" value="4" />'; } ?>
+
+			<button type="submit" name="crop" value="Crop1">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+?>
+
+<?php
+if ($icrop == "2") {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish editing your item, please crop the image you uploaded below (Image 2):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$item_id?>_2.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$item_id?>" />
+		<?php if ($upl3) { echo '<input type="hidden" name="upload3" value="3" />'; } ?>
+		<?php if ($upl4) { echo '<input type="hidden" name="upload4" value="4" />'; } ?>
+			<button type="submit" name="crop" value="Crop2">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+?>
+
+<?php
+if ($icrop == "3") {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish editing your item, please crop the image you uploaded below (Image 3):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$item_id?>_3.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$item_id?>" />
+		<?php if ($upl4) { echo '<input type="hidden" name="upload4" value="4" />'; } ?>
+			<button type="submit" name="crop" value="Crop3">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+?>
+
+<?php
+if ($icrop == "4") {
+?>
+		<center>
+				<h1>Create a Silo</h1>
+		To finish editing your item, please crop the image you uploaded below (Image 4):<br><br>
+		<!-- This is the image we're attaching Jcrop to -->
+		<img src="uploads/<?=$item_id?>_4.jpg" id="cropbox" />
+		
+		<br>
+
+		<!-- This is the form that our event handler fills -->
+		<form action="" method="post" onsubmit="return checkCoords();">
+			<input type="hidden" id="x" name="x" />
+			<input type="hidden" id="y" name="y" />
+			<input type="hidden" id="w" name="w" />
+			<input type="hidden" id="h" name="h" />
+			<input type="hidden" name="item_id" value="<?=$item_id?>" />
+			<button type="submit" name="crop" value="Crop4">Crop</button>
+		</form>
+		</center>
+		<br><br>
+<?php
+die;
+}
+?>
+
 	<?php
 		if (strlen($err) > 0) {
 			echo "<font color='red'><b>".$err."</b></font><br/>";
@@ -409,6 +710,11 @@ die;
 	
 	<hr/>
 	<font size="4"><b>Manage my listings</b></font>
+	<?php
+	if ($icrop == "true" || $updmsg == "true") { 
+		echo "<div style='float: right'><font color='red'><b>$itemmsg</b></font></div>";
+	}
+	?>
 	<hr/>
 	<?php
 		$user_id = $_SESSION['user_id'];
@@ -436,132 +742,7 @@ die;
 		echo "</table>";			
 	?>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-<?php
-	$err = "";
-	if (param_post('submit') == 'Update') {			
-		$item_id = param_post('item_id');
-		$title = param_post('title');
-		$price = param_post('price');
-		$item_cat_id = param_post('item_cat_id');
-		$description = param_post('description');
-	
-		if (strlen(trim($title)) == 0) {
-			$err .= "Item title must not be empty. <br/>";
-		}
-		if (strlen(trim($price)) == 0) {
-			$err .= "Item price must not be empty. <br/>";
-		}
-	
-		if (strlen($err) == 0) {
-			$allowedExts = array("png", "jpg", "jpeg", "gif");
-			for ($i=1; $i<=4; ++$i) {
-				$ext = end(explode('.', strtolower($_FILES['item_photo_'.$i]['name'])));
-				if (!in_array($ext, $allowedExts)) {
-					$err .= $_FILES['item_photo_'.$i]['name']." is invalid file type.<br/>";
-					break;
-				}
-				else {
-							$filename = $_FILES['item_photo_1']['name'];
-							$temporary_name = $_FILES['item_photo_1']['tmp_name'];
-							$mimetype = $_FILES['item_photo_1']['type'];
-							$filesize = $_FILES['item_photo_1']['size'];
 
-							switch($mimetype) {
-
-    								case "image/jpg":
-
-    								case "image/jpeg":
-
-        							$i = imagecreatefromjpeg($temporary_name);
-
-       							break;
-
-    								case "image/gif":
-
-        							$i = imagecreatefromgif($temporary_name);
-
-        							break;
-
-    								case "image/png":
-
-        							$i = imagecreatefrompng($temporary_name);
-
-        							break;
-							}
-
-							unlink($temporary_name);
-							imagejpeg($i,"uploads/".$item_id."_1.jpg",80);
-				}					
-			}
-			
-			$sql = "UPDATE items SET title=?, price=?, item_cat_id=?, description = ? WHERE id = '$item_id';";
-			$stmt->prepare($sql);			
-			$stmt->bind_param("ssss", $title, $price,$item_cat_id, htmlentities($description, ENT_QUOTES));
-			$stmt->execute();
-			$stmt->close();			
-		}
-	}
-
-	if (param_post('crop') == 'Crop-Item') {
-		$id = trim(param_post('item_id'));
-		$crop_item = true;
-		$targ_w = 300;
-		$targ_h = 225;
-		$jpeg_quality = 90;
-
-		$src = 'uploads/'.$id.'_1.jpg';
-		$name = 'uploads/items/'.$id.'_1.jpg';
-		$img_r = imagecreatefromjpeg($src);
-		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-
-		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
-		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
-
-		imagejpeg($dst_r, $name, $jpeg_quality);
-		unlink($src);
-	}
-
-		if ($crop_item == "true") {
-			echo "<script>window.location = 'index.php?task=my_account';</script>";			
-		}
-
-	$itemmsg = "Your item has been updated!";
-?>
-
-<?php
-if ((param_post('submit') == 'Update') && (strlen($err) == 0) && ($filename)) {
-?>
-		<center>
-				<h1>New Item Photo</h1>
-		To finish uploading your new photo for your item, please crop the image you uploaded below:<br><br>
-		<!-- This is the image we're attaching Jcrop to -->
-		<img src="uploads/<?=$item_id?>.jpg" id="cropbox" />
-		
-		<br>
-
-		<!-- This is the form that our event handler fills -->
-		<form action="" method="post" onsubmit="return checkCoords();">
-			<input type="hidden" id="x" name="x" />
-			<input type="hidden" id="y" name="y" />
-			<input type="hidden" id="w" name="w" />
-			<input type="hidden" id="h" name="h" />
-			<input type="hidden" name="item_id" value="<?=$item_id?>" />
-			<button type="submit" name="crop" value="Crop-Item">Crop</button>
-		</form>
-		</center>
-		<br>
-		<br>
-<?php
-}
-?>
 
 <div class="edit_item" id="edit_item" style="width: 800px">
 	<div id="edit_item_drag" style="float: right">
@@ -637,7 +818,7 @@ if ((param_post('submit') == 'Update') && (strlen($err) == 0) && ($filename)) {
 							</tr>
 						</table>
 						<br/>
-						<button type="submit" name="submit" value="Update">Update</button>
+						<button type="submit" name="item" value="Update">Update</button>
 					</td>
 				</tr>	
 			</table>	

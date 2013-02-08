@@ -90,7 +90,7 @@
 			<input type="checkbox" name="remember_me" value="yes" /> Keep me logged in <br/>
 			<div id="login_status"></div>
 			<br/>			
-			<button type="button" id="login_button">Login</button>
+			<button type="button" name="submit" id="login_button">Login</button>
 			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('login').style.display='none';">Cancel</button>
 		</form>
 		<script>
@@ -169,9 +169,13 @@
 </div> -->
 <div id="status" align="right" style="width: 965px; margin-top: -22px; position: absolute;">
 <?php
-	if ($_SESSION['is_logged_in']) {
-		echo "Hello <b>".$_SESSION['username'].",</b> you are logged in! <a href='index.php?task=logout' class='status'>Logout</a>";
+	if ($_SESSION['admin_access']) {
+		$header = "<a href='administrator/' target='_blank' style='padding-right: 20px; text-decoration: none'><font color='red'><b>Admin Login</b></font></a>";
 	}
+	if ($_SESSION['is_logged_in']) {
+		$header .= "Hello <b>".$_SESSION['username'].",</b> you are logged in! <a href='index.php?task=logout' class='status'>Logout</a>";
+	}
+	echo $header;
 	$is_search = array_key_exists('keywords', $_GET) || array_key_exists('zip_code', $_GET) || array_key_exists('category', $_GET) || array_key_exists('amount_min', $_GET) || array_key_exists('amount_max', $_GET);
 ?>
 </div>
