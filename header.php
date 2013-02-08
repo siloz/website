@@ -90,7 +90,7 @@
 			<input type="checkbox" name="remember_me" value="yes" /> Keep me logged in <br/>
 			<div id="login_status"></div>
 			<br/>			
-			<button type="button" name="submit" id="login_button">Login</button>
+			<button type="button" id="login_button">Login</button>
 			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('login').style.display='none';">Cancel</button>
 		</form>
 		<script>
