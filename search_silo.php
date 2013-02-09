@@ -256,3 +256,19 @@ window.onload = loadScript;
 			<div id="silos" style="width: 800;"><?php echo $siloz_html;?></div>
 	</tr>
 </table>
+
+<div style="margin-left: 10px;">
+	<script>
+	function highlight_silo(id) {			
+		document.getElementById("silo_"+id).style.background = "#fff";			
+	}
+	function unhighlight_silo(id) {			
+		document.getElementById("silo_"+id).style.background = "#E0EFF9";			
+	}
+	function highlight_item(id) {			
+		document.getElementById("item_"+id).style.background = "#fff";			
+	}
+	function unhighlight_item(id) {			
+		document.getElementById("item_"+id).style.background = "#E0EFF9";			
+	}
+	</script>

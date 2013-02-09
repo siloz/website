@@ -274,6 +274,9 @@ function populate_item_info(item_id) {
 		if (strlen(trim($title)) == 0) {
 			$err .= "Item title must not be empty. <br/>";
 		}
+		if (strlen(trim($title)) > 40) {
+			$err .= "Your new item title is too long. Please shorten it. <br/>";
+		}
 		if (strlen(trim($price)) == 0) {
 			$err .= "Item price must not be empty. <br/>";
 		}

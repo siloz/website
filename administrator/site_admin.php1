@@ -1,57 +1,25 @@
 <?php
 	ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website"); 
-	require_once("include/autoload.class.php");
 	require_once('utils.php');
 	require_once('config.php');
 	setlocale(LC_MONETARY, 'en_US');
-
-	if(isset($_POST['submit'])) {
-
-        	if (!isset($_SESSION)){ session_start(); }
-
-		$username = mysql_escape_string(trim($_POST['username']));
-		$password = mysql_escape_string(trim($_POST['password']));
-
-        	$res = mysql_query("SELECT user_id, username FROM users WHERE username = '$username' and password='$password' and admin = 'yes'");
-
-       	if (empty($_POST['username']))
-        	{
-			$error = "Please enter a username.<br>";
-        	}
-       	elseif (empty($_POST['password']))
-        	{
-			$error = "Please enter your password.<br>";
-        	}
-
-       	if (!$res || mysql_num_rows($res) <= 0)
-        	{
-			$error = "Login does not match and/or you are not an authorized administrator."; 
-        	}
-		else {
-        		$_SESSION['admin_access']  = true;
-        		$_SESSION['username']  = $username;
-		}
-	}
-
-	if(isset($_POST['logout'])) {
-		unset($_SESSION['admin_access']);
-	}
-
-
+	
+	$conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
+	mysql_select_db(DB_NAME, $conn);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"	xml:lang="en">
 	<head>
 		<title>SiloZ - Site Admin</title>
-		<link rel="stylesheet" type="text/css" href="../css/admin.css" />	
-		<link rel="stylesheet" tyle="text/css" href="../css/jquery-ui-1.8.16.css"/>
-	    <script type="text/javascript" src="../js/jquery-1.6.4.min.js"></script>
-		<script type="text/javascript" src="../js/jquery-ui-1.8.16.min.js"></script> 				
-		<script type="text/javascript" src="../js/popup-window.js"></script>	  
-	    <script type="text/javascript" src="../js/jquery.placeholder.js"></script>		
-	    <script type="text/javascript" src="../js/jquery.jconfirmation.js"></script>				
-		<script type="text/javascript" src="../js/jquery.truncator.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/admin.css" />	
+		<link rel="stylesheet" tyle="text/css" href="css/jquery-ui-1.8.16.css"/>
+	    <script type="text/javascript" src="js/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.8.16.min.js"></script> 				
+		<script type="text/javascript" src="js/popup-window.js"></script>	  
+	    <script type="text/javascript" src="js/jquery.placeholder.js"></script>		
+	    <script type="text/javascript" src="js/jquery.jconfirmation.js"></script>				
+		<script type="text/javascript" src="js/jquery.truncator.js"></script>
 	  	<script type="text/javascript">
 			$(document).ready(function() {
 		      	$('.long_text').truncate({max_length: 1000});			    
@@ -64,55 +32,14 @@
 		?>
 		
 	</head>
-
-<?php
-if (!isset($_SESSION['admin_access'])) {
-?>
-<div align="center" style="margin-top: 100px;" class="login" id="login">
-	<div>
-		<form name="login_form" id="login_form" method="POST">
-			<input type="hidden" name="purpose" value=""/>
-			<h2>Admin login</h2>
-			<table>
-				<tr>
-					<td>
-						<input type="text" name="username" id="username" onfocus="select();" placeholder="Username" value="<?=$username?>"/>
-					</td>
-					<td>
-						<input type="password" name="password" id="password" onfocus="select();"  placeholder="Password"/>
-					</td>
-				</tr>
-			</table>
-			<br/>			
-			<button type="submit" name="submit">Login</button>
-			<br><br>
-			<font color="red"><b><?=$error?></b></font>
-		</form>
-<?php
-}
-else {
-?>
-
 	<body style="background: #fff">
-
-	<?php 
-	$silopay = mysql_query("SELECT * FROM silos WHERE status = 'ended' and paid = 'no'");
-		if (mysql_num_rows($silopay) > 0) {
-	?>
-	<div align="center" style="margin-top: 25px">
-		<a href="index.php?view=paysilo" style="text-decoration: none; font-size: 16px; color: red;">**ALERT: A silo needs to be payed out**</a>
-	</div>
-	<?php } ?>
-
 		<div style="margin: 50px;">
 			<div id="header">
-				<button type="button" style="<?php echo ($view == 'stats' ? 'border-color: #f60' : ''); ?>" onclick="window.location='index.php?view=stats'">Site Statistics</button>
-				<button type="button" style="<?php echo ($view == 'members' ? 'border-color: #f60' : ''); ?>" onclick="window.location='index.php?view=members'">Members</button>
-				<button type="button" style="<?php echo ($view == 'items' ? 'border-color: #f60' : ''); ?>" onclick="window.location='index.php?view=items'">Items</button>
-				<button type="button" style="<?php echo ($view == 'silos' ? 'border-color: #f60' : ''); ?>" onclick="window.location='index.php?view=silos'">Silos</button>
-				<button type="button" style="<?php echo ($view == 'radar' ? 'border-color: #f60' : ''); ?>" onclick="window.location='index.php?view=radar'">Radar Notifications</button>
-			<div style="float: right; padding-right: 50px;"><form method="post"><input type="submit" name="logout" value="Logout"></form></div>
-			<div style="float: right; padding-right: 100px;">Logged in as <b><?=$_SESSION['username']?></b></div>
+				<button type="button" style="<?php echo ($view == 'stats' ? 'border-color: #f60' : ''); ?>" onclick="window.location='site_admin.php?view=stats'">Site Statistics</button>
+				<button type="button" style="<?php echo ($view == 'members' ? 'border-color: #f60' : ''); ?>" onclick="window.location='site_admin.php?view=members'">Members</button>
+				<button type="button" style="<?php echo ($view == 'items' ? 'border-color: #f60' : ''); ?>" onclick="window.location='site_admin.php?view=items'">Items</button>
+				<button type="button" style="<?php echo ($view == 'silos' ? 'border-color: #f60' : ''); ?>" onclick="window.location='site_admin.php?view=silos'">Silos</button>
+				<button type="button" style="<?php echo ($view == 'radar' ? 'border-color: #f60' : ''); ?>" onclick="window.location='site_admin.php?view=radar'">Radar Notifications</button>
 			</div>
 			<div id="main">
 			<?php
@@ -194,7 +121,7 @@ else {
 						$sql4 = "DELETE FROM silo_membership WHERE user_id IN ($in_clause)";
 						mysql_query($sql4);
 					}
-					echo "<br/><form name='members' id='members' action='index.php?view=members' method=post>";
+					echo "<br/><form name='members' id='members' action='site_admin.php?view=members' method=post>";
 					echo "<input type='hidden' name='task' value='delete'>";
 					$users = mysql_query("SELECT * FROM users ORDER BY user_id");
 					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='7%'>Account #</th><th width='10%'>Username</th><th width='30%'>Address</th><th width='8%'>Since</th><th width='10%' style='text-align:right'>Sold</th><th width='10%' style='text-align:right'>Fees</th><th width='7%' style='text-align:center'>Listings</th><th width='5%' style='text-align:right'>Success</th><th width='5%' style='text-align:center'>SiloZ</th><th width='5%'>Flags</th></tr>";
@@ -223,15 +150,7 @@ else {
 						$sql4 = "DELETE FROM silo_membership WHERE silo_id IN ($in_clause)";
 						mysql_query($sql4);
 					}
-					if (param_post('task') == 'markPaid') {
-						$paid_status = param_post('paid');
-						$silo_id = param_post('silo_id');
-						$paid = "UPDATE silos SET paid = '$paid_status' WHERE silo_id = '$silo_id'";
-						mysql_query($paid);
-						header('Location: '.$_SERVER['REQUEST_URI']);
-						exit;
-					}
-					echo "<br/><form name='silos' id='silos' action='index.php?view=silos' method=post>";
+					echo "<br/><form name='silos' id='silos' action='site_admin.php?view=silos' method=post>";
 					echo "<input type='hidden' name='task' value='delete'>";					
 					echo "<h2>Active silos</h2>";
 					$today = date("Y-m-d")."";
@@ -254,7 +173,7 @@ else {
 					echo "<h2>Ended silos</h2>";
 					$today = date("Y-m-d")."";
 					$silos = mysql_query("SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE end_date < '$today' ORDER BY silo_id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='30%'>Silo Name</th><th width='19%'>Category</th><th width='8%'>Type</th><th width='8%'>Admin</th><th width='10%' style='text-align:right'>Goal</th><th width='5%' style='text-align:center'>%</th><th width='5%'>Listings</th><th width='7%' style='text-align:center'>Paid?</th></tr>";
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='30%'>Silo Name</th><th width='19%'>Category</th><th width='8%'>Type</th><th width='8%'>Admin</th><th width='10%' style='text-align:right'>Goal</th><th width='5%' style='text-align:center'>%</th><th width='5%'>Listings</th><th width='7%' style='text-align:center'>Ends</th></tr>";
 					while ($silo = mysql_fetch_array($silos)) {
 						$silo_id = $silo['silo_id'];						
 						$admin = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$silo['admin_id']));
@@ -263,31 +182,15 @@ else {
 						$pct = round(floatval($s2[0])*100.0/floatval($silo['goal']),1);
 						$listings = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE deleted_date = 0 AND silo_id=$silo_id"));
 						$ends_in = floor((strtotime($silo['end_date']) - strtotime($today))/(60*60*24));
-						$paid = $silo['paid'];
-						$opt .= '<option value="' . $paid . '">' . $paid . '</option>';
-						if ($paid == "No") { $other_opt .= '<option value="Yes">Yes</option>'; } else { $other_opt .= '<option value="No">No</option>'; }
-						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$silo['subtype']." > ".$silo['subsubtype']."</td><td>".$silo['type']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['username']."</a></td><td align=right>".money_format('%(#10n', floatval($silo['goal']))."</td><td align=center>".$pct."</td><td align=center>".$listings[0]."</td><td align=center>
-							<form action='' method='POST'>
-								<input type='hidden' name='task' value='markPaid'>
-								<input type='hidden' name='silo_id' value='$silo_id'>
-    								<select name='paid' onchange='this.form.submit()'>
-									".$opt."
-									".$other_opt."
-    								</select>
-							</form></td></tr>";
+						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$silo['subtype']." > ".$silo['subsubtype']."</td><td>".$silo['type']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['username']."</a></td><td align=right>".money_format('%(#10n', floatval($silo['goal']))."</td><td align=center>".$pct."</td><td align=center>".$listings[0]."</td><td align=center>$ends_in days</td></tr>";
 					}
 					$html .= "</table>";					
 					echo $html;
 					echo "<br/><button type='submit' value='Delete' class='round'>Delete</button>";
 					echo "</form>";	
-				}elseif($view === "radar"){
-					include("view_radar.php");
 				}
 			?>
 			</div>
 		</div>
 	</body>
-<?php
-}
-?>
 </html>

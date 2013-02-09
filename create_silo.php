@@ -39,6 +39,9 @@ else {
 		if (strlen(trim($name)) == 0) {
 			$err .= 'Silo name must not be empty.<br/>';		
 		}
+		if (strlen(trim($name)) > 50) {
+			$err .= 'Your silo name is too long. Please shorten it.<br/>';		
+		}
 		if (strlen($shortname) == 0) {
 			$err .= "Silo's short name must not be empty.<br/>";
 		}
