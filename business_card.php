@@ -22,72 +22,74 @@
 	$purpose = substr($silo->purpose, 0, 90)."..";
 	$pdf = new FPDF('P', 'mm', 'Letter');
 	$pdf->AddPage();
-	$pdf->Image('images/businesscardtemplate.png', 0, 0, -150);
+	$pdf->Image('images/new_businesscardtemplate.png', 0, 0, -150);
 	$pdf->SetFont('Helvetica','',10);	
 	$pdf->SetTextColor(47, 141, 203);
-	//URL
-	$pdf->SetXY(18, 50);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-	$pdf->SetXY(107, 50);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-
-	$pdf->SetXY(18, 108.5);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-	$pdf->SetXY(107, 108.5);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-
-	$pdf->SetXY(18, 167);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-	$pdf->SetXY(107, 167);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-
-	$pdf->SetXY(18, 225.5);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-	$pdf->SetXY(107, 225.5);
-	$pdf->Cell(90,6,$url,0,1,'C');		
-	
-	$pdf->SetTextColor(0, 0, 0);
-	//Start date
-	$pdf->SetXY(18, 58.5);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-	$pdf->SetXY(107, 58.5);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-
-	$pdf->SetXY(18, 117);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-	$pdf->SetXY(107, 117);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-
-	$pdf->SetXY(18, 175.5);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-	$pdf->SetXY(107, 175.5);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-
-	$pdf->SetXY(18, 234);
-	$pdf->Cell(90,6,$d,0,1,'C');		
-	$pdf->SetXY(107, 234);
-	$pdf->Cell(90,6,$d,0,1,'C');		
 
 	//Purpose
-	$pdf->SetXY(20, 68);
-	$pdf->MultiCell(85,4,$purpose,0,'J');		
-	$pdf->SetXY(109, 68);
-	$pdf->MultiCell(85,4,$purpose,0,'J');		
-
-	$pdf->SetXY(20, 126.5);
-	$pdf->MultiCell(85,4,$purpose,0,'J');		
-	$pdf->SetXY(109, 126.5);
+	$pdf->SetXY(41.5, 40.5);
+	$pdf->MultiCell(85,4,$purpose,0,'J');
+	$pdf->SetXY(130.5, 40.5);
 	$pdf->MultiCell(85,4,$purpose,0,'J');		
 
-	$pdf->SetXY(20, 185);
+	$pdf->SetXY(41.5, 91.25);
 	$pdf->MultiCell(85,4,$purpose,0,'J');		
-	$pdf->SetXY(109, 185);
+	$pdf->SetXY(130.5, 91.25);
 	$pdf->MultiCell(85,4,$purpose,0,'J');		
 
-	$pdf->SetXY(20, 243.5);
+	$pdf->SetXY(41.5, 142);
 	$pdf->MultiCell(85,4,$purpose,0,'J');		
-	$pdf->SetXY(109, 243.5);
+	$pdf->SetXY(130.5, 142);
 	$pdf->MultiCell(85,4,$purpose,0,'J');		
+
+	$pdf->SetXY(41.5, 192.75);
+	$pdf->MultiCell(85,4,$purpose,0,'J');		
+	$pdf->SetXY(130.5, 192.75);
+	$pdf->MultiCell(85,4,$purpose,0,'J');
+
+	//URL
+	$pdf->SetXY(13, 47.75);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+	$pdf->SetXY(102, 47.75);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+
+	$pdf->SetXY(13, 98.65);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+	$pdf->SetXY(102, 98.65);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+
+	$pdf->SetXY(13, 149.5);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+	$pdf->SetXY(102, 149.5);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+
+	$pdf->SetXY(13, 200.25);
+	$pdf->Cell(90,6,$url,0,1,'C');		
+	$pdf->SetXY(102, 200.25);
+	$pdf->Cell(90,6,$url,0,1,'C');	
+	
+	$pdf->SetTextColor(0, 0, 0);
+
+	//Start date
+	$pdf->SetXY(14.5, 56.25);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+	$pdf->SetXY(104.5, 56.25);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+
+	$pdf->SetXY(14.5, 107.25);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+	$pdf->SetXY(104, 107.25);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+
+	$pdf->SetXY(14.5, 158);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+	$pdf->SetXY(104, 158);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+
+	$pdf->SetXY(14.5, 208.75);
+	$pdf->Cell(90,6,$d,0,1,'C');		
+	$pdf->SetXY(104, 208.75);
+	$pdf->Cell(90,6,$d,0,1,'C');
 	
 	//$pdf->Text(48,63,$d);		
 	//$pdf->Text(20,71,$purpose);				
