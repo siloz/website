@@ -6,22 +6,22 @@
 	<br/>
 	<a href="http://www.youtube.com/watch?v=4_M7hFK2ScE" target="_blank" class="bold_text" style="text-decoration:none">Watch a video on siloz</a>
 </div>
-<p style="margin-left: 10px; color: #2F8ECB; font-size: 18px; font-weight: bold;">siloz allow you to organize an 'online rummage sale' to raise money for anything, public or private.</p>
+<p style="margin-left: 10px; color: #2F8ECB; font-size: 18px; font-weight: bold;">siloz is a marketplace for items donated to raise money for causes (silos) in your community</p>
 <table>
 	<tr>
 		<td width="10px"></td>
 		<td valign="top">
-    <div id="sliderFrame">
-        <div id="slider">
-            <img src="images/splash/civic.jpg" alt="Civic" />
-            <img src="images/splash/education.jpg" alt="Education" />
-            <img src="images/splash/neighborhood.jpg" alt="Neighborhood" />
-            <img src="images/splash/non_profits.jpg" alt="Non-profit Organizations" />
-            <img src="images/splash/public_university.jpg" alt="Public University" />
-            <img src="images/splash/religious.jpg" alt="Religious" />
-            <img src="images/splash/youth_sports.jpg" alt="Local Youth Sports" />
-        </div>
-    </div>
+			<div id="sliderFrame">
+				<div id="slider">
+					<img src="images/splash/civic.jpg" alt="Civic" />
+					<img src="images/splash/education.jpg" alt="Education" />
+					<img src="images/splash/neighborhood.jpg" alt="Neighborhood" />
+					<img src="images/splash/non_profits.jpg" alt="Non-profit Organizations" />
+					<img src="images/splash/public_university.jpg" alt="Public University" />
+					<img src="images/splash/religious.jpg" alt="Religious" />
+					<img src="images/splash/youth_sports.jpg" alt="Local Youth Sports" />
+				</div>
+			</div>
 		</td>
 		<td width="25px"></td>
 		<td valign="top">

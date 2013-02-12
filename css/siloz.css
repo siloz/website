@@ -657,4 +657,8 @@ textarea {
 .orange {
 	color: #FF642F;
 }
+
+#slider {
+	border-radius: 3px;
+}
 	
