@@ -140,6 +140,7 @@ else {
 	<head>
 		<title>SiloZ - Commerce That Counts</title>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8"> 
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/siloz.css" />	
 		<link rel="stylesheet" type="text/css" href="css/siloz_header.css" />	
 		<link rel="stylesheet" type="text/css" href="css/siloz_footer.css" />	
