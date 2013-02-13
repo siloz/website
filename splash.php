@@ -37,7 +37,8 @@
 	
 	<!-- start silo button -->
 	<div class="row">
-		<div class="startsilo" onClick="window.location = 'index.php?search=item'"></div>
+		<div class="action startsilo" onClick="window.location = 'index.php?search=item'"></div>
+		<div class="action donate_vehicle"></div>
 	</div>
 </div>
 

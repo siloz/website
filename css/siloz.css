@@ -501,7 +501,7 @@ textarea {
     color: #000000;
 }
 
-.donate, .shop, .startsilo {
+.donate, .shop, .startsilo, .donate_vehicle {
 	background: url(../images/sprites.png) no-repeat;
 }
 
@@ -526,12 +526,22 @@ textarea {
 }
 
 .startsilo {
-	background-position: -26px -375px;
+	background-position: -25px -375px;
 	width: 615px;
 	height: 83px;
 }
 
 .startsilo:hover {
+	opacity: .8;
+}
+
+.donate_vehicle {
+	background-position: -127px -292px;
+	width: 50px;
+	height: 85px;
+}
+
+.donate_vehicle:hover {
 	opacity: .8;
 }
 
