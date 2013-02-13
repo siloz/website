@@ -536,9 +536,10 @@ textarea {
 }
 
 .donate_vehicle {
-	background-position: -127px -292px;
-	width: 50px;
-	height: 85px;
+	background-position: -63px -68px;
+width: 164px;
+height: 85px;
+margin-left: 5px;
 }
 
 .donate_vehicle:hover {
@@ -673,7 +674,7 @@ textarea {
 
 /* Front Page call to actions */
 #action_call {
-	width: 700px;
+	width: 800px;
 	margin: 0 auto;
 	margin-top: 30px;
 }
