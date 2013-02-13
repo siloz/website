@@ -658,6 +658,13 @@ textarea {
 	color: #FF642F;
 }
 
+/* Text formatting */
+.tagline {
+	text-align: center;
+}
+
+/* Sliders */
+
 #slider {
 	border-radius: 5px;
 }

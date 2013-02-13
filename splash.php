@@ -5,7 +5,7 @@
 </div>
 
 <div class="row">
-	<p style="margin-left: 10px; color: #2F8ECB; font-size: 18px; font-weight: bold;">siloz is a marketplace for items donated to raise money for causes (silos) in your community</p>
+	<h1 class="tagline">siloz is a marketplace for items donated to raise money for causes (silos) in your community</h1>
 </div>
 
 <div class="row">
