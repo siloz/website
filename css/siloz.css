@@ -658,6 +658,10 @@ textarea {
 	color: #FF642F;
 }
 
+#slider {
+	border-radius: 5px;
+}
+
 #slider .mcSlc {
 	border-radius: 5px;
 }
