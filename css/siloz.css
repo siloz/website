@@ -501,7 +501,7 @@ textarea {
     color: #000000;
 }
 
-.donate, .shop {
+.donate, .shop, .startsilo {
 	background: url(../images/sprites.png) no-repeat;
 }
 
@@ -526,9 +526,7 @@ textarea {
 }
 
 .startsilo {
-	position: relative;
-	left: 2px;
-	background: url(../images/start_silo.jpg) no-repeat;
+	background-position: -99px -185px;
 	width: 330px;
 	height: 83px;
 }
