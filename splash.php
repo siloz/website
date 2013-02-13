@@ -2,6 +2,11 @@
 	<div id="logoMain">
 		<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
 	</div>
+	<div id="logged_out_supernav">
+		<span>Your location: Oakland, CA</span>
+		<span>login/create account</span>
+		<span>start a silo</span>
+	<div>
 </div>
 
 <div class="row">
@@ -26,7 +31,7 @@
 	<!-- shop button -->
 	<div class="row">
 		<div class="action shop" onClick="window.location = 'index.php?search=item'"></div>
-		<p class="action_text">pay online and pick up items locally, with PayKey</p>
+		<p class="action_text">pay online and pick up items locally, with <b>PayKey</b></p>
 	</div>
 
 	<!-- donate button -->
