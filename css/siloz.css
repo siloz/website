@@ -663,6 +663,14 @@ textarea {
 	text-align: center;
 }
 
+/* Front Page call to actions */
+#action_call {
+	width: 700px;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+
 /* Sliders */
 #slider_frame {
 	margin: 0 auto;

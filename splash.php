@@ -22,7 +22,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div id="action_call" class="row">
 	<!-- donate button -->
 	<a href="index.php?search=silo"><div class="donate"></div></a>
 	<!-- shop button -->
