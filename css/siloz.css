@@ -664,6 +664,9 @@ textarea {
 }
 
 /* Sliders */
+#slider_frame {
+	margin: 0 auto;
+}
 
 #slider {
 	border-radius: 5px;

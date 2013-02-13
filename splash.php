@@ -5,11 +5,11 @@
 </div>
 
 <div class="row">
-	<h1 class="tagline">siloz is a marketplace for items donated to raise money for causes (silos) in your community</h1>
+	<h2 class="tagline">siloz is a marketplace for items donated to raise money for causes (silos) in your community</h2>
 </div>
 
 <div class="row">
-	<div id="sliderFrame">
+	<div id="slider_frame">
 		<div id="slider">
 			<img src="images/splash/civic.jpg" alt="Civic" />
 			<img src="images/splash/education.jpg" alt="Education" />
