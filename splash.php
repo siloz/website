@@ -25,23 +25,17 @@
 <div id="action_call" class="row">
 	<!-- shop button -->
 	<div class="row">
-		<a href="index.php?search=item">
-			<div class="shop"></div>
-		</a>
+		<div class="action shop" onClick="window.location = 'index.php?search=item'"></div>
 	</div>
 
 	<!-- donate button -->
 	<div class="row">
-		<a href="index.php?search=silo">
-			<div class="donate"></div>
-		</a>
+		<div class="action donate" onClick="window.location = 'index.php?search=silo'"></div>
 	</div>
 	
 	<!-- start silo button -->
 	<div class="row">
-		<a href="index.php?search=item">
-			<div class="startsilo"></div>
-		</a>
+		<div class="startsilo" onClick="window.location = 'index.php?search=item'"></div>
 	</div>
 </div>
 

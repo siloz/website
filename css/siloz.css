@@ -670,6 +670,9 @@ textarea {
 	margin-top: 30px;
 }
 
+.action {
+	cursor: pointer;
+}
 
 /* Sliders */
 #slider_frame {
