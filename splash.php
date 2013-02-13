@@ -23,12 +23,26 @@
 </div>
 
 <div id="action_call" class="row">
-	<!-- donate button -->
-	<a href="index.php?search=silo"><div class="donate"></div></a>
 	<!-- shop button -->
-	<a href="index.php?search=item"><div class="shop"></div></a>
+	<div class="row">
+		<a href="index.php?search=item">
+			<div class="shop"></div>
+		</a>
+	</div>
+
+	<!-- donate button -->
+	<div class="row">
+		<a href="index.php?search=silo">
+			<div class="donate"></div>
+		</a>
+	</div>
+	
 	<!-- start silo button -->
-	<a href="index.php?search=item"><div class="startsilo"></div></a>	
+	<div class="row">
+		<a href="index.php?search=item">
+			<div class="startsilo"></div>
+		</a>
+	</div>
 </div>
 
 <div>
