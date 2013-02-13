@@ -26,11 +26,13 @@
 	<!-- shop button -->
 	<div class="row">
 		<div class="action shop" onClick="window.location = 'index.php?search=item'"></div>
+		<p class="action_text">pay online and pick up items locally, with PayKey</p>
 	</div>
 
 	<!-- donate button -->
 	<div class="row">
 		<div class="action donate" onClick="window.location = 'index.php?search=silo'"></div>
+		<p class="action_text">many donated items are <b>tax deductible</b></p>
 	</div>
 	
 	<!-- start silo button -->

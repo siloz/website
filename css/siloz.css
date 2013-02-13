@@ -671,7 +671,15 @@ textarea {
 }
 
 .action {
+	float: left;
 	cursor: pointer;
+}
+
+.action_text {
+	float: left;
+	margin-top: 30px;
+	margin-left: 15px;
+	color: gray;
 }
 
 /* Sliders */
