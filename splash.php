@@ -79,7 +79,7 @@
 	while ($s = mysql_fetch_array($tmp)) {
 		$silo = new Silo($s['id']);	
 		
-		$first = ($num % 5 == 0)
+		$first = ($num % 5) == 0
 		$siloz_html .= $silo->getSiloPlate($first);
 		
 		$num++
