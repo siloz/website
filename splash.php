@@ -4,7 +4,9 @@
 	</div>
 	<div id="logged_out_supernav">
 		<span>Your location: Oakland, CA</span>
+		<span class="blue separator">|</span>
 		<span class="blue">login/create account</span>
+		<span class="blue separator">|</span>
 		<span class="blue">start a silo</span>
 	</div>
 </div>
