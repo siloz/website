@@ -681,6 +681,8 @@ margin-left: 5px;
 
 #logged_out_supernav span.separator {
 	font-size: 1.2em;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 /* Text formatting */
