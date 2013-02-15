@@ -50,7 +50,7 @@
 	</div>
 </div>
 
-<div>
+<div class="row">
 	<div style="margin-left: 10px;">
 		<script>
 		    // Can be CSSED
@@ -137,37 +137,9 @@
 	echo $items_html;
 	?>
 	</div>
-	</div>
-
-	<div id="quick_start_bg">
-
-	<table width="100%" class="quick_start">
-		<tr>
-		<td valign="top" width="47%">
-			<h2>Who can start a silo?</h2>
-			<p>siloz is for community - and never private - fundraisers.  To administrate a silo, you must officially represent any of the following: a school (faculty or staff, or a student funding a school cause), a religious organization, a youth sports team or league, a civic or neighborhood organization, or a non-profit that both a) has a physical office where the silo is run, and b) that has some outreach in that same area.  You cannot spend any money raised on personal expenses, and must disclose a public address and telephone number.  Additionally, members will be asked to certify (vouch for) your standing.  We have additional basic security measures.</p>
-			<h2>How Does it Work?</h2>
-			<p>Administrators are equipped with on-line (Facebook Connect, email address book), and off-line (ability to print sign-up sheets and business cards, which can then be printed on perforated, card-stock paper, and torn, to make business cards) to get your fundraiser started.  It will last for 1 to 3 weeks.  Your supporters, and the general public, can donate items that sell on the site.  They may also shop for them.  At the end of the silo, we pay you either through PayPal, or through an electronic check.  After some time (up to 60 days), we ask silo administrators to upload photos showing how raised money was spent, at some point (up to 60 days).</p>
-		</td>
-		<td width="6%"></td>
-		<td valign="top" width="47%">
-			<h2>How are items bought and sold?</h2>
-			<p>A silo's supporters donate items.  The public shops for those items, and makes payment online.  Nothing is shipped on the site.  Items are picked up locally.  You are not permitted to shop for items in a region too distant from your home address.  At the end of the silo, the silo administrator is paid (see above).</p>
-			<h2>Are Donated Items Tax-Deductible?</h2>
-			<p>We can verify the 501(c)3 status of any silo.  Donations to non-profits, churches and schools are always tax-deductible.  Neighborhood and civic organizations and youth sports programs may be able to offer tax-deductions.  Tax-deductible silos are labeled.</p>
-			<h2>Is siloz Safe?</h2>
-			<p>We provide 'vouching' score information, Facebook Connect information, contact information, and complete transparency of a silo, in the interest of keeping reducing fraud.  When making purchases, try to meet in public with your item.  Never agree to ship an item.  siloz is not liable for crimes incidental to use, but will cooperate with law enforcement, where possible, when laws have been broken.  For more information, see our Terms of Use and FAQ.</p>
-		</td>
-		</tr>
-	</table>
-
-	<div id="bottom_menu">
-		<a href="index.php?task=contact_us" class="normal_text">Contact Us</a> | <a href="index.php?task=about_us" class="normal_text">About Us</a> | <a href="index.php?task=tos" class="normal_text">Terms of Use</a> | <a href="index.php?task=faq" class="normal_text">FAQ</a> | <a href="index.php?task=getting_started" class="normal_text">Getting Started</a>
-	</div>
-	</div>
-	<br>
-
-	<script>
+</div>
+	
+<script>
 	function changeLocation_silo()
 	{
 	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
@@ -185,5 +157,31 @@
 	  enterLocation_item.style.display = 'inline-block';
 
 	}
-	</script>
+</script>
+<div class="row">
+	<div id="quick_start_bg">
+		<table width="100%" class="quick_start">
+			<tr>
+			<td valign="top" width="47%">
+				<h2>Who can start a silo?</h2>
+				<p>siloz is for community - and never private - fundraisers.  To administrate a silo, you must officially represent any of the following: a school (faculty or staff, or a student funding a school cause), a religious organization, a youth sports team or league, a civic or neighborhood organization, or a non-profit that both a) has a physical office where the silo is run, and b) that has some outreach in that same area.  You cannot spend any money raised on personal expenses, and must disclose a public address and telephone number.  Additionally, members will be asked to certify (vouch for) your standing.  We have additional basic security measures.</p>
+				<h2>How Does it Work?</h2>
+				<p>Administrators are equipped with on-line (Facebook Connect, email address book), and off-line (ability to print sign-up sheets and business cards, which can then be printed on perforated, card-stock paper, and torn, to make business cards) to get your fundraiser started.  It will last for 1 to 3 weeks.  Your supporters, and the general public, can donate items that sell on the site.  They may also shop for them.  At the end of the silo, we pay you either through PayPal, or through an electronic check.  After some time (up to 60 days), we ask silo administrators to upload photos showing how raised money was spent, at some point (up to 60 days).</p>
+			</td>
+			<td width="6%"></td>
+			<td valign="top" width="47%">
+				<h2>How are items bought and sold?</h2>
+				<p>A silo's supporters donate items.  The public shops for those items, and makes payment online.  Nothing is shipped on the site.  Items are picked up locally.  You are not permitted to shop for items in a region too distant from your home address.  At the end of the silo, the silo administrator is paid (see above).</p>
+				<h2>Are Donated Items Tax-Deductible?</h2>
+				<p>We can verify the 501(c)3 status of any silo.  Donations to non-profits, churches and schools are always tax-deductible.  Neighborhood and civic organizations and youth sports programs may be able to offer tax-deductions.  Tax-deductible silos are labeled.</p>
+				<h2>Is siloz Safe?</h2>
+				<p>We provide 'vouching' score information, Facebook Connect information, contact information, and complete transparency of a silo, in the interest of keeping reducing fraud.  When making purchases, try to meet in public with your item.  Never agree to ship an item.  siloz is not liable for crimes incidental to use, but will cooperate with law enforcement, where possible, when laws have been broken.  For more information, see our Terms of Use and FAQ.</p>
+			</td>
+			</tr>
+		</table>
+
+		<div id="bottom_menu">
+			<a href="index.php?task=contact_us" class="normal_text">Contact Us</a> | <a href="index.php?task=about_us" class="normal_text">About Us</a> | <a href="index.php?task=tos" class="normal_text">Terms of Use</a> | <a href="index.php?task=faq" class="normal_text">FAQ</a> | <a href="index.php?task=getting_started" class="normal_text">Getting Started</a>
+		</div>
+	</div>
 </div>
