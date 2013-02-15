@@ -140,6 +140,7 @@
 		echo $items_html;
 	?>
 </div>
+</div>
 
 <div class="row">
 	<div id="quick_start_bg">
