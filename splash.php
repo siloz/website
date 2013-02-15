@@ -53,18 +53,19 @@
 <div>
 	<div style="margin-left: 10px;">
 		<script>
-		function highlight_silo(id) {			
-			document.getElementById("silo_"+id).style.background = "#fff";			
-		}
-		function unhighlight_silo(id) {			
-			document.getElementById("silo_"+id).style.background = "#E0EFF9";			
-		}
-		function highlight_item(id) {			
-			document.getElementById("item_"+id).style.background = "#fff";			
-		}
-		function unhighlight_item(id) {			
-			document.getElementById("item_"+id).style.background = "#E0EFF9";			
-		}
+		    // Can be CSSED
+			function highlight_silo(id) {			
+				document.getElementById("silo_"+id).style.background = "#fff";			
+			}
+			function unhighlight_silo(id) {			
+				document.getElementById("silo_"+id).style.background = "#E0EFF9";			
+			}
+			function highlight_item(id) {			
+				document.getElementById("item_"+id).style.background = "#fff";			
+			}
+			function unhighlight_item(id) {			
+				document.getElementById("item_"+id).style.background = "#E0EFF9";			
+			}
 		</script>
 		
 	<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
@@ -72,14 +73,14 @@
 	$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
 	$tmp = mysql_query($sql);
 
-	$siloz_html = "<table cellpadding='5px' style='border-spacing: 7px'><tr>";
-	while ($s = mysql_fetch_array($tmp)) {	
+	$siloz_html = "<div class='span12'>";
+	while ($s = mysql_fetch_array($tmp)) {
 		$silo = new Silo($s['id']);
 		$siloz_html .= "<td>";				
 		$siloz_html .= $silo->getPlate();
 		$siloz_html .= "</td>";
 	}
-	$siloz_html .= "</tr></table>";
+	$siloz_html .= "</div>";
 	echo $siloz_html;
 	?>
 
