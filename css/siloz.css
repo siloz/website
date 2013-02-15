@@ -724,6 +724,14 @@ margin-left: 5px;
 	color: gray;
 }
 
+#popular_siloz {
+	color: #2F8ECB; 
+	font-size: 18px; 
+	font-weight: bold;
+	
+	margin-bottom: 0px;
+}
+
 /* Sliders */
 #slider_frame {
 	margin: 0 auto;
