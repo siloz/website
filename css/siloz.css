@@ -724,7 +724,7 @@ margin-left: 5px;
 	color: gray;
 }
 
-#popular_silos {
+.silos_header {
 	color: #2F8ECB; 
 	font-size: 18px; 
 	font-weight: bold;

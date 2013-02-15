@@ -68,7 +68,8 @@
 			}
 		</script>
 		
-	<p id="popular_silos">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+	<p class="silos_header">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+	
 	<?php
 	$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
 	$tmp = mysql_query($sql);
@@ -101,16 +102,36 @@
 	echo $siloz_html;
 	?>
 
-	<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Items for Sale near <span id="enterLocation_item" style="display: none;"></span> <span id="userLocation_item" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_item()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
+	<p class="silos_header">Items for Sale near <span id="enterLocation_item" style="display: none;"></span> <span id="userLocation_item" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_item()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
+	
 	<?php
 	$sql = "SELECT *, $sqlDist AS distance FROM items WHERE deleted_date = 0 ORDER BY distance LIMIT 6";
 	$tmp = mysql_query($sql);
 	$items_html = "<div class='row'><div class='span12'>";
+	
+	$num_items = 0;
+	
 	while ($item = mysql_fetch_array($tmp)) {
 		$it = new Item($item['id']);
+		
+		if ($num_items % 6 == 0) {
+			$items_html .= "<div class='row item_row'>";
+		}
+		
 		$items[] = $it;	
-		$items_html .= $it->getPlate();				
-	}	
+		$items_html .= $it->getItemPlate($num_items % 6 == 0);		
+
+		if ($num_items % 6 == 5) {
+			$items_html .= "</div>";
+		}		
+		
+		$num_items++;
+	}
+	
+	if ($num_items % 6 < 5) {
+		$items_html .= "</div";
+	}
+	
 	$items_html .= "</div></div>";
 	
 	echo $items_html;
