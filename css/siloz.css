@@ -530,7 +530,7 @@ textarea {
     color: #000000;
 }
 
-.donate, .shop {
+.donate, .shop, .startsilo, .donate_vehicle {
 	background: url(../images/sprites.png) no-repeat;
 }
 
@@ -555,14 +555,23 @@ textarea {
 }
 
 .startsilo {
-	position: relative;
-	left: 2px;
-	background: url(../images/start_silo.jpg) no-repeat;
-	width: 330px;
+	background-position: -25px -375px;
+	width: 615px;
 	height: 83px;
 }
 
 .startsilo:hover {
+	opacity: .8;
+}
+
+.donate_vehicle {
+	background-position: -63px -68px;
+width: 164px;
+height: 85px;
+margin-left: 5px;
+}
+
+.donate_vehicle:hover {
 	opacity: .8;
 }
 
@@ -703,7 +712,65 @@ textarea {
 	color: #84bfe5;
 }
 
+.gray {
+	color: gray;
+}
+
 .orange {
 	color: #FF642F;
 }
-	
+
+/* Header */
+#logo_container {
+	float: left;
+}
+
+#logged_out_supernav {
+	float: right;
+	margin-top: 10px;
+	margin-right: 10px;
+	font-size: 1.2em;
+}
+
+#logged_out_supernav span.separator {
+	font-size: 1.2em;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/* Text formatting */
+.tagline {
+	text-align: center;
+}
+
+/* Front Page call to actions */
+#action_call {
+	width: 800px;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+.action {
+	float: left;
+	cursor: pointer;
+}
+
+.action_text {
+	float: left;
+	margin-top: 30px;
+	margin-left: 15px;
+	color: gray;
+}
+
+/* Sliders */
+#slider_frame {
+	margin: 0 auto;
+}
+
+#slider {
+	border-radius: 5px;
+}
+
+#slider .mcSlc {
+	border-radius: 5px;
+}	
