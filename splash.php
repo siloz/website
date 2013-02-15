@@ -145,7 +145,7 @@
 </div>
 </div>
 
-<div class="row">
+<div id="footer_container" class="row">
 	<div id="quick_start_bg">
 		<table width="100%" class="quick_start">
 			<tr>
