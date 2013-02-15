@@ -676,6 +676,11 @@ margin-left: 5px;
 	float: right;
 	margin-top: 10px;
 	margin-right: 10px;
+	font-size: 1.2em;
+}
+
+#logged_out_supernav span.separator {
+	font-size: 1.2em;
 }
 
 /* Text formatting */
