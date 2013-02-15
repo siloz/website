@@ -1,5 +1,5 @@
 <div class="row">
-	<div id="logoMain">
+	<div id="logo_container">
 		<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
 	</div>
 	<div id="logged_out_supernav">

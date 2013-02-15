@@ -667,6 +667,17 @@ margin-left: 5px;
 	color: #FF642F;
 }
 
+/* Header */
+#logo_container {
+	float: left;
+}
+
+#logged_out_supernav {
+	float: right;
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
 /* Text formatting */
 .tagline {
 	text-align: center;
