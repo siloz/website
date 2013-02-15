@@ -74,9 +74,14 @@
 	$tmp = mysql_query($sql);
 
 	$siloz_html = "<div class='row'><div class='span12'>";
+	
+	$num_siloz = 0
+	
 	while ($s = mysql_fetch_array($tmp)) {
 		$silo = new Silo($s['id']);		
-		$siloz_html .= $silo->getPlate();
+		$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
+		
+		$num_siloz++;
 	}
 	$siloz_html .= "</div></div>";
 	echo $siloz_html;
