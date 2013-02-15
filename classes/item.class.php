@@ -121,8 +121,8 @@ class Item {
 	}
 	
 	function getPlate() {		
-		$cell = "<div class=plateItem id=item_".$this->id."><a href='index.php?task=view_item&id=".$this->id."' onmouseover=highlight_item('".$this->id."')  onmouseout=unhighlight_item('".$this->id."')>";
-		$cell .= "<table width=100% height=100%><div style='margin-top: 5px; height: 15px'><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'></div><div style='margin-bottom: 3px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->price."</b></span></div></a></div>";
+		$cell = "<div class='plateItem span2' id=item_".$this->id."><a href='index.php?task=view_item&id=".$this->id."' onmouseover=highlight_item('".$this->id."')  onmouseout=unhighlight_item('".$this->id."')>";
+		$cell .= "\<div style='margin-top: 5px; height: 15px'><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'></div><div style='margin-bottom: 3px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->price."</b></span></div></a></div>";
 		return $cell;
 	}
 	
