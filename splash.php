@@ -80,7 +80,7 @@
 		$silo = new Silo($s['id']);	
 		
 		$first = ($num % 5)
-		$siloz_html .= $silo->getSiloPlate($first == 0);
+		$siloz_html .= $silo->getPlate();
 		
 		$num++
 	}
