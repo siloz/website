@@ -215,8 +215,8 @@ class Silo {
 		
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
-		$cell = "<div class=plateSilo id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<table align='center' width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><tr valign=bottom><td><div style='text-align: center; color: #000;'><b>Goal:</b> <span style='color: #f60'>$".round($this->goal)." ($pct%)</span></td></tr><tr><td align='center'>$daysleft $dayplural Left</td><tr></table></a></div>";							
+		$cell = "<div class='plateSilo span2' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
+		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><b>Goal:</b> <span style='color: #f60'>$".round($this->goal)." ($pct%)</span><span>$daysleft $dayplural Left</span></a></div>";							
 		return $cell;
 	}
 	
