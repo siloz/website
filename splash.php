@@ -73,12 +73,12 @@
 	$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
 	$tmp = mysql_query($sql);
 
-	$siloz_html = "<div class='span12'>";
+	$siloz_html = "<div class='span12'><div class='row'>";
 	while ($s = mysql_fetch_array($tmp)) {
 		$silo = new Silo($s['id']);		
 		$siloz_html .= $silo->getPlate();
 	}
-	$siloz_html .= "</div>";
+	$siloz_html .= "</div></div>";
 	echo $siloz_html;
 	?>
 
@@ -86,13 +86,13 @@
 	<?php
 	$sql = "SELECT *, $sqlDist AS distance FROM items WHERE deleted_date = 0 ORDER BY distance LIMIT 6";
 	$tmp = mysql_query($sql);
-	$items_html = "<div class='span12'>";
+	$items_html = "<div class='span12'><div class='row'>";
 	while ($item = mysql_fetch_array($tmp)) {
 		$it = new Item($item['id']);
 		$items[] = $it;	
 		$items_html .= $it->getPlate();				
 	}	
-	$items_html .= "</div>";
+	$items_html .= "</div></div>";
 	
 	echo $items_html;
 	?>
