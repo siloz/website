@@ -232,10 +232,10 @@ class Silo {
 		
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
-		$cell = "<div class='plateSilo span2"
+		$cell = "<div class='plateSilo span2";
 		
 		if ($first) {
-			$cell .= " first_element"
+			$cell .= " first_element";
 		}
 		
 		$cell .= "' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
