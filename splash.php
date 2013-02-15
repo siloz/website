@@ -86,12 +86,17 @@
 		
 		$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
 		
-		if ($num_siloz % 5 == 0) {
+		if ($num_siloz % 5 == 4) {
 			$siloz_html .= "</div>";
 		}
 		
 		$num_siloz++;
 	}
+	
+	if ($num_siloz % 5 < 4) {
+		$siloz_html .= "</div>";
+	}
+	
 	$siloz_html .= "</div></div>";
 	echo $siloz_html;
 	?>
