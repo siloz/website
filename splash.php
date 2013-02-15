@@ -81,13 +81,13 @@
 		$silo = new Silo($s['id']);		
 		
 		if ($num_siloz % 5 == 0) {
-			$siloz_html .= "<div class='row item_row'>"
+			$siloz_html .= "<div class='row item_row'>";
 		}
 		
 		$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
 		
 		if ($num_siloz % 5 == 0) {
-			$siloz_html .= "</div>"
+			$siloz_html .= "</div>";
 		}
 		
 		$num_siloz++;
