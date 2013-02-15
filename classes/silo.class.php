@@ -220,7 +220,7 @@ class Silo {
 		return $cell;
 	}
 	
-	public function getPlate($first) {
+	public function getSiloPlate($first) {
 		$collected = $this->getCollectedAmount();
 		$pct = round($collected*100.0/floatval($this->goal),1);
 
