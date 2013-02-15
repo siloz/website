@@ -220,29 +220,6 @@ class Silo {
 		return $cell;
 	}
 	
-	public function getSiloPlate($first) {
-		$collected = $this->getCollectedAmount();
-		$pct = round($collected*100.0/floatval($this->goal),1);
-
-		$end_date = $this->end_date;
-		$end = strtotime("$end_date");
-		$now = time();
-		$timeleft = $end-$now;
-		$daysleft = ceil($timeleft/86400);
-		
-		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
-														
-		$cell = "<div class='plateSilo "
-		
-		if ($first){
-			$cell .= "first_element"
-		}
-		
-		$cell .= "span2' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><b>Goal:</b> <span style='color: #f60'>$".round($this->goal)." ($pct%)</span><span>$daysleft $dayplural Left</span></a></div></div>";							
-		return $cell;
-	}
-	
 	public function isEnded() {
 		$today = date('Y-m-d')."";
 		//return $this->end_date < $today;
