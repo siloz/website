@@ -68,96 +68,79 @@
 			}
 		</script>
 		
-	<p class="silos_header">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+		<p class="silos_header">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
 	
-	<?php
-	$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
-	$tmp = mysql_query($sql);
+		<?php
+			$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
+			$tmp = mysql_query($sql);
 
-	$siloz_html = "<div class='row'><div class='span12'>";
-	
-	$num_siloz = 0;
-	
-	while ($s = mysql_fetch_array($tmp)) {
-		$silo = new Silo($s['id']);		
-		
-		if ($num_siloz % 5 == 0) {
-			$siloz_html .= "<div class='row item_row'>";
-		}
-		
-		$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
-		
-		if ($num_siloz % 5 == 4) {
-			$siloz_html .= "</div>";
-		}
-		
-		$num_siloz++;
-	}
-	
-	if ($num_siloz % 5 < 4) {
-		$siloz_html .= "</div>";
-	}
-	
-	$siloz_html .= "</div></div>";
-	echo $siloz_html;
-	?>
-
-	<p class="silos_header">Items for Sale near <span id="enterLocation_item" style="display: none;"></span> <span id="userLocation_item" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_item()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
-	
-	<?php
-	$sql = "SELECT *, $sqlDist AS distance FROM items WHERE deleted_date = 0 ORDER BY distance LIMIT 6";
-	$tmp = mysql_query($sql);
-	$items_html = "<div class='row'><div class='span12'>";
-	
-	$num_items = 0;
-	
-	while ($item = mysql_fetch_array($tmp)) {
-		$it = new Item($item['id']);
-		
-		if ($num_items % 6 == 0) {
-			$items_html .= "<div class='row item_row'>";
-		}
-		
-		$items[] = $it;	
-		$items_html .= $it->getItemPlate($num_items % 6 == 0);		
-
-		if ($num_items % 6 == 5) {
-			$items_html .= "</div>";
-		}		
-		
-		$num_items++;
-	}
-	
-	if ($num_items % 6 < 5) {
-		$items_html .= "</div";
-	}
-	
-	$items_html .= "</div></div>";
-	
-	echo $items_html;
-	?>
-	</div>
+			$siloz_html = "<div class='row'><div class='span12'>";
+			
+			$num_siloz = 0;
+			
+			while ($s = mysql_fetch_array($tmp)) {
+				$silo = new Silo($s['id']);		
+				
+				if ($num_siloz % 5 == 0) {
+					$siloz_html .= "<div class='row item_row'>";
+				}
+				
+				$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
+				
+				if ($num_siloz % 5 == 4) {
+					$siloz_html .= "</div>";
+				}
+				
+				$num_siloz++;
+			}
+			
+			if ($num_siloz % 5 < 4) {
+				$siloz_html .= "</div>";
+			}
+			
+			$siloz_html .= "</div></div>";
+			echo $siloz_html;
+		?>
+    </div>
 </div>
-	
-<script>
-	function changeLocation_silo()
-	{
-	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-	  $('#enterLocation_silo').append( str );
-	  userLocation_silo.style.display = 'none';
-	  enterLocation_silo.style.display = 'inline-block';
 
-	}
+<div class="row">
+	<p class="silos_header">Items for Sale near <span id="enterLocation_item" style="display: none;"></span> <span id="userLocation_item" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_item()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
 
-	function changeLocation_item()
-	{
-	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-	  $('#enterLocation_item').append( str );
-	  userLocation_item.style.display = 'none';
-	  enterLocation_item.style.display = 'inline-block';
+	<?php
+		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE deleted_date = 0 ORDER BY distance LIMIT 6";
+		$tmp = mysql_query($sql);
+		$items_html = "<div class='row'><div class='span12'>";
+		
+		$num_items = 0;
+		
+		while ($item = mysql_fetch_array($tmp)) {
+			$it = new Item($item['id']);
+			
+			if ($num_items % 6 == 0) {
+				$items_html .= "<div class='row item_row'>";
+			}
+			
+			$items[] = $it;	
+			$items_html .= $it->getItemPlate($num_items % 6 == 0);		
 
-	}
-</script>
+			if ($num_items % 6 == 5) {
+				$items_html .= "</div>";
+			}		
+			
+			$num_items++;
+		}
+		
+		if ($num_items % 6 < 5) {
+			$items_html .= "</div";
+		}
+		
+		$items_html .= "</div></div>";
+		
+		echo $items_html;
+	?>
+</div>
+
 <div class="row">
 	<div id="quick_start_bg">
 		<table width="100%" class="quick_start">
@@ -185,3 +168,23 @@
 		</div>
 	</div>
 </div>
+	
+<script>
+	function changeLocation_silo()
+	{
+	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
+	  $('#enterLocation_silo').append( str );
+	  userLocation_silo.style.display = 'none';
+	  enterLocation_silo.style.display = 'inline-block';
+
+	}
+
+	function changeLocation_item()
+	{
+	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
+	  $('#enterLocation_item').append( str );
+	  userLocation_item.style.display = 'none';
+	  enterLocation_item.style.display = 'inline-block';
+
+	}
+</script>
