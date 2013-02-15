@@ -1,4 +1,26 @@
 <?php
+	if (param_post('crop') == 'Crop') {
+		$id = trim(param_post('user_id'));
+		$crop = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'.jpg';
+		$name = 'uploads/members/'.$id.'.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		$sql = "UPDATE users SET photo_file = '$id.jpg' WHERE id = $id";
+		mysql_query($sql);
+	}
+
 //If account info is updated
 	if ($_SESSION['is_logged_in'] != 1) {
 		echo "<script>window.location = 'index.php';</script>";
@@ -147,6 +169,8 @@
 			$sql = "SELECT * FROM users WHERE username='$username'";
 			$res = mysql_query($sql);
 			$row = mysql_fetch_array($res);
+			$id = $row['id'];
+			$user_id = $row['user_id'];
 			$fullname = $row['fullname'];
 			$email = $row['email'];
 			$address = $row['address'];
@@ -154,25 +178,6 @@
 			$phone = $row['phone'];
 			$photo_file = $row['photo_file'];
 		}
-
-	if (param_post('crop') == 'Crop') {
-		$id = trim(param_post('user_id'));
-		$crop = true;
-		$targ_w = 300;
-		$targ_h = 225;
-		$jpeg_quality = 90;
-
-		$src = 'uploads/'.$id.'.jpg';
-		$name = 'uploads/members/'.$id.'.jpg';
-		$img_r = imagecreatefromjpeg($src);
-		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-
-		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
-		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
-
-		imagejpeg($dst_r, $name, $jpeg_quality);
-		unlink($src);
-	}
 
 	$updatemsg = "Your account has been updated!";
 ?>
@@ -212,7 +217,7 @@
 				<b>Your Account</b><?php echo " (".$_SESSION['username'].")"?>
 			</td>
 			<td align="center">
-				<a href="index.php?task=my_transactions" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">My Transactions</a>
+				<a href="index.php?task=transaction_console" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
 			</td>	
 			<td align="center">
 				<span style="color: #fff">|</span>
@@ -255,6 +260,30 @@ if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filenam
 		<br>
 		<br>
 <?php
+die;
+}
+?>
+
+<?php
+//If account deleted
+if (param_post('delete') == 'Delete account') {
+	$id = param_post('id');
+	$user_id = param_post('user_id');
+
+	$User = new User();
+	$User->id = $id;
+	$User->user_id = $user_id;
+	$User->DeleteUser();
+?>
+		<center>
+			<font color="red"><b>Your account has been deleted. You will not receive any further notifications from us. 
+			If you have any questions, please call or e-mail our support team.<br><br>
+			Thanks for using siloz.com!</b></font>
+		</center>
+		<br>
+		<br>
+<?php
+session_destroy();
 die;
 }
 ?>
@@ -346,8 +375,32 @@ die;
 					</table>					
 				</td>
 			</tr>
+			<tr>
+				<td></td>
+				<td colspan="2">
+					<font color="red"><b>E-mail notifications</b></font> 
+					<font color="grey">For security reasons..</font>
+				<br>
+					<form method="post" action="">
+					<input type="hidden" name="id" value="<?=$id?>">
+					<input type="hidden" name="user_id" value="<?=$user_id?>">
+					<input style="color: red; font-weight: bold; background: #fff;" type="submit" name="delete" value="Delete account" onClick="return confirmSubmit()">
+					<font color="grey">(this is not reversible, and cannot be performed with items pending or when a silo is open.)</font>
+				</td>
+			</tr>
 		</table>
 	</form>
 <?php
 	}
 ?>
+
+<script>
+function confirmSubmit()
+{
+var agree=confirm("Are you sure you want to delete your account? ALL DELETIONS ARE FINAL!");
+if (agree)
+	return true ;
+else
+	return false ;
+}
+</script>

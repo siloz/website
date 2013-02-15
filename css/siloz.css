@@ -201,6 +201,35 @@ div.siloInfo {
 	padding: 5px 0px;	
 }
 
+div.plateTConsoleSell {
+	-moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -khtml-border-radius: 8px;
+    border-radius: 8px;     
+    border: 1px solid #84bfe5;
+	width: 450px;
+	height: 180px;	
+	padding: 0px 4px;
+	color: #2f8dcb;
+	font-size: 11px;
+	background: #E6F2FB;
+	font-family: Arial, Helvetica,sans-serif; ;	
+}
+
+div.plateTConsoleBuy {
+	-moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -khtml-border-radius: 8px;
+    border-radius: 8px;     
+    border: 1px solid #84bfe5;
+	width: 450px;
+	height: 180px;	
+	padding: 0px 4px;
+	color: #2f8dcb;
+	font-size: 11px;
+	background: #E6F2FB;
+	font-family: Arial, Helvetica,sans-serif; ;	
+}
 div.silo_preview {	
 	-moz-border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -554,11 +583,31 @@ textarea {
 
 .voucherText {
 	color: #2f8dcb;
+	background: #fff;
 }
 
 .voucherText a {
 	color: #2f8dcb;
 	text-decoration: none;
+}
+
+.offer {
+	color: #FF642F;
+	background: #fff;
+}
+
+.offer a {
+	color: #FF642F;
+	text-decoration: none;
+}
+
+.offer a:hover span {
+	display:none
+}
+
+.offer a:hover:before {
+	color: red;
+	content:"cancel offer"
 }
 
 .floatL {

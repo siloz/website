@@ -19,7 +19,96 @@
 		$user_long = urlencode($user['longitude']);
 		$user_lat = urlencode($user['latitude']);
 		$distBuyerSeller = $item->getDistance($item_long, $item_lat, $user_long, $user_lat);
+
+	if (param_post('fav') == 'add to favorites') {
+		$user_id = param_post('user_id');
+		$item_id = param_post('item_id');
+
+			$Item = new Item();
+			$Item->user_id = $user_id;
+			$Item->item_id = $item_id;
+			$Item->AddFav();
+	}
+
+	if (param_post('fav') == 'remove from favorites') {
+		$user_id = param_post('user_id');
+		$item_id = param_post('item_id');
+
+			$Item = new Item();
+			$Item->user_id = $user_id;
+			$Item->item_id = $item_id;
+			$Item->RemoveFav();
+	}
+
+	if (param_post('offer') == 'send offer') {
+		$item_id = param_post('item_id');
+		$buyer_id = param_post('buyer_id');
+		$seller_id = param_post('seller_id');
+		$amount = param_post('amount');
+
+			$Item = new Item();
+			$Item->item_id = $item_id;
+			$Item->buyer_id = $buyer_id;
+			$Item->seller_id = $seller_id;
+			$Item->amount = $amount;
+			$Item->NewOffer();
+	}
+
+	if (param_post('offer') == 'cancel') {
+		$item_id = param_post('item_id');
+		$buyer_id = param_post('buyer_id');
+		$seller_id = param_post('seller_id');
+		$amount = param_post('amount');
+
+			$Item = new Item();
+			$Item->item_id = $item_id;
+			$Item->buyer_id = $buyer_id;
+			$Item->seller_id = $seller_id;
+			$Item->RemoveOffer();
+	}
+
+		$user_id = $user['user_id'];
+		$fav = mysql_num_rows(mysql_query("SELECT * FROM favorites WHERE user_id = '$user_id' AND item_id = '$item->item_id'"));
+
+		$checkOffer = mysql_num_rows(mysql_query("SELECT * FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item->item_id' AND avail = 'no'"));
+		$offer = mysql_num_rows(mysql_query("SELECT * FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item->item_id' AND avail = 'yes'"));
+		$amt = mysql_fetch_array(mysql_query("SELECT amount FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item->item_id' AND avail = 'yes'"));
 ?>
+
+<div class="login" id="offer" style="width: 300px;">
+	<div id="offer_drag" style="float:right">
+		<img id="offer_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<form action="" method="POST">
+			<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+			<input type="hidden" name="buyer_id" value="<?=$user_id?>">
+			<input type="hidden" name="seller_id" value="<?=$item->user_id?>">
+			<h2>Enter your offer below:</h2>
+			$<input onclick=this.value="" type="text" value="0.00" name="amount">
+			<br/><br>	
+			<button type="submit" name="offer" value="send offer">Send offer</button>
+		</form>
+	</div>
+</div>
+
+<div class="login" id="offerp" style="width: 300px;">
+	<div id="offerp_drag" style="float:right">
+		<img id="offerp_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<form action="" method="POST">
+			<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+			<input type="hidden" name="buyer_id" value="<?=$user_id?>">
+			<input type="hidden" name="seller_id" value="<?=$item->user_id?>">
+			<h2><font color="FF642F">Offer: $<?=$amt['amount']?></font></h2>
+			<h2>You are only allowed one offer per item. Are you sure you want to cancel it?</h2>
+			<br/><br>	
+			<button type="submit" name="offer" value="cancel">Yes, cancel my offer</button>
+		</form>
+	</div>
+</div>
+
 <div class="contact_seller" id="contact_admin">
 	<div id="contact_admin_drag" style="float: right">
 		<img id="contact_admin_exit" src="images/close.png"/>
@@ -225,7 +314,7 @@
 							<td rowspan="2"><a href="mailto:?Subject=www.siloz.com/index.php?task=view_item%26<?php echo $item->id;?>&Body=Check out this item on siloz!"><img src="images/mail-icon.png"></a></td>
 							<td rowspan="2"><img src="images/facebook.jpg" onclick='postToFeed();'/></td>
 							<td class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><div class="voucherText"><font size="1">Flag this item</font></div></td>
-									<td>
+									<td align="center">
 											<?php if (!$_SESSION['is_logged_in']) {
 											?>
 											<button onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">Buy This Item</button>
@@ -244,7 +333,36 @@
 						</tr>
 						<tr>
 							<td class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="40px" width="auto" src="img/flag.png" alt="Flag this item" /></td>
-							<td><div class="voucherText"><a href="#">Offer Another Amount</div></a></td>
+							<td align="center">
+								<div class="voucherText"><b>
+								<?php if (!$_SESSION['is_logged_in']) { ?>
+									<a onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">offer another amount
+									<?php } elseif ($checkOffer) { ?>
+									<font color="red">offer declined</font>
+									<?php } elseif ($offer) { ?>
+									<div class="offer"><a href="javascript:popup_show('offerp', 'offerp_drag', 'offerp_exit', 'screen-center', 0, 0);"><span>offer pending</span></div>
+									<?php } else { ?>
+									<a href="javascript:popup_show('offer', 'offer_drag', 'offer_exit', 'screen-center', 0, 0);">offer another amount
+									<?php } ?></div></a></b><br>
+
+								<div class="voucherText">
+								<?php if (!$_SESSION['is_logged_in']) { ?>
+									<a onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">add to favorites
+									<?php } elseif ($fav) { ?>
+									<form method="post" action="">
+										<input type="hidden" name="user_id" value="<?=$user_id?>">
+										<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+										<input style="color: red; background: #fff;" type="submit" name="fav" value="remove from favorites">
+									</form>
+									<?php } else { ?>
+									<form method="post" action="">
+										<input type="hidden" name="user_id" value="<?=$user_id?>">
+										<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+										<input class="voucherText" type="submit" name="fav" value="add to favorites">
+									</form>
+									<?php } ?>
+								</div></a><br>
+							</td>
 						</tr>
 					</table>
 							</div>						

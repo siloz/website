@@ -295,6 +295,47 @@ class Item {
 		mysql_query($query);
 		return $this->item_id;
 		
-	}		
+	}
+
+	public function AddFav(){
+		$query = (
+			"INSERT INTO `favorites` "
+			."("
+				."user_id,item_id"
+			.")VALUES("
+				."'".mysql_real_escape_string($this->user_id)."',"
+				."'".mysql_real_escape_string($this->item_id)."'"
+			.")"
+		);
+		mysql_query($query);
+	}
+
+	public function RemoveFav(){
+		$query = "DELETE FROM favorites WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'";
+		mysql_query($query);
+	}
+
+	public function NewOffer(){
+		$exp = date('Y-m-d H:i:s', strtotime('+1 day'));
+
+		$query = (
+			"INSERT INTO `offers` "
+			."("
+				."item_id,buyer_id,seller_id,amount,expired_date"
+			.")VALUES("
+				."'".mysql_real_escape_string($this->item_id)."',"
+				."'".mysql_real_escape_string($this->buyer_id)."',"
+				."'".mysql_real_escape_string($this->seller_id)."',"
+				."'".mysql_real_escape_string($this->amount)."',"
+				."'".mysql_real_escape_string($exp)."'"
+			.")"
+		);
+		mysql_query($query);
+	}
+
+	public function RemoveOffer(){
+		$query = "UPDATE offers SET avail = 'no' WHERE item_id = '$this->item_id' AND buyer_id = '$this->buyer_id' AND seller_id = '$this->seller_id'";
+		mysql_query($query);
+	}
 }
 ?>

@@ -176,6 +176,15 @@ class User {
 			else{return false;}
 		}
 	}
+
+	public function DeleteUser(){
+		$qry = "DELETE FROM users WHERE user_id = '$this->user_id'";
+		mysql_query($qry);
+
+		$src = 'uploads/members/'.$this->id.'.jpg';
+		unlink($src);
+
+	}
 	
 }
 ?>
