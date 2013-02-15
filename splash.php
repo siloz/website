@@ -75,7 +75,7 @@
 
 	$siloz_html = "<div class='row'><div class='span12'>";
 	
-	$num_siloz = 0
+	$num_siloz = 0;
 	
 	while ($s = mysql_fetch_array($tmp)) {
 		$silo = new Silo($s['id']);		
