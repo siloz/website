@@ -15,7 +15,7 @@
 	$items = mysql_query($sql);
 ?>
 <div class="heading">
-	Items listed by <?php echo "<b><a href='index.php?task=view_user&id=".$user->id."'>".$user->username."</a></b>".$silo_text;?>
+	Items listed by <?php echo "<b><a href='index.php?task=view_user&id=".$user->id."'>".$user->fname."</a></b>".$silo_text;?>
 </div>
 <?php
 	$n = 0;

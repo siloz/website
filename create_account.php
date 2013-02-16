@@ -6,7 +6,8 @@
 		$username = trim(param_post('username'));
 		$password = param_post('password');
 		$retype_password = param_post('retype_password');		
-		$fullname = param_post('fullname');
+		$fname = param_post('fname');
+		$lname = param_post('lname');
 		$email = trim(param_post('email'));
 		$address = param_post('address');
 		$zipcode = param_post('zipcode');
@@ -27,8 +28,11 @@
 		if ($password != $retype_password) {
 			$err .= 'Passwords do not match.<br/>';		
 		}
-		if (strlen(trim($fullname)) == 0) {
-			$err .= 'Full name must not be empty.<br/>';		
+		if (strlen(trim($fname)) == 0) {
+			$err .= 'First name must not be empty.<br/>';		
+		}
+		if (strlen(trim($lname)) == 0) {
+			$err .= 'Last name must not be empty.<br/>';		
 		}
 		if (strlen(trim($email)) == 0) {
 			$err .= 'Email must not be empty.<br/>';		
@@ -69,7 +73,8 @@
 			$User = new User();
 			$User->username = $username;
 			$User->password = $password;
-			$User->fullname = $fullname;
+			$User->fname = $fname;
+			$User->lname = $lname;
 			$User->email = $email;
 			$User->address = $new_adr;
 			$User->zip_code = $zipcode;
@@ -223,9 +228,13 @@ if (!$success && !$crop) {
 			<td colspan=2><hr/></td>
 		</tr>
 		<tr>
-			<td>Fullname <font color='red'>*</font></td>
-			<td><input type="text" name="fullname" style="width : 200px" value='<?php echo $fullname; ?>'/></td>
-		</tr>		
+			<td>First name <font color='red'>*</font></td>
+			<td><input type="text" name="fname" style="width : 200px" value='<?php echo $fname; ?>'/></td>
+		</tr>
+		<tr>
+			<td>Last name <font color='red'>*</font></td>
+			<td><input type="text" name="lname" style="width : 200px" value='<?php echo $fname; ?>'/></td>
+		</tr>
 		<tr>
 			<td>Email <font color='red'>*</font></td>
 			<td><input type="text" name="email" style="width : 200px" value='<?php echo $email; ?>'/></td>

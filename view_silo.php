@@ -164,6 +164,10 @@
 						$daysleft = ceil($timeleft/86400);
 						
 						if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
+
+						$c_user_id = $current_user['user_id'];
+						$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id'"));
+						if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
 					?>
 		<div class='siloInfo'>
 			<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
@@ -187,7 +191,7 @@
 			</td>
 			<td width='6%'></td>
 			<td>
-				<b>Silo Admin:</b> <br> <?php echo $admin->fullname; ?><br>
+				<b>Silo Admin:</b> <br> <?php echo $admin_name?><br>
 				<b>Title:</b> <?php echo $silo->title; ?><br>
 				<b>Official Address:</b> <br> <?php echo $silo->address; ?><br>
 				<b>Telephone:</b> <?php echo $silo->phone_number; ?>
@@ -283,9 +287,9 @@
 
 				//Get and set info for feed
 				$user = new User($result['user_id']);
-				$userCell = $user->getMemberCell($silo_id);
+				$userCell = $user->getMemberCell($silo_id, $c_user_id);
 				$item = new Item($result['item_id']);
-				$itemCell = $item->getItemCell($silo_id);
+				$itemCell = $item->getItemCell($silo_id, $c_user_id);
 				$siloCell = $silo->getPlate($silo_id);
 
 				$date = date('M d, Y', strtotime($result['date']));
@@ -295,14 +299,14 @@
 				$total_raised = floatval($collected);
 
 				if ($type == "Pledged") {
-					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$user->fullname has pledged $item->title.</b></font></td></tr>
+					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$user->fname has pledged $item->title.</b></font></td></tr>
 							<tr><td valign=bottom><a href='index.php?task=view_item&id=$item->id' target='_blank'><font class=orange>Check it out</font></a> <font class=blue>and spread the word if you know any buyers!</blue></td></tr></table></td>";
 					$cellInfo .= "$userCell";
 					$cellInfo .= "$itemCell";
 					$cellInfo .= "<td width=20% valign=top align=center>$date<br>$time</td></tr></table></div><br/>";
 				}
 				if ($type == "Sold") {
-					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$user->fullname has sold $item->title.</b></font></td></tr>
+					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$admin_name has sold $item->title.</b></font></td></tr>
 							<tr><td valign=bottom><font class=blue>The total amount raised for this silo is now $$total_raised!</blue></td></tr></table></td>";
 					$cellInfo .= "$userCell";
 					$cellInfo .= "$itemCell";
@@ -318,7 +322,7 @@
 		}
 
 		//VIEW MEMBERS
-		if ($view == 'members') {
+		if ($view == 'members' && $_SESSION['is_logged_in']) {
 			$count = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id)";
 			$countRow = mysql_num_rows(mysql_query($count));
 			$total_records = $countRow;
@@ -364,7 +368,7 @@
 			foreach ($users as $user) {
 				if ($n == 0)
 					echo "<tr>";
-				echo $user->getMemberCell($silo_id);					
+				echo $user->getMemberCell($silo_id, $c_user_id);					
 				$n++;
 				if ($n == 4) {
 					echo "</tr>";
@@ -373,6 +377,9 @@
 			}
 			echo "</table>";
 			if ($total_records == "0") { echo "There are currently no members in this silo. Only users who pledge an item to this silo are considered members."; }
+		}
+		elseif ($view == 'members') {
+			echo "Please create an account or login to an existing account to view silo members.";
 		}
 		
 		//VIEW ITEMS
@@ -422,7 +429,7 @@
 			foreach ($items as $item) {
 				if ($n == 0)
 					echo "<tr>";							
-				echo $item->getItemCell($silo_id);					
+				echo $item->getItemCell($silo_id, $c_user_id);					
 				$n++;
 				if ($n == 4) {
 					echo "</tr>";

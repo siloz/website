@@ -69,7 +69,7 @@
 		
 	<p style="color: #2F8ECB; font-size: 18px; font-weight: bold;">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
 	<?php
-	$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
+	$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE now() < end_date ORDER BY distance LIMIT 5";
 	$tmp = mysql_query($sql);
 
 	$siloz_html = "<table cellpadding='5px' style='border-spacing: 7px'><tr>";

@@ -300,7 +300,7 @@
 								</tr>
 								<tr>
 									<td><b>Seller:</b></td>
-									<td><a href="index.php?task=view_user&id=<?php echo $seller->id;?>"><font color="#2f8dcb"><?php echo $seller->username?></font></a></td>
+									<td><a href="index.php?task=view_user&id=<?php echo $seller->id;?>"><font color="#2f8dcb"><?php echo $seller->fname?></font></a></td>
 								</tr>
 								<tr>
 									<td><b>Listed on:</b></td>
@@ -453,7 +453,7 @@
 			</td>
 			<td width='6%'></td>
 			<td>
-				<b>Silo Admin:</b> <br> <?php echo $admin->fullname; ?><br>
+				<b>Silo Admin:</b> <br> <?php echo $admin->fname; ?><br>
 				<b>Title:</b> <?php echo $silo->title; ?><br>
 				<b>Official Address:</b> <br> <?php echo $silo->address; ?><br>
 				<b>Telephone:</b> <?php echo $silo->phone_number; ?>

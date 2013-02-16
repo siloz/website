@@ -24,6 +24,11 @@
 		header('Location: '.$_SERVER['REQUEST_URI']);
 		exit;
 	}
+
+	$c_user = $_SESSION['username'];
+	$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE username = '$c_user'"));
+	$fname = $user['fname'];
+	$lname = $user['lname'];
 ?>
 
 <script type="text/javascript">
@@ -173,7 +178,7 @@
 		$header = "<a href='administrator/' target='_blank' style='padding-right: 20px; text-decoration: none'><font color='red'><b>Admin Login</b></font></a>";
 	}
 	if ($_SESSION['is_logged_in']) {
-		$header .= "Hello <b>".$_SESSION['username'].",</b> you are logged in! <a href='index.php?task=logout' class='status'>Logout</a>";
+		$header .= "Hello <b>".$fname." ".$lname.",</b> you are logged in! <a href='index.php?task=logout' class='status'>Logout</a>";
 	}
 	echo $header;
 	$is_search = array_key_exists('keywords', $_GET) || array_key_exists('zip_code', $_GET) || array_key_exists('category', $_GET) || array_key_exists('amount_min', $_GET) || array_key_exists('amount_max', $_GET);

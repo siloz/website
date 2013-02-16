@@ -2,7 +2,7 @@
 	<table width="940px" style="border-spacing: 0px;">
 		<tr>
 			<td width="700px">
-				<b>Your Account</b><?php echo " (".$_SESSION['username'].")"?>
+				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
 			</td>
 			<td align="center">
 				<a href="index.php?task=transaction_console" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>

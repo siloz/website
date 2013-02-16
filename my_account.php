@@ -32,7 +32,8 @@
 			$old_password = param_post('old_password');
 			$new_password = param_post('new_password');
 			$retype_new_password = param_post('retype_new_password');		
-			$fullname = param_post('fullname');
+			$fname = param_post('fname');
+			$lname = param_post('lname');
 			$email = trim(param_post('email'));
 			$address = param_post('address');
 			$zip_code = param_post('zip_code');
@@ -50,8 +51,11 @@
 			if ($new_password != $retype_new_password) {
 				$err .= 'Passwords do not match.<br/>';		
 			}
-			if (strlen(trim($fullname)) == 0) {
-				$err .= 'Full name must not be empty.<br/>';		
+			if (strlen(trim($fname)) == 0) {
+				$err .= 'First name must not be empty.<br/>';		
+			}
+			if (strlen(trim($lname)) == 0) {
+				$err .= 'Last name must not be empty.<br/>';		
 			}
 			if (strlen(trim($email)) == 0) {
 				$err .= 'Email must not be empty.<br/>';		
@@ -75,7 +79,7 @@
 					 	$err .= "New password must not be empty.";
 					}
 					else {
-						$sql = "UPDATE users SET fullname = '$fullname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone', password='$new_password' WHERE id = $id";
+						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone', password='$new_password' WHERE id = $id";
 						mysql_query($sql);
 
 						if ($_FILES['member_photo']['name'] != '') {
@@ -121,7 +125,7 @@
 					}
 				}				
 				else {
-					$sql = "UPDATE users SET fullname = '$fullname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone' WHERE id = $id";
+					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone' WHERE id = $id";
 					mysql_query($sql);
 					if ($_FILES['member_photo']['name'] != '') {
 						$allowedExts = array("png", "jpg", "jpeg", "gif");							
@@ -171,12 +175,18 @@
 			$row = mysql_fetch_array($res);
 			$id = $row['id'];
 			$user_id = $row['user_id'];
-			$fullname = $row['fullname'];
+			$fname = $row['fname'];
+			$lname = $row['lname'];
 			$email = $row['email'];
 			$address = $row['address'];
 			$zip_code = $row['zip_code'];
 			$phone = $row['phone'];
+			$jdate = $row['joined_date'];
+			$msince = date("m/d/Y", strtotime($jdate));
 			$photo_file = $row['photo_file'];
+
+			$funds = mysql_fetch_array(mysql_query("SELECT SUM(price) AS total FROM items WHERE user_id = '$user_id' AND status = 'sold'"));
+			$total_raised = $funds['total'];
 		}
 
 	$updatemsg = "Your account has been updated!";
@@ -214,7 +224,7 @@
 	<table width="940px" style="border-spacing: 0px;">
 		<tr>
 			<td width="700px">
-				<b>Your Account</b><?php echo " (".$_SESSION['username'].")"?>
+				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
 			</td>
 			<td align="center">
 				<a href="index.php?task=transaction_console" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
@@ -324,9 +334,16 @@ die;
 				<td valign="top">
 					<table>
 						<tr>
-							<td><b>Fullname</b> </td>
-							<td><input type="text" name="fullname" style="width : 200px" value='<?php echo $fullname; ?>'/></td>
-						</tr>		
+							<td><b>First name</b> </td>
+							<td><input type="text" name="fname" style="width : 200px" value='<?php echo $fname; ?>'/></td>
+						</tr>
+						<tr>
+							<td><b>Last name</b> </td>
+							<td><input type="text" name="lname" style="width : 200px" value='<?php echo $lname; ?>'/></td>
+						</tr>
+						<tr>
+							<td colspan="2"><b>Member Since:</b> <?=$msince?> </td>
+						</tr>
 						<tr>
 							<td><b>Email</b> </td>
 							<td><input type="text" name="email" style="width : 200px" value='<?php echo $email; ?>'/></td>
@@ -351,6 +368,9 @@ die;
 						<tr>
 							<td><b>Username</b> </td>
 							<td><input type="text" name="username" style="width : 200px" value='<?php echo $username; ?>' disabled="disabled"/></td>			
+						</tr>
+						<tr>
+							<td colspan="2"><b>Total funds raised for silos:</b> <?php if ($total_raised) { echo "$".$total_raised; } else { echo "$0.00"; } ?></td>
 						</tr>
 						<tr>
 							<td><b>Current Password</b> </td>
@@ -378,14 +398,16 @@ die;
 			<tr>
 				<td></td>
 				<td colspan="2">
-					<font color="red"><b>E-mail notifications</b></font> 
-					<font color="grey">For security reasons..</font>
-				<br>
+					<p><font color="red"><b>E-mail notifications</b></font> 
+					<font color="grey">For security reasons, we will notify you of a status changes for items you are buying or selling, 
+					when you join a silo, or when a silo administrator does something of consequence (e.g. end a silo).
+					siloz is not responsible for email intiated by other users.</font></p>
+
 					<form method="post" action="">
 					<input type="hidden" name="id" value="<?=$id?>">
 					<input type="hidden" name="user_id" value="<?=$user_id?>">
 					<input style="color: red; font-weight: bold; background: #fff;" type="submit" name="delete" value="Delete account" onClick="return confirmSubmit()">
-					<font color="grey">(this is not reversible, and cannot be performed with items pending or when a silo is open.)</font>
+					<font color="grey">(this is not reversible, and cannot be performed with items pending or while a silo is open.)</font>
 				</td>
 			</tr>
 		</table>

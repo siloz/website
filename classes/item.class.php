@@ -157,9 +157,12 @@ class Item {
 		return $items;
 	}
 	
-	public function getItemCell() {
+	public function getItemCell($silo_id, $c_user_id) {
+		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id'"));
+		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
+
 		$cell = "<td><div class=plate id='item_".$this->id."' style='color: #000;'>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$this->id."'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$this->owner->username."</a></div></td></tr><tr valign=bottom><td align=center align=center><span style='color: #f60'><b>$".$this->price."</b></span></td></tr></table></div></td>";							
+		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$this->id."'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$admin_name."</a></div></td></tr><tr valign=bottom><td align=center align=center><span style='color: #f60'><b>$".$this->price."</b></span></td></tr></table></div></td>";							
 		return $cell;
 	}
 	

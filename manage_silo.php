@@ -55,7 +55,7 @@ function updateStatus (e, item_id) {
 		
 		//EMAIL - MEMBER REMOVED
 		$subject = "You item has been removed from Silo - ".$silo['name'];
-		$message = $user['username'].", your item number #".$item['item_id'].": ".$item['title']." has been removed from silo ".$silo['name']." by the silo’s administrator.  Only items whose status was not ‘funds sent’ or funds received’ are able to be removed by members or silo administrators.  Therefore, you are not obliged to follow-through with payment to your silo administrator for your item.<br/><br/>";
+		$message = $user['fname'].", your item number #".$item['item_id'].": ".$item['title']." has been removed from silo ".$silo['name']." by the silo’s administrator.  Only items whose status was not ‘funds sent’ or funds received’ are able to be removed by members or silo administrators.  Therefore, you are not obliged to follow-through with payment to your silo administrator for your item.<br/><br/>";
 		$message .= "Silo administrators have the prerogative to remove items at their discretion, for just cause.  See our Terms of Use and FAQ for more information on what constitutes ‘just cause’.  If you feel your item waswrongfully removed you can contact the silo administrator at ".$admin['email'].".  If you feel your silo administrator was not abiding our tenets of legality, respect, goodwill and inclusiveness, you can report inappropriate action to us by using the ‘contact us’ link in the footer of the website.<br/><br/>";
 		$message .= "Thanks,<br/><br/>
 					Siloz Staff.";			
@@ -80,7 +80,7 @@ function updateStatus (e, item_id) {
 			
 		//EMAIL - MEMBER REMOVED
 		$subject = "You have been removed from Silo - ".$silo['name'];
-		$message = $user['username'].", you have been removed from silo ".$silo['name']." by the silo’s administrator.  Any items whose status was not ‘funds sent’ or funds received’ are active on the silo.  Any donations are active on the silo.  Please honor your pledge or donation promise by sending any outstanding amounts.<br/><br/>";
+		$message = $user['fname'].", you have been removed from silo ".$silo['name']." by the silo’s administrator.  Any items whose status was not ‘funds sent’ or funds received’ are active on the silo.  Any donations are active on the silo.  Please honor your pledge or donation promise by sending any outstanding amounts.<br/><br/>";
 		$message .= "Silo administrators have the prerogative to remove members at their discretion, for just cause - or upon request.  See our Terms of Use and FAQ for more information on what constitutes ‘just cause’.  If you feel you were wrongfully removed you can contact the silo administrator at ".$admin['email'].".  If you feel your silo administrator was not abiding our tenets of legality, respect, goodwill and inclusiveness, you can report inappropriate action to us by using the ‘contact us’ link in the footer of the website.<br/><br/>";
 		$message .= "Thanks,<br/><br/>
 					Siloz Staff.";			
@@ -683,7 +683,7 @@ die;
 						$collected = 0;
 					$date = substr($row['joined_date'],5,2).'/'.substr($row['joined_date'],8,2).'/'.substr($row['joined_date'],2,2);
 					$cell = "<td><div class=plate id='user_".$row['user_id']."' style='color: #000; font-size: 11px;'><table width=100% height=100%><tr valign=top><td>";
-					$cell .= "<form name='f$user_id' id='f$user_id' method='post' action=''><input type='hidden' name='user_id' value='$user_id'><input type='hidden' name='silo_id' value='$silo_id'><input type='hidden' name='delete_user' value='delete_$user_id'><a href='javascript:document.f$user_id.submit()' class='confirmation'><img src=images/delete.png style='margin-top: -5px; margin-left:-5px; margin-right: 5px;'></a><a href='index.php?task=view_user&id=$user_id'> <b>".$row['username']."</b></a></form><b>Member Since:</b>".$date."<br/><img height=100px width=135px src=uploads/members/".$row['photo_file']." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$pledged."</span><br/><b>Sold/Donated: </b><span style='color: #f60'>$".$collected."</span><br/>View Items: <a href='index.php?task=view_user&id=".$row['user_id']."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=$user_id'>All Silos</a></td></table></div></td>";
+					$cell .= "<form name='f$user_id' id='f$user_id' method='post' action=''><input type='hidden' name='user_id' value='$user_id'><input type='hidden' name='silo_id' value='$silo_id'><input type='hidden' name='delete_user' value='delete_$user_id'><a href='javascript:document.f$user_id.submit()' class='confirmation'><img src=images/delete.png style='margin-top: -5px; margin-left:-5px; margin-right: 5px;'></a><a href='index.php?task=view_user&id=$user_id'> <b>".$row['fname']." ".$row['lname']."</b></a></form><b>Member Since:</b>".$date."<br/><img height=100px width=135px src=uploads/members/".$row['photo_file']." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$pledged."</span><br/><b>Sold/Donated: </b><span style='color: #f60'>$".$collected."</span><br/>View Items: <a href='index.php?task=view_user&id=".$row['user_id']."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=$user_id'>All Silos</a></td></table></div></td>";
 					echo $cell;					
 					$n++;
 					if ($n == 6) {
@@ -713,7 +713,7 @@ die;
 					if ($row['status'] != 'Funds Sent' && $row['status'] != 'Funds Received')
 						$delete_html = "<form name='f$item_id' id='f$item_id' method='post' action=''><input type='hidden' name='item_id' value='$item_id'><input type='hidden' name='delete_item' value='delete_$item_id'><a href='javascript:document.f$item_id.submit()' class='confirmation'><img src=images/delete.png style='margin-top: -5px; margin-left:-5px; margin-right: 5px;'></a>";
 					$cell = "<td><div class=plate id='item_$item_id' style='color: #000; font-size: 11px;'>";
-					$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'>$delete_html<a href='index.php?task=view_item&id=$item_id'><b>".substr($row['title'], 0, 40)."</b></a></form></div><img height=100px width=135px src=uploads/items/100px/".$row['photo_file_1']." style='margin-bottom: 3px'><div style='font-size: 11px; color: #000;'><b>Status: </b>".getStatusDropDown($item_id, $row['status'])."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$row['user_id']."'>".$row['username']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$row['price']."</b></span></td><td align=right><a href='index.php?task=view_item&id=$item_id'><i><b>more...</b></i></a></td></tr></table></div></td>";							
+					$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'>$delete_html<a href='index.php?task=view_item&id=$item_id'><b>".substr($row['title'], 0, 40)."</b></a></form></div><img height=100px width=135px src=uploads/items/100px/".$row['photo_file_1']." style='margin-bottom: 3px'><div style='font-size: 11px; color: #000;'><b>Status: </b>".getStatusDropDown($item_id, $row['status'])."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$row['user_id']."'>".$row['fname']." ".$row['lname']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$row['price']."</b></span></td><td align=right><a href='index.php?task=view_item&id=$item_id'><i><b>more...</b></i></a></td></tr></table></div></td>";							
 					echo $cell;					
 					$n++;
 					if ($n == 6) {
@@ -741,7 +741,7 @@ die;
 					$donation_id = $don['donation_id'];
 					$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$don['user_id']));
 					$cell = "<td><div class=plate id='item_".$don['donation_id']."' style='color: #000;'>";
-					$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><b>Donation Plate Title???</b></div><img height=100px width=135px src=uploads/members/".$user['photo_file']." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Status: </b>".$don['status']."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$user['user_id']."'>".$user['username']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$don['amount']."</b></span></td><td align=right><i><b>more...</b></i></td></tr></table></div></td>";							
+					$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><b>Donation Plate Title???</b></div><img height=100px width=135px src=uploads/members/".$user['photo_file']." style='margin-bottom: 3px'><div style='color: #000;line-height: 120%;'><b>Status: </b>".$don['status']."<br/><b>Member: </b><a href='index.php?task=view_user&id=".$user['user_id']."'>".$user['fname']." ".$user['lname']."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$don['amount']."</b></span></td><td align=right><i><b>more...</b></i></td></tr></table></div></td>";							
 					echo $cell;					
 					$n++;
 					if ($n == 6) {
@@ -761,7 +761,7 @@ die;
 					while ($item = mysql_fetch_array($sent_items)) {
 						$item_id = $item['item_id'];
 						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$item['user_id']));						
-						$html .= "<tr><td><a class='bluelink' href='index.php?task=view_item&id=$item_id'>#$item_id</a></td><td><a class='bluelink'  href='index.php?task=view_item&id=$item_id'>".$item['title']."</a></td><td>".money_format('%(#10n', floatval($item['price']))."</td><td>".$mem['username']."</td><td>".$item['sent_date']."</td></tr>";
+						$html .= "<tr><td><a class='bluelink' href='index.php?task=view_item&id=$item_id'>#$item_id</a></td><td><a class='bluelink'  href='index.php?task=view_item&id=$item_id'>".$item['title']."</a></td><td>".money_format('%(#10n', floatval($item['price']))."</td><td>".$mem['fname']." ".$mem['lname']."</td><td>".$item['sent_date']."</td></tr>";
 					}
 					$html .= "</table>";
 					echo $html;
