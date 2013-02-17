@@ -176,6 +176,11 @@ div.plateItem {
 	text-align: center;
 }
 
+div.plateItem:hover {
+	background-color: #white;
+	cursor: pointer;
+}
+
 div.plateSilo {
 	-moz-border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -196,6 +201,7 @@ div.plateSilo {
 
 div.plateSilo:hover {
 	background-color: #fff;
+	cursor: pointer;
 }
 
 div.item_row {

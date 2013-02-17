@@ -52,22 +52,6 @@
 
 <div class="row">
 	<div style="margin-left: 10px;">
-		<script>
-		    // Can be CSSED
-			function highlight_silo(id) {			
-				document.getElementById("silo_"+id).style.background = "#fff";			
-			}
-			function unhighlight_silo(id) {			
-				document.getElementById("silo_"+id).style.background = "#E0EFF9";			
-			}
-			function highlight_item(id) {			
-				document.getElementById("item_"+id).style.background = "#fff";			
-			}
-			function unhighlight_item(id) {			
-				document.getElementById("item_"+id).style.background = "#E0EFF9";			
-			}
-		</script>
-		
 		<p class="silos_header">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
 	
 		<?php
