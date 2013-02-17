@@ -195,7 +195,7 @@ div.plateSilo {
 }
 
 div.plateSilo:hover {
-	background-color: red;
+	background-color: #fff;
 }
 
 div.item_row {
