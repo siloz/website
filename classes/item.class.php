@@ -133,7 +133,7 @@ class Item {
 			$cell .= " first_element";
 		}
 		
-		$cell .= "' id=item_".$this->id." onclick='index.php?task=view_item&id=".$this->id."'>";
+		$cell .= "' id=item_".$this->id." onclick='window.location = \"index.php?task=view_item&id=".$this->id."\"'>";
 		$cell .= "<div style='margin-top: 5px;'><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px;'></div><div style='margin-bottom: 3px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->price."</b></span></div></a></div>";
 		return $cell;
 	}
