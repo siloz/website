@@ -194,6 +194,10 @@ div.plateSilo {
 	margin-left: 16px;
 }
 
+div.plateSilo:hover {
+	background-color: red;
+}
+
 div.item_row {
 	margin-top: 10px;
 }
