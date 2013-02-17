@@ -238,7 +238,7 @@ class Silo {
 			$cell .= " first_element";
 		}
 		
-		$cell .= "' id=silo_".$this->id." onclick='window.location = index.php?task=view_silo&id=".$this->id."'>";				
+		$cell .= "' id=silo_".$this->id." onclick='window.location = \"index.php?task=view_silo&id=".$this->id."\"'>";				
 		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal:</b> $".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
