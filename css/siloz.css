@@ -177,7 +177,7 @@ div.plateItem {
 }
 
 div.plateItem:hover {
-	background-color: #white;
+	background-color: white;
 	cursor: pointer;
 }
 
