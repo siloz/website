@@ -159,7 +159,8 @@ else {
 		<script type="text/javascript" src="js/jquery.truncator.js"></script>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false"></script>
 		<script type="text/javascript" src="js/infobubble-compiled.js"></script>	  								
-		<script type="text/javascript" src="js/util.js"></script>	  								
+		<script type="text/javascript" src="js/util.js"></script>	
+		<script type="text/javascript" src="js/change_location.js"></script>
 	  	<script type="text/javascript">
 			$(document).ready(function() {
 		      	$('.max1500').truncate({max_length: 1500});			    

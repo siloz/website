@@ -83,7 +83,7 @@
 
 <div class="row">
 	<div style="margin-left: 10px">
-	<p class="silos_header">Items for Sale near <span id="enterLocation_item" style="display: none;"></span> <span id="userLocation_item" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_item()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
+	<p class="silos_header">Items for Sale near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
 
 	<?php
 		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE deleted_date = 0 ORDER BY distance LIMIT 6";
