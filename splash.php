@@ -44,7 +44,7 @@
 
 <div class="row">
 	<div style="margin-left: 10px;">
-		<p class="silos_header">Popular silos near <span id="enterLocation_silo" style="display: none;"></span> <span id="userLocation_silo" <?php if (!$_SESSION['is_logged_in']) echo  'onclick="changeLocation_silo()"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+		<p class="silos_header">Popular silos near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
 	
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
@@ -148,24 +148,3 @@
 		</div>
 	</div>
 </div>
-	
-<script>
-	function changeLocation_silo()
-	{
-	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-	  $(this).append( str );
-	  userLocation_silo.style.display = 'none';
-	  enterLocation_silo.style.display = 'inline-block';
-
-	}
-
-	function changeLocation_item()
-	{
-	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-	  $(this).append( str );
-	  $(this).remove();
-	  //userLocation_item.style.display = 'none';
-	  //enterLocation_item.style.display = 'inline-block';
-
-	}
-</script>
