@@ -153,7 +153,7 @@
 	function changeLocation_silo()
 	{
 	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-	  $('#enterLocation_silo').append( str );
+	  $(this).append( str );
 	  userLocation_silo.style.display = 'none';
 	  enterLocation_silo.style.display = 'inline-block';
 
@@ -162,9 +162,10 @@
 	function changeLocation_item()
 	{
 	  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-	  $('#enterLocation_item').append( str );
-	  userLocation_item.style.display = 'none';
-	  enterLocation_item.style.display = 'inline-block';
+	  $(this).append( str );
+	  $(this).remove();
+	  //userLocation_item.style.display = 'none';
+	  //enterLocation_item.style.display = 'inline-block';
 
 	}
 </script>
