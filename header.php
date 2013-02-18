@@ -58,6 +58,7 @@
 	
 	<span class="gray">Your location:</span> 
 	<span class="blue"><?=$userLocation?></span>
+	<span class="blue separator">|</span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
 			$user_id = $_SESSION['user_id'];
