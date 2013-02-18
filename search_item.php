@@ -63,13 +63,26 @@
 	$items = array();
 	
 	while ($item = mysql_fetch_array($tmp)) {
-		$i ++;				
+		if ($i % 6 == 0) {
+			$items_html .= "<div class='row item_row'>";
+		}
 		
 		$it = new Item($item['id']);
 		$items[] = $it;
 		
-		$items_html .= $it->getItemPlate($i % 6 == 0);				
-	}	
+		$items_html .= $it->getItemPlate($i % 6 == 0);
+
+		if ($num_items % 6 == 5) {
+			$items_html .= "</div>";
+		}		
+
+		$i ++;
+	}
+	
+	if ($num_items % 6 < 5) {
+		$items_html .= "</div";
+	}
+	
 	$items_html .= "</div></div>";
 
 	$prev = "";
