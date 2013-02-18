@@ -76,8 +76,8 @@
 	<?php
 		} else {
 	?>
-			<a href="javascript:create_silo_need_login();">start a silo</a>	
-			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">login</a>	
+			<a href="javascript:create_silo_need_login();"><span>start a silo</span></a>	
+			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><span>login</span></a>	
 	<?php
 		}
 	?>
@@ -174,7 +174,7 @@
 </div>
 
 <form id="search_form" name="search_form">
-<div id="logo">
+<div id="logo_container">
 	<a href="index.php" style="text-decoration:none"><img src="images/logo.png"/></a>			
 </div>
 <!-- <div align="right" style="margin-top: -30px; margin-right: 10px; font-size: 12px; line-height: 25px;">
