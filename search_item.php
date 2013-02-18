@@ -256,21 +256,7 @@ window.onload = loadScript;
 			</div>
 			
 
-
 <?php echo $items_html;?>
 
 <div style="margin-left: 10px;">
-	<script>
-	function highlight_silo(id) {			
-		document.getElementById("silo_"+id).style.background = "#fff";			
-	}
-	function unhighlight_silo(id) {			
-		document.getElementById("silo_"+id).style.background = "#E0EFF9";			
-	}
-	function highlight_item(id) {			
-		document.getElementById("item_"+id).style.background = "#fff";			
-	}
-	function unhighlight_item(id) {			
-		document.getElementById("item_"+id).style.background = "#E0EFF9";			
-	}
-	</script>
+	
