@@ -43,7 +43,7 @@
 </script>
 <div id="top_menu">
 	<span class="gray">Your location:</span> 
-	<span class="blue change_location"><?=$userLocation?></span>
+	<span class="blue change_location"><?=$userLocation?> change</span>
 	<span class="blue separator">|</span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
