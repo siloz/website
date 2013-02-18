@@ -62,24 +62,34 @@
 	$tmp = mysql_query($sql);		
 	$closed_silos = array();
 	
-	$siloz_html = "<table cellpadding='10px' style='border-spacing: 0px'><tr>";
+	$siloz_html = "<div class='row'><div class='span12'>";
+	
 	$i = 0;
 	
 	while ($s = mysql_fetch_array($tmp)) {	
-		$i ++;
+		
 		$silo = new Silo($s['id']);
-		if ($i % $silosPerRow == 1 && $i > 1) {
-			$siloz_html .= "</tr><tr>";
+		
+		if ($i % 5 == 0) {
+			$siloz_html .= "<div class='row item_row'>";
 		}
-		else if ($i % $silosPerRow == 1) {
-			$siloz_html .= "<tr>";
+					
+		$siloz_html .= $silo->getSiloPlate($i % 5 == 0);
+		
+		if ($i % 5 == 4) {
+			$siloz_html .= "</div>";
 		}
-		$siloz_html .= "<td>";				
-		$siloz_html .= $silo->getPlate();
-		$siloz_html .= "</td>";
-		$closed_silos[] = $silo;		
+		
+		$closed_silos[] = $silo;	
+
+		$i ++;
 	}
-	$siloz_html .= "</tr></table></div>";
+	
+	if ($i % 5 < 4) {
+		$siloz_html .= "</div>";
+	}
+	
+	$siloz_html .= "</div></div>";
 
 	$prev = "";
 	if ($from >= $silosPerPage)
@@ -250,25 +260,7 @@ window.onload = loadScript;
 	</tr>
 			</table>
 			</div>
-<table>
-	<tr>
-		<td valign='top' width="800px">
-			<div id="silos" style="width: 800;"><?php echo $siloz_html;?></div>
-	</tr>
-</table>
+			
+<?php echo $siloz_html;?>
 
 <div style="margin-left: 10px;">
-	<script>
-	function highlight_silo(id) {			
-		document.getElementById("silo_"+id).style.background = "#fff";			
-	}
-	function unhighlight_silo(id) {			
-		document.getElementById("silo_"+id).style.background = "#E0EFF9";			
-	}
-	function highlight_item(id) {			
-		document.getElementById("item_"+id).style.background = "#fff";			
-	}
-	function unhighlight_item(id) {			
-		document.getElementById("item_"+id).style.background = "#E0EFF9";			
-	}
-	</script>
