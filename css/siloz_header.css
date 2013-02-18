@@ -116,6 +116,10 @@ select {
 	padding: 20px;
 }
 
+.login {
+	z-index: 100;
+}
+
 .overlay_search_bar {
 	z-index: 1;
 	height: 50px;
