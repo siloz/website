@@ -307,10 +307,10 @@ function populate_item_info(item_id) {
 	<table width="940px" style="border-spacing: 0px;">
 		<tr>
 			<td width="700px">
-				<b>Your Account</b><?php echo " (".$_SESSION['username'].")"?>
+				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
 			</td>
 			<td align="center">
-				<a href="index.php?task=my_transactions" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">My Transactions</a>
+				<a href="index.php?task=transaction_console" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
 			</td>	
 			<td align="center">
 				<span style="color: #fff">|</span>

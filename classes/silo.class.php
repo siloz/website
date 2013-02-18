@@ -187,7 +187,7 @@ class Silo {
 		$pct_day = 100*min(1,(time() - strtotime($this->start_date))/(strtotime($this->end_date) - strtotime($this->start_date)));
 		$html .= "<b>Deadline:</b><div style='width: 120px; height: 10px; border: 1px solid #2F8ECB;'><div style='width: $pct_day%; height:10px; background: #2F8ECB;'></div></div>";
 		$html .= "</td><td><img height=100px width=135px src=uploads/silos/".$this->photo_file."></td></tr>";
-		$html .= "<tr><td colspan=2><b>Purpose:</b> ".$this->getPurpose()."<br/><br/><b>Administrator:</b> ".$admin->username."<br/><br/>";
+		$html .= "<tr><td colspan=2><b>Purpose:</b> ".$this->getPurpose()."<br/><br/><b>Administrator:</b> ".$admin_name."<br/><br/>";
 		$html .= "<b>Official address:</b>".$this->address."</td></tr>";
 		$html .= "</table>";
 		$html .= "</div>";

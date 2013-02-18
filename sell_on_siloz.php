@@ -107,6 +107,13 @@ else {
 			$Feed->item_id = $actual_id;
 			$Feed->status = $status;
 			$Feed->Save();
+
+			$sql = "SELECT * FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
+			if (mysql_num_rows(mysql_query($sql)) == 0) {
+				$joined = false;
+				$sql = "INSERT INTO silo_membership(silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
+				mysql_query($sql);
+			}
 						
 			for ($i=1; $i<=4; ++$i) {
 				if ($_FILES['item_photo_'.$i]['name'] != '') {
@@ -147,13 +154,6 @@ else {
 
 						unlink($temporary_name);
 						imagejpeg($img,"uploads/".$id."_".$i.".jpg",80);
-
-						$sql = "SELECT * FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
-						if (mysql_num_rows(mysql_query($sql)) == 0) {
-							$joined = false;
-							$sql = "INSERT INTO silo_membership(silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
-							mysql_query($sql);
-						}
 					}
 				}							
 			}

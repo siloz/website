@@ -1,4 +1,26 @@
 <?php
+	if (param_post('crop') == 'Crop') {
+		$id = trim(param_post('user_id'));
+		$crop = true;
+		$targ_w = 300;
+		$targ_h = 225;
+		$jpeg_quality = 90;
+
+		$src = 'uploads/'.$id.'.jpg';
+		$name = 'uploads/members/'.$id.'.jpg';
+		$img_r = imagecreatefromjpeg($src);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+
+		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
+		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+
+		imagejpeg($dst_r, $name, $jpeg_quality);
+		unlink($src);
+
+		$sql = "UPDATE users SET photo_file = '$id.jpg' WHERE id = $id";
+		mysql_query($sql);
+	}
+
 //If account info is updated
 	if ($_SESSION['is_logged_in'] != 1) {
 		echo "<script>window.location = 'index.php';</script>";
@@ -10,7 +32,8 @@
 			$old_password = param_post('old_password');
 			$new_password = param_post('new_password');
 			$retype_new_password = param_post('retype_new_password');		
-			$fullname = param_post('fullname');
+			$fname = param_post('fname');
+			$lname = param_post('lname');
 			$email = trim(param_post('email'));
 			$address = param_post('address');
 			$zip_code = param_post('zip_code');
@@ -28,8 +51,11 @@
 			if ($new_password != $retype_new_password) {
 				$err .= 'Passwords do not match.<br/>';		
 			}
-			if (strlen(trim($fullname)) == 0) {
-				$err .= 'Full name must not be empty.<br/>';		
+			if (strlen(trim($fname)) == 0) {
+				$err .= 'First name must not be empty.<br/>';		
+			}
+			if (strlen(trim($lname)) == 0) {
+				$err .= 'Last name must not be empty.<br/>';		
 			}
 			if (strlen(trim($email)) == 0) {
 				$err .= 'Email must not be empty.<br/>';		
@@ -53,7 +79,7 @@
 					 	$err .= "New password must not be empty.";
 					}
 					else {
-						$sql = "UPDATE users SET fullname = '$fullname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone', password='$new_password' WHERE id = $id";
+						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone', password='$new_password' WHERE id = $id";
 						mysql_query($sql);
 
 						if ($_FILES['member_photo']['name'] != '') {
@@ -99,7 +125,7 @@
 					}
 				}				
 				else {
-					$sql = "UPDATE users SET fullname = '$fullname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone' WHERE id = $id";
+					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone' WHERE id = $id";
 					mysql_query($sql);
 					if ($_FILES['member_photo']['name'] != '') {
 						$allowedExts = array("png", "jpg", "jpeg", "gif");							
@@ -147,32 +173,21 @@
 			$sql = "SELECT * FROM users WHERE username='$username'";
 			$res = mysql_query($sql);
 			$row = mysql_fetch_array($res);
-			$fullname = $row['fullname'];
+			$id = $row['id'];
+			$user_id = $row['user_id'];
+			$fname = $row['fname'];
+			$lname = $row['lname'];
 			$email = $row['email'];
 			$address = $row['address'];
 			$zip_code = $row['zip_code'];
 			$phone = $row['phone'];
+			$jdate = $row['joined_date'];
+			$msince = date("m/d/Y", strtotime($jdate));
 			$photo_file = $row['photo_file'];
+
+			$funds = mysql_fetch_array(mysql_query("SELECT SUM(price) AS total FROM items WHERE user_id = '$user_id' AND status = 'sold'"));
+			$total_raised = $funds['total'];
 		}
-
-	if (param_post('crop') == 'Crop') {
-		$id = trim(param_post('user_id'));
-		$crop = true;
-		$targ_w = 300;
-		$targ_h = 225;
-		$jpeg_quality = 90;
-
-		$src = 'uploads/'.$id.'.jpg';
-		$name = 'uploads/members/'.$id.'.jpg';
-		$img_r = imagecreatefromjpeg($src);
-		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-
-		imagecopyresampled($dst_r,$img_r,0,0,$_POST['x'],$_POST['y'],
-		$targ_w,$targ_h,$_POST['w'],$_POST['h']);
-
-		imagejpeg($dst_r, $name, $jpeg_quality);
-		unlink($src);
-	}
 
 	$updatemsg = "Your account has been updated!";
 ?>
@@ -209,10 +224,10 @@
 	<table width="940px" style="border-spacing: 0px;">
 		<tr>
 			<td width="700px">
-				<b>Your Account</b><?php echo " (".$_SESSION['username'].")"?>
+				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
 			</td>
 			<td align="center">
-				<a href="index.php?task=my_transactions" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">My Transactions</a>
+				<a href="index.php?task=transaction_console" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
 			</td>	
 			<td align="center">
 				<span style="color: #fff">|</span>
@@ -259,6 +274,30 @@ die;
 }
 ?>
 
+<?php
+//If account deleted
+if (param_post('delete') == 'Delete account') {
+	$id = param_post('id');
+	$user_id = param_post('user_id');
+
+	$User = new User();
+	$User->id = $id;
+	$User->user_id = $user_id;
+	$User->DeleteUser();
+?>
+		<center>
+			<font color="red"><b>Your account has been deleted. You will not receive any further notifications from us. 
+			If you have any questions, please call or e-mail our support team.<br><br>
+			Thanks for using siloz.com!</b></font>
+		</center>
+		<br>
+		<br>
+<?php
+session_destroy();
+die;
+}
+?>
+
 	<hr/>
 	<font size="4"><b>My Account Information</b></font>
 	<?php
@@ -295,9 +334,16 @@ die;
 				<td valign="top">
 					<table>
 						<tr>
-							<td><b>Fullname</b> </td>
-							<td><input type="text" name="fullname" style="width : 200px" value='<?php echo $fullname; ?>'/></td>
-						</tr>		
+							<td><b>First name</b> </td>
+							<td><input type="text" name="fname" style="width : 200px" value='<?php echo $fname; ?>'/></td>
+						</tr>
+						<tr>
+							<td><b>Last name</b> </td>
+							<td><input type="text" name="lname" style="width : 200px" value='<?php echo $lname; ?>'/></td>
+						</tr>
+						<tr>
+							<td colspan="2"><b>Member Since:</b> <?=$msince?> </td>
+						</tr>
 						<tr>
 							<td><b>Email</b> </td>
 							<td><input type="text" name="email" style="width : 200px" value='<?php echo $email; ?>'/></td>
@@ -324,6 +370,9 @@ die;
 							<td><input type="text" name="username" style="width : 200px" value='<?php echo $username; ?>' disabled="disabled"/></td>			
 						</tr>
 						<tr>
+							<td colspan="2"><b>Total funds raised for silos:</b> <?php if ($total_raised) { echo "$".$total_raised; } else { echo "$0.00"; } ?></td>
+						</tr>
+						<tr>
 							<td><b>Current Password</b> </td>
 							<td><input type="password" name="old_password" style="width : 200px"/></td>			
 						</tr>
@@ -346,8 +395,34 @@ die;
 					</table>					
 				</td>
 			</tr>
+			<tr>
+				<td></td>
+				<td colspan="2">
+					<p><font color="red"><b>E-mail notifications</b></font> 
+					<font color="grey">For security reasons, we will notify you of a status changes for items you are buying or selling, 
+					when you join a silo, or when a silo administrator does something of consequence (e.g. end a silo).
+					siloz is not responsible for email intiated by other users.</font></p>
+
+					<form method="post" action="">
+					<input type="hidden" name="id" value="<?=$id?>">
+					<input type="hidden" name="user_id" value="<?=$user_id?>">
+					<input style="color: red; font-weight: bold; background: #fff;" type="submit" name="delete" value="Delete account" onClick="return confirmSubmit()">
+					<font color="grey">(this is not reversible, and cannot be performed with items pending or while a silo is open.)</font>
+				</td>
+			</tr>
 		</table>
 	</form>
 <?php
 	}
 ?>
+
+<script>
+function confirmSubmit()
+{
+var agree=confirm("Are you sure you want to delete your account? ALL DELETIONS ARE FINAL!");
+if (agree)
+	return true ;
+else
+	return false ;
+}
+</script>

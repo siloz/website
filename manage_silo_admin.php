@@ -55,7 +55,7 @@ function updateStatus (e, item_id) {
 		
 		//EMAIL - MEMBER REMOVED
 		$subject = "You item has been removed from Silo - ".$silo['name'];
-		$message = $user['username'].", your item number #".$item['item_id'].": ".$item['title']." has been removed from silo ".$silo['name']." by the silo’s administrator.  Only items whose status was not ‘funds sent’ or funds received’ are able to be removed by members or silo administrators.  Therefore, you are not obliged to follow-through with payment to your silo administrator for your item.<br/><br/>";
+		$message = $user['fname'].", your item number #".$item['item_id'].": ".$item['title']." has been removed from silo ".$silo['name']." by the silo’s administrator.  Only items whose status was not ‘funds sent’ or funds received’ are able to be removed by members or silo administrators.  Therefore, you are not obliged to follow-through with payment to your silo administrator for your item.<br/><br/>";
 		$message .= "Silo administrators have the prerogative to remove items at their discretion, for just cause.  See our Terms of Use and FAQ for more information on what constitutes ‘just cause’.  If you feel your item waswrongfully removed you can contact the silo administrator at ".$admin['email'].".  If you feel your silo administrator was not abiding our tenets of legality, respect, goodwill and inclusiveness, you can report inappropriate action to us by using the ‘contact us’ link in the footer of the website.<br/><br/>";
 		$message .= "Thanks,<br/><br/>
 					Siloz Staff.";			
@@ -80,7 +80,7 @@ function updateStatus (e, item_id) {
 			
 		//EMAIL - MEMBER REMOVED
 		$subject = "You have been removed from Silo - ".$silo['name'];
-		$message = $user['username'].", you have been removed from silo ".$silo['name']." by the silo’s administrator.  Any items whose status was not ‘funds sent’ or funds received’ are active on the silo.  Any donations are active on the silo.  Please honor your pledge or donation promise by sending any outstanding amounts.<br/><br/>";
+		$message = $user['fname'].", you have been removed from silo ".$silo['name']." by the silo’s administrator.  Any items whose status was not ‘funds sent’ or funds received’ are active on the silo.  Any donations are active on the silo.  Please honor your pledge or donation promise by sending any outstanding amounts.<br/><br/>";
 		$message .= "Silo administrators have the prerogative to remove members at their discretion, for just cause - or upon request.  See our Terms of Use and FAQ for more information on what constitutes ‘just cause’.  If you feel you were wrongfully removed you can contact the silo administrator at ".$admin['email'].".  If you feel your silo administrator was not abiding our tenets of legality, respect, goodwill and inclusiveness, you can report inappropriate action to us by using the ‘contact us’ link in the footer of the website.<br/><br/>";
 		$message .= "Thanks,<br/><br/>
 					Siloz Staff.";			

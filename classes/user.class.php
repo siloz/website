@@ -4,7 +4,8 @@ class User {
 	public $id;
 	public $username;
 	public $password;
-	public $fullname;
+	public $fname;
+	public $lname;
 	public $phone;
 	public $email;
 	public $address;
@@ -34,7 +35,8 @@ class User {
 		$this->id = $res['id'];
 		$this->username = $res['username'];
 		$this->password = $res['password'];
-		$this->fullname = $res['fullname'];
+		$this->fname = $res['fname'];
+		$this->lname = $res['lname'];
 		$this->phone = $res['phone'];
 		$this->email = $res['email'];
 		$this->address = $res['address'];
@@ -86,10 +88,14 @@ class User {
 		return $members;
 	}
 	
-	public function getMemberCell($silo_id) {
-		$date = substr($this->joined_date,5,2).'/'.substr($this->joined_date,8,2).'/'.substr($this->joined_date,2,2);		
+	public function getMemberCell($silo_id, $c_user_id) {
+		$date = substr($this->joined_date,5,2).'/'.substr($this->joined_date,8,2).'/'.substr($this->joined_date,2,2);
+
+		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id'"));
+		if ($show) { $admin_name = $this->fname; $admin_name .= "&nbsp;".$this->lname; } else { $admin_name = $this->fname; };
+
 		$cell = "<td><div class=plate id='user_".$this->id."' style='color: #000;'><table width=100% height=100%><tr valign=top><td>";
-		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$this->username."</b></a></div><b>Member Since: </b>".$date."<br/><img height=100px width=135px src=uploads/members/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
+		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$admin_name."</b></a></div><b>Member Since: </b>".$date."<br/><img height=100px width=135px src=uploads/members/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
 		return $cell;		
 	}
 	
@@ -101,13 +107,14 @@ class User {
 	private function Insert(){
 		$query = (
 			"INSERT INTO `users` "
-			."(`username`,`password`,`fullname`,`phone`,`email`,`address`,`zip_code`,`longitude`,`latitude`,"
+			."(`username`,`password`,`fname`,`lname`,`phone`,`email`,`address`,`zip_code`,`longitude`,`latitude`,"
 			."`user_type`,`joined_date`,`validation_code`,`status`) "
 			."VALUES "
 			."("
 				."'".mysql_real_escape_string($this->username)."',"
 				."'".mysql_real_escape_string($this->password)."',"
-				."'".mysql_real_escape_string($this->fullname)."',"
+				."'".mysql_real_escape_string($this->fname)."',"
+				."'".mysql_real_escape_string($this->lname)."',"
 				."'".mysql_real_escape_string($this->phone)."',"
 				."'".mysql_real_escape_string($this->email)."',"
 				."'".mysql_real_escape_string($this->address)."',"
@@ -138,7 +145,8 @@ class User {
 			"UPDATE `users` "
 			."SET "
 			."`username` = '".mysql_real_escape_string($this->username)."',"
-			."`fullname` = '".mysql_real_escape_string($this->fullname)."',"
+			."`fname` = '".mysql_real_escape_string($this->fname)."',"
+			."`lname` = '".mysql_real_escape_string($this->lname)."',"
 			."`phone` = '".mysql_real_escape_string($this->phone)."',"
 			."`email` = '".mysql_real_escape_string($this->email)."',"
 			."`address` = '".mysql_real_escape_string($this->address)."',"
@@ -175,6 +183,15 @@ class User {
 			if(mysql_affected_rows() >= 1){return "active";}
 			else{return false;}
 		}
+	}
+
+	public function DeleteUser(){
+		$qry = "DELETE FROM users WHERE user_id = '$this->user_id'";
+		mysql_query($qry);
+
+		$src = 'uploads/members/'.$this->id.'.jpg';
+		unlink($src);
+
 	}
 	
 }
