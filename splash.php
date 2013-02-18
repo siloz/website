@@ -1,17 +1,3 @@
-<!-- <div class="row">
-	<div id="logo_container">
-		<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
-	</div>
-	<div id="logged_out_supernav">
-		<span class="gray">Your location:</span> 
-		<span>Oakland, CA</span>
-		<span class="blue separator">|</span>
-		<span class="blue">login/create account</span>
-		<span class="blue separator">|</span>
-		<span class="blue">start a silo</span>
-	</div>
-</div> -->
-
 <div id="header">
 	<?php
 		include('header.php');

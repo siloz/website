@@ -42,7 +42,20 @@
 	}
 </script>
 <div id="top_menu">
-	<a href="index.php?task=stories" class="bold_text">silozstories</a>					
+	<!-- <div class="row">
+			<div id="logo_container">
+				<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
+			</div>
+			<div id="logged_out_supernav">
+				<span class="gray">Your location:</span> 
+				<span>Oakland, CA</span>
+				<span class="blue separator">|</span>
+				<span class="blue">login/create account</span>
+				<span class="blue separator">|</span>
+				<span class="blue">start a silo</span>
+			</div>
+		</div> -->
+	<!--<a href="index.php?task=stories" class="bold_text">silozstories</a>-->					
 	<?php
 		if (isset($_SESSION['user_id'])) {
 			$user_id = $_SESSION['user_id'];
@@ -63,8 +76,8 @@
 	<?php
 		} else {
 	?>
-			<a href="javascript:create_silo_need_login();" class="bold_text">start a silo</a>	
-			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" class="bold_text">login</a>	
+			<a href="javascript:create_silo_need_login();">start a silo</a>	
+			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">login</a>	
 	<?php
 		}
 	?>
