@@ -89,7 +89,7 @@
 		$siloz_html .= "</div>";
 	}
 	
-	$siloz_html .= "</div></div>";
+	$siloz_html .= "</div></div></div>";
 
 	$prev = "";
 	if ($from >= $silosPerPage)
