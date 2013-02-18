@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
 	<div id="logo_container">
 		<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
 	</div>
@@ -10,6 +10,12 @@
 		<span class="blue separator">|</span>
 		<span class="blue">start a silo</span>
 	</div>
+</div> -->
+
+<div id="header">
+	<?php
+		include('header.php');
+	?>
 </div>
 
 <div class="row">
