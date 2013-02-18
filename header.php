@@ -47,8 +47,7 @@
 				<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
 			</div>
 			<div id="logged_out_supernav">
-				<span class="gray">Your location:</span> 
-				<span>Oakland, CA</span>
+				
 				
 				<span class="blue">login/create account</span>
 				<span class="blue separator">|</span>
@@ -56,6 +55,9 @@
 			</div>
 		</div> -->
 	<!--<a href="index.php?task=stories" class="bold_text">silozstories</a>-->					
+	
+	<span class="gray">Your location:</span> 
+	<span class="blue"><?=$userLocation?></span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
 			$user_id = $_SESSION['user_id'];
