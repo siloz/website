@@ -63,16 +63,18 @@
 			$res = mysql_query($sql);
 			if (mysql_num_rows($res) == 0) {
 	?>
-				<a href="index.php?task=create_silo" class="bold_text">start a silo</a>
+				<a href="index.php?task=create_silo"><span class="blue">start a silo</span></a>
+				<span class="blue separator">|</span>
 	<?php
 			}
 			else {
 	?>
-				<a href="index.php?task=manage_silo" class="bold_text">manage your silo</a>				
+				<a href="index.php?task=manage_silo"><span class="blue">manage your silo</span></a>		
+				<span class="blue separator">|</span>
 	<?php
 			}
 	?>
-			<a href="index.php?task=my_account" class="bold_text">my account</a>	
+			<a href="index.php?task=my_account"><span class="blue">my account</span></a>	
 	<?php
 		} else {
 	?>
