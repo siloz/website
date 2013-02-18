@@ -42,22 +42,8 @@
 	}
 </script>
 <div id="top_menu">
-	<!-- <div class="row">
-			<div id="logo_container">
-				<a href="index.php" style="text-decoration:none"><img src="images/logo_main.png"/></a>			
-			</div>
-			<div id="logged_out_supernav">
-				
-				
-				<span class="blue">login/create account</span>
-				<span class="blue separator">|</span>
-				<span class="blue">start a silo</span>
-			</div>
-		</div> -->
-	<!--<a href="index.php?task=stories" class="bold_text">silozstories</a>-->					
-	
 	<span class="gray">Your location:</span> 
-	<span class="blue"><?=$userLocation?></span>
+	<span class="blue change_location"><?=$userLocation?></span>
 	<span class="blue separator">|</span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
@@ -284,14 +270,3 @@ else { }
 </div>
 
 </form>
-
-<script>
-function changeLocation()
-{
-  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-  $('#enterLocation').append( str );
-  userLocation.style.display = 'none';
-  enterLocation.style.display = 'inline-block';
-
-}
-</script>
