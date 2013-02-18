@@ -49,7 +49,7 @@
 			<div id="logged_out_supernav">
 				<span class="gray">Your location:</span> 
 				<span>Oakland, CA</span>
-				<span class="blue separator">|</span>
+				
 				<span class="blue">login/create account</span>
 				<span class="blue separator">|</span>
 				<span class="blue">start a silo</span>
@@ -77,6 +77,7 @@
 		} else {
 	?>
 			<a href="javascript:create_silo_need_login();"><span>start a silo</span></a>	
+			<span class="blue separator">|</span>
 			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><span>login</span></a>	
 	<?php
 		}
