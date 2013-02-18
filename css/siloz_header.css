@@ -1,9 +1,14 @@
 #top_menu {
     float: right;
-    margin-top: 8px;
-	margin-left: 8px;
-	margin-bottom: 8px;
-	margin-right: -10px;
+	margin-top: 10px;
+	margin-right: 10px;
+	font-size: 1.2em;
+}
+
+#top_menu span.separator {
+	font-size: 1.2em;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 #top_menu a, a:active, a:visited {

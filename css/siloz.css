@@ -700,19 +700,6 @@ margin-left: 5px;
 	float: left;
 }
 
-#top_menu {
-	float: right;
-	margin-top: 10px;
-	margin-right: 10px;
-	font-size: 1.2em;
-}
-
-#top_menu span.separator {
-	font-size: 1.2em;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
 /* Text formatting */
 .tagline {
 	text-align: center;

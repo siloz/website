@@ -4,7 +4,7 @@
 	?>
 </div>
 
-<div class="row">
+<div class="row top_row">
 	<h2 class="tagline">siloz is a marketplace for items donated to raise money for causes (silos) in your community</h2>
 </div>
 
