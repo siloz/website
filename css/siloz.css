@@ -170,13 +170,22 @@ div.plateItem {
 	color: #2f8dcb;
 	font-size: 11px;
 	background: #E6F2FB;
-	font-family: Arial, Helvetica,sans-serif; ;	
+	font-family: Arial, Helvetica,sans-serif;
+	
+	margin-left: 8px;
+	text-align: center;
+}
+
+div.plateItem:hover {
+	background-color: white;
+	cursor: pointer;
 }
 
 div.plateSilo {
 	-moz-border-radius: 8px;
     -webkit-border-radius: 8px;
     -khtml-border-radius: 8px;
+	
     border-radius: 8px;     
     border: 1px solid #84bfe5;
 	width: 165px;
@@ -185,8 +194,23 @@ div.plateSilo {
 	color: #2f8dcb;
 	font-size: 11px;
 	background: #E6F2FB;
-	font-family: Arial, Helvetica,sans-serif; ;	
+	font-family: Arial, Helvetica,sans-serif;
+	
+	margin-left: 16px;
 }
+
+div.plateSilo:hover {
+	background-color: #fff;
+	cursor: pointer;
+}
+
+div.item_row {
+	margin-top: 10px;
+}
+
+div.first_element {
+	margin-left: 0px;
+}	
 
 div.siloInfo {
 	-moz-border-radius: 8px;
@@ -725,19 +749,6 @@ margin-left: 5px;
 	float: left;
 }
 
-#logged_out_supernav {
-	float: right;
-	margin-top: 10px;
-	margin-right: 10px;
-	font-size: 1.2em;
-}
-
-#logged_out_supernav span.separator {
-	font-size: 1.2em;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
 /* Text formatting */
 .tagline {
 	text-align: center;
@@ -760,6 +771,14 @@ margin-left: 5px;
 	margin-top: 30px;
 	margin-left: 15px;
 	color: gray;
+}
+
+.silos_header {
+	color: #2F8ECB; 
+	font-size: 18px; 
+	font-weight: bold;
+	
+	margin-bottom: 0px;
 }
 
 /* Sliders */

@@ -57,23 +57,33 @@
 
 	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE deleted_date = 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
 	$tmp = mysql_query($sql);
-	$items_html = "<table cellpadding='6px'><tr>";
+	
+	$items_html = "<div class='row'><div class='span12'>";
 	$i = 0;
 	$items = array();
+	
 	while ($item = mysql_fetch_array($tmp)) {
-		$i ++;				
-		if ($i % $itemsPerRow == 1 && $i > 1) {
-			$items_html .= "</tr><tr>";
+		if ($i % 6 == 0) {
+			$items_html .= "<div class='row item_row'>";
 		}
-		else if ($i % $itemsPerRow == 1) {
-			$items_html .= "<tr>";
-		}
+		
 		$it = new Item($item['id']);
 		$items[] = $it;
 		
-		$items_html .= "<td>".$it->getPlate()."</td>";				
-	}	
-	$items_html .= "</tr></table></div>";
+		$items_html .= $it->getItemPlate($i % 6 == 0);
+
+		if ($num_items % 6 == 5) {
+			$items_html .= "</div>";
+		}		
+
+		$i ++;
+	}
+	
+	if ($num_items % 6 < 5) {
+		$items_html .= "</div";
+	}
+	
+	$items_html .= "</div></div>";
 
 	$prev = "";
 	if ($from >= $itemsPerPage)
@@ -244,25 +254,9 @@ window.onload = loadScript;
 	</tr>
 			</table>
 			</div>
-<table>
-	<tr>
-		<td valign='top' width="800px">
-			<div id="items" style="width: 800;"><?php echo $items_html;?></div>
-	</tr>
-</table>
+			
+
+<?php echo $items_html;?>
 
 <div style="margin-left: 10px;">
-	<script>
-	function highlight_silo(id) {			
-		document.getElementById("silo_"+id).style.background = "#fff";			
-	}
-	function unhighlight_silo(id) {			
-		document.getElementById("silo_"+id).style.background = "#E0EFF9";			
-	}
-	function highlight_item(id) {			
-		document.getElementById("item_"+id).style.background = "#fff";			
-	}
-	function unhighlight_item(id) {			
-		document.getElementById("item_"+id).style.background = "#E0EFF9";			
-	}
-	</script>
+	

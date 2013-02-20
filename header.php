@@ -47,7 +47,9 @@
 	}
 </script>
 <div id="top_menu">
-	<a href="index.php?task=stories" class="bold_text">silozstories</a>					
+	<span class="gray">Your location:</span> 
+	<span class="blue change_location"><?=$userLocation?> change</span>
+	<span class="blue separator">|</span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
 			$user_id = $_SESSION['user_id'];
@@ -55,21 +57,24 @@
 			$res = mysql_query($sql);
 			if (mysql_num_rows($res) == 0) {
 	?>
-				<a href="index.php?task=create_silo" class="bold_text">start a silo</a>
+				<a href="index.php?task=create_silo"><span class="blue">start a silo</span></a>
+				<span class="blue separator">|</span>
 	<?php
 			}
 			else {
 	?>
-				<a href="index.php?task=manage_silo" class="bold_text">manage your silo</a>				
+				<a href="index.php?task=manage_silo"><span class="blue">manage your silo</span></a>		
+				<span class="blue separator">|</span>
 	<?php
 			}
 	?>
-			<a href="index.php?task=my_account" class="bold_text">my account</a>	
+			<a href="index.php?task=my_account"><span class="blue">my account</span></a>	
 	<?php
 		} else {
 	?>
-			<a href="javascript:create_silo_need_login();" class="bold_text">start a silo</a>	
-			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" class="bold_text">login</a>	
+			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><span class="blue">login/create account</span></a>
+			<span class="blue separator">|</span>	
+			<a href="javascript:create_silo_need_login();"><span class="blue">start a silo</span></a>
 	<?php
 		}
 	?>
@@ -166,7 +171,7 @@
 </div>
 
 <form id="search_form" name="search_form">
-<div id="logo">
+<div id="logo_container">
 	<a href="index.php" style="text-decoration:none"><img src="images/logo.png"/></a>			
 </div>
 <!-- <div align="right" style="margin-top: -30px; margin-right: 10px; font-size: 12px; line-height: 25px;">
@@ -270,14 +275,4 @@ else { }
 </div>
 
 </form>
-
-<script>
-function changeLocation()
-{
-  var str = '<form action="" method="POST"><input onclick=this.value=""; type="text" value="Enter Zip Code" name="zip"> <button type="submit" name="location" value="Update">Update</button></form>';
-  $('#enterLocation').append( str );
-  userLocation.style.display = 'none';
-  enterLocation.style.display = 'inline-block';
-
-}
-</script>
+<div style="clear: both;"></div>
