@@ -53,7 +53,7 @@ function updateStatus (e, item_id) {
 		$sql = "UPDATE items SET deleted_date = CURRENT_TIMESTAMP WHERE item_id = $item_id";
 		mysql_query($sql);
 		
-		//EMAIL - MEMBER REMOVED
+		//EMAIL - ITEM REMOVED
 		$subject = "You item has been removed from Silo - ".$silo['name'];
 		$message = $user['fname'].", your item number #".$item['item_id'].": ".$item['title']." has been removed from silo ".$silo['name']." by the silo’s administrator.  Only items whose status was not ‘funds sent’ or funds received’ are able to be removed by members or silo administrators.  Therefore, you are not obliged to follow-through with payment to your silo administrator for your item.<br/><br/>";
 		$message .= "Silo administrators have the prerogative to remove items at their discretion, for just cause.  See our Terms of Use and FAQ for more information on what constitutes ‘just cause’.  If you feel your item waswrongfully removed you can contact the silo administrator at ".$admin['email'].".  If you feel your silo administrator was not abiding our tenets of legality, respect, goodwill and inclusiveness, you can report inappropriate action to us by using the ‘contact us’ link in the footer of the website.<br/><br/>";
@@ -75,7 +75,7 @@ function updateStatus (e, item_id) {
 
 		$sql = "UPDATE items SET deleted_date = CURRENT_TIMESTAMP WHERE silo_id = $silo_id AND user_id = $user_id AND (status <> 'Funds Sent' AND status <> 'Funds Received')";
 		mysql_query($sql);		
-		$sql = "DELETE FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
+		$sql = "UPDATE silo_membership SET removed_date = CURRENT_TIMESTAMP WHERE silo_id = $silo_id AND user_id = $user_id";
 		mysql_query($sql);
 			
 		//EMAIL - MEMBER REMOVED
@@ -661,7 +661,7 @@ die;
 					$order_by_clause = " ORDER BY username $sort_order ";
 				if ($order_by == 'date')
 					$order_by_clause = " ORDER BY joined_date $sort_order ";			
-				$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id) $order_by_clause";				
+				$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id AND removed_date < 1) $order_by_clause";				
 				$users = mysql_query($sql);
 				echo "<table cellpadding='3px'>";
 				$n = 0;

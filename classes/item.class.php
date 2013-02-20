@@ -158,7 +158,7 @@ class Item {
 	}
 	
 	public function getItemCell($silo_id, $c_user_id) {
-		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id'"));
+		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
 
 		$cell = "<td><div class=plate id='item_".$this->id."' style='color: #000;'>";

@@ -78,7 +78,7 @@ class User {
 			$order_by_clause = " ORDER BY username $sort_order ";
 		if ($order_by == 'date')
 			$order_by_clause = " ORDER BY joined_date $sort_order ";			
-		$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id) $order_by_clause $limit";
+		$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id AND removed_date = 0) $order_by_clause $limit";
 		$members = array();
 		$tmp = mysql_query($sql);
 		while ($res = mysql_fetch_array($tmp)) {
@@ -91,7 +91,7 @@ class User {
 	public function getMemberCell($silo_id, $c_user_id) {
 		$date = substr($this->joined_date,5,2).'/'.substr($this->joined_date,8,2).'/'.substr($this->joined_date,2,2);
 
-		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id'"));
+		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 		if ($show) { $admin_name = $this->fname; $admin_name .= "&nbsp;".$this->lname; } else { $admin_name = $this->fname; };
 
 		$cell = "<td><div class=plate id='user_".$this->id."' style='color: #000;'><table width=100% height=100%><tr valign=top><td>";

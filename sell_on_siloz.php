@@ -26,7 +26,7 @@ else {
 		
 		//test for form errors //comment added sept 8th 2012 james kenny
 		if (strlen(trim($title)) == 0) {
-			$err .= "Item title must not be empty. <br/>";
+			$err .= "Item ".$silo->silo_id." ".$user_id." title must not be empty. <br/>";
 		}
 		if (strlen(trim($title)) > 40) {
 			$err .= "Your item title is too long. Please shorten it. <br/>";
@@ -108,11 +108,11 @@ else {
 			$Feed->status = $status;
 			$Feed->Save();
 
-			$sql = "SELECT * FROM silo_membership WHERE silo_id = $silo_id AND user_id = $user_id";
-			if (mysql_num_rows(mysql_query($sql)) == 0) {
+			$silo_member = "SELECT * FROM silo_membership WHERE silo_id = $silo->silo_id AND user_id = $user_id";
+			if (mysql_num_rows(mysql_query($silo_member)) == 0) {
 				$joined = false;
-				$sql = "INSERT INTO silo_membership(silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
-				mysql_query($sql);
+				$member = "INSERT INTO silo_membership (silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
+				mysql_query($member);
 			}
 						
 			for ($i=1; $i<=4; ++$i) {
@@ -160,6 +160,7 @@ else {
 			if (strlen($err) > 0) {
 				$sql = "DELETE FROM items WHERE id = $id";
 				mysql_query($sql);
+				$err = "Something went wrong..";
 			}			
 		}
 		if (strlen($err) == 0) {

@@ -117,7 +117,7 @@ class Silo {
 	}
 	
 	public function getTotalMembers() {
-		$sql = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id;
+		$sql = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id." AND removed_date = 0";
 		$res = mysql_fetch_row(mysql_query($sql));		
 		return intval($res[0]);
 	}
@@ -136,7 +136,7 @@ class Silo {
 		$i = "SELECT COUNT(DISTINCT item_id) FROM items where silo_id = ".$this->silo_id;
 		$ires = mysql_fetch_row(mysql_query($i));		
 		$itotal = $ires[0];
-		$m = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id;
+		$m = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id." AND removed_date = 0";
 		$mres = mysql_fetch_row(mysql_query($m));		
 		$mtotal = $mres[0];
 		return intval($itotal/$mtotal);

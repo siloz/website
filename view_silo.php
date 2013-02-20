@@ -18,7 +18,9 @@
 		$silo_ended = $silo->end_date < $today;
 		$admin = $silo->admin;
 
+		$checkUser = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date > 0"));
 ?>
+
 <div class="contact_seller" id="contact_admin">
 	<div id="contact_admin_drag" style="float: right">
 		<img id="contact_admin_exit" src="images/close.png"/>
@@ -100,8 +102,15 @@
 			
 			<div class="icons"><img class="space" src="images/fb.png" onclick='postToFeed();'/>
 			<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
+
 		<?php
-			if ($_SESSION['is_logged_in']) {			
+			if ($checkUser) {
+		?>
+		<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
+
+		<?php
+			}
+			elseif ($_SESSION['is_logged_in']) {			
 		?>
 			<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
 
@@ -166,7 +175,7 @@
 						if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
 
 						$c_user_id = $current_user['user_id'];
-						$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id'"));
+						$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 						if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
 					?>
 		<div class='siloInfo'>
@@ -323,7 +332,7 @@
 
 		//VIEW MEMBERS
 		if ($view == 'members' && $_SESSION['is_logged_in']) {
-			$count = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id)";
+			$count = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id AND removed_date = 0)";
 			$countRow = mysql_num_rows(mysql_query($count));
 			$total_records = $countRow;
 			$total_pages = ceil($total_records / $usersPerPage);
