@@ -1,6 +1,12 @@
 <?php 
 	require_once("include/autoload.class.php");
 
+	$silo_time_check = mysql_query("UPDATE silos SET status = 'Latent' WHERE status = 'Active' AND end_date < NOW()");
+
+	if (mysql_affected_rows() > 0) {
+		$item_update = mysql_query("UPDATE items, silos SET items.status = 'Inert' WHERE items.silo_id = silos.silo_id AND items.status = 'Pledged' AND silos.status = 'Latent'");
+	}
+
 if ($_SESSION['is_logged_in']) {
 	$sql = "SELECT * FROM users WHERE username='".$_SESSION['username']."'";
 	$res = mysql_query($sql);		
@@ -26,8 +32,8 @@ if ($_SESSION['is_logged_in']) {
 			}
 			else { echo "Location not found"; }
 			
-			$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+			$userLong = $current_user['longitude'];
+			$userLat = $current_user['latitude'];
 
 		} else {
 			echo 'Invalid Zip Code.<br/>';

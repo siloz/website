@@ -84,7 +84,7 @@
 			$seller_email .= "<ul><li>The potential buyer, alone, has the option to <b>accept</b> the item by providing you with the PayKey.  Once you are in receipt of a PayKey that meets the descriptive criteria of your PayLock, enter it into the item plate in your siloz.com account. </li>";
 			$seller_email .= "<li>After 72 hours, if a you do not enter a valid PayKey, the pending transaction will <b>cancel</b>.</li></ul>";
 			// email_with_template($item->owner->email, "Notification: Potential buyer for item \"".$item->title."\"", $seller_email);
-			email_with_template("vinhanh@gmail.com", "Notification: Potential buyer for item \"".$item->title."\"", $seller_email);
+			email_with_template("robert@aronedesigns.com", "Notification: Potential buyer for item \"".$item->title."\"", $seller_email);
 			
 		} else if ($result->transaction) {
 		    print_r("Error processing transaction:");

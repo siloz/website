@@ -47,7 +47,7 @@
 		<p class="silos_header">Popular silos near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
 	
 		<?php
-			$sql = "SELECT *, $sqlDist AS distance FROM silos ORDER BY distance LIMIT 5";
+			$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'Active' ORDER BY distance LIMIT 5";
 			$tmp = mysql_query($sql);
 
 			$siloz_html = "<div class='row'><div class='span12'>";
@@ -86,7 +86,7 @@
 	<p class="silos_header">Items for Sale near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
 
 	<?php
-		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE deleted_date = 0 ORDER BY distance LIMIT 6";
+		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'Pledged' ORDER BY distance LIMIT 6";
 		$tmp = mysql_query($sql);
 		$items_html = "<div class='row'><div class='span12'>";
 		

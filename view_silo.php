@@ -315,7 +315,7 @@
 					$cellInfo .= "<td width=20% valign=top align=center>$date<br>$time</td></tr></table></div><br/>";
 				}
 				if ($type == "Sold") {
-					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$admin_name has sold $item->title.</b></font></td></tr>
+					$cellInfo = "<div class=nicebox><table width=675px><tr><td width=30% valign=middle><table height=150px width=95%><tr><td valign=top><font class='blue' size='4'><b>$user->fname has sold $item->title.</b></font></td></tr>
 							<tr><td valign=bottom><font class=blue>The total amount raised for this silo is now $$total_raised!</blue></td></tr></table></td>";
 					$cellInfo .= "$userCell";
 					$cellInfo .= "$itemCell";

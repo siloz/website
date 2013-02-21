@@ -69,6 +69,20 @@
 					$err .= "Email '$email' is already registered.<br/>";
 				}
 			}
+
+			$adr = urlencode($address);
+			$zip = urlencode($zip_code);
+			$url = "http://maps.google.com/maps/geo?q=".$adr."".$zip;
+			$xml = file_get_contents($url);
+			$geo_json = json_decode($xml, TRUE);
+			if ($geo_json['Status']['code'] == '200') {
+				$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+				$new_adr = $geo_json['Placemark'][0]['address'];
+				$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
+				$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+			} else {
+				$err .= 'Invalid address.<br/>';
+			}
 		
 			if (strlen($err) == 0) {				
 				if ($old_password != '' || $new_password != '' || $retype_new_password != '') {
@@ -79,7 +93,8 @@
 					 	$err .= "New password must not be empty.";
 					}
 					else {
-						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone', password='$new_password' WHERE id = $id";
+						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$new_adr', zip_code = '$zip_code', 
+								phone = '$phone', password='$new_password', longitude = '$long', latitude = '$lat' WHERE id = $id";
 						mysql_query($sql);
 
 						if ($_FILES['member_photo']['name'] != '') {
@@ -125,7 +140,8 @@
 					}
 				}				
 				else {
-					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', phone = '$phone' WHERE id = $id";
+					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', 
+							phone = '$phone', longitude = '$long', latitude = '$lat' WHERE id = $id";
 					mysql_query($sql);
 					if ($_FILES['member_photo']['name'] != '') {
 						$allowedExts = array("png", "jpg", "jpeg", "gif");							
