@@ -1,10 +1,10 @@
 <?php 
 	require_once("include/autoload.class.php");
 
-	$silo_time_check = mysql_query("UPDATE silos SET status = 'Latent' WHERE status = 'Active' AND end_date < NOW()");
+	$silo_latent_check = mysql_query("UPDATE silos SET status = 'latent', end_date = NOW() WHERE status = 'active' AND (end_date <= NOW() OR goal <= collected)");
 
 	if (mysql_affected_rows() > 0) {
-		$item_update = mysql_query("UPDATE items, silos SET items.status = 'Inert' WHERE items.silo_id = silos.silo_id AND items.status = 'Pledged' AND silos.status = 'Latent'");
+		$item_update = mysql_query("UPDATE items, silos SET items.status = 'inert', items.end_date = NOW() WHERE items.silo_id = silos.silo_id AND items.status = 'pledged' AND silos.status = 'latent'");
 	}
 
 if ($_SESSION['is_logged_in']) {

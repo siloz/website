@@ -1,6 +1,6 @@
 <?php
 	define(DB_USERNAME, "admin");
-	define(DB_PASSWORD, "deertrot");
+	define(DB_PASSWORD, "w@1kingded");
 	define(DB_HOST, "localhost");
 	define(DB_NAME, "james_siloz");
 	define(ABS_PATH, "/var/www/vhosts/stage.james.siloz.com/httpdocs/website");

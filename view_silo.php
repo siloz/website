@@ -1,7 +1,7 @@
 <?php
 	$feedPerPage = "3";
 	$usersPerPage = "12";
-	$itemsPerPage = "12";
+	$itemsPerPage = "4";
 
 	$id = param_get('id');
 	
@@ -20,6 +20,24 @@
 
 		$checkUser = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date > 0"));
 ?>
+
+<div class="login" id="sold" style="width: 300px;">
+	<div id="sold_drag" style="float:right">
+		<img id="sold_exit" src="images/close.png"/>
+	</div>
+	<div>
+		This Item Has Been Sold!
+	</div>
+</div>
+
+<div class="login" id="pending" style="width: 300px;">
+	<div id="pending_drag" style="float:right">
+		<img id="pending_exit" src="images/close.png"/>
+	</div>
+	<div>
+		This Item Is Pending To Be Sold!
+	</div>
+</div>
 
 <div class="contact_seller" id="contact_admin">
 	<div id="contact_admin_drag" style="float: right">
@@ -393,7 +411,10 @@
 		
 		//VIEW ITEMS
 		if ($view == 'items') {
-			$count = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE deleted_date = 0 AND silo_id = $silo_id";
+			$sold_items = param_get('items');
+
+		if ($sold_items == "") {
+			$count = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE items.status = 'pledged' AND silo_id = $silo_id";
 			$countRow = mysql_num_rows(mysql_query($count));
 			$total_records = $countRow;
 			$total_pages = ceil($total_records / $itemsPerPage);
@@ -429,6 +450,8 @@
 					}
 			}
 
+			echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <font class='orange'><u>Pledged</u></font> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=sold&id=".$silo->id."' style='text-decoration: none' class='blue'>Sold</a> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=pending&id=".$silo->id."' style='text-decoration: none' class='blue'>Pending Sales</a></div>";
+
 			echo '<div style="padding-bottom: 5px;"></div>';
 
 			$limit = "LIMIT $start_from, $itemsPerPage";
@@ -447,9 +470,132 @@
 			}
 			echo "</table>";
 
-			if ($total_records == "0") { echo "There are currently no items in this silo. Once an item is pledged to this silo, it will be added to this list."; }
+			if ($total_records == "0") { echo "There are currently no items being pledged in this silo. Once an item is pledged to this silo, it will be added to this list."; }
 	
 		}
+
+		if ($sold_items == "sold") {
+			$count = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE items.status = 'sold' AND silo_id = $silo_id";
+			$countRow = mysql_num_rows(mysql_query($count));
+			$total_records = $countRow;
+			$total_pages = ceil($total_records / $itemsPerPage);
+
+			if (param_get('page')) {
+				$page  = param_get('page');
+			} 
+			else { 
+				$page = 1;
+			};
+
+			$start_from = ($page-1) * $itemsPerPage;
+
+			if ($total_pages < 2) {}
+			else	{
+					if ($page != "1") {
+						$prev = $page - 1;
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page</a> &nbsp; &nbsp;';
+					}
+
+				for ($i=1; $i<=$total_pages; $i++) {			
+
+					if ($i != $page) {
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$i.'" style="text-decoration: none" class="blue">' . $i . '</a> &nbsp;';
+					} 
+					else {
+						echo '<font class="orange">'.$i.'</font> &nbsp;';
+					}
+				};
+					if ($page != $total_pages) {
+						$next = $page + 1;
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >></a>';
+					}
+			}
+
+			echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <a href='index.php?task=view_silo&view=items&id=".$silo->id."' style='text-decoration: none' class='blue'>Pledged</a> &nbsp; | &nbsp; <font class='orange'><u>Sold</u></font> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=pending&id=".$silo->id."' style='text-decoration: none' class='blue'>Pending Sales</a> </div>";
+
+			echo '<div style="padding-bottom: 5px;"></div>';
+
+			$limit = "LIMIT $start_from, $itemsPerPage";
+			$items = Item::getSoldItems($silo_id, $order_by, $limit);
+			$n = 0;
+			echo "<table cellpadding='10px'>";			
+			foreach ($items as $item) {
+				if ($n == 0)
+					echo "<tr>";							
+				echo $item->getSoldItemCell($silo_id, $c_user_id);					
+				$n++;
+				if ($n == 4) {
+					echo "</tr>";
+					$n = 0;
+				}	
+			}
+			echo "</table>";
+
+			if ($total_records == "0") { echo "There are currently no items that have sold in this silo. Once an item has sold for this silo, it will be added to this list."; }
+	
+		}
+
+		if ($sold_items == "pending") {
+			$count = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE items.status = 'pending' AND silo_id = $silo_id";
+			$countRow = mysql_num_rows(mysql_query($count));
+			$total_records = $countRow;
+			$total_pages = ceil($total_records / $itemsPerPage);
+
+			if (param_get('page')) {
+				$page  = param_get('page');
+			} 
+			else { 
+				$page = 1;
+			};
+
+			$start_from = ($page-1) * $itemsPerPage;
+
+			if ($total_pages < 2) {}
+			else	{
+					if ($page != "1") {
+						$prev = $page - 1;
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$prev.'" style="text-decoration: none" class="blue"><< previous page</a> &nbsp; &nbsp;';
+					}
+
+				for ($i=1; $i<=$total_pages; $i++) {			
+
+					if ($i != $page) {
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$i.'" style="text-decoration: none" class="blue">' . $i . '</a> &nbsp;';
+					} 
+					else {
+						echo '<font class="orange">'.$i.'</font> &nbsp;';
+					}
+				};
+					if ($page != $total_pages) {
+						$next = $page + 1;
+						echo '<a href="index.php?task=view_silo&view=items&id='.$silo->id.'&page='.$next.'" style="text-decoration: none" class="blue">&nbsp; &nbsp; next page >></a>';
+					}
+			}
+
+			echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <a href='index.php?task=view_silo&view=items&id=".$silo->id."' style='text-decoration: none' class='blue'>Pledged</a> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=sold&id=".$silo->id."' style='text-decoration: none' class='blue'>Sold</a> &nbsp; | &nbsp; <font class='orange'><u>Pending Sales</u></font> </div>";
+
+			echo '<div style="padding-bottom: 5px;"></div>';
+
+			$limit = "LIMIT $start_from, $itemsPerPage";
+			$items = Item::getPendingItems($silo_id, $order_by, $limit);
+			$n = 0;
+			echo "<table cellpadding='10px'>";			
+			foreach ($items as $item) {
+				if ($n == 0)
+					echo "<tr>";							
+				echo $item->getPendingItemCell($silo_id, $c_user_id);					
+				$n++;
+				if ($n == 4) {
+					echo "</tr>";
+					$n = 0;
+				}	
+			}
+			echo "</table>";
+
+			if ($total_records == "0") { echo "There are currently no items that have sold in this silo. Once an item has sold for this silo, it will be added to this list."; }
+	
+		}
+	}
 
 		//VIEW Map
 		if ($view == 'map') {

@@ -105,25 +105,25 @@ class Silo {
 	}
 	
 	public function getPledgedAmount() {
-		$sql = "SELECT SUM(price) FROM items WHERE deleted_date = 0 AND silo_id = ".$this->silo_id." AND status = 'Pledged'";
+		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status = 'Pledged'";
 		$res = mysql_fetch_row(mysql_query($sql));								
 		return floatval($res[0]);
 	}
 	
 	public function getCollectedAmount() {
-		$sql = "SELECT SUM(price) FROM items WHERE deleted_date = 0 AND silo_id = ".$this->silo_id." AND status = 'Sold'";
+		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status = 'Sold'";
 		$res = mysql_fetch_row(mysql_query($sql));		
 		return floatval($res[0]);
 	}
 	
 	public function getTotalMembers() {
-		$sql = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id." AND removed_date = 0";
+		$sql = "SELECT COUNT(DISTINCT user_id) FROM silo_membership WHERE silo_id = ".$this->silo_id." AND removed_date = 0";
 		$res = mysql_fetch_row(mysql_query($sql));		
 		return intval($res[0]);
 	}
 
 	public function getAvgItemPrice() {
-		$p = "SELECT SUM(price) FROM items WHERE deleted_date = 0 AND silo_id = ".$this->silo_id."";
+		$p = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id."";
 		$pres = mysql_fetch_row(mysql_query($p));								
 		$ptotal = $pres[0];
 		$i = "SELECT COUNT(DISTINCT item_id) FROM items where silo_id = ".$this->silo_id;
@@ -133,7 +133,7 @@ class Silo {
 	}
 
 	public function getAvgListings() {
-		$i = "SELECT COUNT(DISTINCT item_id) FROM items where silo_id = ".$this->silo_id;
+		$i = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id;
 		$ires = mysql_fetch_row(mysql_query($i));		
 		$itotal = $ires[0];
 		$m = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id." AND removed_date = 0";
@@ -143,7 +143,7 @@ class Silo {
 	}
 	
 	public function getTotalItems() {
-		$sql = "SELECT COUNT(DISTINCT item_id) FROM items where silo_id = ".$this->silo_id;
+		$sql = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id;
 		$res = mysql_fetch_row(mysql_query($sql));		
 		return intval($res[0]);
 	}

@@ -34,7 +34,7 @@
 	else {
 		$search_clause .= " AND silo_cat_id IN (SELECT silo_cat_id FROM silo_categories)";		
 	}
-	$search_clause .= " AND status = 'active' ";
+	$search_clause .= " AND (status = 'active' OR status = 'latent') ";
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $silosPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
