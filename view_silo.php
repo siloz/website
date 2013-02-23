@@ -115,13 +115,13 @@
 			<?php
 				if ($checkUser) {
 			?>
-			<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
+			<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate Items</button>
 
 			<?php
 				}
 				elseif ($_SESSION['is_logged_in']) {			
 			?>
-				<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
+				<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate Items</button>						
 	
 				<?php
 					$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
@@ -131,7 +131,7 @@
 				}
 				else {
 			?>
-			<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
+			<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate Items</button>						
 			<?php
 				}
 			?>
