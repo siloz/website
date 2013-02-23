@@ -110,95 +110,23 @@
 
 <div class="span12">
 	<div class="row">
-		<table align="right" width="72%">
-			<tr>
-				<td>
-					<div class="donations">Items donationed to this silo are tax-deductible!</div>
-		
-					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&id=<?php echo $silo->id;?>'">Feed</button>
-					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'">Members</button>
-					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'">Items</button>
-					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
+		<div class="span4">
+			<div class="row">
+				<?php
+					$collected = $silo->getCollectedAmount();
+					$pct = round($collected*100.0/floatval($silo->goal),1);
+					$end_date = $silo->end_date;
+					$end = strtotime("$end_date");
+					$now = time();
+					$timeleft = $end-$now;
+					$daysleft = ceil($timeleft/86400);
 					
-					<div class="icons"><img class="space" src="images/fb.png" onclick='postToFeed();'/>
-					<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
-		
-				<?php
-					if ($checkUser) {
+					if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
+
+					$c_user_id = $current_user['user_id'];
+					$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
+					if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
 				?>
-				<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
-		
-				<?php
-					}
-					elseif ($_SESSION['is_logged_in']) {			
-				?>
-					<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
-		
-					<?php
-						$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
-					?>
-		
-				<?php
-					}
-					else {
-				?>
-				<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
-				<?php
-					}
-				?>
-		
-				</td>
-				<td valign="center" align="right">
-					<?php
-						$new_sort_order = '';
-						$sort_order = param_get('sort_order');
-						$img1_path = 'images/none.png';
-						$img2_path = 'images/none.png';			
-						$order_by = param_get('sort_by');	
-						if ($sort_order == 'asc') {
-							$new_sort_order = '&sort_order=desc';
-							if ($order_by == 'date')
-								$img2_path = 'images/up.png';
-							else if ($order_by != '')
-								$img1_path = 'images/up.png';
-						}
-						else {
-							$new_sort_order = '&sort_order=asc';										
-							if ($order_by == 'date')
-								$img2_path = 'images/down.png';
-							else if ($order_by != '')
-								$img1_path = 'images/down.png';
-						}
-						if ($view == 'item') {
-							echo "<b>sort by <a href=index.php?task=view_silo&view=items&sort_by=price$new_sort_order&id=".$silo->id." class=simplebluelink>price <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=items&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>list date <img src=$img2_path></a></b>";
-						}
-						else if ($view == 'member') {
-							echo "<b>sort by <a href=index.php?task=view_silo&view=members&sort_by=name$new_sort_order&id=".$silo->id." class=simplebluelink>username <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=members&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>join date <img src=$img2_path></a></b>";
-						}
-					?>
-				</td>
-			</tr>
-		</table>
-		
-		
-		<table cellpadding="5px">
-			<tr>
-				<td valign="top" align="middle" width="260px">
-							<?php
-								$collected = $silo->getCollectedAmount();
-								$pct = round($collected*100.0/floatval($silo->goal),1);
-								$end_date = $silo->end_date;
-								$end = strtotime("$end_date");
-								$now = time();
-								$timeleft = $end-$now;
-								$daysleft = ceil($timeleft/86400);
-								
-								if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
-		
-								$c_user_id = $current_user['user_id'];
-								$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
-								if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
-							?>
 				<div class='siloInfo'>
 					<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
 					<img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/>
@@ -261,9 +189,74 @@
 				    	});
 				  	}
 				</script>
-				</td>
-			</tr>
-		</table>
+			</div>	
+		</div>
+		
+		<div class="span8">
+			<div class="row">
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&id=<?php echo $silo->id;?>'">Feed</button>
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'">Members</button>
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'">Items</button>
+			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
+			
+			<div class="icons">
+				<img class="space" src="images/fb.png" onclick='postToFeed();'/>
+				<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
+		
+				<?php
+					if ($checkUser) {
+				?>
+				<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
+	
+				<?php
+					}
+					elseif ($_SESSION['is_logged_in']) {			
+				?>
+					<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
+		
+					<?php
+						$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
+					?>
+		
+				<?php
+					}
+					else {
+				?>
+				<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
+				<?php
+					}
+				?>
+		
+				<?php
+					$new_sort_order = '';
+					$sort_order = param_get('sort_order');
+					$img1_path = 'images/none.png';
+					$img2_path = 'images/none.png';			
+					$order_by = param_get('sort_by');	
+					if ($sort_order == 'asc') {
+						$new_sort_order = '&sort_order=desc';
+						if ($order_by == 'date')
+							$img2_path = 'images/up.png';
+						else if ($order_by != '')
+							$img1_path = 'images/up.png';
+					}
+					else {
+						$new_sort_order = '&sort_order=asc';										
+						if ($order_by == 'date')
+							$img2_path = 'images/down.png';
+						else if ($order_by != '')
+							$img1_path = 'images/down.png';
+					}
+					if ($view == 'item') {
+						echo "<b>sort by <a href=index.php?task=view_silo&view=items&sort_by=price$new_sort_order&id=".$silo->id." class=simplebluelink>price <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=items&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>list date <img src=$img2_path></a></b>";
+					}
+					else if ($view == 'member') {
+						echo "<b>sort by <a href=index.php?task=view_silo&view=members&sort_by=name$new_sort_order&id=".$silo->id." class=simplebluelink>username <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=members&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>join date <img src=$img2_path></a></b>";
+					}
+				?>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
