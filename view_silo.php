@@ -108,159 +108,164 @@
 	</div>
 </div>
 
-<table align="right" width="72%">
-	<tr>
-		<td>
-			<div class="donations">Items donationed to this silo are tax-deductible!</div>
-
-			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&id=<?php echo $silo->id;?>'">Feed</button>
-			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'">Members</button>
-			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'">Items</button>
-			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
-			
-			<div class="icons"><img class="space" src="images/fb.png" onclick='postToFeed();'/>
-			<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
-
-		<?php
-			if ($checkUser) {
-		?>
-		<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
-
-		<?php
-			}
-			elseif ($_SESSION['is_logged_in']) {			
-		?>
-			<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
-
-			<?php
-				$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
-			?>
-
-		<?php
-			}
-			else {
-		?>
-		<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
-		<?php
-			}
-		?>
-
-		</td>
-		<td valign="center" align="right">
-			<?php
-				$new_sort_order = '';
-				$sort_order = param_get('sort_order');
-				$img1_path = 'images/none.png';
-				$img2_path = 'images/none.png';			
-				$order_by = param_get('sort_by');	
-				if ($sort_order == 'asc') {
-					$new_sort_order = '&sort_order=desc';
-					if ($order_by == 'date')
-						$img2_path = 'images/up.png';
-					else if ($order_by != '')
-						$img1_path = 'images/up.png';
-				}
-				else {
-					$new_sort_order = '&sort_order=asc';										
-					if ($order_by == 'date')
-						$img2_path = 'images/down.png';
-					else if ($order_by != '')
-						$img1_path = 'images/down.png';
-				}
-				if ($view == 'item') {
-					echo "<b>sort by <a href=index.php?task=view_silo&view=items&sort_by=price$new_sort_order&id=".$silo->id." class=simplebluelink>price <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=items&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>list date <img src=$img2_path></a></b>";
-				}
-				else if ($view == 'member') {
-					echo "<b>sort by <a href=index.php?task=view_silo&view=members&sort_by=name$new_sort_order&id=".$silo->id." class=simplebluelink>username <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=members&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>join date <img src=$img2_path></a></b>";
-				}
-			?>
-		</td>
-	</tr>
-</table>
-
-<table cellpadding="5px">
-	<tr>
-		<td valign="top" align="middle" width="260px">
-					<?php
-						$collected = $silo->getCollectedAmount();
-						$pct = round($collected*100.0/floatval($silo->goal),1);
-						$end_date = $silo->end_date;
-						$end = strtotime("$end_date");
-						$now = time();
-						$timeleft = $end-$now;
-						$daysleft = ceil($timeleft/86400);
-						
-						if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
-
-						$c_user_id = $current_user['user_id'];
-						$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
-						if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
-					?>
-		<div class='siloInfo'>
-			<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
-			<img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/>
-			<div class='bio'>
-
-			<div class='floatL'><b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?> (<?=$pct?>%)</div>
-			<div class='floatR'><b><?=$daysleft?> <?=$dayplural?> Left</b></div>
-			<div class='floatL'><div class='padding'><b>Progress:</b> &nbsp;&nbsp;&nbsp;<div style='float: right; width: 160px; height: 12px; border: 1px solid #2F8ECB;'><div style='float: left; width: <?=$pct;?>%; height:12px; background: #2F8ECB;'></div></div></div></div>
-			<div class='padding'>&nbsp;</div>
-			<p><a href='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'><?php echo $silo->getTotalMembers();?> Members</a>, <a href='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'><?php echo $silo->getTotalItems();?> Items Pledged</a></p>
-			<div class='floatL'><b>Organization:</b> <?php echo $silo->name; ?></div>
-			<div class='floatL'><b>Purpose:</b> <?php echo $silo->getPurpose();?></div>
-			<div class='floatL'><b>Category:</b> <?php echo $silo->type;?></div>
-			<div class='padding2'>&nbsp;</div>
-			<table class='floatL'>
+<div class="span12">
+	<div class="row">
+		<table align="right" width="72%">
 			<tr>
-			<td>
-				<img src=<?php echo 'uploads/members/'.$admin->photo_file;?> width='90px'/><br>
-				<button type='button' class='buttonEmail'>Email Admin.</button>
-			</td>
-			<td width='6%'></td>
-			<td>
-				<b>Silo Admin:</b> <br> <?php echo $admin_name?><br>
-				<b>Title:</b> <?php echo $silo->title; ?><br>
-				<b>Official Address:</b> <br> <?php echo $silo->address; ?><br>
-				<b>Telephone:</b> <?php echo $silo->phone_number; ?>
-			</td>
-			</tr>
-			</table>
-			<div class='floatL'><div class='voucher'>Research a silo and administrator</div></div>
-			<div class='floatL'><?php include('include/UI/flag_box.php'); ?></div>
-
-		</div>
-		</div>
-		</td>
+				<td>
+					<div class="donations">Items donationed to this silo are tax-deductible!</div>
 		
-		<div id='fb-root'></div>
-		<script src='http://connect.facebook.net/en_US/all.js'></script>
-		<?php
-			$url = ACTIVE_URL."/index.php?task=view_silo&id=$silo->id";
-			$photo_url = ACTIVE_URL.'/uploads/silos/'.$silo->photo_file;
-			$name = $silo->name;
-		?>
-
-		<script> 
-		 	FB.init({
-		            appId      : <?php echo "'".FACEBOOK_ID."'"; ?>,
-		            status     : true, 
-		            cookie     : true,
-		            xfbml      : true
-		          });
-		  	function postToFeed() {
-		    	FB.ui({
-		      		method: 'feed',
-		      		link: "<?php echo $url; ?>",
-		      		picture: "<?php echo $photo_url; ?>",
-		      		name: "<?php echo $silo->type.' Silo: '.$name; ?>",
-					caption: "Siloz.com - Commerce thats count",
-		      		description: "<?php echo $description; ?>"
-		    	});
-		  	}
-		</script>
-		</td>
-	</tr>
-</table>
+					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'home' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&id=<?php echo $silo->id;?>'">Feed</button>
+					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'members' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'">Members</button>
+					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'items' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'">Items</button>
+					<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
+					
+					<div class="icons"><img class="space" src="images/fb.png" onclick='postToFeed();'/>
+					<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
+		
+				<?php
+					if ($checkUser) {
+				?>
+				<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
+		
+				<?php
+					}
+					elseif ($_SESSION['is_logged_in']) {			
+				?>
+					<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
+		
+					<?php
+						$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
+					?>
+		
+				<?php
+					}
+					else {
+				?>
+				<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
+				<?php
+					}
+				?>
+		
+				</td>
+				<td valign="center" align="right">
+					<?php
+						$new_sort_order = '';
+						$sort_order = param_get('sort_order');
+						$img1_path = 'images/none.png';
+						$img2_path = 'images/none.png';			
+						$order_by = param_get('sort_by');	
+						if ($sort_order == 'asc') {
+							$new_sort_order = '&sort_order=desc';
+							if ($order_by == 'date')
+								$img2_path = 'images/up.png';
+							else if ($order_by != '')
+								$img1_path = 'images/up.png';
+						}
+						else {
+							$new_sort_order = '&sort_order=asc';										
+							if ($order_by == 'date')
+								$img2_path = 'images/down.png';
+							else if ($order_by != '')
+								$img1_path = 'images/down.png';
+						}
+						if ($view == 'item') {
+							echo "<b>sort by <a href=index.php?task=view_silo&view=items&sort_by=price$new_sort_order&id=".$silo->id." class=simplebluelink>price <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=items&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>list date <img src=$img2_path></a></b>";
+						}
+						else if ($view == 'member') {
+							echo "<b>sort by <a href=index.php?task=view_silo&view=members&sort_by=name$new_sort_order&id=".$silo->id." class=simplebluelink>username <img src=$img1_path></a> or <a href=index.php?task=view_silo&view=members&sort_by=date$new_sort_order&id=$silo_id class=simplebluelink>join date <img src=$img2_path></a></b>";
+						}
+					?>
+				</td>
+			</tr>
+		</table>
+		
+		
+		<table cellpadding="5px">
+			<tr>
+				<td valign="top" align="middle" width="260px">
+							<?php
+								$collected = $silo->getCollectedAmount();
+								$pct = round($collected*100.0/floatval($silo->goal),1);
+								$end_date = $silo->end_date;
+								$end = strtotime("$end_date");
+								$now = time();
+								$timeleft = $end-$now;
+								$daysleft = ceil($timeleft/86400);
+								
+								if ($daysleft > 1) { $dayplural = "Days"; } else { $dayplural = "Day"; }
+		
+								$c_user_id = $current_user['user_id'];
+								$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
+								if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
+							?>
+				<div class='siloInfo'>
+					<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
+					<img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/>
+					<div class='bio'>
+		
+					<div class='floatL'><b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?> (<?=$pct?>%)</div>
+					<div class='floatR'><b><?=$daysleft?> <?=$dayplural?> Left</b></div>
+					<div class='floatL'><div class='padding'><b>Progress:</b> &nbsp;&nbsp;&nbsp;<div style='float: right; width: 160px; height: 12px; border: 1px solid #2F8ECB;'><div style='float: left; width: <?=$pct;?>%; height:12px; background: #2F8ECB;'></div></div></div></div>
+					<div class='padding'>&nbsp;</div>
+					<p><a href='index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>'><?php echo $silo->getTotalMembers();?> Members</a>, <a href='index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>'><?php echo $silo->getTotalItems();?> Items Pledged</a></p>
+					<div class='floatL'><b>Organization:</b> <?php echo $silo->name; ?></div>
+					<div class='floatL'><b>Purpose:</b> <?php echo $silo->getPurpose();?></div>
+					<div class='floatL'><b>Category:</b> <?php echo $silo->type;?></div>
+					<div class='padding2'>&nbsp;</div>
+					<table class='floatL'>
+					<tr>
+					<td>
+						<img src=<?php echo 'uploads/members/'.$admin->photo_file;?> width='90px'/><br>
+						<button type='button' class='buttonEmail'>Email Admin.</button>
+					</td>
+					<td width='6%'></td>
+					<td>
+						<b>Silo Admin:</b> <br> <?php echo $admin_name?><br>
+						<b>Title:</b> <?php echo $silo->title; ?><br>
+						<b>Official Address:</b> <br> <?php echo $silo->address; ?><br>
+						<b>Telephone:</b> <?php echo $silo->phone_number; ?>
+					</td>
+					</tr>
+					</table>
+					<div class='floatL'><div class='voucher'>Research a silo and administrator</div></div>
+					<div class='floatL'><?php include('include/UI/flag_box.php'); ?></div>
+		
+				</div>
+				</div>
+				</td>
+				
+				<div id='fb-root'></div>
+				<script src='http://connect.facebook.net/en_US/all.js'></script>
+				<?php
+					$url = ACTIVE_URL."/index.php?task=view_silo&id=$silo->id";
+					$photo_url = ACTIVE_URL.'/uploads/silos/'.$silo->photo_file;
+					$name = $silo->name;
+				?>
+		
+				<script> 
+				 	FB.init({
+				            appId      : <?php echo "'".FACEBOOK_ID."'"; ?>,
+				            status     : true, 
+				            cookie     : true,
+				            xfbml      : true
+				          });
+				  	function postToFeed() {
+				    	FB.ui({
+				      		method: 'feed',
+				      		link: "<?php echo $url; ?>",
+				      		picture: "<?php echo $photo_url; ?>",
+				      		name: "<?php echo $silo->type.' Silo: '.$name; ?>",
+							caption: "Siloz.com - Commerce thats count",
+				      		description: "<?php echo $description; ?>"
+				    	});
+				  	}
+				</script>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
 
 <div class="info-container">
 <?php
