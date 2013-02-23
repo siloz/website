@@ -109,9 +109,9 @@
 </div>
 
 <div class="span12 span_static">
-	<div class="row">
-		<div class="silo-header">
-			<span><?php echo $silo->getTitle(); ?></span>
+	<div class="row silo-header">
+		<div class="">
+			<span id="silo_name" class="blue"><?php echo $silo->getTitle(); ?></span>
 			<span></span>
 		</div>
 	</div>
