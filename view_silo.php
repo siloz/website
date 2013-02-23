@@ -110,6 +110,12 @@
 
 <div class="span12 span_static">
 	<div class="row">
+		<div class="silo-header">
+			<span><?php echo $silo->getTitle(); ?></span>
+			<span></span>
+		</div>
+	</div>
+	<div class="row">
 		<div class="span4">
 			<div class="row">
 				<?php
@@ -128,7 +134,6 @@
 					if ($show) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
 				?>
 				<div class='siloInfo'>
-					<button type='button' class='buttonTitleInfo'><?php echo $silo->getTitle(); ?></button>
 					<img src=<?php echo 'uploads/silos/'.$silo->photo_file;?> width='250px'/>
 					<div class='bio'>
 		
