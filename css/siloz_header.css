@@ -16,6 +16,10 @@
     text-decoration: none;
 }
 
+#top_menu a:hover {
+	color: #54A3D8;
+}
+
 #logo {
 	height: 65px;
 	margin-left:5px;
