@@ -111,7 +111,7 @@
 <div class="span12 span_static">
 	<div class="row silo-header">
 		<div class="">
-			<span id="silo_name" class="blue"><?php echo $silo->getTitle(); ?></span>
+			<span id="silo-name" class="blue"><?php echo $silo->getTitle(); ?></span>
 			<span></span>
 		</div>
 	</div>
