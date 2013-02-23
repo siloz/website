@@ -205,9 +205,11 @@
 			<button type="button" class="buttonSilo" style="font-size: 12px; <?php echo ($view == 'map' ? 'background-color: #f60' : ''); ?>" onclick="window.location='index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>'">Map</button>
 			
 			<div class="icons">
+				<!--
 				<img class="space" src="images/fb.png" onclick='postToFeed();'/>
 				<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
-		
+				-->
+				
 				<?php
 					if ($checkUser) {
 				?>
