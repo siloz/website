@@ -112,7 +112,29 @@
 	<div class="row silo-header">
 		<div class="">
 			<span id="silo-name" class="blue"><?php echo $silo->getTitle(); ?></span>
-			<span></span>
+			<?php
+				if ($checkUser) {
+			?>
+			<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
+
+			<?php
+				}
+				elseif ($_SESSION['is_logged_in']) {			
+			?>
+				<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
+	
+				<?php
+					$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
+				?>
+	
+			<?php
+				}
+				else {
+			?>
+			<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
+			<?php
+				}
+			?>
 		</div>
 	</div>
 	<div class="row">
@@ -210,30 +232,6 @@
 				<a href="mailto:?Subject=www.siloz.com/index.php?task=view_silo%26<?php echo $silo->id;?>&Body=Check out this silo on siloz!"><img class="space" src="images/mail-icon.png"></a>
 				-->
 				
-				<?php
-					if ($checkUser) {
-				?>
-				<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">Donate<br>Items</button>
-	
-				<?php
-					}
-					elseif ($_SESSION['is_logged_in']) {			
-				?>
-					<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">Donate<br>Items</button>						
-		
-					<?php
-						$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
-					?>
-		
-				<?php
-					}
-					else {
-				?>
-				<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">Donate<br>Items</button>						
-				<?php
-					}
-				?>
-		
 				<?php
 					$new_sort_order = '';
 					$sort_order = param_get('sort_order');
