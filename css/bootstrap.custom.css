@@ -9,3 +9,7 @@
 .span12 {
 	margin-left: 0px;
 }
+
+.span_static {
+	float: none;
+}
