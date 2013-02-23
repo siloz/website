@@ -16,7 +16,7 @@
     text-decoration: none;
 }
 
-#top_menu a:hover {
+#top_menu span:hover {
 	color: #54A3D8;
 }
 
