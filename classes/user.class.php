@@ -34,7 +34,7 @@ class User {
 		$this->user_id = $res['user_id'];
 		$this->id = $res['id'];
 		$this->username = $res['username'];
-		$this->password = $res['password'];
+		$this->password = md5($res['password']);
 		$this->fname = $res['fname'];
 		$this->lname = $res['lname'];
 		$this->phone = $res['phone'];

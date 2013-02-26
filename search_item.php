@@ -116,7 +116,7 @@ if ($view == "map") {
 
 <?php
 //Get items for map
-$qry = mysql_query("SELECT * FROM items");
+$qry = mysql_query("SELECT * FROM items WHERE status = 'pledged'");
 $num = mysql_num_rows($qry);
 
     echo "<script> var locations = [";

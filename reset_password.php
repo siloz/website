@@ -49,8 +49,9 @@
     			return $string;
 			}
 		$new_pw = genRandomString();
+		$enc_pw = md5($new_pw);
 
-		$dbpw = mysql_fetch_array(mysql_query("UPDATE users SET password = '$new_pw' WHERE email = '$email'"));
+		$dbpw = mysql_fetch_array(mysql_query("UPDATE users SET password = '$enc_pw' WHERE email = '$email'"));
 		
 		if (strlen($err) != 0) {}
 		else {

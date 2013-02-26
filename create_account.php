@@ -72,7 +72,7 @@
 		if (strlen($err) == 0) {
 			$User = new User();
 			$User->username = $username;
-			$User->password = $password;
+			$User->password = md5($password);
 			$User->fname = $fname;
 			$User->lname = $lname;
 			$User->email = $email;

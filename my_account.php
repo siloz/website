@@ -31,7 +31,8 @@
 		if (param_post('task') == 'update_account') {				
 			$old_password = param_post('old_password');
 			$new_password = param_post('new_password');
-			$retype_new_password = param_post('retype_new_password');		
+			$retype_new_password = param_post('retype_new_password');
+		
 			$fname = param_post('fname');
 			$lname = param_post('lname');
 			$email = trim(param_post('email'));
@@ -52,7 +53,7 @@
 				$err .= 'Passwords do not match.<br/>';		
 			}
 			if (strlen(trim($fname)) == 0) {
-				$err .= 'First name must not be empty.<br/>';		
+				$err .= 'First name must not be empty.<br/>';	
 			}
 			if (strlen(trim($lname)) == 0) {
 				$err .= 'Last name must not be empty.<br/>';		
@@ -86,15 +87,20 @@
 		
 			if (strlen($err) == 0) {				
 				if ($old_password != '' || $new_password != '' || $retype_new_password != '') {
-					if ($old_password != $row['password']) {
+
+					$enc_old = md5($old_password);
+					$enc_new = md5($new_password);
+					$enc_retype = md5($retype_new_password);
+
+					if ($enc_old != $row['password']) {
 						$err .= "Current password is not correct.";
 					}					
-					else if ($new_password == '') {
+					else if ($enc_new == '') {
 					 	$err .= "New password must not be empty.";
 					}
 					else {
 						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$new_adr', zip_code = '$zip_code', 
-								phone = '$phone', password='$new_password', longitude = '$long', latitude = '$lat' WHERE id = $id";
+								phone = '$phone', password='$enc_new', longitude = '$long', latitude = '$lat' WHERE id = $id";
 						mysql_query($sql);
 
 						if ($_FILES['member_photo']['name'] != '') {
@@ -197,13 +203,15 @@
 			$address = $row['address'];
 			$zip_code = $row['zip_code'];
 			$phone = $row['phone'];
-			$jdate = $row['joined_date'];
-			$msince = date("m/d/Y", strtotime($jdate));
 			$photo_file = $row['photo_file'];
+		}
+
+			$data = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE username='$username'"));
+			$jdate = $data['joined_date'];
+			$msince = date("m/d/Y", strtotime($jdate));
 
 			$funds = mysql_fetch_array(mysql_query("SELECT SUM(price) AS total FROM items WHERE user_id = '$user_id' AND status = 'sold'"));
 			$total_raised = $funds['total'];
-		}
 
 	$updatemsg = "Your account has been updated!";
 ?>

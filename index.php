@@ -1,4 +1,4 @@
-<?php 
+<?php
 	require_once("include/autoload.class.php");
 
 	$silo_latent_check = mysql_query("UPDATE silos SET status = 'latent', end_date = NOW() WHERE status = 'active' AND (end_date <= NOW() OR goal <= collected)");
@@ -113,7 +113,7 @@ else {
 	
 	if (isset($_POST['username']) && isset($_POST['password'])) {
 		$username = $_POST['username'];
-		$password = $_POST['password'];
+		$password = md5($_POST['password']);
 		$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
 		$res = mysql_query($sql);
 		if (mysql_num_rows($res) > 0) {
@@ -179,6 +179,7 @@ else {
 
 		<script src="jCrop/js/jquery.min.js"></script>
 		<script src="jCrop/js/jquery.Jcrop.js"></script>
+		<script src="js/md5.js"></script>
 		<link rel="stylesheet" href="jCrop/css/jquery.Jcrop.css" type="text/css" />
 		<link rel="stylesheet" href="demo_files/demos.css" type="text/css" />
 

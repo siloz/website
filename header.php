@@ -106,7 +106,8 @@
 		<script>
 			$("#login_button").click(function(event) {	
 				var un = document.getElementById('username').value;
-				var pw = document.getElementById('password').value;							
+				var pw = document.getElementById('password').value;
+				var enc_pw = md5(pw);					
 				if (un == '' || pw == '') {
 					document.getElementById("login_status").innerHTML = "<font color='red'><b><br/>Error: Empty username/password</b></font>";
 				}
@@ -115,7 +116,7 @@
 						{	
 							request: 'login',
 							username: un, 
-							password: pw
+							password: enc_pw
 						}, 
 						function (data) {
 							if (parseInt($(data).find('authenticated').text(), 10) == 1) {
@@ -199,8 +200,8 @@
 			
 			<td align="left" class="main_menu" id="search_bar">
 				Search: &nbsp;&nbsp;&nbsp;
-				<a href="index.php?search=item" <?php if (param_get('search') == 'item') echo "class=main_menu_current"; ?>>Items</a> &nbsp;&nbsp;&nbsp;
-				<a href="index.php?search=silo" <?php if (param_get('search') == 'silo') echo "class=main_menu_current"; ?>>Silos</a>	&nbsp;&nbsp;&nbsp;	
+				<a href="items" <?php if (param_get('search') == 'item') echo "class=main_menu_current"; ?>>Items</a> &nbsp;&nbsp;&nbsp;
+				<a href="silos" <?php if (param_get('search') == 'silo') echo "class=main_menu_current"; ?>>Silos</a>	&nbsp;&nbsp;&nbsp;	
 				Near: <a href="javascript:popup_show('location', 'location_drag', 'location_exit', 'screen-center', 0, 0);" class="bold_text"><?=$userLocation?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
 					<?php
 						if (!$is_search || strlen(trim(param_get('keywords'))) == 0)

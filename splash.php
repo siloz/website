@@ -25,26 +25,26 @@
 <div id="action_call" class="row">
 	<!-- shop button -->
 	<div class="row">
-		<div class="action shop" onClick="window.location = 'index.php?search=item'"></div>
+		<div class="action shop" onClick="window.location = 'items'"></div>
 		<p class="action_text">pay online and pick up items locally, with <b>PayKey</b></p>
 	</div>
 
 	<!-- donate button -->
 	<div class="row">
-		<div class="action donate" onClick="window.location = 'index.php?search=silo'"></div>
+		<div class="action donate" onClick="window.location = 'silos'"></div>
 		<p class="action_text">many donated items are <b>tax deductible</b></p>
 	</div>
 	
 	<!-- start silo button -->
 	<div class="row">
-		<div class="action startsilo" onClick="window.location = 'index.php?search=item'"></div>
+		<div class="action startsilo" onClick="window.location = 'items'"></div>
 		<div class="action donate_vehicle"></div>
 	</div>
 </div>
 
 <div class="row">
 	<div style="margin-left: 10px;">
-		<p class="silos_header">Popular silos near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=silo" class="bold_text">view more</a></p>
+		<p class="silos_header">Popular silos near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
 	
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' ORDER BY distance LIMIT 5";
@@ -70,9 +70,9 @@
 				$num_siloz++;
 			}
 			
-			if ($num_siloz % 5 < 4) {
-				$siloz_html .= "</div>";
-			}
+			//if ($num_siloz % 5 < 4) {
+				//$siloz_html .= "</div>";
+			//}
 			
 			$siloz_html .= "</div></div>";
 			echo $siloz_html;
@@ -83,7 +83,7 @@
 
 <div class="row">
 	<div style="margin-left: 10px">
-	<p class="silos_header">Items for Sale near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="index.php?search=item" class="bold_text">view more</a></p>
+	<p class="silos_header">Items for Sale near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
 
 	<?php
 		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' ORDER BY distance LIMIT 6";
@@ -104,14 +104,14 @@
 
 			if ($num_items % 6 == 5) {
 				$items_html .= "</div>";
-			}		
+			}
 			
 			$num_items++;
 		}
-		
-		if ($num_items % 6 < 5) {
-			$items_html .= "</div";
-		}
+
+		//if ($num_items % 6 < 5) {
+		//	$items_html .= "</div>";
+		//}
 		
 		$items_html .= "</div></div>";
 		

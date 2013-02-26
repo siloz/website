@@ -34,7 +34,7 @@
 	else {
 		$search_clause .= " AND silo_cat_id IN (SELECT silo_cat_id FROM silo_categories)";		
 	}
-	$search_clause .= " AND (status = 'active' OR status = 'latent') ";
+	$search_clause .= " AND status = 'active' ";
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $silosPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
@@ -86,7 +86,7 @@
 	}
 	
 	if ($i % 5 < 4) {
-		$siloz_html .= "</div>";
+		$siloz_html .= "</div";
 	}
 	
 	$siloz_html .= "</div></div></div>";
@@ -122,7 +122,7 @@ if ($view == "map") {
 
 <?php
 //Get silos for map
-$qry = mysql_query("SELECT * FROM silos");
+$qry = mysql_query("SELECT * FROM silos WHERE status = 'active'");
 $num = mysql_num_rows($qry);
 
     echo "<script> var locations = [";
@@ -264,3 +264,4 @@ window.onload = loadScript;
 <?php echo $siloz_html;?>
 
 <div style="margin-left: 10px;">
+</div>
