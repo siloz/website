@@ -79,7 +79,6 @@
 		?>
     </div>
 </div>
-</div>
 
 <div class="row">
 	<div style="margin-left: 10px">
@@ -118,7 +117,6 @@
 		echo $items_html;
 	?>
 	</div>
-</div>
 </div>
 
 <div id="footer_container" class="row">
