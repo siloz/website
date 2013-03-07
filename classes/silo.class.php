@@ -239,7 +239,8 @@ class Silo {
 		}
 		
 		$cell .= "' id=silo_".$this->id." onclick='window.location = \"index.php?task=view_silo&id=".$this->id."\"'>";				
-		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal:</b> $".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
+		$cell .= "<div style='display: table; margin-left: -1px; height: 30px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: middle; text-align: center;'>
+				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=128px width=173px src=uploads/silos/".$this->photo_file." style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='orange'>$".round($this->goal)."</span> <br> $daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 	

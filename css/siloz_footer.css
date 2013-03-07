@@ -1,8 +1,10 @@
 #quick_start_bg {
 	background: #808080;
-	margin: auto;
-	width: 955px;
-	padding: 5px 10px 25px 10px;	
+	width: 965px;
+	margin-left: -5px;
+	margin-bottom: 5px;
+	padding: 5px 10px 25px 10px;
+	height: 465px;	
 }
 
 .quick_start {
@@ -24,22 +26,28 @@
 
 #bottom_menu {
 	text-align: center;
-	margin-top: 10px;
-	width: 100%;
-	margin-left: auto;
-	margin-right: auto;	
-	-moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -khtml-border-radius: 8px;
-	background: #E6F2FB;
-    border-radius: 8px;     
-    border: 0px solid #2f8dcb;
-	width: 950px;
+	color: #2F8ECB;
+	margin-top: 25px;
+	margin-left: -10px;
+	background: #fff;
+	width: 980px;
 	padding: 3px;	
-	height: 20px;
-	line-height: 20px;
+	height: 50px;
+	line-height: 50px;
+	font-weight: bold;
+	font-size: 12pt;
+	font-family: Arial;
 }
 
 #bottom_menu a {
 	text-decoration: none;
+	color: #2F8ECB;
+	font-weight: bold;
+	font-size: 12pt;
+	padding: 5px;
+	font-family: Arial;
+}
+
+#bottom_menu a:hover {
+	opacity: .8;
 }

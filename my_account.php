@@ -244,30 +244,43 @@
 
 		</script>
 
-<div class="heading" style="padding-bottom:5px;">
+<div class="spacer"></div>
+
+<div class="userNav">
 	<table width="940px" style="border-spacing: 0px;">
-		<tr>
-			<td width="700px">
-				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
+		<tr><form action="">
+			<td>
+				<span class="accountHeading">User Account</span>
+			</td>
+			<td align="center" width="400px">
+				<?php
+					if (strlen($err) > 0) {
+						echo "<span id='success' class='error'>".$err."</span";
+					}
+
+					if ((param_post('task') == 'update_account') && !$filename && strlen($err) == 0) { 
+						echo "<span id='success' class='error'>".$updatemsg."</span";
+					}
+					elseif ($crop == "true") { 
+						echo "<span id='success' class='error'>".$updatemsg."</span>";
+					}
+
+				?>
 			</td>
 			<td align="center">
-				<a href="index.php?task=transaction_console" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
-			</td>	
+				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio">Transaction Console</input></a>
+			</td>				
 			<td align="center">
-				<span style="color: #fff">|</span>
-			</td>					
-			<td align="center">
-				<a href="index.php?task=my_listings" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">My Listings</a>
+				<a href="index.php?task=my_listings" class="blue" style="float: left"><input type="radio">My Listings</input></a>
 			</td>
 			<td align="center">
-				<span style="color: #fff">|</span>
+				<a href="index.php?task=my_account" class="blue" style="float: left"><input type="radio" CHECKED>Account Settings</input></a>
 			</td>
-			<td align="center">
-				<a href="index.php?task=my_account" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff">Home</a>
-		</tr>
+		</form></tr>
 	</table>
 </div>
-<br/>
+
+<div class="spacer"></div>
 
 <?php
 //If account info updated
@@ -321,23 +334,6 @@ session_destroy();
 die;
 }
 ?>
-
-	<hr/>
-	<font size="4"><b>My Account Information</b></font>
-	<?php
-		if (strlen($err) > 0) {
-			echo "<div style='float: right'><font color='red'><b>".$err."</b></font><br/></div>";
-		}
-		
-		if ((param_post('task') == 'update_account') && !$filename && strlen($err) == 0) { 
-			echo "<div style='float: right'><font color='red'><b>".$updatemsg."</b></font><br/></div>";
-		}
-		elseif ($crop == "true") { 
-			echo "<div style='float: right'><font color='red'><b>".$updatemsg."</b></font><br/></div>";
-		}
-
-	?>
-	<hr/>
 
 	<form enctype="multipart/form-data"  name="my_account_form" class="my_account_form" method="POST">
 		<input type="hidden" name="task" value="update_account"/>		

@@ -87,8 +87,8 @@ else {
 			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
 
 		} else {
-			echo 'Invalid Zip Code.<br/>';
-			die;
+			 echo "Invalid Zip Code.";
+			 die;
 		}
 
 		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
@@ -96,7 +96,7 @@ else {
 		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
 		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
 
-		header("Location: index.php");
+		header("Location:".$_SERVER['REQUEST_URI']);
 		exit;
 	}
 }
@@ -197,6 +197,20 @@ else {
 				echo "<script>window.location = '/alpha/index.php?task=view_silo&id=$id';</script>";
 			}		
 		?>
+
+    <SCRIPT language=Javascript>
+       <!--
+       function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : event.keyCode;
+          if (charCode != 46 && charCode > 31 
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+       //-->
+    </SCRIPT>
 		<script type="text/javascript">
 
 		  var _gaq = _gaq || [];
@@ -308,3 +322,18 @@ else {
 	</script>		
 	</body>
 </html>
+
+    <script type="text/javascript"> 
+      $(document).ready( function() {
+        $('#success').delay(2000).fadeOut();
+      });
+    </script>
+
+<script type="text/javascript"> 
+	$("#category").change(function () {
+    		if($(this).val() == "") $(this).addClass("empty");
+    		else $(this).removeClass("empty")
+	});
+
+	$("#category").change();
+</script>

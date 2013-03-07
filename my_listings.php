@@ -303,30 +303,35 @@ function populate_item_info(item_id) {
 
 		</script>
 
-<div class="heading" style="padding-bottom:5px;">
+<div class="spacer"></div>
+
+<div class="userNav">
 	<table width="940px" style="border-spacing: 0px;">
-		<tr>
-			<td width="700px">
-				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
+		<tr><form action="">
+			<td>
+				<span class="accountHeading">User Account</span>
+			</td>
+			<td align="center" width="400px">
+				<?php
+					if ($icrop == "true" || $updmsg == "true") { 
+						echo "<span id='success' class='error'>$itemmsg</span>";
+					}
+				?>
 			</td>
 			<td align="center">
-				<a href="index.php?task=transaction_console" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
-			</td>	
+				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio">Transaction Console</input></a>
+			</td>				
 			<td align="center">
-				<span style="color: #fff">|</span>
-			</td>					
-			<td align="center">
-				<a href="index.php?task=my_listings" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff">My Listings</a>
+				<a href="index.php?task=my_listings" class="blue" style="float: left"><input type="radio" CHECKED>My Listings</input></a>
 			</td>
 			<td align="center">
-				<span style="color: #fff">|</span>
+				<a href="index.php?task=my_account" class="blue" style="float: left"><input type="radio">Account Settings</input></a>
 			</td>
-			<td align="center">
-				<a href="index.php?task=my_account" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Home</a>
-		</tr>
+		</form></tr>
 	</table>
 </div>
-<br/>
+
+<div class="spacer"></div>
 
 <?php
 if ($success && $_FILES['item_photo_1']['name']) {
@@ -443,15 +448,7 @@ if ($icrop == "4") {
 die;
 }
 ?>
-	
-	<hr/>
-	<font size="4"><b>Manage my listings</b></font>
-	<?php
-	if ($icrop == "true" || $updmsg == "true") { 
-		echo "<div style='float: right'><font color='red'><b>$itemmsg</b></font></div>";
-	}
-	?>
-	<hr/>
+
 	<?php
 		$user_id = $_SESSION['user_id'];
 		$sql = "SELECT id FROM items WHERE deleted_date = 0 AND user_id = $user_id ORDER BY item_id";

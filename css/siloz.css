@@ -2,7 +2,7 @@ body {
 	/*background-image:url('../images/background.jpg');
 	background-position:center top;
 	background-repeat:no-repeat;*/
-	background-color: #61b1e5;
+	background-color: #2F8ECB;
 	font-family: Arial, Helvetica,sans-serif; ;
 	font-size: 12px;	
 	margin: 0px;
@@ -47,7 +47,7 @@ table {
 	margin: auto;
 	width: 975px;
 	padding-left: 10px;
-	padding-right: 10px;	
+	padding-right: 10px;
 }
 
 #main_body {
@@ -132,6 +132,253 @@ div.heading {
 	font-weight: bold;
 }
 
+.sb {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-top-left-radius: 8px;
+    	border-top-right-radius: 8px;    
+    	border: 1px solid lightgray;
+	color: grey;
+
+	padding: 10px;
+	height: 10px;
+	line-height: 10px;
+	font-size: 12pt;
+	font-weight: bold;
+	width: 120px;
+	text-align: center;
+}
+
+.sb a {
+	text-decoration: none;
+	color: gray;
+}
+
+.sb:hover {
+	text-decoration: none;
+	opacity: .8
+}
+
+.sbSelected {
+   	background-color: #2F8ECB;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-top-left-radius: 8px;
+    	border-top-right-radius: 8px;    
+	color: #fff;
+
+	padding: 10px;
+	height: 10px;
+	line-height: 10px;
+	font-size: 12pt;
+	font-weight: bold;
+	width: 120px;
+	text-align: center;
+}
+
+.sbSelected a {
+	text-decoration: none;
+	color: #fff;
+}
+
+.searchBar {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-top-left-radius: 8px;
+    	border-top-right-radius: 8px;    
+    	border: 1px solid lightgray;
+	color: gray;
+
+	padding: 2px 10px;
+	font-size: 9pt;
+	width: 675px;
+	text-align: center;
+}
+
+.searchBar a {
+	text-decoration: none;
+	color: gray;
+}
+
+.searchBar a:hover {
+	opacity: .8
+}
+
+.searchPage {
+	float: left;
+	margin-top: 5px;
+}
+
+.navBreak {
+	margin-top: 15px
+}
+
+.navPad {
+	padding-right: 5px;
+}
+
+.nb {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+   
+    	border: 1px solid lightgray;
+	color: grey;
+
+	padding: 5px;
+	height: 5px;
+	line-height: 5px;
+	font-size: 10pt;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+}
+
+.nb a {
+	text-decoration: none;
+	color: gray;
+}
+
+.nb:hover {
+	opacity: .8
+}
+
+.nbSelected {
+   	background-color: #2F8ECB;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+   
+	color: #fff;
+
+	padding: 5px;
+	height: 5px;
+	line-height: 5px;
+	font-size: 10pt;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+}
+
+.nbSelected a {
+	text-decoration: none;
+	color: #fff;
+}
+
+.searchOpt {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+   
+    	border: 1px solid lightgray;
+	color: grey;
+
+	height: 30px;
+	line-height: 30px;
+	font-size: 10pt;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	float: right;
+	margin-top: -7px;
+	padding: 0px 5px;
+	width: 350px;
+}
+
+.searchOpt a {
+	text-decoration: none;
+	color: gray;
+}
+
+.searchOpt a:hover {
+	opacity: .8;
+}
+
+.userNav {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-radius: 8px;     
+    	border: 1px solid lightgray;
+	color: #2f8dcb;
+
+	padding: 10px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+.userNav a {
+	text-decoration: none;
+}
+
+.userNav a:hover {
+	opacity: .8
+}
+
+.accountHeading {
+	font-size: 12pt;
+	font-weight: bold;
+	color: #2f8dcb;
+
+}
+
+input[type=radio], input.radio { 
+ 	float:left;
+	clear:none; 
+ 	margin: 3px 10px;
+}
+
 div.nicebox {
 	background-color: #E6F2FB;
 
@@ -179,49 +426,60 @@ div.plate_pending a {
 }
 
 div.plateItem {
-	-moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -khtml-border-radius: 8px;
-    border-radius: 8px;     
-    border: 1px solid #84bfe5;
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-radius: 8px;     
+    	border: 1px solid lightgray;
 	width: 140px;
 	height: 155px;	
 	padding: 0px 4px;
 	color: #2f8dcb;
 	font-size: 11px;
-	background: #E6F2FB;
+	background: #EEF7FC;
 	font-family: Arial, Helvetica,sans-serif;
-	
-	margin-left: 8px;
+	margin-left: 16px;
 	text-align: center;
 }
 
 div.plateItem:hover {
-	background-color: white;
 	cursor: pointer;
+	background-color: #fff;
+	-moz-box-shadow: 0px 0px 0px;
+	-webkit-box-shadow: 0px 0px 0px;
+	box-shadow: 0px 0px 0px;
+}
+
+.photoItem {
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	margin-bottom: 3px;
+	margin-left: -4px;
 }
 
 div.plateSilo {
-	-moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -khtml-border-radius: 8px;
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
 	
-    border-radius: 8px;     
-    border: 1px solid #84bfe5;
+    	border-radius: 8px;     
+   	border: 1px solid lightgrey;
 	width: 165px;
-	height: 180px;	
+	height: 190px;	
 	padding: 0px 4px;
-	color: #2f8dcb;
+	color: #2f8ecb;
 	font-size: 11px;
-	background: #E6F2FB;
+	background: #FFF;
 	font-family: Arial, Helvetica,sans-serif;
-	
 	margin-left: 16px;
 }
 
 div.plateSilo:hover {
-	background-color: #fff;
 	cursor: pointer;
+	-moz-box-shadow: 0px 0px 0px;
+	-webkit-box-shadow: 0px 0px 0px;
+	box-shadow: 0px 0px 0px;
 }
 
 div.item_row {
@@ -246,18 +504,27 @@ div.siloInfo {
 }
 
 div.plateTConsoleSell {
-	-moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -khtml-border-radius: 8px;
-    border-radius: 8px;     
-    border: 1px solid #84bfe5;
-	width: 450px;
-	height: 180px;	
-	padding: 0px 4px;
+   	background-color: #80E9B7; 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#80E9B7));
+   	background-image: -webkit-linear-gradient(top, #fff, #80E9B7); 
+   	background-image:    -moz-linear-gradient(top, #fff, #80E9B7);
+   	background-image:     -ms-linear-gradient(top, #fff, #80E9B7);
+   	background-image:      -o-linear-gradient(top, #fff, #80E9B7);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-radius: 8px;     
+    	border: 1px solid lightgray;
 	color: #2f8dcb;
-	font-size: 11px;
-	background: #E6F2FB;
-	font-family: Arial, Helvetica,sans-serif; ;	
+
+	padding: 10px;
+	font-size: 9pt;
+	font-weight: bold;
+	font-family: Arial, Helvetica,sans-serif;
+	width: 465px;
+	height: 180px;
 }
 
 div.plateTConsoleBuy {
@@ -266,7 +533,7 @@ div.plateTConsoleBuy {
     -khtml-border-radius: 8px;
     border-radius: 8px;     
     border: 1px solid #84bfe5;
-	width: 450px;
+	width: 465px;
 	height: 180px;	
 	padding: 0px 4px;
 	color: #2f8dcb;
@@ -376,15 +643,20 @@ div.plate button, div.plateItem button, div.plateSilo button, div.silo_preview b
 button {
 	background-color: #2f8dcb;
     color: #fff;
-    font-size: 12px;
+    font-size: 11pt;
     font-weight: bold;
 	font-family: Arial, Helvetica,sans-serif; ;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -khtml-border-radius: 8px;
-    border-radius: 8px;     
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;     
     border-width: 0px;
-    padding: 5px 20px;
+    padding: 5px;
+}
+
+button:hover {
+	opacity: .8;
+	cursor: pointer;
 }
 
 .buttonSilo {
@@ -393,14 +665,19 @@ button {
     	font-size: 12px;
     	font-weight: bold;
 	font-family: Arial, Helvetica,sans-serif; ;
-    	-moz-border-radius: 8px;
-    	-webkit-border-radius: 8px;
-    	-khtml-border-radius: 8px;
-    	border-radius: 8px;     
+    	-moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+    	-khtml-border-radius: 4px;
+    	border-radius: 4px;     
     	border-width: 0px;
     	padding: 5px 20px;
 	width: 70px;
 	margin-top: 5px;
+}
+
+.buttonSilo:hover {
+	opacity: .8;
+	cursor: pointer;
 }
 
 .buttonTitle {
@@ -409,10 +686,10 @@ button {
     	font-size: 10px;
     	font-weight: bold;
 	font-family: Arial, Helvetica,sans-serif; ;
-    	-moz-border-radius: 8px;
-    	-webkit-border-radius: 8px;
-    	-khtml-border-radius: 8px;
-    	border-radius: 8px;     
+    	-moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+    	-khtml-border-radius: 4px;
+    	border-radius: 4px;     
     	border-width: 0px;
     	padding: 5px 20px;
 	width: 260px;
@@ -421,16 +698,21 @@ button {
 	margin-top: 5px;
 }
 
+.buttonTitle:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
 .buttonTitleInfo {
 	background-color: #84BFE5;
     	color: #fff;
     	font-size: 10px;
     	font-weight: bold;
 	font-family: Arial, Helvetica,sans-serif; ;
-    	-moz-border-radius: 8px;
-    	-webkit-border-radius: 8px;
-    	-khtml-border-radius: 8px;
-    	border-radius: 8px;     
+    	-moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+    	-khtml-border-radius: 4px;
+    	border-radius: 4px;     
     	border-width: 0px;
     	padding: 5px 20px;
 	width: 250px;
@@ -439,16 +721,21 @@ button {
 	margin: 0px 5px 5px 5px;
 }
 
+.buttonTitleInfo:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
 .buttonEmail {
 	background-color: #84BFE5;
     	color: #fff;
     	font-size: 11px;
     	font-weight: bold;
 	font-family: Arial, Helvetica,sans-serif; ;
-    	-moz-border-radius: 8px;
-    	-webkit-border-radius: 8px;
-    	-khtml-border-radius: 8px;
-    	border-radius: 8px;     
+    	-moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+    	-khtml-border-radius: 4px;
+    	border-radius: 4px;     
     	border-width: 0px;
     	padding: 1px 1px;
 	width: 85px;
@@ -456,6 +743,12 @@ button {
 	float: left;
 	margin: 5px 1px 1px 1px;
 }
+
+.buttonEmail:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
 .donations {
     	color: #2f8dcb;
     	font-size: 10px;
@@ -695,6 +988,20 @@ margin-left: 5px;
 	margin: 10px;
 }
 
+.spacer {
+	padding-top: 10px;
+}
+
+.change_location {
+	cursor: pointer;
+	font-size: 9pt; 
+	font-weight: normal;
+}
+
+.s_change_location {
+	cursor: pointer;
+}
+
 .info-container {
 	position: absolute;
 	top: 120px;
@@ -749,7 +1056,7 @@ margin-left: 5px;
 }
 
 .blue {
-	color: #2f8dcb;
+	color: #2f8ECB;
 }
 
 .lblue {
@@ -764,9 +1071,18 @@ margin-left: 5px;
 	color: #FF642F;
 }
 
+.error {
+	color: red;
+	font-weight: bold;
+}
+
 /* Header */
 #logo_container {
 	float: left;
+}
+
+#logo_container a:hover {
+	opacity: .8
 }
 
 /* Text formatting */

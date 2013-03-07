@@ -1,51 +1,71 @@
-<div class="heading" style="padding-bottom:5px;">
+<div class="spacer"></div>
+
+<div class="userNav">
 	<table width="940px" style="border-spacing: 0px;">
-		<tr>
-			<td width="700px">
-				<b>Your Account</b><?php echo " (".$fname." ".$lname.")"?>
+		<tr><form action="">
+			<td>
+				<span class="accountHeading">User Account</span>
+			</td>
+			<td align="center" width="400px"></td>
+			<td align="center">
+				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio" CHECKED>Transaction Console</input></a>
+			</td>				
+			<td align="center">
+				<a href="index.php?task=my_listings" class="blue" style="float: left"><input type="radio">My Listings</input></a>
 			</td>
 			<td align="center">
-				<a href="index.php?task=transaction_console" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px; color: #fff">Transaction Console</a>
-			</td>	
-			<td align="center">
-				<span style="color: #fff">|</span>
-			</td>					
-			<td align="center">
-				<a href="index.php?task=my_listings" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">My Listings</a>
+				<a href="index.php?task=my_account" class="blue" style="float: left"><input type="radio">Account Settings</input></a>
 			</td>
-			<td align="center">
-				<span style="color: #fff">|</span>
-			</td>
-			<td align="center">
-				<a href="index.php?task=my_account" style="font-size: 12px; text-decoration: none; font-weight: bold; background: transparent; border: 0px; color: #fff">Home</a>
-		</tr>
+		</form></tr>
 	</table>
 </div>
-<br/>
-	
-	<hr/>
-	<font size="4"><b>Transaction Console</b></font>
-	<hr/>
 
-<br>
+<div class="spacer"></div>
 
 <table width="100%">
 <tr><td>
-Buying
+	<span class="accountHeading">Selling</span>
 </td>
 <td width="20px"></td>
 <td>
-Selling
+	<span class="accountHeading">Buying</span>
 </td></tr>
 
 <tr>
 <td>
 
 <div class="plateTConsoleSell">
-<table width="100%" height="100%">
+<table border=1 width="100%" height="100%">
 <tr valign=top>
-	<td valign=top colspan=2>
-	test
+	<td valign="top" rowspan="2">
+			<?php
+			$limit = "LIMIT $start_from, $itemsPerPage";
+			$items = Item::getSoldItems(80, $order_by, $limit);
+			$n = 0;
+			echo "<table cellpadding='10px'>";			
+			foreach ($items as $item) {
+				if ($n == 0)
+					echo "<tr>";							
+				echo $item->getSoldItemCell($silo_id, $c_user_id);					
+				$n++;
+				if ($n == 4) {
+					echo "</tr>";
+					$n = 0;
+				}	
+			}
+			echo "</table>";
+			?>
+	</td>
+	<td>
+		Status: <br>
+		Notifications: <br>
+		Other Party Contact: <br>
+	</td>
+</tr>
+<tr>
+	<td valign="top">
+		Actions: <br>
+		Edit Item | Delete Item
 	</td>
 </tr>
 </table>

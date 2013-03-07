@@ -11,8 +11,9 @@
 
 		$username = mysql_escape_string(trim($_POST['username']));
 		$password = mysql_escape_string(trim($_POST['password']));
+		$enc_pw = md5($password);
 
-        	$res = mysql_query("SELECT user_id, username FROM users WHERE username = '$username' and password='$password' and admin = 'yes'");
+        	$res = mysql_query("SELECT user_id, username FROM users WHERE username = '$username' and password='$enc_pw' and admin = 'yes'");
 
        	if (empty($_POST['username']))
         	{

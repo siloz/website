@@ -44,7 +44,7 @@
 
 <div class="row">
 	<div style="margin-left: 10px;">
-		<p class="silos_header">Popular silos near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
+		<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
 	
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' ORDER BY distance LIMIT 5";
@@ -82,7 +82,7 @@
 
 <div class="row">
 	<div style="margin-left: 10px">
-	<p class="silos_header">Items for Sale near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
+	<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
 
 	<?php
 		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' ORDER BY distance LIMIT 6";
@@ -119,6 +119,8 @@
 	</div>
 </div>
 
+<div id="quick-start"></div>
+
 <div id="footer_container" class="row">
 	<div id="quick_start_bg">
 		<table width="100%" class="quick_start">
@@ -128,6 +130,7 @@
 				<p>siloz is for community - and never private - fundraisers.  To administrate a silo, you must officially represent any of the following: a school (faculty or staff, or a student funding a school cause), a religious organization, a youth sports team or league, a civic or neighborhood organization, or a non-profit that both a) has a physical office where the silo is run, and b) that has some outreach in that same area.  You cannot spend any money raised on personal expenses, and must disclose a public address and telephone number.  Additionally, members will be asked to certify (vouch for) your standing.  We have additional basic security measures.</p>
 				<h2>How Does it Work?</h2>
 				<p>Administrators are equipped with on-line (Facebook Connect, email address book), and off-line (ability to print sign-up sheets and business cards, which can then be printed on perforated, card-stock paper, and torn, to make business cards) to get your fundraiser started.  It will last for 1 to 3 weeks.  Your supporters, and the general public, can donate items that sell on the site.  They may also shop for them.  At the end of the silo, we pay you either through PayPal, or through an electronic check.  After some time (up to 60 days), we ask silo administrators to upload photos showing how raised money was spent, at some point (up to 60 days).</p>
+				<h2 align="center"><a href="index.php?task=getting_started" style="text-decoration: none; color: #FFAABC">more information</a></h2>
 			</td>
 			<td width="6%"></td>
 			<td valign="top" width="47%">
@@ -142,7 +145,7 @@
 		</table>
 
 		<div id="bottom_menu">
-			<a href="index.php?task=contact_us" class="normal_text">Contact Us</a> | <a href="index.php?task=about_us" class="normal_text">About Us</a> | <a href="index.php?task=tos" class="normal_text">Terms of Use</a> | <a href="index.php?task=faq" class="normal_text">FAQ</a> | <a href="index.php?task=getting_started" class="normal_text">Getting Started</a>
+			<a href="index.php?task=contact_us">contact siloz</a> | <a href="index.php?task=about_us">about</a> | <a href="index.php?task=tos">terms of use</a> | <a href="index.php#quick-start">get started!</a> | <a href="index.php?task=faq">faq</a>
 		</div>
 	</div>
 </div>

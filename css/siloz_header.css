@@ -16,6 +16,10 @@
     text-decoration: none;
 }
 
+#top_menu a:hover {
+	opacity: .8
+}
+
 #logo {
 	height: 65px;
 	margin-left:5px;
@@ -30,6 +34,10 @@ a.status, a.status:active, a.status:visited {
 	font-weight: bold;
 	color: #2f8dcb;
     text-decoration: none;
+}
+
+a:hover {
+	opacity: .8
 }
 
 .normal_text {
@@ -75,34 +83,58 @@ td.main_menu {
 }
 
 input {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;  
-    border-radius: 3px; 
-    border-style: solid;
-    border-color: #a7a7a7;
-    border-width: 0px;
-    background-color: #E6F2FB; 
-	font-size: 12px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;  
+    border-radius: 2px; 
+    border: 1px solid lightgray;
+    background-color: #fff; 
+	color: grey;
+	font-size: 9pt;
 	font-weight: bold;
 	line-height: 15px;
-	height: 15px;
+	height: 20px;
 	font-family: Arial, Helvetica,sans-serif; ;
 }
 
+input:hover {
+	opacity: .8
+}
+
+input:focus { 
+    	outline: none;
+    	border-color: #2F8ECB;
+    	box-shadow: 0 0 5px #2F8ECB;
+}
+
 select {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;  
-    border-radius: 3px; 
-    border-style: solid;
-    border-color: #a7a7a7;
-    border-width: 1px;
-    background-color: #fff; 
-	font-size: 12px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid lightgray;
+    background-color: #fff;
+	color: grey;
+	font-size: 9pt;
 	font-weight: bold;
-	height: 18px;
-	font-family: Arial, Helvetica,sans-serif; ;
+	height: 23px;
+	width: 130px;
+	line-height: 15px;
+	font-family: Arial, Helvetica,sans-serif;
+}
+
+select:hover {
+	opacity: .8;
+}
+
+select:focus { 
+    	outline: none;
+    	border-color: #2F8ECB;
+    	box-shadow: 0 0 5px #2F8ECB;
+}
+.empty { 
+	color: grey;
+	opacity: .6;
 }
 
 .login, .contact_seller, .edit_item {

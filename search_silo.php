@@ -1,14 +1,14 @@
 <?php
 	$silosPerPage = "10";
-	$silosPerRow = 5;
+	$silosPerRow = "5";
 
 	$view = param_get('view');
 
 	$search_clause = "";
-	$query = "";
+	$saveSearch = "";
 	
 	if (strlen(trim(param_get('keywords'))) > 0) {
-		$query .= "&keywords=".trim(param_get('keywords'));
+		$saveSearch .= "&keywords=".trim(param_get('keywords'));
 		$kws = explode(" ", strtolower(param_get('keywords')));
 		foreach ($kws as $kw) {
 			if (strlen(trim($kw)) > 0)
@@ -16,24 +16,35 @@
 		}
 	}
 	if (strlen(param_get('zip_code')) > 0) {
-		$query .= "&zip_code=".param_get('zip_code');
+		$saveSearch .= "&zip_code=".param_get('zip_code');
 		$search_clause .= "";
 	}
-	if (strlen(param_get('amount_min')) > 0) {
-		$query .= "&amount_min=".param_get('amount_min');
-		$search_clause .= " AND goal >= ".param_get('amount_min');
+	if (strlen(param_get('price_low')) > 0) {
+		$saveSearch .= "&price_low=".param_get('price_low');
+		$search_clause .= " AND goal >= ".param_get('price_low');
 	}
-	if (strlen(param_get('amount_max')) > 0) {
-		$query .= "&amount_max=".param_get('amount_max');
-		$search_clause .= " AND goal <= ".param_get('amount_max');
+	if (strlen(param_get('price_high')) > 0) {
+		$saveSearch .= "&price_high=".param_get('price_high');
+		$search_clause .= " AND goal <= ".param_get('price_high');
 	}
 	if (strlen(param_get('category')) > 0) {
-		$query .= "&category=".param_get('category');		
+		$saveSearch .= "&category=".param_get('category');		
 		$search_clause .= " AND silo_cat_id = ".param_get('category');
 	}
 	else {
 		$search_clause .= " AND silo_cat_id IN (SELECT silo_cat_id FROM silo_categories)";		
 	}
+	if (strlen(param_get('sort_by')) > 0) {
+		$saveSearch .= "&sort_by=".param_get('sort_by');
+		$saveSearch .= "&sort_order=".param_get('sort_order');				
+	}
+	if (strlen(param_get('view')) > 0) {
+		$saveSearch .= "&view=map";
+	}
+	if (strlen(param_get('page')) > 0) {
+		$saveSearch .= "&page=".param_get('page');;
+	}
+
 	$search_clause .= " AND status = 'active' ";
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $silosPerPage : intval(param_get('to'));		
@@ -57,7 +68,20 @@
 	$tmp = mysql_fetch_array(mysql_query($sql));
 	$count_silos = $tmp[0];
 
-	$sql = "SELECT *, $sqlDist AS distance FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 $search_clause $order_by_clause LIMIT ".($from-1).", $offset";
+	if ($count_silos == "0") { $no_res = "<center>We cannot find any matches. Please broaden your search!</center>"; }
+
+	$total_pages = ceil($count_silos / $silosPerPage);
+
+	if (param_get('page')) {
+		$page  = param_get('page');
+	} 
+	else { 
+		$page = 1;
+	};
+
+	$start_from = ($page-1) * $silosPerPage;
+
+	$sql = "SELECT *, $sqlDist AS distance FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE 1 > 0 $search_clause $order_by_clause LIMIT $start_from, $silosPerPage";
 	
 	$tmp = mysql_query($sql);		
 	$closed_silos = array();
@@ -99,10 +123,79 @@
 	 	$next = "<a href=index.php?search=silo&from=".($to+1)."&to=".min($to + $silosPerPage, $count_silos)."$query class=status><font color='#fff'>Next</font> <img src='images/next_arrow.png' height='15px'></a>"
 ?>
 
+<div class="navBreak">
+
+<?php
+	if ($total_pages < 2) {
+		echo '<span class="nbSelected">1</span>';
+	}
+	else	{
+		if ($page != "1") {
+			$prev = $page - 1;
+				echo '<a href="index.php?'.$saveSearch.'&search=silo&page='.$prev.'" class="nb">< Prev</a> <span class="navPad"></span>';
+			}
+
+		for ($i=1; $i<=$total_pages; $i++) {			
+
+			if ($i != $page) {
+				echo '<a href="index.php?'.$saveSearch.'&search=silo&page='.$i.'" class="nb">' . $i . '</a> <span class="navPad"></span>';
+			} 
+			else {
+				echo '<span class="nbSelected">'.$i.'</span> <span class="navPad"></span>';
+			}
+		};
+		if ($page != $total_pages) {
+			$next = $page + 1;
+			echo '<a href="index.php?'.$saveSearch.'&search=silo&page='.$next.'" class="nb">>Next</a>';
+		}
+	}
+
+	if ($sort_order == 'asc') {
+		$new_sort_order = '&sort_order=desc';
+		if ($order_by == 'date')
+			$img2_path = 'images/up.png';
+		else if ($order_by != '')
+			$img1_path = 'images/up.png';
+		}
+	else {
+		$new_sort_order = '&sort_order=asc';										
+		if ($order_by == 'date')
+			$img2_path = 'images/down.png';
+		else if ($order_by != '')
+			$img1_path = 'images/down.png';
+		}
+	$sortBy = "<b>sort: <a href=index.php?".$saveSearch."&search=silo&sort_by=goal$new_sort_order style='text-decoration:none;'> value <img src=$img1_path></a> &nbsp; <a href=index.php?".$saveSearch."&search=silo&sort_by=date$new_sort_order style='text-decoration:none;'> date <img src=$img2_path></a></b>";
+			?>
+
+<div class="searchOpt">
+<table width="100%">
+<tr>
+	<td style="padding-right: 15px;">
+		<?=$sortBy?>
+	</td>
+	<td style="padding-right: 5px;">
+		view:
+	</td>
+	<td>
+		<a href="index.php?<?=$saveSearch?>&search=silo&view=map"> map <input style="float: right; margin-top: 5px; margin-left: 5px;" type="radio" <?php if ($view) { echo "CHECKED"; } ?>></input></a>
+	</td>
+	<td>
+		<a href="index.php?search=silo<?=$saveSearch?>&view=">grid <input style="float: right; margin-top: 5px; margin-left: 5px;" type="radio" <?php if (!$view) { echo "CHECKED"; } ?>></input></a>
+	</td>
+</tr>
+</table>
+</div>
+
+
+</div>
+
+<div class="spacer"></div>
+
 <?php
 if ($view == "map") {
 ?>
 
+<!--
 <div id="result_nav" class="heading">
 <table width="100%">
 <tr>
@@ -115,6 +208,7 @@ if ($view == "map") {
 </tr>
 </table>
 </div>
+-->
 
 <div id='map_canvas' style='width: 930px; height: 400px; margin: 20px;'></div>
 
@@ -228,6 +322,7 @@ window.onload = loadScript;
 }
 ?>
 
+<!--
 <div id="result_nav" class="heading">
 	<table width="100%" valign=”top”>
 	<tr>
@@ -260,7 +355,10 @@ window.onload = loadScript;
 	</tr>
 			</table>
 			</div>
-			
+-->
+
+<?=$no_res?>
+
 <?php echo $siloz_html;?>
 
 <div style="margin-left: 10px;">

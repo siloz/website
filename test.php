@@ -108,7 +108,7 @@ class Bcrypt {
 
 $hash = md5(deniro96);
 
-//$sql = mysql_query("UPDATE users SET password = '$hash' WHERE password = 'deniro96'");
+//$sql = mysql_query("UPDATE items SET status = 'pledged' WHERE silo_id = '80' AND status = 'inert'");
 ?>
 
 test
