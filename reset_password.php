@@ -1,10 +1,55 @@
+<br><br>
 <?php
+	$id = param_get('id');
+	$token = param_get('token');
+
+	$validReset = mysql_num_rows(mysql_query("SELECT * FROM password_reset WHERE user_id = '$id' AND token = '$token' AND exp_date > NOW()"));
+
+if ($_SESSION['is_logged_in'] == 1) {
+	echo "<script>window.location = 'items';</script>";
+}
+elseif (!$validReset && ($id || $token)) {
+	echo "<script type='text/javascript'>window.location = 'index.php?task=reset_password';</script>";
+}
+
+
 	$err = '';
 	$success = false;
 
+	if (param_post('newpass') == 'Submit') {
+		$user_id = param_post('user_id');		
+		$password = md5(mysql_real_escape_string(param_post('password')));
+		$confirm_password = md5(mysql_real_escape_string(param_post('confirm_password')));
+
+		$email = mysql_fetch_row(mysql_query("SELECT email FROM users WHERE id = '$user_id'"));
+	
+		if (strlen($password) == 0) {
+			$err .= 'New password must not be empty.<br/>';		
+		}
+		elseif (strlen($confirm_password) == 0) {
+			$err .= 'Please confirm your new password.<br/>';		
+		}
+		elseif ($password != $confirm_password) {
+			$err .= "The two passwords do not match. Please confirm they are both the same.<br/>";		
+		}
+
+		if (strlen($err) != 0) {}
+		else {
+			$pwUpd = mysql_query("UPDATE users SET password = '$password' WHERE id = '$user_id'");
+			$resetDel = mysql_query("DELETE FROM password_reset WHERE user_id = '$id'");
+
+			$err = "Your password has been updated! Please login above to access your account.";
+			$success = true;
+			$subject = "Password changed on ".SHORT_URL;
+			$message = "<h3>Your password has been updated on ".SITE_NAME."</h3>";
+			$message .= "<br/>This message is simply to inform you that your password has been updated on your ".SITE_NAME." account. If you did not intitate this, please contact our support team right away.";
+			email_with_template($email[0], $subject, $message);
+		}
+	}
+
 	if (param_post('reset') == 'Reset') {				
-		$email = trim(param_post('email'));
-		$retype_email = trim(param_post('retype_email'));
+		$email = trim(strtolower(param_post('email')));
+		$retype_email = trim(strtolower(param_post('retype_email')));
 	
 		if (strlen($email) == 0) {
 			$err .= 'E-mail must not be empty.<br/>';		
@@ -21,7 +66,7 @@
 		else {
 			$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM users WHERE email = '$email'"));
 			if ($tmp[0] < 1) {
-				$err .= "Your e-mail address ('$email') is not registered yet on siloz .<br/>";
+				$err .= "Your e-mail address ('$email') is not registered yet on ".SITE_NAME.".<br/>";
 			}
 		}
 		
@@ -32,13 +77,16 @@
 			$err .= "Incorrect security code entered.<br/>";
 		}
 
-		$user = mysql_fetch_array(mysql_query("SELECT id, username, email FROM users WHERE email = '$email'"));
+		$user = mysql_fetch_array(mysql_query("SELECT id, fname, email FROM users WHERE email = '$email'"));
 		$id = $user['id'];
-		$username = $user['username'];
+		$fname = $user['fname'];
 		$email = $user['email'];
+		if (strtolower($email) == strtolower($retype_email)) {
+			$retype_email = $user['email'];
+		}
 
 		function genRandomString() {
-    			$length = 10;
+    			$length = 15;
     			$characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz";
     			$string = "";    
 
@@ -48,20 +96,20 @@
 
     			return $string;
 			}
-		$new_pw = genRandomString();
-		$enc_pw = md5($new_pw);
-
-		$dbpw = mysql_fetch_array(mysql_query("UPDATE users SET password = '$enc_pw' WHERE email = '$email'"));
+		$token = genRandomString();
 		
 		if (strlen($err) != 0) {}
 		else {
-			$err = "An e-mail has been sent with your username and your password has been reset.";
+			$dbReset = mysql_query("INSERT INTO password_reset (user_id, token, exp_date) VALUES ('$id', '$token', DATE_ADD(NOW(), INTERVAL 1 DAY))");
+
+			$err = "An e-mail has been sent with a password reset link. Please create a new password right away because the link expires after 24 hours!";
 			$success = true;
-			$subject = "Username/Password Reset - siloz";
-			$message = "<h3>Your new login information for siloz is below:</h3>";
-			$message .= "<br/>Username: ".$username." <br><br/>";
-			$message .= "Password: ".$new_pw." <br/><br/>";
-			$message .= "Welcome to siloz!";
+			$subject = "Username/Password Reset - ".SHORT_URL."";
+			$message = "<h3>Password Reset Link for ".SITE_NAME."</h3>";
+			$message .= "<br/>Hello ".$fname.",<br><br>";
+			$message .= "A request has been made to reset your password. Please click on the link below.<br><br/>";
+			$message .= "<a href='".ACTIVE_URL."index.php?task=reset_password&id=".$id."&token=".$token."'>".ACTIVE_URL."index.php?task=reset_password&id=".$id."&token=".$token."</a><br/><br/>";
+			$message .= "**Remember, this link is only active for 24 hours.";
 			email_with_template($email, $subject, $message);
 		}
 	}
@@ -73,7 +121,7 @@
 	<table style="margin:auto">
 		<tr>
 			<td colspan="2" align="center">
-				<h1>Forgot Username/Password</h1>
+				<h1>Forgot Password</h1>
 			</td>
 		</tr>
 		<tr>
@@ -86,7 +134,27 @@
 			</td>
 		</tr>
 <?php
-if (!$success) {
+if ($validReset > 0 && !$success) {
+?>
+		<tr>
+			<td>New password <font color='red'>*</font></td>
+			<td><input type="password" name="password" style="width : 200px" /></td>
+		</tr>
+		<tr>
+			<td>Confirm new password <font color='red'>*</font></td>
+			<td><input type="password" name="confirm_password" style="width : 200px" /></td>
+		</tr>			
+		<tr>
+			<td colspan="2" align="center">
+				<br/>
+				<input type="hidden" name="user_id" value="<?=$id?>" />
+				<button type="submit" name="newpass" value="Submit">Submit</button>
+			</td>
+		</tr>
+
+<?php
+}
+elseif (!$success) {
 ?>
 
 		<tr>

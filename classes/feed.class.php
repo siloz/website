@@ -5,15 +5,35 @@ class Feed {
 	public $item_id;
 
 	public function Save(){
-		if($this->status == "Pledged") {
+		$silo = mysql_fetch_row(mysql_query("SELECT silo_id FROM items WHERE item_id = '$this->item_id'"));
+		$this->silo_id = $silo[0];
+
+		if($this->status == "Joined") {
+			return $this->InsertJoined();
+		}
+		elseif($this->status == "Pledged") {
 			return $this->InsertPledged();
 		}
 		elseif($this->status == "Sold") {
 			return $this->InsertSold();
 		}
-		else {
-			return $this->InsertGoal();
-		}
+	}
+
+public function InsertJoined(){
+		$query = (
+			"INSERT INTO `feed` "
+			."("
+				."silo_id, user_id, item_id, type"
+			.")VALUES("
+				."'".$this->silo_id."',"
+				."'".mysql_real_escape_string($this->user_id)."',"
+				."'".mysql_real_escape_string($this->item_id)."',"
+				."'Joined'"
+			.")"
+		);
+		mysql_query($query);
+
+		return true;		
 	}
 
 public function InsertPledged(){
@@ -22,7 +42,7 @@ public function InsertPledged(){
 			."("
 				."silo_id, user_id, item_id, type"
 			.")VALUES("
-				."'".mysql_real_escape_string($this->silo_id)."',"
+				."'".$this->silo_id."',"
 				."'".mysql_real_escape_string($this->user_id)."',"
 				."'".mysql_real_escape_string($this->item_id)."',"
 				."'Pledged'"
@@ -34,18 +54,32 @@ public function InsertPledged(){
 	}
 
 public function InsertSold(){
+		$silo = new Silo($this->silo_id);
+		$this->goal = $silo->goal;
+
+		$checkBefore = mysql_fetch_row(mysql_query("SELECT goal_reached FROM feed WHERE silo_id = '$this->silo_id' ORDER BY goal_reached DESC"));
+		$goalBefore = $checkBefore[0];
+
 		$query = (
 			"INSERT INTO `feed` "
 			."("
 				."silo_id, user_id, item_id, type"
 			.")VALUES("
-				."'".mysql_real_escape_string($this->silo_id)."',"
+				."'".$this->silo_id."',"
 				."'".mysql_real_escape_string($this->user_id)."',"
 				."'".mysql_real_escape_string($this->item_id)."',"
 				."'Sold'"
 			.")"
 		);
 		mysql_query($query);
+
+		$checkAfter = mysql_fetch_row(mysql_query("SELECT SUM(price) FROM items WHERE silo_id = '$this->silo_id' AND status = 'Sold'"));
+		$totalAfter = ($checkAfter[0]/$this->goal)*10;
+		$this->goal_reached = floor($totalAfter)*10;
+
+		if ($this->goal_reached - $goalBefore) {
+			return $this->InsertGoal();
+		}
 
 		return true;		
 	}
@@ -56,11 +90,11 @@ public function InsertGoal(){
 			."("
 				."silo_id, user_id, item_id, type, goal_reached"
 			.")VALUES("
-				."'".mysql_real_escape_string($this->silo_id)."',"
+				."'".$this->silo_id."',"
 				."'".mysql_real_escape_string($this->user_id)."',"
 				."'".mysql_real_escape_string($this->item_id)."',"
-				."'Goal'"
-				."'".mysql_real_escape_string($this->goal_reached)."',"
+				."'Goal',"
+				."'".$this->goal_reached."'"
 			.")"
 		);
 		mysql_query($query);

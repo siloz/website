@@ -2,7 +2,7 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, em, img, strong, ol, ul, li
 table { border-collapse: collapse; border-spacing: 0; }
 input, button{ overflow: visible; }
 html, body { height: 100%; min-height: 100%; }
-body { font: normal 11px/14px tahoma, arial, verdana, sans-serif; text-align:center; color: #333; background: #f6f6f6; }
+body { font: normal 11px/14px arial, verdana, sans-serif; text-align:center; color: #333; background: #f6f6f6; }
 p { padding: 0 0 10px; }
 ul { padding: 0 0 0 16px; }
 li { padding: 0 0 8px; }
@@ -53,7 +53,7 @@ h3 { margin: 10px 0 5px 0; }
 .page .footer-area { height: 38px; font-size: 11px; text-align: left; color: #000; }
 .page .footer .description { margin: 0; padding: 12px 10px 0; }
 .icons-area { padding: 5px 10px 10px; text-align: center; background: url('../img/common/blocks_bg.png') 0 100% no-repeat; }
-.icon { display: -moz-inline-box; display: inline-block; margin: 0 3px 12px 0; padding: 0; min-height: 32px; font: normal 11px/13px tahoma, arial, helvetica, sans-serif; text-decoration: none; text-align: left; vertical-align: top; color: #000; cursor: pointer; background-position: 50% 0; background-repeat: no-repeat; }
+.icon { display: -moz-inline-box; display: inline-block; margin: 0 3px 12px 0; padding: 0; min-height: 32px; font: normal 11px/13px arial, helvetica, sans-serif; text-decoration: none; text-align: left; vertical-align: top; color: #000; cursor: pointer; background-position: 50% 0; background-repeat: no-repeat; }
 a.icon:link, a.icon:visited, a.icon:hover, a.icon:active { color: #000; text-decoration: none; }
 .icon span { display: block; padding: 34px 0 0; width: 80px; text-align: center; cursor: pointer; }
 #asp { background-image: url('../img/glyph/btn_asp_bg.gif'); }
@@ -76,12 +76,12 @@ fieldset { border: 1px solid #e0e0e0; margin: 0; padding: 0 10px 10px; }
 legend { margin: 0; padding: 0 2px 5px; vertical-align: middle; font-weight: bold; color: #000; }
 .form-fields { padding-top: 6px; }
 .formFields { margin: 5px 0; }
-.formFields, .formFields input, .formFields select, .formFields textarea { font: normal 11px 'Segoe UI', Tahoma, Verdana, Arial, Helvetica, sans-serif; }
+.formFields, .formFields input, .formFields select, .formFields textarea { font: normal 11px 'Segoe UI', Verdana, Arial, Helvetica, sans-serif; }
 .formFields td.name { padding: 0 10px 10px 0; width: 200px; vertical-align: top; font-weight: bold; }
 .buttonsContainer { margin-top: 10px; text-align: right; }
 .buttonsContainer .commonButton { display: inline; margin-left: 14px; }
 .buttonsContainer .commonButton span { display: none; }
-.buttonsContainer .commonButton button { border: 0; width: 91px; height: 21px; text-align: center; white-space: nowrap; cursor: pointer; font: normal 11px 'Segoe UI', Tahoma, Verdana, Arial, Helvetica, sans-serif; background: transparent url('../img/glyph/btn_bg.gif') 0 0 no-repeat; }
+.buttonsContainer .commonButton button { border: 0; width: 91px; height: 21px; text-align: center; white-space: nowrap; cursor: pointer; font: normal 11px 'Segoe UI', Verdana, Arial, Helvetica, sans-serif; background: transparent url('../img/glyph/btn_bg.gif') 0 0 no-repeat; }
 .commonButton button[disabled] { color: #999; background-image: url('../img/glyph/btn_bg-disabled.gif'); }
 #bid-ok button  { padding-left: 8px; background-image: url('../img/glyph/btn_ok_bg.gif'); }
 .commonButton button:hover { background-position: 0 -21px; }

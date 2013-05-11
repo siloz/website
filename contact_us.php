@@ -1,7 +1,15 @@
-<div class="heading">
-	<b>Contact Us</b>
-</div>		
-<br/>
+<?php include_once("include/GoogleAnalytics.php"); ?>
+
+<span class="greyFont">
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Contact Us</span>
+</div>
+
+<div class="headingPad"></div><br>
+
 <div class="rounded_box" style="width: 80%; margin: auto;">
 	<?php
 		if (param_post('submit') == 'Send') {
@@ -28,7 +36,7 @@
 				echo "<div style='color: red; font-weight: bold;'>ERROR: <br/>$err</div><br/>";
 			}
 			else {
-				$to      = 'Anh Pham <vinhanh@gmail.com>';
+				$to      = 'Siloz Support <support@siloz.com>';
 				$subject = "Contact Us: $subject";
 				$message = "Department: $department\nPhone: $phone\nInquiry: $content";
 				$headers = "From: $email" . "\r\n" .
@@ -40,19 +48,19 @@
 				if (!$sent) {
 					echo "<div style='color: red; font-weight: bold;'>ERROR: Failed to sent email!</div><br/>";
 				} else {
-					echo "<div style='color: red; font-weight: bold;'>Your information has been emailed to SiloZ Administrator</div><br/>";
+					echo "<div style='color: red; font-weight: bold;'>Your information has been emailed to <?=SITE_NAME?> Administrator</div><br/>";
 				}
 			}
 		}
 	?>
-	<b>Mailing address:</b> Siloz LLC., 1926 6th Ave. Suite 108, Oakland, CA, 94606
+	<b>Mailing address:</b> <?=SITE_NAME?> LLC., 4413 S. 1st Street, Austin, TX 78745
 	<br/>
 	<b>Phone number: </b> 510-842-6077
 	<br/>
 	<br/>
 	Feel free to contact us with business or press-related matters by using this form or giving us a call. 
 	<br/>
-	Thanks very much for your interest in SiloZ! 
+	Thanks very much for your interest in <?=SITE_NAME?>! 
 	<br/>	
 	<form name="contact_us" id="contact_us" method="POST">
 		<table cellpadding="20px">
@@ -67,9 +75,8 @@
 					Department: <br/>
 					<select style="width: 300px" name="department">
 						<option value="">Select the department</option>
-						<option value="Technical support">Technical support</option>
-						<option value="Customer support">Customer support</option>
-						<option value="Feedback">Feedback</option>
+						<option value="Customer support">Support</option>
+						<option value="Feedback">Feedback or requests</option>
 						<option value="Business and press inquiries">Business and press inquiries</option>
 					</select>
 				</td>
@@ -88,4 +95,6 @@
 			</tr>
 		</table>
 	</form>
-</div>			
+</div>
+
+</span>			

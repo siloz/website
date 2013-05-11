@@ -1,36 +1,90 @@
 <?php
-	$user_id = param_get('id');
+	$itemsPerPage = "12";
+	$itemsPerRow = "6";
+
+	$view_user_id = param_get('id');
 	$silo_id = param_get('silo_id');
-	$user = new User($user_id);
-	$silo_text = " in <b>all</b> Silos";	
+	$user = new User($view_user_id);
+
+	$count = "SELECT COUNT(*) AS num FROM items WHERE user_id = '$user->user_id'";
+	$countRow = mysql_fetch_array(mysql_query($count));
+	$total_records = $countRow['num'];
+	$total_pages = ceil($total_records / $itemsPerPage);
+
+	if (param_get('page')) { $page  = param_get('page'); } else { $page = 1; };
+	$start_from = ($page-1) * $itemsPerPage;
+
 	if ($silo_id != '') {
-		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE deleted_date = 0 AND user_id = $user_id AND silo_id = $silo_id ORDER BY item_id";
+		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE deleted_date = 0 AND user_id = $user_id AND silo_id = $silo_id ORDER BY item_id LIMIT $start_from, $itemsPerPage";
 		$tmp = mysql_query("SELECT * FROM silos WHERE silo_id = $silo_id");
 		$silo = mysql_fetch_array($tmp);
 		$silo_text = " in <b><a href='index.php?task=view_silo&id=".$silo_id."'>".$silo['name']."</a></b> Silo";			
 	}
 	else {
-		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE deleted_date = 0 AND user_id = ".$user->user_id." ORDER BY item_id";		
+		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE deleted_date = 0 AND user_id = ".$user->user_id." ORDER BY item_id LIMIT $start_from, $itemsPerPage";		
 	}
 	$items = mysql_query($sql);
 ?>
-<div class="heading">
-	Items listed by <?php echo "<b><a href='index.php?task=view_user&id=".$user->id."'>".$user->fname."</a></b>".$silo_text;?>
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Items listed by <?php echo "<b><a href='index.php?task=view_user&id=".$user->id."'><u>".$user->fname."</u></a></b>";?></span><br>
+	<img src="uploads/members/<?=$view_user_id?>.jpg" width="100px" class="user-img">
 </div>
+
+<div class="headingPad"></div><br>
+
+	<center>
+		<?php
+			if ($total_pages == 1) {
+				echo '<span class="nb_siloSelected">1</span>';
+			}
+			elseif (!$total_pages) {}
+			else	{
+				if ($page != "1") {
+					$prev = $page - 1;
+						echo '<a href="index.php?task=view_user&id='.$user->id.'&page='.$prev.'" class="nb_silo">< Prev</a> <span class="navPad"></span>';
+					}
+
+				for ($i=1; $i<=$total_pages; $i++) {			
+
+					if ($i != $page) {
+						echo '<a href="index.php?task=view_user&id='.$user->id.'&page='.$i.'" class="nb_silo">' . $i . '</a> <span class="navPad"></span>';
+					} 
+					else {
+						echo '<span class="nb_siloSelected">'.$i.'</span> <span class="navPad"></span>';
+					}
+				};
+				if ($page != $total_pages) {
+					$next = $page + 1;
+					echo '<a href="index.php?task=view_user&id='.$user->id.'&page='.$next.'" class="nb_silo">>Next</a>';
+				}
+			}
+		?>
+	</center>
+
+<div class="headingPad"></div>
+
 <?php
-	$n = 0;
-	echo "<table cellpadding='3px'>";			
-	while ($row = mysql_fetch_array($items)) {
-		if ($n == 0)
-			echo "<tr>";
-		$cell = "<td><div class=plate id='item_".$row['item_id']."' style='color: #000;height: 200px;'>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$row['item_id']."'><b>".substr($row['title'], 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/300px/".$row['photo_file_1']." style='margin-bottom: 3px'><div style='color: #000;'><b>Status: </b>".$row['status']."<br/><b>Benefiting: </b><a href='index.php?task=view_silo&id=".$row['silo_id']."'>".substr($row['name'],0,30)."</a></div></td></tr><tr valign=bottom><td align=left align=left><span style='color: #f60'><b>$".$row['price']."</b></span></td><td align=right><a href='index.php?task=view_item&id=".$row['item_id']. "'><i><b>more...</b></i></a></td></tr></table></div></td>";							
-		echo $cell;					
-		$n++;
-		if ($n == 6) {
-			echo "</tr>";
-			$n = 0;
-		}					
-	}
-	echo "</table>";			
+	$num = mysql_num_rows($items);
+
+	if (!$num) {
+    		echo "<br><br><center>This user has not pledged any items to any silos yet.</center>";
+  	}
+
+		$n = 0;
+		echo "<table cellpadding='5px'>";			
+		while ($item = mysql_fetch_array($items)) {
+			$i = new Item($item['item_id']);
+			if ($n == 0)
+				echo "<tr>";							
+				echo $i->getItemCell($item['silo_id'], $user_id);					
+				$n++;
+			if ($n == $itemsPerRow) {
+				echo "</tr>";
+				$n = 0;
+			}					
+		}
+		echo "</table>";
 ?>

@@ -3,7 +3,10 @@
  * Set Silo params for save
  *
  *
- */ 
+ */
+
+$Silo->id = "0";
+$Silo->id = $id[0];
 if($name){$Silo->name = $name;}
 if($shortname){$Silo->shortname = $shortname;}
 if($paypal_account){$Silo->paypal_account = $paypal_account;}
@@ -14,6 +17,7 @@ if($bank_account_number){$Silo->bank_account_number = $bank_account_number;}
 if($bank_routing_number){$Silo->bank_routing_number = $bank_routing_number;}
 if($org_name){$Silo->org_name = $org_name;}
 if($ein){$Silo->ein = $ein;}
+if($verified){$Silo->verified = $verified;}
 if($issue_receipts){$Silo->issue_receipts = $issue_receipts;}
 if($title){$Silo->title = $title;}
 if($phone_number){$Silo->phone_number = $phone_number;}
@@ -28,5 +32,7 @@ if($admin_notice){$Silo->admin_notice = $admin_notice;}
 if($status){$Silo->status = $status;}
 if($description){$Silo->description = $description;}
 if($purpose){$Silo->purpose = $purpose;}
-$silo_id = $Silo->Save(); 
+if(!$filename && !$success){ $Silo->photo_file = "default.png"; }
+if (param_post('publish') == 'Publish') { $Silo->silo_type = $silo_type; }
+$silo_id = $Silo->Save();
 ?>

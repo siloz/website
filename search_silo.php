@@ -1,4 +1,6 @@
 <?php
+	include_once("include/GoogleAnalytics.php");
+
 	$silosPerPage = "10";
 	$silosPerRow = "5";
 
@@ -19,13 +21,13 @@
 		$saveSearch .= "&zip_code=".param_get('zip_code');
 		$search_clause .= "";
 	}
-	if (strlen(param_get('price_low')) > 0) {
-		$saveSearch .= "&price_low=".param_get('price_low');
-		$search_clause .= " AND goal >= ".param_get('price_low');
+	if (strlen($low) > 0) {
+		$saveSearch .= "&price_low=".$low;
+		$search_clause .= " AND goal >= ".$low;
 	}
-	if (strlen(param_get('price_high')) > 0) {
-		$saveSearch .= "&price_high=".param_get('price_high');
-		$search_clause .= " AND goal <= ".param_get('price_high');
+	if (strlen($high) > 0) {
+		$saveSearch .= "&price_high=".$high;
+		$search_clause .= " AND goal <= ".$high;
 	}
 	if (strlen(param_get('category')) > 0) {
 		$saveSearch .= "&category=".param_get('category');		
@@ -45,7 +47,7 @@
 		$saveSearch .= "&page=".param_get('page');;
 	}
 
-	$search_clause .= " AND status = 'active' ";
+	$search_clause .= " AND status = 'active' AND silo_type = 'public' ";
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $silosPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
@@ -94,26 +96,34 @@
 		
 		$silo = new Silo($s['id']);
 		
-		if ($i % 5 == 0) {
-			$siloz_html .= "<div class='row item_row'>";
+		if ($i % $silosPerRow == 0) {
+			$siloz_html .= "<div class='row item_row-search'>";
 		}
 					
-		$siloz_html .= $silo->getSiloPlate($i % 5 == 0);
+		$siloz_html .= $silo->getSiloPlate($i % $silosPerRow == 0);
 		
-		if ($i % 5 == 4) {
+		if ($i % $silosPerRow == $silosPerRow - 1) {
 			$siloz_html .= "</div>";
 		}
 		
 		$closed_silos[] = $silo;	
 
-		$i ++;
+		$i++;
 	}
 	
-	if ($i % 5 < 4) {
-		$siloz_html .= "</div";
+	if ($i % $silosPerRow < $silosPerRow - 1) {
+		$siloz_html .= "</div>";
+	}
+
+	if ($i == 4) {
+		$siloz_html .= "</div>";
+	}
+
+	if ($view != map) {
+		$siloz_html .= "</div>";
 	}
 	
-	$siloz_html .= "</div></div></div>";
+	$siloz_html .= "</div>";
 
 	$prev = "";
 	if ($from >= $silosPerPage)
@@ -126,9 +136,10 @@
 <div class="navBreak">
 
 <?php
-	if ($total_pages < 2) {
+	if ($total_pages == 1) {
 		echo '<span class="nbSelected">1</span>';
 	}
+	elseif (!$total_pages) {}
 	else	{
 		if ($page != "1") {
 			$prev = $page - 1;
@@ -200,7 +211,7 @@ if ($view == "map") {
 <table width="100%">
 <tr>
 	<td width="67%" align="right" valign="top">
-		<b>This map is showing <?=$count_silos?> siloz that are fundraising in your area</b>
+		<b>This map is showing <?=$count_silos?> silos that are fundraising in your area</b>
 	</td>
 	<td align="right">
 		<i>View:</i> <a href="index.php?search=silo&view=map">Map</a> | <a href="index.php?search=silo" style="text-decoration:none;">Grid</a>
@@ -210,7 +221,7 @@ if ($view == "map") {
 </div>
 -->
 
-<div id='map_canvas' style='width: 930px; height: 400px; margin: 20px;'></div>
+<div id='map_canvas' class="map-canvas" style='width: 930px; height: 400px; margin: 20px;'></div>
 
 <br>
 
@@ -330,7 +341,7 @@ window.onload = loadScript;
 	<?=$prev?> <?=$next?>
 	</td>
 	<td width="50%" align="right" valign="top">
-		<b>Viewing <?=$count_silos?> siloz that are fundraising in your area</b>
+		<b>Viewing <?=$count_silos?> silos that are fundraising in your area</b>
 	</td>
 	<td align="right">
 		<?php

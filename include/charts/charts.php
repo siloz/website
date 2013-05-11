@@ -25,7 +25,7 @@ function InsertChart( $flash_file, $library_path, $php_source, $width=400, $heig
 	if($transparent){$html.="<PARAM NAME='wmode' VALUE='transparent' /> ";}
 	$html.="<EMBED src='".$flash_file.$u."library_path=".$library_path."&stage_width=".$width."&stage_height=".$height."&php_source=".$php_source;
 	if($license!=null){$html.="&license=".$license;}
-	$html.="' quality='high' bgcolor='#".$bg_color."' width='".$width."' height='".$height."' NAME='charts' allowScriptAccess='sameDomain' swLiveConnect='true' ";
+	$html.="' quality='high' width='".$width."' height='".$height."' NAME='charts' allowScriptAccess='sameDomain' swLiveConnect='true' ";
 	if($transparent){$html.="wmode=transparent ";} //use wmode=opaque to prevent printing on black
 	$html.="TYPE='application/x-shockwave-flash' PLUGINSPAGE='".$protocol."://www.macromedia.com/go/getflashplayer'></EMBED></OBJECT>";
 	return $html;

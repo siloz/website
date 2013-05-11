@@ -5,7 +5,7 @@
 	
 	function email_with_template($to, $subject, $content) {
 		$mail = new PHPMailer(true);
-		$mail->SetFrom("noreply@siloz.com", "Siloz.com");
+		$mail->SetFrom("noreply@".SHORT_URL, SHORT_URL);
 		$mail->AddAddress($to);
 		$mail->AddEmbeddedImage("images/logo.png", "logo", "logo.png");
 		$mail->Subject = $subject;
@@ -13,7 +13,7 @@
 		"<html>
 			<body style='background-color: #84BFE5'>
 				<div style='width: 600px; margin: auto; padding: 20px; background-color: #fff;'>
-					<img src='cid:logo'/><br/>					
+					<img src='cid:logo' width='289' height='62' /><br/>					
 					$content
 				</div>
 				<div style='width: 600px; margin: auto; padding: 20px; text-align:center; background-color: #f60;'>

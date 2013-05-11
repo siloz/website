@@ -1,4 +1,12 @@
 <?php
+	$redirect = param_get('redirect');
+
+if ($_SESSION['is_logged_in'] != 1) {
+	echo "<script>window.location = 'index.php';</script>";
+}
+
+mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
+
 	if (param_post('crop') == 'Crop') {
 		$id = trim(param_post('user_id'));
 		$crop = true;
@@ -26,7 +34,6 @@
 		echo "<script>window.location = 'index.php';</script>";
 	}	
  	else {
-		$username = $_SESSION['username'];		
 		$err = '';
 		if (param_post('task') == 'update_account') {				
 			$old_password = param_post('old_password');
@@ -40,15 +47,12 @@
 			$zip_code = param_post('zip_code');
 			$phone = param_post('phone');
 
-			$sql = "SELECT * FROM users WHERE username='$username'";
+			$sql = "SELECT * FROM users WHERE email='$email'";
 			$res = mysql_query($sql);
 			$row = mysql_fetch_array($res);
 			$photo_file = $row['photo_file'];
 			$id = $row['id'];
 			
-			if (strlen(trim($username)) == 0) {
-				$err .= 'Username must not be empty.<br/>';		
-			}
 			if ($new_password != $retype_new_password) {
 				$err .= 'Passwords do not match.<br/>';		
 			}
@@ -65,27 +69,46 @@
 				$err .= 'Email address is invalid.<br/>';		
 			}
 			else {
-				$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM users WHERE email = '$email' AND username <> '$username'"));
+				$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM users WHERE email = '$email' AND user_id != '$user_id'"));
 				if ($tmp[0] > 0) {
 					$err .= "Email '$email' is already registered.<br/>";
 				}
 			}
 
+			$filesize = $_FILES['member_photo']['size'];
+			if ($filesize > 250000) {
+				$err .= "Image file is too large. Please scale it down.";
+			}
+
 			$adr = urlencode($address);
 			$zip = urlencode($zip_code);
-			$url = "http://maps.google.com/maps/geo?q=".$adr."".$zip;
-			$xml = file_get_contents($url);
-			$geo_json = json_decode($xml, TRUE);
-			if ($geo_json['Status']['code'] == '200') {
-				$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-				$new_adr = $geo_json['Placemark'][0]['address'];
-				$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-				$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
-			} else {
-				$err .= 'Invalid address.<br/>';
-			}
+
+		$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."+".$zip."&sensor=false");
+		$loc = json_decode($json);
+
+		if ($loc->status == 'OK') {
+    			foreach ($loc->results[0]->address_components as $address) {
+        			if (in_array("locality", $address->types)) {
+            				$city = $address->long_name;
+        			}
+        			if (in_array("administrative_area_level_1", $address->types)) {
+            				$state = $address->short_name;
+        			}
+        			if (in_array("postal_code", $address->types)) {
+            				$zip_code = $address->short_name;
+        			}
+    			}
+
+			$address = $loc->results[0]->formatted_address;
+			$lat = $loc->results[0]->geometry->location->lat;
+			$long = $loc->results[0]->geometry->location->lng;
+		}
 		
-			if (strlen($err) == 0) {				
+			if ($zip_code == '') {
+				$err .= "Please enter a more detailed address.";
+			}
+
+			elseif (strlen($err) == 0) {				
 				if ($old_password != '' || $new_password != '' || $retype_new_password != '') {
 
 					$enc_old = md5($old_password);
@@ -99,21 +122,19 @@
 					 	$err .= "New password must not be empty.";
 					}
 					else {
-						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$new_adr', zip_code = '$zip_code', 
-								phone = '$phone', password='$enc_new', longitude = '$long', latitude = '$lat' WHERE id = $id";
+						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', city = '$city', state = '$state',
+								zip_code = '$zip_code', phone = '$phone', password='$enc_new', longitude = '$long', latitude = '$lat' WHERE id = $id";
 						mysql_query($sql);
 
 						if ($_FILES['member_photo']['name'] != '') {
-							$allowedExts = array("png", "jpg", "jpeg", "gif");							
+							$allowedExts = array("png", "jpg", "jpeg", "gif");
 							$ext = end(explode('.', strtolower($_FILES['member_photo']['name'])));
 							if (!in_array($ext, $allowedExts)) {
 								$err .= $_FILES['member_photo']['name']." is invalid file type.";
-							}
-							else {
-							$filename = $_FILES['member_photo']['name'];
-							$temporary_name = $_FILES['member_photo']['tmp_name'];
-							$mimetype = $_FILES['member_photo']['type'];
-							$filesize = $_FILES['member_photo']['size'];
+							} else {
+								$filename = $_FILES['member_photo']['name'];
+								$temporary_name = $_FILES['member_photo']['tmp_name'];
+								$mimetype = $_FILES['member_photo']['type'];
 
 							switch($mimetype) {
 
@@ -138,28 +159,38 @@
         							break;
 							}
 
+							$name = "uploads/".$id.".jpg";
+							$targ_w = "900";
+							$img_w = getimagesize($temporary_name);
+
+							if ($img_w[0] > $targ_w) {
+      								$image = new Photo();
+      								$image->load($temporary_name);
+      								$image->resizeToWidth($targ_w);
+								$image->save($name);
+							} else {
+								imagejpeg($i,$name,80);
+							}
+
 							unlink($temporary_name);
-							imagejpeg($i,"uploads/".$User->id.".jpg",80);
 
 							}
 						}						
 					}
 				}				
 				else {
-					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', zip_code = '$zip_code', 
-							phone = '$phone', longitude = '$long', latitude = '$lat' WHERE id = $id";
+					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', city = '$city', state = '$state', 
+							zip_code = '$zip_code', phone = '$phone', longitude = '$long', latitude = '$lat' WHERE id = $id";
 					mysql_query($sql);
 					if ($_FILES['member_photo']['name'] != '') {
 						$allowedExts = array("png", "jpg", "jpeg", "gif");							
 						$ext = end(explode('.', strtolower($_FILES['member_photo']['name'])));
 						if (!in_array($ext, $allowedExts)) {
 							$err .= $_FILES['member_photo']['name']." is invalid file type.";
-						}
-						else {
+						} else {
 							$filename = $_FILES['member_photo']['name'];
 							$temporary_name = $_FILES['member_photo']['tmp_name'];
 							$mimetype = $_FILES['member_photo']['type'];
-							$filesize = $_FILES['member_photo']['size'];
 
 							switch($mimetype) {
 
@@ -184,29 +215,56 @@
         							break;
 							}
 
+							$name = "uploads/".$id.".jpg";
+							$targ_w = "900";
+							$img_w = getimagesize($temporary_name);
+
+							if ($img_w[0] > $targ_w) {
+      								$image = new Photo();
+      								$image->load($temporary_name);
+      								$image->resizeToWidth($targ_w);
+								$image->save($name);
+							} else {
+								imagejpeg($i,$name,80);
+							}
+
 							unlink($temporary_name);
-							imagejpeg($i,"uploads/".$id.".jpg",80);
 						}
 					}					
 				}		
 			}
 		}
 		else {
-			$sql = "SELECT * FROM users WHERE username='$username'";
+			$sql = "SELECT * FROM users WHERE user_id = '$user_id'";
 			$res = mysql_query($sql);
 			$row = mysql_fetch_array($res);
 			$id = $row['id'];
-			$user_id = $row['user_id'];
 			$fname = $row['fname'];
 			$lname = $row['lname'];
 			$email = $row['email'];
 			$address = $row['address'];
 			$zip_code = $row['zip_code'];
 			$phone = $row['phone'];
+			$last_update = strtotime($row['last_update']);
 			$photo_file = $row['photo_file'];
+			$valid_code = $row['validation_code'];
 		}
 
-			$data = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE username='$username'"));
+		if ($valid_code == -1) { mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); ?>
+			<script type="text/javascript">
+				$(document).ready(function () {
+        				javascript:popup_show('new_account', 'new_account_drag', 'new_account_exit', 'screen-center', 0, 0);
+				})
+			</script>
+<?php 		} if ($redirect && (!param_post('task') == 'update_account')) { ?>
+			<script type="text/javascript">
+				$(document).ready(function () {
+        				javascript:popup_show('addInfo_message', 'addInfo_message_drag', 'addInfo_message_exit', 'screen-center', 0, 0);
+				})
+			</script>
+<?php 		}
+
+			$data = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
 			$jdate = $data['joined_date'];
 			$msince = date("m/d/Y", strtotime($jdate));
 
@@ -214,6 +272,14 @@
 			$total_raised = $funds['total'];
 
 	$updatemsg = "Your account has been updated!";
+
+	if (!$fname || !$lname || !$address || !$phone || !$photo_file) { $addInfo_account = true; }
+
+	if ($redirect && !$addInfo_account && !$filename) {
+		$getId = param_get('id');
+		if ($getId) { $redirect_id = "&id=".$getId; }
+		echo "<script>window.location = 'index.php?task=".$redirect."".$redirect_id."';</script>";
+	}
 ?>
 
 		<script language="Javascript">
@@ -246,20 +312,22 @@
 
 <div class="spacer"></div>
 
+<span class="greyFont">
+
 <div class="userNav">
 	<table width="940px" style="border-spacing: 0px;">
 		<tr><form action="">
 			<td>
 				<span class="accountHeading">User Account</span>
 			</td>
-			<td align="center" width="400px">
+			<td align="center" width="500px">
 				<?php
-					if (strlen($err) > 0) {
-						echo "<span id='success' class='error'>".$err."</span";
+					if (strlen($err) > 0 && !param_post('delete')) {
+						echo "<span id='success' class='error'>".$err."</span>";
 					}
 
 					if ((param_post('task') == 'update_account') && !$filename && strlen($err) == 0) { 
-						echo "<span id='success' class='error'>".$updatemsg."</span";
+						echo "<span id='success' class='error'>".$updatemsg."</span>";
 					}
 					elseif ($crop == "true") { 
 						echo "<span id='success' class='error'>".$updatemsg."</span>";
@@ -268,10 +336,7 @@
 				?>
 			</td>
 			<td align="center">
-				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio">Transaction Console</input></a>
-			</td>				
-			<td align="center">
-				<a href="index.php?task=my_listings" class="blue" style="float: left"><input type="radio">My Listings</input></a>
+				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio" onclick="window.location = 'index.php?task=transaction_console'">Transaction Console</input></a>
 			</td>
 			<td align="center">
 				<a href="index.php?task=my_account" class="blue" style="float: left"><input type="radio" CHECKED>Account Settings</input></a>
@@ -325,7 +390,7 @@ if (param_post('delete') == 'Delete account') {
 		<center>
 			<font color="red"><b>Your account has been deleted. You will not receive any further notifications from us. 
 			If you have any questions, please call or e-mail our support team.<br><br>
-			Thanks for using siloz.com!</b></font>
+			Thanks for using <?=SITE_NAME?>.com!</b></font>
 		</center>
 		<br>
 		<br>
@@ -342,10 +407,10 @@ die;
 				<td valign="top" width="250px">
 					<table>						
 						<tr>			
-							<td align="center"><img src=<?php echo 'uploads/members/'.$photo_file;?> width="250px"></td>
+							<td align="center"><img id="prof_pic" src="<?php echo 'uploads/members/'.$photo_file.'?'.$last_update?>" width="250px"></td>
 						</tr>
 						<tr>
-							<td><input name="member_photo" type="file" style="height: 20px"/></td>
+							<td><input name="member_photo" type="file" style="height: 24px"/></td>
 						</tr>		
 					</table>
 				</td>
@@ -354,19 +419,16 @@ die;
 				<td valign="top">
 					<table>
 						<tr>
+							<td><b>Email</b> </td>
+							<td><input type="text" name="email" id="email" style="width : 200px" value='<?php echo $email; ?>'/></td>
+						</tr>
+						<tr>
 							<td><b>First name</b> </td>
-							<td><input type="text" name="fname" style="width : 200px" value='<?php echo $fname; ?>'/></td>
+							<td><input type="text" name="fname" id="fname" style="width : 200px" value='<?php echo $fname; ?>'/></td>
 						</tr>
 						<tr>
 							<td><b>Last name</b> </td>
-							<td><input type="text" name="lname" style="width : 200px" value='<?php echo $lname; ?>'/></td>
-						</tr>
-						<tr>
-							<td colspan="2"><b>Member Since:</b> <?=$msince?> </td>
-						</tr>
-						<tr>
-							<td><b>Email</b> </td>
-							<td><input type="text" name="email" style="width : 200px" value='<?php echo $email; ?>'/></td>
+							<td><input type="text" name="lname" id="lname" style="width : 200px" value='<?php echo $lname; ?>'/></td>
 						</tr>
 						<tr>
 							<td><b>Address</b> </td>
@@ -378,7 +440,7 @@ die;
 						</tr>
 						<tr>
 							<td><b>Phone</b> </td>
-							<td><input type="text" name="phone" style="width : 200px" value='<?php echo $phone; ?>'/></td>
+							<td><input type="text" name="phone" id="phone" style="width : 200px" value='<?php echo $phone; ?>'/></td>
 						</tr>						
 					</table>
 				</td>
@@ -386,8 +448,7 @@ die;
 				<td valign="top">
 					<table>
 						<tr>
-							<td><b>Username</b> </td>
-							<td><input type="text" name="username" style="width : 200px" value='<?php echo $username; ?>' disabled="disabled"/></td>			
+							<td colspan="2"><b>Member Since:</b> <?=$msince?> </td>
 						</tr>
 						<tr>
 							<td colspan="2"><b>Total funds raised for silos:</b> <?php if ($total_raised) { echo "$".$total_raised; } else { echo "$0.00"; } ?></td>
@@ -418,31 +479,98 @@ die;
 			<tr>
 				<td></td>
 				<td colspan="2">
+					<p>
+      						<fb:login-button perms="email,user_address,user_mobile_phone">Connect with Facebook
+      						</fb:login-button>
+						<br><br>
+						<a href="include/apis/linkedin.php"><img src="images/linkedin_connect.png" id="linkedin" style="margin-left: -3px"></img></a>
+					</p>
+
 					<p><font color="red"><b>E-mail notifications</b></font> 
 					<font color="grey">For security reasons, we will notify you of a status changes for items you are buying or selling, 
 					when you join a silo, or when a silo administrator does something of consequence (e.g. end a silo).
-					siloz is not responsible for email intiated by other users.</font></p>
+					<?=SITE_NAME?> is not responsible for email intiated by other users.</font></p>
 
-					<form method="post" action="">
-					<input type="hidden" name="id" value="<?=$id?>">
-					<input type="hidden" name="user_id" value="<?=$user_id?>">
-					<input style="color: red; font-weight: bold; background: #fff;" type="submit" name="delete" value="Delete account" onClick="return confirmSubmit()">
+					<?php 
+					$chkItems = mysql_num_rows(mysql_query("SELECT * FROM items WHERE user_id = '$user_id' AND (status = 'pledged' OR status = 'offer' OR status = 'pending')"));
+					$chkSilos = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = '$user_id' AND (status = 'active' OR status = 'latent')"));
+					if (!$chkItems && !$chkSilos) { ?>
+					<a onclick="popup_show('delete_account', 'delete_account_drag', 'delete_account_exit', 'screen-center', 0, 0);"><font color="red"><strong>Delete account</strong></font></a>
 					<font color="grey">(this is not reversible, and cannot be performed with items pending or while a silo is open.)</font>
+					<?php } else { ?>
+					<a onclick="popup_show('keep_account', 'keep_account_drag', 'keep_account_exit', 'screen-center', 0, 0);"><font color="red"><strong>Delete account</strong></font></a>
+					<font color="grey">(this is not reversible, and cannot be performed with items pending or while a silo is open.)</font>
+					<?php } ?>
 				</td>
 			</tr>
 		</table>
-	</form>
 <?php
 	}
 ?>
 
-<script>
-function confirmSubmit()
-{
-var agree=confirm("Are you sure you want to delete your account? ALL DELETIONS ARE FINAL!");
-if (agree)
-	return true ;
-else
-	return false ;
-}
-</script>
+<div class="login" id="delete_account" style="width: 300px;">
+	<div id="delete_account_drag" style="float:right">
+		<img id="delete_account_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<form method="post" action="">
+			<h2>Are you sure you want to delete your account?</h2>
+			**All deletions are <strong>final</strong> and <strong>cannot</strong> be reversed!<br><br>
+			<input type="hidden" name="id" value="<?=$id?>">
+			<input type="hidden" name="user_id" value="<?=$user_id?>">
+			<button type="submit" name="delete" value="Delete account">Delete account</button>
+			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('delete_account').style.display='none';">Cancel</button>
+		</form>
+	</div>
+</div>
+
+<div class="login" id="keep_account" style="width: 300px;">
+	<div id="keep_account_drag" style="float:right">
+		<img id="keep_account_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<form method="post" action="">
+			<h2>You cannot delete your account due to active items and/or silos.</h2>
+			You are only allowed to delete your account once you have no items pledged or pending. You also cannot be assosciated with an active silo.<br><br>
+			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('keep_account').style.display='none';">Okay</button>
+		</form>
+	</div>
+</div>
+
+<div class="login" id="new_account" style="width: 500px;">
+	<div id="new_account_drag" style="float:right">
+		<img id="new_account_exit" src="images/close.png"/>
+	</div>
+	<div>
+			<h2>Welcome to your <?=SITE_NAME?> account page!</h2>
+			We have worked around the clock to make your user experience as fast and fluent as possible. We try to make everything simple and easy as well.<br><br>
+			When you signed up, we only asked for your e-mail address and a password. By doing this, you can navigate through the site and view certain things you wouldn't be able to without creating an account.<br><br>
+			If you would like to create a silo, donate an item, or buy an item on <?=SITE_NAME?>, you will need to provide some more information about yourself. We will not ask for this information until we absolutely need it. At any time, you can complete this by filling out your profile or by connecting with Facebook or LinkedIn. All of this can be located under your account page.<br><br>
+			Our hope is to have each member help benefit a silo in some way, but we don't want to make it required, by any means.<br><br>
+			In the meantime, we hope you enjoy <?=SITE_NAME?>! If you have any questions, please look at the bottom of the page to help get started or to view the frequently asked questions.<br><br>
+			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('new_account').style.display='none';">Go to my account</button>
+	</div>
+</div>
+
+<div class="login" id="addInfo_message" style="width: 500px;">
+	<div id="addInfo_message_drag" style="float:right">
+		<img id="addInfo_message_exit" src="images/close.png"/>
+	</div>
+	<div>
+			<h2>Completing your <?=SITE_NAME?> profile</h2>
+			In order to use <?=SITE_NAME?> at its fullest, you will need to fill out your profile completely.<br><br>
+			Below is a list of the specific details that you will need to complete:
+			<blockquote><b>
+			- First name <br>
+			- Last name <br>
+			- Address <br>
+			- Phone <br>
+			- Profile picture <br>
+			</b></blockquote>
+			Remember, you can always connect with Facebook or LinkedIn to get started right away without the hassle!<br><br>
+			Once you have finished, we will redirect you back to where you were.<br><br>
+			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_message').style.display='none';">Continue to my account</button>
+	</div>
+</div>
+
+</span>

@@ -58,6 +58,8 @@ function Save(){
 }
 
 private function Update(){
+	$exp = date('Y-m-d H:i:s', strtotime('+1 day'));
+
 	$query = (
 		"update item_purchase "
 		."set "
@@ -65,9 +67,11 @@ private function Update(){
 		."item_id = '".mysql_real_escape_string($this->item_id)."',"
 		."user_id = '".mysql_real_escape_string($this->user_id)."',"
 		."amount = '".mysql_real_escape_string($this->amount)."',"
+		."paylock = '".mysql_real_escape_string($this->paylock)."',"
 		."paykey = '".mysql_real_escape_string($this->paykey)."',"
 		."status = '".mysql_real_escape_string($this->status)."',"
-		."ip = '".mysql_real_escape_string($this->ip)."' "
+		."ip = '".mysql_real_escape_string($this->ip)."',"
+		."expired_date = '".mysql_real_escape_string($exp)."'"
 		."where id = '".mysql_real_escape_string($this->id)."'" 
 	);
 	mysql_query($query);
@@ -80,19 +84,23 @@ private function Update(){
 
 
 private function Insert(){
+	$exp = date('Y-m-d H:i:s', strtotime('+3 day'));
+
 	$query = (
 		"insert into item_purchase "
-		."(silo_id,item_id,user_id,amount,paykey,status,ip,created) "
+		."(silo_id,item_id,user_id,amount,paylock,paykey,status,ip,created,expired_date) "
 		."values "
 		."("
 			."'".mysql_real_escape_string($this->silo_id)."',"
 			."'".mysql_real_escape_string($this->item_id)."',"
 			."'".mysql_real_escape_string($this->user_id)."',"
 			."'".mysql_real_escape_string($this->amount)."',"
+			."'".mysql_real_escape_string($this->paylock)."',"
 			."'".mysql_real_escape_string($this->paykey)."',"
 			."'".mysql_real_escape_string($this->status)."',"
 			."'".mysql_real_escape_string($this->ip)."',"
-			."'".mysql_real_escape_string(date("Y-m-d H:i:s"))."'"
+			."'".mysql_real_escape_string(date("Y-m-d H:i:s"))."',"
+			."'".mysql_real_escape_string($exp)."'"
 		.")"
 	);
 	error_log($query);

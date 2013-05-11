@@ -111,7 +111,38 @@ function Insert($user_id,$silo_id,$flag_id,$ip){
 	;
 	$result = mysql_query($query);
 	$id = mysql_insert_id();
-	Radar::Silo($silo_id,$flag_id,"flags");
+
+	$checkTotal = mysql_num_rows(mysql_query("SELECT * FROM flag_silo WHERE silo_id = '$silo_id'"));
+	if ($checkTotal > 4) {
+		$notification = new Notification();
+		$notification->silo_id = $silo_id;
+		$notification->type = "Cancel Silo";
+		$notification->Email();
+
+		$radar = new FlagRadar();
+		$radar->KillSilo($silo_id);
+	}
+	
+	$i=56;
+	$warn = "";
+	while ($i < 62) {
+		$checkCount = mysql_num_rows(mysql_query("SELECT * FROM flag_silo WHERE silo_id = '$silo_id' AND flag_id = '$i'"));
+		if ($checkCount > 1) { $warn = "true"; $i=100; }
+		$i++;
+	}
+
+	$checkRadar = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE silo_id = '$silo_id' AND type = 'silo'"));
+
+	if ($warn && $checkTotal < 5  && !$checkRadar) {
+		$notification = new Notification();
+		$notification->silo_id = $silo_id;
+		$notification->type = "Warn Silo";
+		$notification->Email();
+
+		$radar = new FlagRadar();
+		$radar->WarnSilo($silo_id);
+	}
+
 	if($id >= 1){return $id;}
 	else{return false;} 
 }

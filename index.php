@@ -1,47 +1,24 @@
 <?php
 	require_once("include/autoload.class.php");
-
-	$silo_latent_check = mysql_query("UPDATE silos SET status = 'latent', end_date = NOW() WHERE status = 'active' AND (end_date <= NOW() OR goal <= collected)");
-
-	if (mysql_affected_rows() > 0) {
-		$item_update = mysql_query("UPDATE items, silos SET items.status = 'inert', items.end_date = NOW() WHERE items.silo_id = silos.silo_id AND items.status = 'pledged' AND silos.status = 'latent'");
-	}
+	require_once("include/check_updates.php");
 
 if ($_SESSION['is_logged_in']) {
-	$sql = "SELECT * FROM users WHERE username='".$_SESSION['username']."'";
-	$res = mysql_query($sql);		
-	$current_user = mysql_fetch_array($res);
-	$zip_enc = urlencode($current_user['zip_code']);
+	$cur_user = mysql_fetch_array(mysql_query("SELECT city, state, longitude, latitude FROM users WHERE user_id = '".$_SESSION['user_id']."'"));
+		$userCity = $cur_user['city'];
+		$userState = $cur_user['state'];
+		$userLong = $cur_user['longitude'];
+		$userLat = $cur_user['latitude'];
 
-	$url = "http://maps.google.com/maps/geo?q=".$zip_enc;
-	$xml = file_get_contents($url);
-	$geo_json = json_decode($xml, TRUE);
-	if ($geo_json['Status']['code'] == '200') {
-			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-
-			if ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName']) {
-				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
-				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-			}
-			elseif ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName']) {
-				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName'];
-				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-			}
-			elseif ($geo_json['Placemark'][0]['address']) {
-				$userLocation = $geo_json['Placemark'][0]['address'];
-			}
-			else { echo "Location not found"; }
-			
-			$userLong = $current_user['longitude'];
-			$userLat = $current_user['latitude'];
-
-		} else {
-			echo 'Invalid Zip Code.<br/>';
-			die;
-		}
+	if (!isset($_COOKIE['LoggedIn'])) {
+		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
+		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
+		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
+		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
+		setcookie( "LoggedIn", true, strtotime( '+1 year' ) );
+	}
 }
 else {
-	if ((!isset($_COOKIE['UserCity'])) && (!isset($_COOKIE['UserState']))) {
+	if ((!isset($_COOKIE['UserCity'])) || (!isset($_COOKIE['UserState']))) {
 		$geoplugin = new geoPlugin();
 		$geoplugin->locate();
 		$userCity = $geoplugin->city;
@@ -53,6 +30,7 @@ else {
 		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
 		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
 		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
+		setcookie( "LoggedIn", false, strtotime( '0 day' ) );
 	}
 	else {
 		$userCity = $_COOKIE['UserCity'];
@@ -64,37 +42,29 @@ else {
 	if (param_post('location') == 'Update') {
 		$zip = urlencode(param_post('zip'));
 
-		$url = "http://maps.google.com/maps/geo?q=".$zip;
-		$xml = file_get_contents($url);
-		$geo_json = json_decode($xml, TRUE);
-		if ($geo_json['Status']['code'] == '200') {
-			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
+		$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$zip."&sensor=false");
+		$loc = json_decode($json);
 
-			if ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName']) {
-				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['Locality']['LocalityName'];
-				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-			}
-			elseif ($geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName']) {
-				$userCity = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['DependentLocality']['DependentLocalityName'];
-				$userState = $geo_json['Placemark'][0]['AddressDetails']['Country']['AdministrativeArea']['AdministrativeAreaName'];
-			}
-			elseif ($geo_json['Placemark'][0]['address']) {
-				$userLocation = $geo_json['Placemark'][0]['address'];
-			}
-			else { echo "Location not found"; }
-			
-			$userLong = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$userLat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
+		if ($loc->status == 'OK') {
 
-		} else {
-			 echo "Invalid Zip Code.";
-			 die;
+    			foreach ($loc->results[0]->address_components as $address) {
+        			if (in_array("locality", $address->types)) {
+            				$userCity = $address->long_name;
+        			}
+        			if (in_array("administrative_area_level_1", $address->types)) {
+            				$userState = $address->short_name;
+        			}
+    			}
+			$userLat = $loc->results[0]->geometry->location->lat;
+			$userLong = $loc->results[0]->geometry->location->lng;
 		}
+		else { echo "Invalid Location!"; die; }
 
 		setcookie( "UserCity", $userCity, strtotime( '+1 year' ) );
 		setcookie( "UserState", $userState, strtotime( '+1 year' ) );
 		setcookie( "UserLong", $userLong, strtotime( '+1 year' ) );
 		setcookie( "UserLat", $userLat, strtotime( '+1 year' ) );
+		setcookie( "LoggedIn", false, strtotime( '0 day' ) );
 
 		header("Location:".$_SERVER['REQUEST_URI']);
 		exit;
@@ -110,16 +80,48 @@ else {
 	
 	$db = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
 	$stmt = $db->stmt_init();
+
+if (!isset($_SESSION['is_logged_in'])) {
+	if ((isset($_COOKIE['remember_me_id'])) && (isset($_COOKIE['remember_me_token']))) {
+		$user_id = $_COOKIE['remember_me_id'];
+		$old_token = $_COOKIE['remember_me_token'];
+		$check = mysql_num_rows(mysql_query("SELECT * FROM user_sessions WHERE user_id = '$user_id' AND token = '$old_token'"));
+		if ($check) {
+			$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
+
+			$_SESSION['username'] = $user['username'];
+			$_SESSION['user_id'] = $user['user_id'];
+			$_SESSION['is_logged_in'] = 1;
+
+			if ($user['admin'] == yes) {
+				$_SESSION['admin_access'] = true;
+			}
+
+			$token = new User();
+			$token = $token->randString(32);
+			$ip = getenv('REMOTE_ADDR');
+
+			$updSess = mysql_query("UPDATE user_sessions SET token = '$token', ip = '$ip' WHERE user_id = '$user_id'");
+			setcookie( "remember_me_id", $user_id, strtotime( '+1 month' ) );
+			setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+		}
+		else {
+			$delSess = mysql_query("DELETE FROM user_sessions WHERE user_id = '$user_id' OR token = '$old_token'");
+			setcookie( "remember_me_id", false, strtotime( '-1 month' ) );
+			setcookie( "remember_me_token", false, strtotime( '-1 month' ) );
+			setcookie( "LoggedIn", false, strtotime( '0 day' ) );
+		}
+	}
+}
 	
-	if (isset($_POST['username']) && isset($_POST['password'])) {
-		$username = $_POST['username'];
+	if (isset($_POST['email']) && isset($_POST['password'])) {
+		$email = $_POST['email'];
 		$password = md5($_POST['password']);
-		$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+		$sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
 		$res = mysql_query($sql);
 		if (mysql_num_rows($res) > 0) {
 			$row = mysql_fetch_array($res);
-			if ($row['validation_code'] == -1) {
-				$_SESSION['username'] = $username;
+			if ($row['validation_code'] < 0) {
 				$_SESSION['user_id'] = $row['user_id'];
 				$_SESSION['is_logged_in'] = 1;
 			}
@@ -129,23 +131,51 @@ else {
 			if ($row['admin'] == yes) {
 				$_SESSION['admin_access'] = true;
 			}
+			if (isset($_POST['remember_me'])) {
+				$check = mysql_num_rows(mysql_query("SELECT * FROM user_sessions WHERE user_id = '$row[user_id]'"));
+				$token = new User();
+				$token = $token->randString(32);
+				$ip = getenv('REMOTE_ADDR');
+
+				if (!$check) {
+					$newSess = mysql_query("INSERT INTO user_sessions (user_id, token, ip) VALUES ('$row[user_id]', '$token', '$ip')");
+					setcookie( "remember_me_id", $row['user_id'], strtotime( '+1 month' ) );
+					setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+				}
+				else {
+					$updSess = mysql_query("UPDATE user_sessions SET token = '$token', ip = '$ip' WHERE user_id = '$row[user_id]'");
+					setcookie( "remember_me_id", $row['user_id'], strtotime( '+1 month' ) );
+					setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+				}
+			}
+			else {
+				$delSess = mysql_query("DELETE FROM user_sessions WHERE user_id = '$row[user_id]'");
+				setcookie( "remember_me_id", false, strtotime( '-1 month' ) );
+				setcookie( "remember_me_token", false, strtotime( '-1 month' ) );
+			}
 		} 
 	}
 
 	if (param_get('task') == 'logout') {
+		$delSess = mysql_query("DELETE FROM user_sessions WHERE user_id = '$_SESSION[user_id]'");
+		setcookie( "remember_me_id", false, strtotime( '-1 month' ) );
+		setcookie( "remember_me_token", false, strtotime( '-1 month' ) );
+		setcookie( "LoggedIn", false, strtotime( '0 day' ) );
+
 		$_SESSION = array();
 		session_destroy();
 		echo "<script type='text/javascript'>window.location = 'index.php';</script>";		
-	}		
-	
+	}
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="https://www.facebook.com/2008/fbml">
 	<head>
-		<title>SiloZ - Commerce That Counts</title>
-		<meta http-equiv="Content-type" content="text/html;charset=UTF-8"> 
+		<title><?=TAG_LINE?></title>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+		<link rel="shortcut icon" href="favicon.ico?v=6" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/siloz.css" />	
@@ -194,7 +224,7 @@ else {
 				$res = mysql_query($sql);
 				$row = mysql_fetch_array($res);	
 				$id = $row['id'];
-				echo "<script>window.location = '/alpha/index.php?task=view_silo&id=$id';</script>";
+				echo "<script>window.location = '/index.php?task=view_silo&id=$id';</script>";
 			}		
 		?>
 
@@ -211,25 +241,84 @@ else {
        }
        //-->
     </SCRIPT>
-		<script type="text/javascript">
 
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-33231904-1']);
-		  _gaq.push(['_setDomainName', 'siloz.com']);
-		  _gaq.push(['_trackPageview']);
-
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-
-		</script>
-		<meta name="google-site-verification" content="IdsGEo2aFhBP7TVnPEfSzjkF7rDKpsv4RviuTlHTjt8" />				
+	<meta name="google-site-verification" content="Yx4Ns5zGDP4tabuxvwAtGTY10jyw_CC4NjvBTISPcqc" />
 	</head>
 	<body>
+
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '<?=FACEBOOK_ID?>', // App ID
+    channelUrl : '//<?=ACTIVE_URL?>include/fb.html', // Channel File
+    status     : true, // check login status
+    cookie     : true, // enable cookies to allow the server to access the session
+    xfbml      : true  // parse XFBML
+  });
+
+  // Here we subscribe to the auth.authResponseChange JavaScript Event. This event is fired
+  // for any auth related change, such as login, logout or session refresh. This means that
+  // whenever someone who was previously logged out then logs in, the correct case below 
+  // will be handled. 
+  FB.Event.subscribe('auth.authResponseChange', function(response) {
+    // Here we specify what we do with the response anytime this event occurs. 
+    if (response.status === 'connected') {
+      // The response object is returned with a status field that lets us know what the current
+      // login status of the person is. In this case, we're handling the situation where they 
+      // have logged in to the app.
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      // In this case, the person is logged into Facebook, but not into the app, so we call
+      // FB.login() to prompt them to do so. 
+      // In real-life usage, you wouldn't want to immediately prompt someone to login 
+      // like this, for two reasons:
+      // (1) JavaScript created popup windows are blocked by most browsers unless they 
+      // result from direct user interaction (such as a mouse click)
+      // (2) it is a bad experience to be continually prompted to login upon page load.
+      FB.login();
+	alert("Not Auth");
+    } else {
+      // In this case, the person is not logged into Facebook, so we call the login() 
+      // function to prompt them to do so. Note that at this stage there is no indication
+      // of whether they are logged into the app. If they aren't then they'll see the Login
+      // Dialog right after they login to Facebook. 
+      // The same caveats as above apply to the FB.login() call here.
+      FB.login();
+	alert("Not Logged");
+    }
+  });
+  };
+
+  // Load the SDK Asynchronously
+  (function(d){
+   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement('script'); js.id = id; js.async = true;
+   js.src = "//connect.facebook.net/en_US/all.js";
+   ref.parentNode.insertBefore(js, ref);
+  }(document));
+
+  // Here we are just running a very simple test of the Graph API after login is successful. 
+  // This testAPI() function is only called in those cases. 
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Good to see you, ' + response.name + '.');
+	//alert('Good to see you, ' + response.username + '.');
+	$("#userName").val(response.username);
+	$("#fname").val(response.first_name);
+	$("#lname").val(response.last_name);
+	$("#email").val(response.email);
+	$("#phone").val(response.mobile_phone);
+       $('#prof_pic').attr('src','https://graph.facebook.com/' + response.username + '/picture?width=250');
+    });
+  }
+
+</script>
+
 		<div id="overlay">	
-		</div>	
+		</div>
 		<?php
 		if (false && (!isset($_COOKIE['notice']) || $_COOKIE['notice'] != '1')) {
 		?>
@@ -248,7 +337,7 @@ else {
 		?>
 		<div id="main">
 			<?php
-			if (count($_GET) == 0 && count($_POST) == 0) {
+			if ((count($_GET) == 0 && count($_POST) == 0) && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes") {
 				include('splash.php');
 			} 
 			else {
@@ -272,6 +361,22 @@ else {
 						error_log("ACTIVATE: ".$activate);
 						if ($activate === "success"){
 							$headline = "Your account has been activated, please login!";
+							$subject = "Make a difference in your community, as a shopper, item donor, or silo administrator!";
+							$message = "<h2>Welcome to ".SITE_NAME."!</h2>";
+							$message .= "We want to thank you for creating an account with ".SITE_NAME."! We wanted to briefly tell you what you can expect as a user. ".SITE_NAME." allows local organizations to raise money by accepting donated items from local supporters.  Those items then appear for sale to the general public. <br><br>";
+							$message .= "We believe ".SITE_NAME." is, quite simply, the best way for a community – private or public – to raise money for a cause.  Here are some reasons why: <br><br>";
+							$message .= "<ul>
+									<li>It's not shaking a collection jar; it's asking for items.</li>
+									<li>Whether private or public, causes are local, and assist people you know, involve features you drive by every day, and organizations that make a real-world difference in the life of your community.</li>
+									<li>Everybody wins – the silo administrator, the donor (who often receives a tax-deduction), and the buyer, who not only gets an item, but the knowledge that he or she is helping a local cause of their choosing.</li>
+									<li>It's designed for viral promotion. There is no limit to a fundraising goal, and no limit to how many members can be part of a given silo.</li>
+									<li>It's safe, it's transparent, and it's 90% efficient for public silos, and 95% efficient for private silos.</li>
+									</ul> <br>";
+							$message .= "We invite you to communicate your questions and concerns with us.<br><br>";
+							$message .= "Thank You, and Happy Fundraising, <br><br><br>";
+							$message .= "Zackery West <br><br> CEO, ".SITE_NAME." LLC";
+							email_with_template($User->email, $subject, $message);
+							mysql_query("UPDATE users SET info_emails = 1 WHERE user_id = '$User->user_id'");
 						}
 						else if ($activate === "active") {
 							$headline = "Your account was already activated, please login!";							
@@ -281,8 +386,9 @@ else {
 						include('search_item.php');
 					}
 					else if ($task != '') {
-						if ($headline != "")
+						if ($headline != "") {
 							echo "<div style='font-size: 14px; font-weight: bold; color: red; text-align: center'>$headline</div>";
+						}
 						include($task.'.php');
 					}
 					else {
@@ -297,7 +403,7 @@ else {
 						else {
 							?>
 							<script type="text/javascript">
-								window.location = "index.php?search=item";
+								window.location = "items";
 							</script>
 							<?
 						}
@@ -306,17 +412,19 @@ else {
 			</div>
 			<?php
 			}
+			if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes"){} else { echo '<div id="push"></div>'; }
 			?>
-			<div id="footer">
+		</div>
+		</div>
+			<div id="new-footer">
 				<?php
-					if (count($_GET) == 0 && count($_POST) == 0) {
+					if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes") {
 					} 
 					else {
 						include('footer.php'); 
 					}
 				?>
 			</div>
-		</div>
 	<script>
 	    $('input[placeholder], textarea[placeholder]').placeholder();
 	</script>		
@@ -327,6 +435,12 @@ else {
       $(document).ready( function() {
         $('#success').delay(2000).fadeOut();
       });
+
+$('#email, #password').keypress(function(event){
+  if(event.keyCode == 13){
+    $('#login_button').click();
+  }
+});
     </script>
 
 <script type="text/javascript"> 

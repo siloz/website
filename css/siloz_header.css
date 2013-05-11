@@ -33,10 +33,11 @@
 a.status, a.status:active, a.status:visited {
 	font-weight: bold;
 	color: #2f8dcb;
-    text-decoration: none;
+    	text-decoration: none;
 }
 
 a:hover {
+	cursor: pointer;
 	opacity: .8
 }
 

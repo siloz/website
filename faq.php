@@ -1,3 +1,13 @@
+<?php include_once("include/GoogleAnalytics.php"); ?>
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading"><?=SITE_NAME?> FAQ</span>
+</div>
+
+<div class="headingPad"></div>
+
 <div style='margin: 20px; 100px;'>
 <h2>Questions</h2>
 <ol>
@@ -13,7 +23,7 @@
 	</li>
 	<li>
 		<a class=bluelink href="#q3">
-		<b>Siloz and The Law</b>		
+		<b><?=SITE_NAME?> and The Law</b>		
 		</a>
 	</li>
 	<li>
@@ -33,7 +43,7 @@
 	</li>
 	<li>
 		<a class=bluelink href="#q7">
-		<b>What Are Siloz' Security Features?</b>		
+		<b>What Are <?=SITE_NAME?>' Security Features?</b>		
 		</a>
 	</li>
 	<li>
@@ -43,7 +53,7 @@
 	</li>
 	<li>
 		<a class=bluelink href="#q9">
-		<b>What Is Siloz?</b>		
+		<b>What Is <?=SITE_NAME?>?</b>		
 		</a>
 	</li>
 	<li>
@@ -58,7 +68,7 @@
 	</li>
 	<li>
 		<a class=bluelink href="#q12">
-		<b>How Much Does Siloz Charge?</b>		
+		<b>How Much Does <?=SITE_NAME?> Charge?</b>		
 		</a>
 	</li>
 	<li>
@@ -117,13 +127,13 @@
 	
 	<li>
 		<a class=bluelink href="#q23">
-		<b>Will Siloz Ever Have Advertisements?</b>
+		<b>Will <?=SITE_NAME?> Ever Have Advertisements?</b>
 		</a>
 	</li>
 	
 	<li>
 		<a class=bluelink href="#q24">
-		<b>How Does Siloz Make Money?</b>
+		<b>How Does <?=SITE_NAME?> Make Money?</b>
 		</a>
 	</li>
 	
@@ -207,19 +217,19 @@
 
 	<li>
 		<a class=bluelink href="#q39">
-		<b>Is Siloz a Non-Profit?</b>
+		<b>Is <?=SITE_NAME?> a Non-Profit?</b>
 		</a>
 	</li>
 
 	<li>
 		<a class=bluelink href="#q40">
-		<b>Will Siloz Ever Go Public?</b>
+		<b>Will <?=SITE_NAME?> Ever Go Public?</b>
 		</a>
 	</li>
 
 	<li>
 		<a class=bluelink href="#q41">
-		<b>How Do I Invest In Siloz or Otherwise Do Business With Siloz?</b>
+		<b>How Do I Invest In <?=SITE_NAME?> or Otherwise Do Business With <?=SITE_NAME?>?</b>
 		</a>
 	</li>
 
@@ -255,7 +265,7 @@
 	
 	<li>
 		<a class=bluelink href="#q47">
-		<b>Will Siloz Ever Exist Outside the United States?</b>
+		<b>Will <?=SITE_NAME?> Ever Exist Outside the United States?</b>
 		</a>
 	</li>
 	
@@ -267,7 +277,7 @@
 	
 	<li>
 		<a class=bluelink href="#q49">
-		<b>Does Siloz Allow Shipping?</b>
+		<b>Does <?=SITE_NAME?> Allow Shipping?</b>
 		</a>
 	</li>
 	
@@ -304,7 +314,7 @@
 		<b>Promoting your Silo</b>
 		<p><strong>Facebook and Email</strong></p>
 		<p>At the end of the silo-creation process, after you have published your silo, you have options for connecting to the social networks.  Sharing to Facebook is easy.  Simply click on the appropriate links and follow the on-screen instructions.  Because causes that appeal to people can go <em>viral</em>, social network and email promotions can have a tremendous impact.</p>
-		<p>You can also pull contacts from your email provider to configure a message with links to your Silo, and send it from siloz.com.</p>
+		<p>You can also pull contacts from your email provider to configure a message with links to your Silo, and send it from <?=SITE_NAME?>.com.</p>
 		<p><strong>Local Periodicals' 'Events' Sections</strong></p>
 		<p>A silo to raise money for Girl Scouts is no less an 'event' than a car wash: the result is the same.  So, have at it!</p>
 		<p><strong>Newsletters</strong></p>
@@ -316,7 +326,7 @@
 		<p><em>Sign-Up Sheets</em><br />
 		Self-explanatory.  Download the form, enter your specific Silo's information, and ask members to share their email addresses with you, so that they can be invited to the Silo.</p>
 		<p><strong>Word of Mouth</strong></p>
-		<p>Don't forget to tell people you already know, and those you meet, about your silo. Ask them to check out your silo on siloz.com. If you are the admin of a community silo, be sure to let other members of your organization know about the silo, and ask them to be vocal about it with anyone interested in your organizations work or purpose.</p>
+		<p>Don't forget to tell people you already know, and those you meet, about your silo. Ask them to check out your silo on <?=SITE_NAME?>.com. If you are the admin of a community silo, be sure to let other members of your organization know about the silo, and ask them to be vocal about it with anyone interested in your organizations work or purpose.</p>
 		<p> </p>
 	</li>	
 	
@@ -324,7 +334,7 @@
 		<a name="q2">			
 		</a>
 		<b>Can National Non-Profits Create Community Silos?</b>
-		<p>Siloz is meant to be about people in a given region helping themselves, and helping each other.  Upon request, we may be able to accommodate certain national non-profits, that have a presence in a given region, and that meet certain other criteria (below).</p>
+		<p><?=SITE_NAME?> is meant to be about people in a given region helping themselves, and helping each other.  Upon request, we may be able to accommodate certain national non-profits, that have a presence in a given region, and that meet certain other criteria (below).</p>
 		<p>Our target demographic, our market, is people with strong, local, social bonds, supporting causes that directly impact them.  The American Heart Association, as worthy as it is, would never be a community silo candidate.</p>
 		<p>They are in a given region, but their profile is <em>national</em>.  Their budget is massive.  Their efficiency is lower than a grass-roots community organization, because they have a larger operational overhead.  They are a faceless, large-scale institution.  The average person, in our estimation, has few <em>strong social bonds</em> with these organizations and institutions. Moreover, $5,000 raised for them will not have the same positive impact as $5,000 raised for a local Girl Scout troop.</p>
 		<p>To be clear: we are not understating the importance of what they do, criticizing their efficiency, or questioning their value to society.  <strong>We're saying donating to an organization like that is <em>materially different in its impact</em>, and <em>aesthetically different on a subtle emotional level,</em> than, say, donating to a local youth group</strong>.  We facilitate the latter.</p>
@@ -338,14 +348,14 @@
 		<li>The organization must not be inconsistent with our message of legality, respect, goodwill, and inclusiveness.</li>
 		</ol>
 		<p>In short: we don't want a  national non-profit to create a silo to pay for operating expenses or executive salaries; we want to help churches, little leagues, local chapters of the YMCA, Girl Scouts, at-risk youth programs, local schools, local libraries, etc.</p>
-		<p>Siloz is about giving in a maximally helpful way: in your immediate community, to people you know, and organizations you regularly, and closely, interact with.  Please email us at info@siloz.com to request consideration for a chapter or office of a national non-profit to run a silo in a given region.</p>
+		<p><?=SITE_NAME?> is about giving in a maximally helpful way: in your immediate community, to people you know, and organizations you regularly, and closely, interact with.  Please email us at info@<?=SITE_NAME?>.com to request consideration for a chapter or office of a national non-profit to run a silo in a given region.</p>
 	</li>		
 	
 	
 	<li>
 		<a name="q3">			
 		</a>
-		<b>Siloz and The Law</b>
+		<b><?=SITE_NAME?> and The Law</b>
 		<p>It is central to our mission, and to our reputation, that we operate legally.  We have implemented several security features, including:</p>
 		<ol>
 		<li>Personal silos are invisible, and are accessible by invitation only</li>
@@ -359,9 +369,9 @@
 		<li>Verifying EIN numbers for tax-exempt silos</li>
 		</ol>
 		<p>Our design itself, especially as it applies to personal silos, is a security feature.  The only way to propagate a personal silo is either through Facebook, or via email, by sharing the unique URL.  Ergo, the only way you'd even know of a personal silo is through someone you know, personally.  This chain may be traced back to the original source, and creates a sort of 'web of accountability', where the agents of the promotion of a silo are, in essence, vouching for its authenticity.</p>
-		<p>Siloz is a for-profit technology provider and is not a professional fund-raising organization, fund-raising counsel, a fund-raising advisor, a fund-raising manager, a fund-raising planner, a commercial co-venturer, or a fund-raising solicitor.</p>
-		<p>Siloz provides only tools for organizations to conduct their own fundraisers, and/or prepare soliciting materials, makes no representations about the veracity of a fund-raiser, and never executes any aspect of a fund-raising effort.</p>
-		<p>The Modal Charitable Solicitations Act says you cannot be a charitable adviser or counsel, without registering, which siloz does not want or need to do.  What constitutes advising as it regards a charity?</p>
+		<p><?=SITE_NAME?> is a for-profit technology provider and is not a professional fund-raising organization, fund-raising counsel, a fund-raising advisor, a fund-raising manager, a fund-raising planner, a commercial co-venturer, or a fund-raising solicitor.</p>
+		<p><?=SITE_NAME?> provides only tools for organizations to conduct their own fundraisers, and/or prepare soliciting materials, makes no representations about the veracity of a fund-raiser, and never executes any aspect of a fund-raising effort.</p>
+		<p>The Modal Charitable Solicitations Act says you cannot be a charitable adviser or counsel, without registering, which <?=SITE_NAME?> does not want or need to do.  What constitutes advising as it regards a charity?</p>
 		<p>Advising is:</p>
 		<ol>
 		<li>Planning a fund-raiser for a charity</li>
@@ -380,7 +390,7 @@
 		<p>All are tax-exempt.  All are registered 501(c)3 organizations.  However, we are restricted only in our interactions with charitable organizations.</p>
 		<p>Essentially the law was enacted to prevent charlatans from collecting money on behalf of (and/or exploiting) non-profits, without being registered (which is presumably a disincentive for such abuses).</p>
 		<p>Typically, the regulatory burden is less for a person who doesn't actually conduct the solicitation but only advises the nonprofit organization. Note, however, that the Model Solicitations Act (1986) did not specify that     a fund-raising counsel never has custody or control of the contributions. Accordingly, some states have added such     a requirement to their definition of this role, sometimes renaming it to fund-raising consultant.</p>
-		<p>Like much of the law, case law informs these matters.  Siloz is invested in operating legally.  Should anybody inquire, The Charleston Principles, an advisory guideline on solicitation of charitable giving, indicates that technology providers who do not charge excessively for their service, are less likely to be seen as charitable advisors.  We charge around 7%.</p>
+		<p>Like much of the law, case law informs these matters.  <?=SITE_NAME?> is invested in operating legally.  Should anybody inquire, The Charleston Principles, an advisory guideline on solicitation of charitable giving, indicates that technology providers who do not charge excessively for their service, are less likely to be seen as charitable advisors.  We charge around 7%.</p>
 		<p>Finally, there are some states, such as Massachusetts, and Rhode Island, where the legal standards a slightly different.</p>
 		<p>In Massachusetts, though we do not &#8220;&#8230;conduct, produce, promote, underwrite or arrange a&#8230;performance&#8230;or the sale to the public of a good advertised in conjunction with a charitable organization&#8230;&#8221; we could putatively be considered a commercial co-venturer if we did not allow the proceeds and fund-raising venture to be entirely controlled by a given organization, which we do. ( Mass. Gen. Laws ch. 68, § 18).</p>
 		<p>In Rhode Island, the standard is similar; however, since the fund-raising venture <em>itself</em> is controlled by agents of a given charitable organization, we do not qualify as either counsel or a solicitor, for fund-raising purposes. (R.I. Gen. Laws § 5-53-1).</p>
@@ -809,7 +819,7 @@
 	<li>
 		<a name="q7">			
 		</a>
-		<b>What Are Siloz' Security Features?</b>
+		<b>What Are <?=SITE_NAME?>' Security Features?</b>
 		<p>We have implemented several security features, including:</p>
 		<ol>
 		<li>Personal silos are invisible, and are accessible by invitation only</li>
@@ -833,7 +843,7 @@
 			<p>No personal silo donation or pledge is ever a tax-deductible gift.</p>
 			<p>Only community silos with a banner indicating an organization's EIN (employer identification number) have been verified by our site as a 501(c)3 organization, and, therefore, able to provide a receipt for a gift, waiving taxes for that amount, for the donor/pledger.</p>
 			<p>This verified status (checked with http://www.realsearch.com/) is displayed in the silo's banner (see below).  <strong>Any silo not bearing this seal (gold star) is not verified by us, and cannot provide a receipt for a charitable gift.</strong></p>
-			<p><a href="http://silozhelp.files.wordpress.com/2011/10/tax-deduction1.png"><img class="alignright size-full wp-image-445" title="" src="http://silozhelp.files.wordpress.com/2011/10/tax-deduction1.png?w=700&#038;h=324" alt="" width="700" height="324" /></a></p>
+			<p><a href="http://<?=SITE_NAME?>help.files.wordpress.com/2011/10/tax-deduction1.png"><img class="alignright size-full wp-image-445" title="" src="http://<?=SITE_NAME?>help.files.wordpress.com/2011/10/tax-deduction1.png?w=700&#038;h=324" alt="" width="700" height="324" /></a></p>
 	</li>
 	
 	
@@ -841,8 +851,8 @@
 	<li>
 			<a name="q9">			
 			</a>
-			<b>What Is Siloz?</b>
-			<p>Siloz is much like an 'online church rummage sale', where people pledge the sale of items and remittance of donations to a silo's administrator (creator), in a fund-raising effort.  Every item listed on the site benefits some fund-raiser (called a 'silo').</p>
+			<b>What Is <?=SITE_NAME?>?</b>
+			<p><?=SITE_NAME?> is much like an 'online church rummage sale', where people pledge the sale of items and remittance of donations to a silo's administrator (creator), in a fund-raising effort.  Every item listed on the site benefits some fund-raiser (called a 'silo').</p>
 			<p>On the site, you can create a silo, pledge items or donate to a silo (join as a member), or simply shop.  About 93% of the money you spend on any item on the site goes to the silo it benefits.</p>
 			</p>
 	</li>
@@ -855,7 +865,7 @@
 			<b>How Do I Start a Silo?</b>
 			<p>Select the 'Create Silo' button at the top of the page.  Follow the prompts.</p>
 			<p>Personal silos are not visible on the site and are not visible in an Internet search, and only items benefiting community silos indicate which silo they benefit.  These are security features, preventing a person from, say, falsely claiming they have a child dying from cancer, and inviting strangers to pledge items or money.  Personal silos can be shared through their unique URL (web address), and thus are self-monitoring, since the only way you would know about it is through someone you know, who learned about it, in turn, from someone he or she knows, back to the silo administrator.</p>
-			<p>Siloz uses such transparency, and a half-dozen other checks and balances to maximize transparency and accountability for a safe, effective, fun, fund-raising experience for personal and community causes alike.</p>
+			<p><?=SITE_NAME?> uses such transparency, and a half-dozen other checks and balances to maximize transparency and accountability for a safe, effective, fun, fund-raising experience for personal and community causes alike.</p>
 	</li>
 	
 	
@@ -867,8 +877,8 @@
 			</a>
 			<b>How Do I Join a Silo?</b>
 			<p>Select the 'Search Silos' button in the navigation bar on the home page.  You will see silos on a map, and in the grid on the left of the screen.  Hover over silos on a map for more information.  Select an object to be taken to a Silo's Detail Page.  On the Silo Detail Page, select 'Donate' or 'Sell for This Silo' and follow the prompts.</p>
-			<p>After you pledge an item or indicate that you will make a donation, you are free to sell your item on siloz or elsewhere, and to send your money to your silo administrator in any way you choose.</p>
-			<p>When an item sells (on siloz or elsewhere), you change the status of your item to 'item sold', or 'payment sent' as the case may be.  When the money is received by the silo administrator, he or she changes the status to 'payment received'.</p>
+			<p>After you pledge an item or indicate that you will make a donation, you are free to sell your item on <?=SITE_NAME?> or elsewhere, and to send your money to your silo administrator in any way you choose.</p>
+			<p>When an item sells (on <?=SITE_NAME?> or elsewhere), you change the status of your item to 'item sold', or 'payment sent' as the case may be.  When the money is received by the silo administrator, he or she changes the status to 'payment received'.</p>
 			<p>Since items are not for sale on the site, but only represented, it is up to silo members to keep the status of pledged items up-to-date.</p>
 	</li>
 	
@@ -878,7 +888,7 @@
 	<li>
 				<a name="q12">			
 				</a>
-				<b>How Much Does Siloz Charge?</b>
+				<b>How Much Does <?=SITE_NAME?> Charge?</b>
 				<p>Personal silos are always free.  We charge community silo administrators 7% of whatever money they report collecting.</p>
 		</li>
 		
@@ -900,7 +910,7 @@
 								<a name="q14">			
 								</a>
 								<b>How Do I Find Out About Corporate Donations and Pledges?</b>
-								<p>To learn more about corporate participation in a silo, contact us at info@siloz.com.</p>
+								<p>To learn more about corporate participation in a silo, contact us at info@<?=SITE_NAME?>.com.</p>
 						</li>
 
 
@@ -919,7 +929,7 @@
 	</a>
 	<b>What Rights or Responsibilities Does a Silo Member Have?</b>		
 	<p>To fully understand your obligations a silo web application user, see our Terms of Use, in the footer.</p>
-	<p>Silo members' principal obligations are 1) make an earnest effort to sell pledge items (on siloz.com or elsewhere &#8211; we don't discourage duplicate listings, as, in that event, we are simply a place to represent and track pledges, <em>in addition to</em> a sales forum), 2) conform to the values of the site (legality, respect, goodwill and inclusiveness) , and 3) update the status of your pledged items and remit payment to a silo administrator, <em>promptly</em>.</p>
+	<p>Silo members' principal obligations are 1) make an earnest effort to sell pledge items (on <?=SITE_NAME?>.com or elsewhere &#8211; we don't discourage duplicate listings, as, in that event, we are simply a place to represent and track pledges, <em>in addition to</em> a sales forum), 2) conform to the values of the site (legality, respect, goodwill and inclusiveness) , and 3) update the status of your pledged items and remit payment to a silo administrator, <em>promptly</em>.</p>
 </li>
 
 
@@ -972,7 +982,7 @@
 	<a name="q22">			
 	</a>
 	<b>How Do I Remove People or Items From My Silo?</b>
-	<p>Only a silo administrator may remove people or items.  Items or membership that do not conform to the spirit of a given silo, or of siloz.com, maybe be apt for a warning from a silo administrator.</p>
+	<p>Only a silo administrator may remove people or items.  Items or membership that do not conform to the spirit of a given silo, or of <?=SITE_NAME?>.com, maybe be apt for a warning from a silo administrator.</p>
 	<p>We ask that you issue a warning and/or use discretion in editing silo membership and member pledges (particularly for a community silo &#8211; which is intended to be open to the public), as the administrator him- or herself may run afoul of our spirit of inclusiveness and goodwill.  Under no circumstances should personal feelings influence this action.</p>
 	<p>To remove a member, go to the silo administrator 'dashboard', select the 'members' tab, and select the red 'x' on a given member's plate.</p>
 	<p>To remove an item, go to the silo administrator 'dashboard', select the 'items' tab, and select the red 'x' on a given item's plate.</p>
@@ -984,8 +994,8 @@
 <li>
 	<a name="q23">			
 	</a>
-	<b>Will Siloz Ever Have Advertisements?</b>
-	<p>Siloz.com will never feature advertisements.</p>
+	<b>Will <?=SITE_NAME?> Ever Have Advertisements?</b>
+	<p><?=SITE_NAME?>.com will never feature advertisements.</p>
 </li>
 
 
@@ -993,8 +1003,8 @@
 <li>
 	<a name="q24">			
 	</a>
-	<b>How Does Siloz Make Money?</b>
-	<p>Siloz.com makes money by charging a nominal fee to community silo administrators.  By definition, these are individuals operating in some <em>official </em>capacity.  Our fee is 7% of the total amount collected (as reported by the silo administrator).</p>
+	<b>How Does <?=SITE_NAME?> Make Money?</b>
+	<p><?=SITE_NAME?>.com makes money by charging a nominal fee to community silo administrators.  By definition, these are individuals operating in some <em>official </em>capacity.  Our fee is 7% of the total amount collected (as reported by the silo administrator).</p>
 </li>
 
 
@@ -1003,7 +1013,7 @@
 	<a name="q25">			
 	</a>
 	<b>What Sorts of Silos Are Banned?</b>
-	<p>Siloz prohibits fundraisers for political, racial, heritage foundations or causes, or any organization whose purpose or reputation is associated with an ethos we deem contrary to our mission of legality, respect, goodwill, and inclusiveness.  For more information, see our Terms of Use.</p>
+	<p><?=SITE_NAME?> prohibits fundraisers for political, racial, heritage foundations or causes, or any organization whose purpose or reputation is associated with an ethos we deem contrary to our mission of legality, respect, goodwill, and inclusiveness.  For more information, see our Terms of Use.</p>
 </li>
 
 
@@ -1012,7 +1022,7 @@
 	<a name="q26">			
 	</a>
 	<b>Can I Start A Silo For A Political Purpose?</b>
-	<p>Siloz prohibits fundraisers for political, racial, heritage foundations or causes, or any organization whose purpose or reputation is associated with an ethos we deem contrary to our mission of legality, respect, goodwill, and inclusiveness.  For more information, see our Terms of Use.</p>
+	<p><?=SITE_NAME?> prohibits fundraisers for political, racial, heritage foundations or causes, or any organization whose purpose or reputation is associated with an ethos we deem contrary to our mission of legality, respect, goodwill, and inclusiveness.  For more information, see our Terms of Use.</p>
 </li>
 
 
@@ -1030,17 +1040,17 @@
 	<li>Fraud/Scam/Illegal</li>
 	<li>Duplicate</li>
 	<li>Spam/Advertisement</li>
-	<li>Violates Spirit of Siloz</li>
+	<li>Violates Spirit of <?=SITE_NAME?></li>
 	<li>Offensive/Discriminatory</li>
 	</ol>
 	<p>Multiple flags by different users, in any of these categories will get an (any) item or silo suspended.</p>
 	<p>Note: only community silos are required to exercise tact and taste; an offensive personal silo that is otherwise not in violation of our Terms of Use is acceptable.  If you know of this silo, and don't like what they're doing, simply exit (by requesting from the administrator that you be removed from the silo).</p>
 	<p><em><strong>Contact Us</strong></em></p>
-	<p>You may also report silos (personal or community) that do not conform to our standards of legality, respect, goodwill, and inclusiveness by using the 'contact us' link in the footer of every page, and appropriately completing the form.  As a public endeavor, and because a silo administrator is representing siloz.com to the public, a community silo (or listed item) must meet a higher standard of tact and/taste in addition to the aforementioned.  Community silos and items that do not meet this additional standard should likewise be reported using the 'contact us' link in the site's footer.</p>
+	<p>You may also report silos (personal or community) that do not conform to our standards of legality, respect, goodwill, and inclusiveness by using the 'contact us' link in the footer of every page, and appropriately completing the form.  As a public endeavor, and because a silo administrator is representing <?=SITE_NAME?>.com to the public, a community silo (or listed item) must meet a higher standard of tact and/taste in addition to the aforementioned.  Community silos and items that do not meet this additional standard should likewise be reported using the 'contact us' link in the site's footer.</p>
 	<p>Personal silos that are tasteless or not tactful, but otherwise not in violation of our Terms of Use, are not fit to be canceled (things like fraternity parties or bachelor parties or bachelorette parties).  We would advise that you simply exit that silo (done by requesting to be deleted to your silo's administrator).</p>
 	<p><em><strong>Fraud and Misrepresentation, Fraud and Scams (Items or Silos)</strong></em></p>
-	<p>We take abuse of public and private trust <em>very </em>seriously, and will fully cooperate with disciplinary and law enforcement personnel in the interest of keeping siloz a safe place for good people to do good work.</p>
-	<p>If you believe a breach  involves misrepresentation, fraud, or another type of scam, we invite you to telephone us directly at: 510-842-6077, or email us at info@siloz.com.</p>
+	<p>We take abuse of public and private trust <em>very </em>seriously, and will fully cooperate with disciplinary and law enforcement personnel in the interest of keeping <?=SITE_NAME?> a safe place for good people to do good work.</p>
+	<p>If you believe a breach  involves misrepresentation, fraud, or another type of scam, we invite you to telephone us directly at: 510-842-6077, or email us at info@<?=SITE_NAME?>.com.</p>
 	<p>Please be prepared with your username, relationship to the silo (if any), the silo title and ID number.</p>
 	<p><strong>Flagging</strong></p>
 	<p>If the breach is at all questionable, you can simply flag a silo.  Flaggable infractions include:</p>
@@ -1049,7 +1059,7 @@
 	<li>Fraud/Scam/Illegal</li>
 	<li>Duplicate</li>
 	<li>Spam/Advertisement</li>
-	<li>Violates Spirit of Siloz</li>
+	<li>Violates Spirit of <?=SITE_NAME?></li>
 	<li>Offensive/Discriminatory</li>
 	</ol>
 </li>
@@ -1075,7 +1085,7 @@
 	<b>What Does 'Pledged', 'Item Sold', 'Funds Sent' and 'Funds Received' Mean?</b>
 	<p>The various statuses for pledged items are:</p>
 	<ol>
-	<li>Pledged.  This is when you listed an item whose proceeds go to a silo.  Note, your item may sell through siloz.com, or elsewhere online (or even off-line).  Simply update the appropriate item's status as needed.  This status is generated when an item is first listed or pledged.</li>
+	<li>Pledged.  This is when you listed an item whose proceeds go to a silo.  Note, your item may sell through <?=SITE_NAME?>.com, or elsewhere online (or even off-line).  Simply update the appropriate item's status as needed.  This status is generated when an item is first listed or pledged.</li>
 	<li>Item Sold.  The pledging member found a buyer for an item.  This status is set by the pledging member.</li>
 	<li>Funds Sent.  Money has been sent to the silo administrator, through some means (cash, check, money order, bank check, PayPal, etc.).  This status is set by the pledging member.</li>
 	<li>Funds Received.  This status is set by the silo administrator.</li>
@@ -1129,13 +1139,13 @@
 	<a name="q35">			
 	</a>
 	<b>What is Flagging?</b>
-	<p>There are six types of flags in use on siloz.com.  These apply to both silos and items for sale on the site.</p>
+	<p>There are six types of flags in use on <?=SITE_NAME?>.com.  These apply to both silos and items for sale on the site.</p>
 	<ol>
 	<li>Miscategorized</li>
 	<li>Fraud/Scam/Illegal</li>
 	<li>Duplicate</li>
 	<li>Spam/Advertisement</li>
-	<li>Violates Spirit of Siloz</li>
+	<li>Violates Spirit of <?=SITE_NAME?></li>
 	<li>Offensive/Discriminatory</li>
 	</ol>
 	<p>Multiple flags by different users, in any of these categories will get an (any) item or silo suspended.</p>
@@ -1166,21 +1176,21 @@
 <li>
 	<a name="q39">			
 	</a>
-	<b>Is Siloz a Non-Profit?</b>
-	<p>Siloz.com is a privately-held, for-profit company.  We provide a technology service for private and public fund-raising, in observance of state and federal laws and advisories.  For more information, see the FAQ article on legality, or the Terms of Use.</p>
+	<b>Is <?=SITE_NAME?> a Non-Profit?</b>
+	<p><?=SITE_NAME?>.com is a privately-held, for-profit company.  We provide a technology service for private and public fund-raising, in observance of state and federal laws and advisories.  For more information, see the FAQ article on legality, or the Terms of Use.</p>
 </li>
 
 <li>
 	<a name="q40">			
 	</a>
-	<b>Will Siloz Ever Go Public?</b>
-	<p>Siloz.com will never go public, as long as it's owned by the founder and CEO, Zackery West.</p>
+	<b>Will <?=SITE_NAME?> Ever Go Public?</b>
+	<p><?=SITE_NAME?>.com will never go public, as long as it's owned by the founder and CEO, Zackery West.</p>
 </li>
 
 <li>
 	<a name="q41">			
 	</a>
-	<b>How Do I Invest In Siloz or Otherwise Do Business With Siloz?</b>
+	<b>How Do I Invest In <?=SITE_NAME?> or Otherwise Do Business With <?=SITE_NAME?>?</b>
 	<p>For business inquiries, select 'contact us' from the footer, and appropriately complete the form.</p>
 </li>
 
@@ -1209,22 +1219,22 @@
 	<a name="q45">			
 	</a>
 	<b>What Happens If I Surpass My Silo's Goal?</b>
-	<p>Silo administrators are accountable to silo members for all money raised by a silo.  If a silo surpasses its goal, members are expected (but not required) to cease in their fund-raising effort.  In this event, silo administrators are expected (but not required) to return the overage to contributors on the proportionate basis of members' contributions.  Siloz offers no recourse or legal remedy for silo members who contributed to a silo that failed to meet, met, or exceeded its fund-raising goal.</p>
+	<p>Silo administrators are accountable to silo members for all money raised by a silo.  If a silo surpasses its goal, members are expected (but not required) to cease in their fund-raising effort.  In this event, silo administrators are expected (but not required) to return the overage to contributors on the proportionate basis of members' contributions.  <?=SITE_NAME?> offers no recourse or legal remedy for silo members who contributed to a silo that failed to meet, met, or exceeded its fund-raising goal.</p>
 </li>
 
 <li>
 	<a name="q46">			
 	</a>
 	<b>My Silo Member's Item Sold, But He Or She Will Not Remit Payment</b>
-	<p>Siloz is designed to be completely transparent.  If an item sells, as reported by the pledging member, it is expected that the social pressure and desire to honor a pledge and retain credibility will be sufficient motivators (if good will itself isn't).</p>
+	<p><?=SITE_NAME?> is designed to be completely transparent.  If an item sells, as reported by the pledging member, it is expected that the social pressure and desire to honor a pledge and retain credibility will be sufficient motivators (if good will itself isn't).</p>
 	<p>The site is meant to inspire good feelings: goodwill, voluntarily undertaken. Therefore, we offer no recourse for pledging members who refuse to remit payment.  They are visible by everyone in the silo.</p>
 </li>
 
 <li>
 	<a name="q47">			
 	</a>
-	<b>Will Siloz Ever Exist Outside the United States?</b>
-	<p>We are constantly learning from our mistakes, and your feedback.  Siloz is a business, and any business decision should be informed by practicality, if not profitability.  Ergo, we cannot guarantee we will ever exist outside the United States, but we'd like to believe the same model that makes us viable here applies in other countries &#8211; that, the world over, people are invested in helping each other.</p>
+	<b>Will <?=SITE_NAME?> Ever Exist Outside the United States?</b>
+	<p>We are constantly learning from our mistakes, and your feedback.  <?=SITE_NAME?> is a business, and any business decision should be informed by practicality, if not profitability.  Ergo, we cannot guarantee we will ever exist outside the United States, but we'd like to believe the same model that makes us viable here applies in other countries &#8211; that, the world over, people are invested in helping each other.</p>
 </li>
 
 <li>
@@ -1239,8 +1249,8 @@
 <li>
 	<a name="q49">			
 	</a>
-	<b>Does Siloz Allow Shipping?</b>
-	<p>Under no circumstances should a buyer coordinate with a seller to receive a shipped item, or make payment to a seller in any way other than in-person.  Siloz is meant to operate regionally, buying and selling in local markets (ideally &#8211; especially as it informs community silos), near <em>the actual </em>silo.</p>
+	<b>Does <?=SITE_NAME?> Allow Shipping?</b>
+	<p>Under no circumstances should a buyer coordinate with a seller to receive a shipped item, or make payment to a seller in any way other than in-person.  <?=SITE_NAME?> is meant to operate regionally, buying and selling in local markets (ideally &#8211; especially as it informs community silos), near <em>the actual </em>silo.</p>
 	<p>Since items and silos are, by definition, different objects, they will not always geographically overlap.  Use discretion when joining a silo that is not in your region.  If you must do this, personal silos may be safer, since it's someone you know who can vouch for a silo's legitimacy.</p>
 	<p>See the FAQ article on joining a silo in another region for more information.</p></li>
 
@@ -1257,12 +1267,12 @@
 	<b>Who Can Create a Tax-Deductible Community Silo?</b>
 	<p><strong>The Law</strong></p>
 	<p>501(c)(3) exemptions apply to corporations, and any community chest, fund, cooperating association or foundation, organized and operated exclusively for religious, charitable, scientific, testing for public safety, literary, or educational purposes, to foster national or international amateur sports competition, to promote the arts, or for the prevention of cruelty to children or animals.</p>
-	<p><strong>Siloz' Criteria: Verifiable EIN Showing Non-Profit Status With the IRS<br />
+	<p><strong><?=SITE_NAME?>' Criteria: Verifiable EIN Showing Non-Profit Status With the IRS<br />
 	</strong></p>
 	<p>Organizations may or may not have an EIN (employer identification number), which we then verify (when the silo administrator creates a silo), that authenticates 501(c)3 status; <strong>a regional organization without a verified EIN indicating non-profit status can create a community silo, but cannot offer tax-deductible receipts for pledges or donations</strong>.</p>
-	<p><strong>Siloz' Criteria: Community</strong></p>
-	<p>Siloz is intended to leverage existing relationships in regional communities; it is about communities taking care of themselves and each other.  When you log in, you see your community on the map, complete with items and silos.</p>
-	<p><strong>National non-profits, with or without 501(c)3 status must meet separate criteria to qualify for a community silo.  </strong>Among other requirements, they must have a regional office, and not intend the funds for operating costs.  While national non-profits headquartered in Washington, D.C., or New York, New York, (and without regional offices) may be worthy organizations, it is inconsistent with siloz' function (and an invitation for fraud) to permit them to create silos either a) in their own region, since their location is arbitrary and their span is national, or b) to permit them to create silos in other regions.</p>
+	<p><strong><?=SITE_NAME?>' Criteria: Community</strong></p>
+	<p><?=SITE_NAME?> is intended to leverage existing relationships in regional communities; it is about communities taking care of themselves and each other.  When you log in, you see your community on the map, complete with items and silos.</p>
+	<p><strong>National non-profits, with or without 501(c)3 status must meet separate criteria to qualify for a community silo.  </strong>Among other requirements, they must have a regional office, and not intend the funds for operating costs.  While national non-profits headquartered in Washington, D.C., or New York, New York, (and without regional offices) may be worthy organizations, it is inconsistent with <?=SITE_NAME?>' function (and an invitation for fraud) to permit them to create silos either a) in their own region, since their location is arbitrary and their span is national, or b) to permit them to create silos in other regions.</p>
 	<p><strong>For more information, see the FAQ article: 'Can National Non-Profits Create Community Silos?'<br />
 	</strong></p>
 </li>
@@ -1271,9 +1281,9 @@
 	<a name="q52">			
 	</a>
 	<b>I Suspect A Personal Or Community Silo Administrator of Fraud / Abuse</b>
-	<p>Siloz is a <strong>technology provider</strong> for users to fund-raise.  We have built in safeguards, encouraged our users to exercise skepticism when joining a silo, and empowered our users to police the site, themselves.  Still, humans are inventive, and we cannot guarantee every silo administrator is honest and reliable.</p>
+	<p><?=SITE_NAME?> is a <strong>technology provider</strong> for users to fund-raise.  We have built in safeguards, encouraged our users to exercise skepticism when joining a silo, and empowered our users to police the site, themselves.  Still, humans are inventive, and we cannot guarantee every silo administrator is honest and reliable.</p>
 	<p>See our FAQ article on 'Security Features' of the site for more information.</p>
-	<p>For either personal silos or community silos,<strong> siloz offers no legal or financial remedy for abuse of trust or misappropriation of funds raised</strong> on the part of the silo administrator.  See our 'Terms of Use' for more information.</p>
+	<p>For either personal silos or community silos,<strong> <?=SITE_NAME?> offers no legal or financial remedy for abuse of trust or misappropriation of funds raised</strong> on the part of the silo administrator.  See our 'Terms of Use' for more information.</p>
 	<p><strong>Remedies Offered by The Law</strong></p>
 	<p><strong>Community silo administrators</strong> are liable for <strong>criminal </strong>fraud / misrepresentation charges for abusing public trust and misappropriating public funds.  This may include suspension of 501(c)3 status for their organization.  We invite members of a silo to judiciously exercise options to remedy a situation of abuse or suspected abuse, including:</p>
 	<ol>
@@ -1282,7 +1292,7 @@
 	<li>Withdraw from a silo;</li>
 	<li>Flag a silo for 'fraud';</li>
 	<li>Notify other members of your concerns and urge them to flag or withdraw from a silo;</li>
-	<li>Notify siloz.com; while we can offer no remedy for abuses (we are not a law-enforcement body), we can suspend a silo, if there is sufficient evidence of wrongdoing, and investigate.  Under certain circumstances, we can <em>ban</em> an organization or individual from ever conducting a silo on our site;</li>
+	<li>Notify <?=SITE_NAME?>.com; while we can offer no remedy for abuses (we are not a law-enforcement body), we can suspend a silo, if there is sufficient evidence of wrongdoing, and investigate.  Under certain circumstances, we can <em>ban</em> an organization or individual from ever conducting a silo on our site;</li>
 	<li>Notify local authorities to pursue a criminal charge.</li>
 	</ol>
 	<p>There may be a <strong>civil</strong> remedy at law for<strong> personal silo administrators</strong> who abuse their membership's trust or misappropriate funds.  Depending on the circumstance, such an administrator may be guilty of panhandling, or the tort (to be pursued in a municipal court) of breach of a duty to honor the expectation of silo members to honestly handle funds raised.</p>
@@ -1291,10 +1301,10 @@
 	<li>Withdraw from a silo;</li>
 	<li>Flag a silo for 'fraud';</li>
 	<li>Notify other members of your concerns and urge them to flag or withdraw from a silo;</li>
-	<li>Notify siloz.com; while we can offer no remedy for abuses (we are not a law-enforcement body), we can suspend a silo, if there is sufficient evidence of wrongdoing, and investigate.  Under certain circumstances, we can <em>ban</em> an organization or individual from ever conducting a silo on our site;</li>
+	<li>Notify <?=SITE_NAME?>.com; while we can offer no remedy for abuses (we are not a law-enforcement body), we can suspend a silo, if there is sufficient evidence of wrongdoing, and investigate.  Under certain circumstances, we can <em>ban</em> an organization or individual from ever conducting a silo on our site;</li>
 	<li>Consult an attorney and file a legal suit for damages in a civil venue.</li>
 	</ol>
-	<p>Note: siloz recommends you consult with an attorney before pursuing legal remedy for abuse.</p>
+	<p>Note: <?=SITE_NAME?> recommends you consult with an attorney before pursuing legal remedy for abuse.</p>
 	<div class="sharedaddy"></div></div>
 </li>
 
@@ -1307,7 +1317,7 @@
 	<p>See the FAQ article on personal vs. community silos.</p>
 	<ul>
 	<li>Personal silos are by invitation only, and <strong>never public</strong>.  You should only know about a personal silo from a friend, or through direct contact (Facebook or email invitation) from the silo administrator.  This is a security feature.</li>
-	<li>Personal silos should <strong>never</strong> be visible on the siloz.com map (with other community silos).</li>
+	<li>Personal silos should <strong>never</strong> be visible on the <?=SITE_NAME?>.com map (with other community silos).</li>
 	<li>Personal silos should never be Internet-searchable.</li>
 	<li>Items benefiting a personal silo should indicate that the benefiting silo is 'personal'.</li>
 	</ul>

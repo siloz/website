@@ -1,10 +1,12 @@
 <?php
-	$itemsPerPage = "12";
+	include_once("include/GoogleAnalytics.php");
+
+	$itemsPerPage = "18";
 	$itemsPerRow = "6";
 
 	$view = param_get('view');
 
-	$search_clause = "";
+	$search_clause = "(status = 'pledged' OR status = 'offer')";
 	$saveSearch = "";
 
 	if (strlen(trim(param_get('keywords'))) > 0) {
@@ -19,13 +21,13 @@
 		$saveSearch .= "&zip_code=".param_get('zip_code');
 		$search_clause .= "";
 	}
-	if (strlen(param_get('price_low')) > 0) {
-		$saveSearch .= "&price_low=".param_get('price_low');
-		$search_clause .= " AND price >= ".param_get('price_low');
+	if (strlen($low) > 0) {
+		$saveSearch .= "&price_low=".$low;
+		$search_clause .= " AND price >= ".$low;
 	}
-	if (strlen(param_get('price_high')) > 0) {
-		$saveSearch .= "&price_high=".param_get('price_high');
-		$search_clause .= " AND price <= ".param_get('price_high');
+	if (strlen($high) > 0) {
+		$saveSearch .= "&price_high=".$high;
+		$search_clause .= " AND price <= ".$high;
 	}
 	if (strlen(param_get('category')) > 0) {
 		$saveSearch .= "&category=".param_get('category');		
@@ -41,15 +43,13 @@
 	if (strlen(param_get('page')) > 0) {
 		$saveSearch .= "&page=".param_get('page');;
 	}
-
-	$search_clause .= " AND status = 'pledged' ";
 	
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $itemsPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
-	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE status = 'pledged' $search_clause"));
+	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE $search_clause"));
 	$count_items = $tmp[0];	
-	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(DISTINCT silo_id) FROM items WHERE deleted_date = 0 $search_clause"));
+	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(DISTINCT silo_id) FROM items WHERE $search_clause AND deleted_date = 0"));
 	$count_silos = $tmp[0];
 
 	$new_sort_order = '';
@@ -79,7 +79,7 @@
 
 	$start_from = ($page-1) * $itemsPerPage;
 
-	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE status = 'pledged' $search_clause $order_by_clause LIMIT $start_from, $itemsPerPage";
+	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE $search_clause $order_by_clause LIMIT $start_from, $itemsPerPage";
 	$tmp = mysql_query($sql);
 	
 	$items_html = "<div class='row'><div class='span12'>";
@@ -87,42 +87,55 @@
 	$items = array();
 	
 	while ($item = mysql_fetch_array($tmp)) {
-		if ($i % 6 == 0) {
-			$items_html .= "<div class='row item_row'>";
+		if ($i % $itemsPerRow == 0) {
+			$items_html .= "<div class='row item_row-search'>";
 		}
 		
 		$it = new Item($item['id']);
 		$items[] = $it;
 		
-		$items_html .= $it->getItemPlate($i % 6 == 0);
+		$items_html .= $it->getItemPlate($i % $itemsPerRow == 0);
 
-		if ($num_items % 6 == 5) {
+		if ($i % $itemsPerRow == $itemsPerRow - 1) {
 			$items_html .= "</div>";
 		}		
 
-		$i ++;
+		$i++;
 	}
 	
-	if ($num_items % 6 < 5) {
-		$items_html .= "</div";
+	if ($i % $itemsPerRow < $itemsPerRow - 1) {
+		$items_html .= "</div>";
 	}
-	
-	$items_html .= "</div></div>";
 
-	$prev = "";
-	if ($from >= $itemsPerPage)
-		$prev = "<a href=index.php?search=item&from=".($from-$itemsPerPage)."&to=".($from-1)."$query class=status><img src='images/prev_arrow.png' height='15px'> <font color='#fff'>Prev</font></a> &nbsp;&nbsp;";
-	$next = "";
-	if ($to < $count_items)
-	 	$next = "<a href=index.php?search=item&from=".($to+1)."&to=".min($to + $itemsPerPage, $count_items)."$query class=status><font color='#fff'>Next</font> <img src='images/next_arrow.png' height='15px'></a>"
+	if ($page == $total_pages) {
+		$items_html .= "</div>";
+	}
+
+	if ($i != 6) {
+		$items_html .= "</div>";
+	}
+
+	if ($view != map) {
+		$items_html .= "</div>";
+	}
+	
+	$items_html .= "</div>";
+
+	$user_id = $_SESSION["user_id"];
+	$offerUser = mysql_fetch_array(mysql_query("SELECT status, amount FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item->item_id'"));
+	$offerStatus = $offerUser['status'];
+	$offerAmount = $offerUser['amount'];
+
+	if ($offerStatus == 'accepted') { $price = $offerAmount; } else { $price = $item->price; }
 ?>
 
 <div class="navBreak">
 
 <?php
-	if ($total_pages < 2) {
+	if ($total_pages == 1) {
 		echo '<span class="nbSelected">1</span>';
 	}
+	elseif (!$total_pages) {}
 	else	{
 		if ($page != "1") {
 			$prev = $page - 1;
@@ -171,10 +184,10 @@
 		view:
 	</td>
 	<td>
-		<a href="index.php?<?=$saveSearch?>&search=item&view=map"> map <input style="float: right; margin-top: 5px; margin-left: 5px;" type="radio" <?php if ($view) { echo "CHECKED"; } ?>></input></a>
+		<a href="index.php?<?=$saveSearch?>&search=item&view=map"> map <input style="float: right; margin-top: 3px; margin-left: 5px;" type="radio" <?php if ($view) { echo "CHECKED"; } ?>></input></a>
 	</td>
 	<td>
-		<a href="index.php?search=item<?=$saveSearch?>&view=">grid <input style="float: right; margin-top: 5px; margin-left: 5px;" type="radio" <?php if (!$view) { echo "CHECKED"; } ?>></input></a>
+		<a href="index.php?search=item<?=$saveSearch?>&view=">grid <input style="float: right; margin-top: 3px; margin-left: 5px;" type="radio" <?php if (!$view) { echo "CHECKED"; } ?>></input></a>
 	</td>
 </tr>
 </table>
@@ -201,13 +214,13 @@ if ($view == "map") {
 </table>
 </div> -->
 
-<div id='map_canvas' style='width: 930px; height: 400px; margin: 20px;'></div>
+<div id='map_canvas' class="map-canvas" style='width: 930px; height: 400px; margin: 20px;'></div>
 
 <br>
 
 <?php
 //Get items for map
-$qry = mysql_query("SELECT * FROM items WHERE status = 'pledged'");
+$qry = mysql_query("SELECT * FROM items WHERE status = 'pledged' OR status = 'offer'");
 $num = mysql_num_rows($qry);
 
     echo "<script> var locations = [";
@@ -291,7 +304,7 @@ map.mapTypes.set('Styled', styledMapType);
             	marker = new google.maps.Marker({
             	position: new google.maps.LatLng(locations[i][1], locations[i][2]),
             	map: map,
-		animation: google.maps.Animation.DROP
+		animation: google.maps.Animation.DROP,
             });
 }
 
@@ -353,4 +366,3 @@ window.onload = loadScript;
 <?php echo $items_html;?>
 
 <div style="margin-left: 10px;">
-	

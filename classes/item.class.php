@@ -18,6 +18,7 @@ class Item {
 	public $sent_date;
 	public $received_date;
 	public $deleted_date;
+	public $last_update;
 	public $photo_file_1;
 	public $photo_file_2;
 	public $photo_file_3;
@@ -43,6 +44,12 @@ class Item {
 		$this->id = $res['id'];
 		$this->title = $res['title'];
 		$this->avail = $res['avail'];
+
+		$offerUser = mysql_fetch_array(mysql_query("SELECT status, amount FROM offers WHERE buyer_id = '$_SESSION[user_id]' AND item_id = '$this->item_id'"));
+		$offerStatus = $offerUser['status'];
+		$offerAmount = $offerUser['amount'];
+		if ($offerStatus == 'accepted') { $this->priceOffer = $offerAmount; } else { $this->priceOffer = $res['price']; }
+
 		$this->price = $res['price'];
 		$this->item_cat_id = $res['item_cat_id'];
 		$this->description = $res['description'];
@@ -50,7 +57,7 @@ class Item {
 		$this->latitude = $res['latitude'];
 		$this->status = $res['status'];
 		$this->link = $res['link'];
-		
+		$this->last_update = strtotime($res['last_update']);
 		
 		$this->photo_file_1 = $res['photo_file_1'];
 		$this->photo_file_2 = $res['photo_file_2'];
@@ -122,7 +129,7 @@ class Item {
 	
 	function getPlate() {
 		$cell = "<div class='plateItem span2' id=item_".$this->id." onClick='window.location = index.php?task=view_item&id=".$this->id."'><a href='index.php?task=view_item&id=".$this->id."'";
-		$cell .= "\<div style='margin-top: 5px; height: 15px'><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'></div><div style='margin-bottom: 3px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->price."</b></span></div></a></div>";
+		$cell .= "\<div style='margin-top: 5px; height: 15px'><img height=100px width=135px src='uploads/items/".$this->photo_file_1."?".$this->last_update."' style='margin-bottom: 3px'></div><div style='margin-bottom: 3px'><a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->priceOffer."</b></span></div></a></div>";
 		return $cell;
 	}
 	
@@ -134,8 +141,8 @@ class Item {
 		}
 		
 		$cell .= "' id=item_".$this->id." onclick='window.location = \"index.php?task=view_item&id=".$this->id."\"'>";
-		$cell .= "<img class='photoItem' height=110px width=148px src=uploads/items/".$this->photo_file_1."><div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: middle; text-align: center;'>
-			<a href='index.php?task=view_item&id=".$this->id."'><b>".$this->getShortTitle(40)."</b></a><br><span style='color: #f60'><b>$".$this->price."</b></span></div></div></a></div>";
+		$cell .= "<img class='photoItem' height=110px width=149px src='uploads/items/".$this->photo_file_1."?".$this->last_update."'><div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: middle; text-align: center;'>
+			<a href='index.php?task=view_item&id=".$this->id."'><span style='color: #0F5684;'><b>".$this->getShortTitle(40)."</b></span></a><br><span style='color: #f60'><b>$".$this->priceOffer."</b></span></div></div></a></div>";
 		return $cell;
 	}
 	
@@ -160,7 +167,7 @@ class Item {
 			$order_by_clause = " ORDER BY username $sort_order ";
 		if ($order_by == 'date')
 			$order_by_clause = " ORDER BY joined_date $sort_order ";			
-		$sql = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE items.status = 'pledged' AND silo_id = $silo_id $order_by_clause $limit";
+		$sql = "SELECT item_id FROM items INNER JOIN users USING (user_id) WHERE silo_id = $silo_id AND (items.status = 'pledged' OR items.status = 'offer') $order_by_clause $limit";
 		$items = array();
 		$tmp = mysql_query($sql);
 		while ($res = mysql_fetch_array($tmp)) {
@@ -205,30 +212,53 @@ class Item {
 	public function getItemCell($silo_id, $c_user_id) {
 		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
+		$title = (strlen($this->title) > 20) ? substr($this->title, 0, 20) . '...' : $this->title;
 
-		$cell = "<td><div class=plate id='item_".$this->id."' style='color: #000;'>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='index.php?task=view_item&id=".$this->id."'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$admin_name."</a></div></td></tr><tr valign=bottom><td align=center align=center><span style='color: #f60'><b>$".$this->price."</b></span></td></tr></table></div></td>";							
+		$cell .= "<td><div class='plate'><a style='color: grey; text-decoration: none;' href='index.php?task=view_item&id=".$this->id."'>";
+		$cell .= "<img src='uploads/items/".$this->photo_file_1."?".$this->last_update."'>";
+		$cell .= "<div style='padding-bottom: 0px;'>".$title."</div>  <span class='blue'>$".$this->priceOffer."</span>";
+		$cell .= "</a></div></td>";
 		return $cell;
 	}
-	
+
+	public function getItemCellAdmin($silo_id, $c_user_id) {
+		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
+		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
+		$title = (strlen($this->title) > 20) ? substr($this->title, 0, 20) . '...' : $this->title;
+
+		$cell = "<td><form name='f".$this->item_id."' id='f".$this->item_id."' method='post' action=''><input type='hidden' name='item_id' value='".$this->item_id."'><input type='hidden' name='delete_item' value='delete_".$this->item_id."'><a href='javascript:document.f".$this->item_id.".submit()' class='confirmation'><img src=images/delete.png  style='position: absolute; padding-left: 145px;'></a></form>";
+		$cell .= "<div class='plate'><a style='color: grey; text-decoration: none;' href='index.php?task=view_item&id=".$this->id."'>";
+		$cell .= "<img src='uploads/items/".$this->photo_file_1."?".$this->last_update."'>";
+		$cell .= "<div style='padding-bottom: 0px;'>".$title."</div>  <span class='blue'>$".$this->priceOffer."</span>";
+		$cell .= "</a></div></td>";
+		return $cell;
+	}
+
+
 	public function getSoldItemCell($silo_id, $c_user_id) {
 		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
+		$title = (strlen($this->title) > 20) ? substr($this->title, 0, 20) . '...' : $this->title;
 
-		$cell = "<td><div class=plate id='item_".$this->id."' style='color: #000;'>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='javascript:popup_show(\"sold\", \"sold_drag\", \"sold_exit\", \"screen-center\", 0, 0);'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$admin_name."</a></div></td></tr><tr valign=bottom><td align=center align=center><span style='color: #f60'><b>$".$this->price."</b></span></td></tr></table></div></td>";		
+		$cell = "<td><div class='plate'><a style='color: grey; text-decoration: none;' href='javascript:popup_show(\"sold\", \"sold_drag\", \"sold_exit\", \"screen-center\", 0, 0);'>";
+		$cell .= "<img src='uploads/items/".$this->photo_file_1."?".$this->last_update."'>";
+		$cell .= "<div style='padding-bottom: 0px;'>".$title."</div>  <span class='blue'>$".$this->price."</span>";
+		$cell .= "</a></div></td>";
 		return $cell;
 	}
 
 	public function getPendingItemCell($silo_id, $c_user_id) {
 		$show = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
+		$title = (strlen($this->title) > 20) ? substr($this->title, 0, 20) . '...' : $this->title;
 
-		$cell = "<td><div class=plate_pending id='item_".$this->id."' style='color: #000;'>";
-		$cell .= "<table width=100% height=100%><tr valign=top><td valign=top colspan=2><div style='height: 30px'><a href='javascript:popup_show(\"pending\", \"pending_drag\", \"pending_exit\", \"screen-center\", 0, 0);'><b>".substr($this->title, 0, 40)."</b></a></div><img height=100px width=135px src=uploads/items/".$this->photo_file_1." style='margin-bottom: 3px'><b>Member: </b><a href='index.php?task=view_user&id=".$this->owner->id."'>".$admin_name."</a></div></td></tr><tr valign=bottom><td align=center align=center><span style='color: #f60'><b>$".$this->price."</b></span></td></tr></table></div></td>";		
+		$cell = "<td><div class='plate'><a style='color: grey; text-decoration: none;' href='href='javascript:popup_show(\"pending\", \"pending_drag\", \"pending_exit\", \"screen-center\", 0, 0);'>";
+		$cell .= "<img src='uploads/items/".$this->photo_file_1."?".$this->last_update."'>";
+		$cell .= "<div style='padding-bottom: 0px;'>".$title."</div>  <span class='blue'>$".$this->price."</span>";
+		$cell .= "</a></div></td>";
 		return $cell;
 	}
-	
+
 	public function GetIds($value,$key = false,$overide = false){
 		switch(strtolower($key)){
 			case "silo":
@@ -341,7 +371,7 @@ class Item {
 				."'".mysql_real_escape_string($this->photo_file_2)."',"
 				."'".mysql_real_escape_string($this->photo_file_3)."',"
 				."'".mysql_real_escape_string($this->photo_file_4)."',"
-				."'".mysql_real_escape_string($this->added_date)."',"
+				."'".mysql_real_escape_string(date('Y-m-d H:i:s'))."',"
 				."'".mysql_real_escape_string($this->sold_date)."',"
 				."'".mysql_real_escape_string($this->sent_date)."',"
 				."'".mysql_real_escape_string($this->received_date)."',"
@@ -363,6 +393,25 @@ class Item {
 		
 	}
 
+	public function SaveBuyer(){
+		$check = mysql_num_rows(mysql_query("SELECT * FROM buyer WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'"));
+		if ($check) {
+			$updBuyer = mysql_query("UPDATE buyer SET purchase = '1', cleared = '0' WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'");
+		} else {
+			$updBuyer = (
+				"INSERT INTO `buyer` "
+				."("
+					."user_id,item_id,purchase"
+				.")VALUES("
+					."'".mysql_real_escape_string($this->user_id)."',"
+					."'".mysql_real_escape_string($this->item_id)."',"
+					."'1'"
+				.")"
+			);
+			mysql_query($updBuyer);
+		}
+	}
+
 	public function AddFav(){
 		$query = (
 			"INSERT INTO `favorites` "
@@ -374,15 +423,44 @@ class Item {
 			.")"
 		);
 		mysql_query($query);
+
+		$check = mysql_num_rows(mysql_query("SELECT * FROM buyer WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'"));
+		if ($check) {
+			$updBuyer = mysql_query("UPDATE buyer SET favorite = '1', cleared = '0' WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'");
+		} else {
+			$updBuyer = (
+				"INSERT INTO `buyer` "
+				."("
+					."user_id,item_id,favorite"
+				.")VALUES("
+					."'".mysql_real_escape_string($this->user_id)."',"
+					."'".mysql_real_escape_string($this->item_id)."',"
+					."'1'"
+				.")"
+			);
+			mysql_query($updBuyer);
+		}
 	}
 
 	public function RemoveFav(){
 		$query = "DELETE FROM favorites WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'";
 		mysql_query($query);
+
+		$check = mysql_num_rows(mysql_query("SELECT * FROM buyer WHERE user_id = '$this->user_id' AND item_id = '$this->item_id' AND (offer = '1' OR purchase = '1')"));
+		if ($check) {
+			$qry = mysql_query("UPDATE buyer SET favorite = '0' WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'");
+		} else {
+			$qry = mysql_query("DELETE FROM buyer WHERE user_id = '$this->user_id' AND item_id = '$this->item_id'");
+		}
 	}
 
 	public function NewOffer(){
 		$exp = date('Y-m-d H:i:s', strtotime('+1 day'));
+
+		if (!$this->seller_id) { 
+			$seller = mysql_fetch_row(mysql_query("SELECT user_id FROM items WHERE item_id = '$this->item_id'"));
+			$this->seller_id = $seller[0];
+		}
 
 		$query = (
 			"INSERT INTO `offers` "
@@ -397,11 +475,77 @@ class Item {
 			.")"
 		);
 		mysql_query($query);
+
+		$updItem = mysql_query("UPDATE items SET status = 'offer' WHERE item_id = '$this->item_id'");
+
+		$checkBuyer = mysql_num_rows(mysql_query("SELECT * FROM buyer WHERE user_id = '$this->buyer_id' AND item_id = '$this->item_id'"));
+		if ($checkBuyer) {
+			$updBuyer = mysql_query("UPDATE buyer SET offer = '1', cleared = '0' WHERE user_id = '$this->buyer_id' AND item_id = '$this->item_id'");
+		} else {
+			$updBuyer = (
+				"INSERT INTO `buyer` "
+				."("
+					."user_id,item_id,offer"
+				.")VALUES("
+					."'".mysql_real_escape_string($this->buyer_id)."',"
+					."'".mysql_real_escape_string($this->item_id)."',"
+					."'1'"
+				.")"
+			);
+			mysql_query($updBuyer);
+		}
+
+		$Notification = new Notification();
+		$Notification->user_id = $this->seller_id;
+		$Notification->item_id = $this->item_id;
+		$Notification->type = "New Offer";
+		$Notification->Send();
 	}
 
 	public function RemoveOffer(){
-		$query = "UPDATE offers SET avail = 'no' WHERE item_id = '$this->item_id' AND buyer_id = '$this->buyer_id' AND seller_id = '$this->seller_id'";
+		if (!$this->seller_id) { 
+			$seller = mysql_fetch_row(mysql_query("SELECT user_id FROM items WHERE item_id = '$this->item_id'"));
+			$this->seller_id = $seller[0];
+		}
+
+		$query = "UPDATE offers SET status = 'canceled', expired_date = '0' WHERE item_id = '$this->item_id' AND buyer_id = '$this->buyer_id' AND seller_id = '$this->seller_id'";
 		mysql_query($query);
+
+		$updItem = mysql_query("UPDATE items SET status = 'pledged' WHERE item_id = '$this->item_id'");
+
+		$check = mysql_num_rows(mysql_query("SELECT * FROM buyer WHERE user_id = '$this->buyer_id' AND item_id = '$this->item_id' AND (favorite = '1' OR purchase = '1')"));
+		if ($check) {
+			$query = mysql_query("UPDATE buyer SET offer = '0' WHERE user_id = '$this->buyer_id' AND item_id = '$this->item_id'");
+		} else {
+			$query = mysql_query("DELETE FROM buyer WHERE user_id = '$this->buyer_id' AND item_id = '$this->item_id'");
+		}
+
+		$Notification = new Notification();
+		$Notification->user_id = $this->seller_id;
+		$Notification->item_id = $this->item_id;
+		$Notification->type = "Cancel Offer";
+		$Notification->Email();
+	}
+
+	public function GetPayCode($buyer_id, $seller_id){
+		$id = rand(1,100);
+
+		$buyer = mysql_num_rows(mysql_query("SELECT * FROM user_paycodes WHERE user_id = '$buyer_id' AND paycode_id = '$id'"));
+		$seller = mysql_num_rows(mysql_query("SELECT * FROM user_paycodes WHERE user_id = '$seller_id' AND paycode_id = '$id'"));
+
+		while ($buyer || $seller) {
+			$id = rand(1,100);
+
+			$buyer = mysql_num_rows(mysql_query("SELECT * FROM user_paycodes WHERE user_id = '$buyer_id' AND paycode_id = '$id'"));
+			$seller = mysql_num_rows(mysql_query("SELECT * FROM user_paycodes WHERE user_id = '$seller_id' AND paycode_id = '$id'"));
+		}
+
+		$codes = mysql_fetch_array(mysql_query("SELECT paylock, paykey FROM paycodes WHERE id = '$id'"));
+
+		$addBuyer = mysql_query("INSERT INTO user_paycodes (user_id, paycode_id) VALUES ('$buyer_id', '$id')");
+		$addSeller = mysql_query("INSERT INTO user_paycodes (user_id, paycode_id) VALUES ('$seller_id', '$id')");
+
+		return array($codes[0], $codes[1]);
 	}
 }
 ?>

@@ -140,7 +140,6 @@ $contents="<script type='text/javascript'>
 	   	}
 	}
 </script>";
-$contents.="<h1>Invite your friends</h1>";
 $contents.="<form action='' method='POST' name='openinviter'>".ers($ers).oks($oks);
 if (!$done)
 	{
@@ -198,5 +197,16 @@ if (!$done)
 		}
 	}
 $contents.="</form>";
+?>
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Invite your friends!</span>
+</div>
+
+<div class="headingPad"></div>
+
+<?php
 echo $contents;
 ?>

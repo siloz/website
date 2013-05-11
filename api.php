@@ -11,56 +11,37 @@
 	mysql_select_db(DB_NAME, $conn);
 	
 	function verify_ein() {
-		// $ein = param_post('ein');
-		// $xml_data = 
-		// 	"<npreq:apirequest  xmlns:npreq='http://www.libertydata.net/api/apirequest'> 
-		// 	 <npreq:requestercredentials> 
-		// 	  <npreq:login>zackery.n.west@gmail.com</npreq:login>
-		// 	  <npreq:password>P@ssword3343</npreq:password> 
-		// 	 </npreq:requestercredentials> 
-		// 	 <npreq:version>1</npreq:version> 
-		// 	 <npreq:SearchByEIN> 
-		// 	  <npreq:ein>$ein</npreq:ein> 
-		// 	 </npreq:SearchByEIN> 
-		// 	</npreq:apirequest>";
-		// $ch = curl_init();
-		// $url = "https://www.libertydata.net/api/nonprofits/api.asp";
-		// $headers = array("Content-Type: text/xml", "Content-Length: ".strlen($xml_data), "X-NONPROFITS-API-CALL-NAME:SearchByEIN");
-		// 
-		// curl_setopt($ch, CURLOPT_URL, $url);
-		// curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);         
-		// curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		//         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_data); 
-		// 
-		// $rxml=curl_exec($ch);
-		// $rxml = str_replace(array("<![CDATA[","]]>"), "", $rxml);
-		// echo $rxml;
-		echo "
-		<npres:apiresponse  xmlns:npres='http://www.libertydata.net/api/apiresponse'>
-		<npres:version>1</npres:version>
-		<npres:status>ok</npres:status>
-		<npres:errmsg></npres:errmsg>
-		<npres:searchid>8615317</npres:searchid>
-		<npres:searchcount>1</npres:searchcount>
-		<npres:searchresults>
-		<npres:searchresult id='1561089'>
-		<EIN>13-178-8491</EIN>
-		<CompanyName>AMERICAN CANCER SOCIETY INC</CompanyName>
-		<Address>250 WILLIAMS ST 4TH FLR</Address>
-		<City>ATLANTA</City>
-		<State>GA</State>
-		<Zip>30303-1032</Zip>
-		<ZipPlus4></ZipPlus4>
-		</npres:searchresult>
-		</npres:searchresults>
-		</npres:apiresponse>
-		";
+		 $ein = param_post('ein');
+		 $xml_data = 
+		 	"<npreq:apirequest  xmlns:npreq='http://www.libertydata.net/api/apirequest'> 
+		 	 <npreq:requestercredentials> 
+		 	  <npreq:login>zackery.n.west@gmail.com</npreq:login>
+		 	  <npreq:password>P@ssword3343</npreq:password> 
+		 	 </npreq:requestercredentials> 
+		 	 <npreq:version>1</npreq:version> 
+		 	 <npreq:SearchByEIN> 
+		 	  <npreq:ein>$ein</npreq:ein> 
+		 	 </npreq:SearchByEIN> 
+		 	</npreq:apirequest>";
+		 $ch = curl_init();
+		 $url = "https://www.libertydata.net/api/nonprofits/api.asp";
+		 $headers = array("Content-Type: text/xml", "Content-Length: ".strlen($xml_data), "X-NONPROFITS-API-CALL-NAME:SearchByEIN");
+		 
+		 curl_setopt($ch, CURLOPT_URL, $url);
+		 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);         
+		 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_data); 
+		 
+		$rxml=curl_exec($ch);
+		$rxml = str_replace(array("<![CDATA[","]]>"), "", $rxml);
+		echo $rxml;
+
 	}
 	
 	function login() {
-		$username = param_post('username');
+		$email = param_post('email');
 		$password = param_post('password');	
-		$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+		$sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
 		$res = mysql_query($sql);
 		if (mysql_num_rows($res) > 0) {
 			$row = mysql_fetch_array($res);

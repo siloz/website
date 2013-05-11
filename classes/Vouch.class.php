@@ -105,6 +105,26 @@ function Save($silo_id,$user_id,$vouch_type_id){
 	;
 	mysql_query($query);
 	$id = mysql_insert_id();
+
+	$voucherWarn = "";
+	$memberCount = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id'"));
+	if ($memberCount > 2) {
+		$checkVouch = mysql_num_rows(mysql_query("SELECT * FROM vouch WHERE silo_id = '$silo_id' AND vouch_type_id = '77'"));
+		if ($checkVouch/$memberCount > .2) { $voucherWarn = "true"; }
+	}
+
+	$checkRadarVouch = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE silo_id = '$silo_id' AND status = 'vouch'"));
+
+	if (!$checkRadarVouch && $voucherWarn) {
+		$notification = new Notification();
+		$notification->silo_id = $silo_id;
+		$notification->type = "Vouch Warn Silo";
+		$notification->Email();
+
+		$radar = new FlagRadar();
+		$radar->VouchWarnSilo($silo_id);
+	}
+
 	if($id >= 1){return $id;}
 	else{return false;}
 }

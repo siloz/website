@@ -113,9 +113,41 @@ function Insert($item_id,$user_id,$flag_id,$ip){
 	;
 	$result = mysql_query($query);
 	$id = mysql_insert_id();
-	Radar::Item($item_id,$flag_id,"flags");
+
+	$checkTotal = mysql_num_rows(mysql_query("SELECT * FROM flag_item WHERE item_id = '$item_id'"));
+	if ($checkTotal > 4) {
+		$notification = new Notification();
+		$notification->item_id = $item_id;
+		$notification->type = "Cancel Item";
+		$notification->Email();
+
+		$radar = new FlagRadar();
+		$radar->KillItem($item_id);
+	}
+	
+	$i=56;
+	$warn = "";
+	while ($i < 62) {
+		$checkCount = mysql_num_rows(mysql_query("SELECT * FROM flag_item WHERE item_id = '$item_id' AND flag_id = '$i'"));
+		if ($checkCount > 1) { $warn = "true"; $i=100; }
+		$i++;
+	}
+
+	$checkRadar = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE item_id = '$item_id' AND type = 'item'"));
+
+	if ($warn && $checkTotal < 5  && !$checkRadar) {
+		$notification = new Notification();
+		$notification->item_id = $item_id;
+		$notification->type = "Warn Item";
+		$notification->Email();
+
+		$radar = new FlagRadar();
+		$radar->WarnItem($item_id);
+	}
+
 	if($id >= 1){return $id;}
-	else{return false;} 
+	else{return false;}
+
 }
 
 }

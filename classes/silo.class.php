@@ -23,17 +23,12 @@ class Silo {
 	public $start_date;
 	public $end_date;
 	public $created_date;
+	public $last_update;
 	public $goal;
 	public $purpose;
-	public $description;
-	public $admin_notice;
 	public $photo_file;
-	
-	//table silo_categories
 	public $silo_cat_id;
 	public $type;
-	public $subtype;
-	public $subsubtype;	
 	
 	public $admin;
 	
@@ -70,19 +65,16 @@ class Silo {
 		$this->start_date = $res['start_date'];
 		$this->end_date = $res['end_date'];
 		$this->created_date = $res['created_date'];
+		$this->last_update = strtotime($res['last_update']);
 		$this->goal = $res['goal'];
 		$this->purpose = $res['purpose'];
-		$this->description = $res['description'];
-		$this->admin_notice = $res['admin_notice'];
 		$this->photo_file = $res['photo_file'];
 		$this->flag_radar_id = $res['flag_radar_id'];
 		$this->schedule_end_date = $res['schedule_end_date'];
 
 		$this->silo_cat_id = $res['silo_cat_id'];
+		$this->silo_type = $res['silo_type'];
 		$this->status = $res['status'];
-		$this->type = $res['type'];
-		$this->subtype = $res['subtype'];
-		$this->subsubtype = $res['subsubtype'];
 
 		$this->admin = new User($this->admin_id);
 	}
@@ -97,7 +89,7 @@ class Silo {
 	}
 	
 	public function getTitle() {
-		return "<b>".$this->name."</b> (".$this->type." Silo)";
+		return "<b>".$this->name."</b>";
 	}
 	
 	public function getAdmin() {
@@ -105,25 +97,37 @@ class Silo {
 	}
 	
 	public function getPledgedAmount() {
-		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status = 'Pledged'";
+		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND (status = 'pledged' OR status = 'offer')";
 		$res = mysql_fetch_row(mysql_query($sql));								
 		return floatval($res[0]);
 	}
 	
 	public function getCollectedAmount() {
-		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status = 'Sold'";
+		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status = 'sold'";
 		$res = mysql_fetch_row(mysql_query($sql));		
 		return floatval($res[0]);
 	}
 	
 	public function getTotalMembers() {
 		$sql = "SELECT COUNT(DISTINCT user_id) FROM silo_membership WHERE silo_id = ".$this->silo_id." AND removed_date = 0";
-		$res = mysql_fetch_row(mysql_query($sql));		
-		return intval($res[0]);
+		$res = mysql_fetch_row(mysql_query($sql));
+		$total = intval($res[0]);
+		if ($total == 1) { $total .= " member"; } else { $total .= " members"; }
+		return $total;
+	}
+
+	public function getDaysLeft() {
+		$end_date = $this->end_date;
+		$end = strtotime("$end_date");
+		$now = time();
+		$timeleft = $end-$now;
+		$days = ceil($timeleft/86400);		
+		if ($days > 1) { $days .= " Days Left"; } elseif ($days == 1) { $days .= " Day Left"; } else { $days = "Ended on ".date("m/d/y", $end); }
+		return $days;
 	}
 
 	public function getAvgItemPrice() {
-		$p = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id."";
+		$p = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status != 'flagged' AND status != 'deleted'";
 		$pres = mysql_fetch_row(mysql_query($p));								
 		$ptotal = $pres[0];
 		$i = "SELECT COUNT(DISTINCT item_id) FROM items where silo_id = ".$this->silo_id;
@@ -133,19 +137,21 @@ class Silo {
 	}
 
 	public function getAvgListings() {
-		$i = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id;
+		$i = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id." AND status != 'flagged' AND status != 'deleted'";
 		$ires = mysql_fetch_row(mysql_query($i));		
 		$itotal = $ires[0];
 		$m = "SELECT COUNT(DISTINCT user_id) FROM silo_membership where silo_id = ".$this->silo_id." AND removed_date = 0";
-		$mres = mysql_fetch_row(mysql_query($m));		
+		$mres = mysql_fetch_row(mysql_query($m));
 		$mtotal = $mres[0];
 		return intval($itotal/$mtotal);
 	}
 	
 	public function getTotalItems() {
-		$sql = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id;
+		$sql = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id." AND status != 'flagged' AND status != 'deleted'";
 		$res = mysql_fetch_row(mysql_query($sql));		
-		return intval($res[0]);
+		$total = intval($res[0]);
+		if ($total == 1) { $total .= " item"; } else { $total .= " items"; }
+		return $total;
 	}
 	public function getPurpose() {
 		$order   = array("\r\n", "\n", "\r");
@@ -186,7 +192,7 @@ class Silo {
 		$html .= "Ends: ".$this->end_date."<br/>";
 		$pct_day = 100*min(1,(time() - strtotime($this->start_date))/(strtotime($this->end_date) - strtotime($this->start_date)));
 		$html .= "<b>Deadline:</b><div style='width: 120px; height: 10px; border: 1px solid #2F8ECB;'><div style='width: $pct_day%; height:10px; background: #2F8ECB;'></div></div>";
-		$html .= "</td><td><img height=100px width=135px src=uploads/silos/".$this->photo_file."></td></tr>";
+		$html .= "</td><td><img height=100px width=135px src='uploads/silos/".$this->photo_file."?".$this->last_update."'></td></tr>";
 		$html .= "<tr><td colspan=2><b>Purpose:</b> ".$this->getPurpose()."<br/><br/><b>Administrator:</b> ".$admin_name."<br/><br/>";
 		$html .= "<b>Official address:</b>".$this->address."</td></tr>";
 		$html .= "</table>";
@@ -216,7 +222,7 @@ class Silo {
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
 		$cell = "<div class='plateSilo span2' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src=uploads/silos/".$this->photo_file." style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
+		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 	
@@ -239,8 +245,8 @@ class Silo {
 		}
 		
 		$cell .= "' id=silo_".$this->id." onclick='window.location = \"index.php?task=view_silo&id=".$this->id."\"'>";				
-		$cell .= "<div style='display: table; margin-left: -1px; height: 30px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: middle; text-align: center;'>
-				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=128px width=173px src=uploads/silos/".$this->photo_file." style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='orange'>$".round($this->goal)."</span> <br> $daysleft $dayplural Left</span></a></div></div>";							
+		$cell .= "<div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: top; text-align: center;'>
+				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=136px width=182px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='orange'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 	
@@ -286,6 +292,7 @@ class Silo {
 			."`name` = '".mysql_real_escape_string($this->name)."', "
 			."`shortname` = '".mysql_real_escape_string($this->shortname)."', "
 			."`silo_cat_id` = '".mysql_real_escape_string($this->silo_cat_id)."', "
+			."`silo_type` = '".mysql_real_escape_string($this->silo_type)."', "
 			."`paypal_account` = '".mysql_real_escape_string($this->paypal_account)."', "
 			."`financial_account` = '".mysql_real_escape_string($this->financial_account)."', "
 			."`bank_name` = '".mysql_real_escape_string($this->bank_account)."', "
@@ -302,12 +309,9 @@ class Silo {
 			."`start_date` = '".mysql_real_escape_string($this->start_date)."', "
 			."`goal` = '".mysql_real_escape_string($this->goal)."', "
 			."`purpose` = '".mysql_real_escape_string($this->purpose)."', "
-			."`description` = '".mysql_real_escape_string($this->description)."', "
-			."`admin_notice` = '".mysql_real_escape_string($this->admin_notice)."', "
 			."`status` = '".mysql_real_escape_string($this->status)."', "
 			."`photo_file` = '".mysql_real_escape_string($this->photo_file)."', "
 			."`flag_radar_id` = '".mysql_real_escape_string($this->flag_radar_id)."', "
-			."`schedule_end_date` = '".mysql_real_escape_string($this->schedule_end_date)."', "
 			."`end_date` = '".mysql_real_escape_string($this->end_date)."' "
 			."WHERE "
 			."`id` = '".mysql_real_escape_string($this->id)."' "
@@ -318,6 +322,35 @@ class Silo {
 		else{return false;}
 	
 	}
+
+	private function InsertNEW(){
+		$sql = mysql_query("INSERT INTO silos (admin_id, name, shortname, silo_cat_id, silo_type, org_name, ein, issue_receipts, 
+					title, phone_number, address, longitude, latitude, start_date, goal, purpose, photo_file, flag_radar_id, schedule_end_date, end_date) 
+			VALUES (
+				'".mysql_real_escape_string($this->admin_id)."',
+				'".mysql_real_escape_string($this->name)."',
+				'".mysql_real_escape_string($this->shortname)."',
+				'".mysql_real_escape_string($this->silo_cat_id)."',
+				'".mysql_real_escape_string($this->silo_type)."',
+				'".mysql_real_escape_string($this->org_name)."',
+				'".mysql_real_escape_string($this->ein)."',
+				'".mysql_real_escape_string($this->issue_receipts)."',
+				'".mysql_real_escape_string($this->title)."',
+				'".mysql_real_escape_string($this->phone_number)."',
+				'".mysql_real_escape_string($this->address)."',
+				'".mysql_real_escape_string($this->longitude)."',
+				'".mysql_real_escape_string($this->latitude)."',
+				'".mysql_real_escape_string($this->start_date)."',
+				'".mysql_real_escape_string($this->goal)."',
+				'".mysql_real_escape_string($this->purpose)."',
+				'".mysql_real_escape_string($this->photo_file)."',
+				'".mysql_real_escape_string($this->flag_radar_id)."',
+				'".mysql_real_escape_string($this->schedule_end_date)."',
+				'".mysql_real_escape_string($this->end_date)."'
+			)");
+		return true;
+			
+	}
 	
 	private function Insert(){
 		error_log($this->purpose);
@@ -325,17 +358,18 @@ class Silo {
 		$query = (
 			"INSERT INTO "
 			."`silos` "
-			."(`admin_id`,`name`,`shortname`,`silo_cat_id`,`paypal_account`,`financial_account`,"
+			."(`admin_id`,`name`,`shortname`,`silo_cat_id`,`silo_type`,`paypal_account`,`financial_account`,"
 			."`bank_name`,`bank_account_number`,`bank_routing_number`,`org_name`,`ein`,"
 			."`issue_receipts`,`title`,`phone_number`,`address`,`longitude`,`latitude`,"
-			."`start_date`,`goal`,`purpose`,`description`,`admin_notice`,`photo_file`,"
-			."`flag_radar_id`,`schedule_end_date`,`end_date`,`created_date`,`status`) "
+			."`start_date`,`goal`,`purpose`,`photo_file`,"
+			."`flag_radar_id`,`end_date`,`created_date`,`status`) "
 			."VALUES "
 			."("
 				."'".mysql_real_escape_string($this->admin_id)."',"
 				."'".mysql_real_escape_string($this->name)."',"
 				."'".mysql_real_escape_string($this->shortname)."',"
 				."'".mysql_real_escape_string($this->silo_cat_id)."',"
+				."'".mysql_real_escape_string($this->silo_type)."',"
 				."'".mysql_real_escape_string($this->paypal_account)."',"
 				."'".mysql_real_escape_string($this->financial_account)."',"
 				."'".mysql_real_escape_string($this->bank_name)."',"
@@ -352,14 +386,11 @@ class Silo {
 				."'".mysql_real_escape_string($this->start_date)."',"
 				."'".mysql_real_escape_string($this->goal)."',"
 				."'".mysql_real_escape_string($this->purpose)."',"
-				."'".mysql_real_escape_string($this->description)."',"
-				."'".mysql_real_escape_string($this->admin_notice)."',"
 				."'".mysql_real_escape_string($this->photo_file)."',"
 				."'".mysql_real_escape_string($this->flag_radar_id)."',"
-				."'".mysql_real_escape_string($this->schedule_end_date)."',"
 				."'".mysql_real_escape_string($this->end_date)."',"
-				."'".mysql_real_escape_string(date('Y-m-d H:i:s'))."', "
-				."'".mysql_real_escape_string($this->status)."' "						
+				."'".mysql_real_escape_string(date('Y-m-d H:i:s'))."',"
+				."'".mysql_real_escape_string($this->status)."'"						
 			.")"
 		);
 		mysql_query($query);
@@ -381,7 +412,7 @@ class Silo {
 		$query = (
 			"select silo_id from silos "
 			."where admin_id = '".mysql_real_escape_string($user_id)."' " 
-			."and status = 'active' "
+			//."and status = 'active' "
 			."order by id desc limit 1;"
 		);
 		error_log($query);

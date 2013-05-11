@@ -55,11 +55,10 @@ div.mc-caption a:hover {
 }
 
 
-/* ------ built-in navigation bullets wrapper ------*/
+/* ------ built-in navigation bullets wrapper ------
 div.navBulletsWrapper  {
-	top:260px; left:165px; /* Its position is relative to the #slider */
+	top:260px; left:135px; /* Its position is relative to the #slider */
 	background:none;
-	padding-left:20px;
 	position:relative;
 	z-index:5;
 	cursor:pointer;
@@ -76,6 +75,8 @@ div.navBulletsWrapper div
 }
 
 div.navBulletsWrapper div.active {background-position:0 -11px;}
+
+*/
 
 
 /* --------- Others ------- */

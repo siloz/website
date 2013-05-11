@@ -1,9 +1,61 @@
 <?php
+include("include/timeout.php");
+
 if ($_SESSION['is_logged_in'] != 1) {
 	echo "<script>window.location = 'index.php';</script>";
-}	
+}
+elseif ($addInfo_full) {
+	echo "<script>window.location = 'index.php?task=my_account&redirect=create_silo';</script>";
+}
+else if (!param_get('type')) { ?>
+	<div class="spacer"></div>
+	<div class="spacer"></div>
+
+	<table width="700px" align="center">
+	<tr>
+		<td style="padding-bottom: 30px" colspan="2" align="center">
+			<span class="blue" style="font-size: 20pt; font-weight: bold">which silo type do you want to start?</span>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<div class="createSilo">
+				<b>Private Silo</b><br><br>
+				Lasts 1, 2, or 3 weeks; no goal limit<br><br>
+				Benefits a private person or group<br><br>
+				Invitation only; public cannot donate<br><br>
+				silo Admin is paid via PayPal (95%)
+			</div>
+		</td>
+		<td align="center">
+			<div class="createSilo">
+				<b>Public Silo</b><br><br>
+				Lasts 1, 2, or 3 weeks; no goal limit<br><br>
+				Benefits the public in your areas<br><br>
+				Invite and public can join through site<br><br>
+				silo Admin is paid via e-check (ACH; 90%)<br><br>
+				silo Administrator has leadership role<br><br>
+				May qualify to issue tax-deductible receipts<br><br>
+				Fits into 1 of 7 community silo categories
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<a href="index.php?task=create_silo&type=private" style="text-decoration: none"><div class="buttonSilo">start a private silo</div></a>
+		</td>
+		<td align="center">
+			<a href="index.php?task=create_silo&type=public" style="text-decoration: none"><div class="buttonSilo">start a public silo</div></a>
+		</td>
+	</tr>
+	</table>
+<?php
+}
 else {
+	$silo_type = param_get('type');
 	$err = "";
+	$address = "";
+	$filename = "";
 	$today = date('Y-m-d')."";
 	if (mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = ".$_SESSION['user_id']." AND end_date >= '".$today."'")) > 0) {
 		echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
@@ -12,15 +64,9 @@ else {
 			
 		$admin_id = $_SESSION['user_id'];
 		$name = param_post('name');
-		$shortname = trim(param_post('shortname'));		
-		$paypal_account = param_post('paypal_account');
-		$financial_account_type = param_post('financial_account_type');
-		$bank_name = param_post('bank_name');
-		$bank_account_number = param_post('bank_account_number');
-		$reenter_bank_account_number = param_post('reenter_bank_account_number');
-		$bank_routing_number = param_post('bank_routing_number');
-		$reenter_bank_routing_number = param_post('reenter_bank_routing_number');
-		$ein = param_post('ein');		
+		$shortname = trim(param_post('shortname'));
+		$ein = param_post('ein');
+		$verified = param_post('verified');
 		$issue_receipts = param_post('issue_receipts');		
 		$org_name = param_post('org_name');		
 		$title = param_post('title');
@@ -30,11 +76,19 @@ else {
 		$start_date = $today;				
 		$goal = param_post('goal');
 		$purpose = param_post('purpose');
+
+		$ein = ($verified == 1) ? $ein : '0';
+		$s_types = array(2, 5, 6);
+
+		if ($issue_receipts == 0) { $issue_receipts = 0; }
+		elseif ($ein > 0) { $issue_receipts = 1; }
+		elseif ($ein == 0 && in_array($silo_cat_id, $s_types)) { $issue_receipts = 1; }
+		else { $issue_receipts = 0; }
+
 		if($_REQUEST["duration"]){
 			$end_date = Common::AddDays($_REQUEST["duration"]);
 			
 		}
-		
 		
 		if (strlen(trim($name)) == 0) {
 			$err .= 'Silo name must not be empty.<br/>';		
@@ -62,20 +116,6 @@ else {
 		}		
 		if (strlen(trim($org_name)) == 0) {
 			$err .= "Silo's organization name must not be empty. <br/>";
-		}
-		
-		if ($financial_account_type  == 'PayPal' && strlen(trim($paypal_account)) >0 && !is_valid_email($paypal_account)) {
-			$err .= 'PayPal account is invalid.<br/>';		
-		}
-
-		if ($financial_account_type != 'PayPal' &&  (strlen(trim($bank_account_number)) == 0 || strlen(trim($bank_routing_number)) == 0)) {
-			$err .= "Empty Bank Account/Routing number. <br/>";
-		}		
-		if ($bank_account_number != $reenter_bank_account_number) {
-			$err .= 'Bank Account number does not match.<br/>';		
-		}
-		if ($bank_routing_number != $reenter_bank_routing_number) {
-			$err .= 'Bank Routing number does not match.<br/>';		
 		}
 
 		if (strlen(trim($address)) == 0) {
@@ -113,17 +153,21 @@ else {
 		else if (floatval($goal) > 100000000) {
 			$err .= "Silo's goal exceeds the allowed maximum.<br/>";
 		}
-		$adr = urlencode($address);
-		$url = "http://maps.google.com/maps/geo?q=".$adr;
-		$xml = file_get_contents($url);
-		$geo_json = json_decode($xml, TRUE);
-		if ($geo_json['Status']['code'] == '200') {
-			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-			$longitude = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$latitude = $geo_json['Placemark'][0]['Point']['coordinates'][1];
-		} else {
-			$err .= 'Invalid address.<br/>';
+
+		if (!$_FILES['silo_photo']['name']) {
+			$err .= "You must upload an image for your silo.<br/>";
 		}
+
+		$adr = urlencode($address);
+		$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."&sensor=false");
+		$loc = json_decode($json);
+
+		if ($loc->status == 'OK') {
+			$address = $loc->results[0]->formatted_address;
+			$latitude = $loc->results[0]->geometry->location->lat;
+			$longitude = $loc->results[0]->geometry->location->lng;
+		}
+		else { $err .= "Invalid business address!"; }
 			
 		
 		if (strlen($err) == 0) {
@@ -134,12 +178,8 @@ else {
 			include("include/set_silo_params.php");
 			$actual_id = $silo_id;
 			
-			
-			
 			$allowedExts = array("png", "jpg", "jpeg", "gif");
 			
-			
-			if ($_FILES['silo_photo']['name'] != '') {
 				$ext = end(explode('.', strtolower($_FILES['silo_photo']['name'])));
 				if (!in_array($ext, $allowedExts)) {
 					$err .= $_FILES['silo_photo']['name']." is invalid file.<br/>";
@@ -173,11 +213,21 @@ else {
         					break;
 				}
 
-				unlink($temporary_name);
-				imagejpeg($i,"uploads/".$Silo->id.".jpg",80);
+						$name = "uploads/".$Silo->id.".jpg";
+						$targ_w = "900";
+						$img_w = getimagesize($temporary_name);
 
+						if ($img_w[0] > $targ_w) {
+      							$image = new Photo();
+      							$image->load($temporary_name);
+      							$image->resizeToWidth($targ_w);
+							$image->save($name);
+						} else {
+							imagejpeg($i,$name,80);
+						}
+
+						unlink($temporary_name);
 				}
-			}					
 		}
 		
 		if (strlen($err) == 0) {
@@ -242,11 +292,13 @@ else {
 
 		</script>
 
+<div class="spacer"></div>
+<div class="spacer"></div>
+
 <?php
 if ($success && $filename) {
 ?>
-	<div class="create_account_form" style="width: 800px; margin: auto;">
-		<center>
+	<center>
 				<h1>Create a Silo</h1>
 		To finish creating your silo, please crop the image you uploaded below:<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
@@ -263,12 +315,11 @@ if ($success && $filename) {
 			<input type="hidden" name="silo_id" value="<?=$Silo->id?>" />
 			<button type="submit" name="crop" value="Crop">Crop</button>
 		</form>
-		</center>
-	</div>
+	</center>
 <?php
 die;
 }
-elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'"); }
+elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'</script>"; }
 ?>
 
 <form enctype="multipart/form-data"  name="create_silo" class="create_account_form" method="POST">
@@ -278,7 +329,7 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 		<table style="margin:auto">
 			<tr>
 				<td colspan="2" align="center">
-					<h1>Create a Silo</h1>
+					<h1>Create a <?=ucfirst($silo_type)?> Silo</h1>
 				</td>
 			</tr>
 			<tr>
@@ -301,56 +352,21 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 			<tr>
 				<td valign="top">Silo Type <font color='red'>*</font></td>
 				<td>
-					<select id="silo_cat_id" name="silo_cat_id">
-						<option value="">-- Please Select --</option>
-						<option value="1">Education</option>
-						<option value="2">Local Youth Sports</option>
-						<option value="3">Neighborhood and Civic</option>
-						<option value="4">Other</option>
-						<option value="5">Non-Profit Organizations</option>
-						<option value="6">Religious</option>
+					<select name="silo_cat_id" id="silo_cat_id" size="1" placeholder="-- Please Select --">
+						<?php
+							$sql = "SELECT * FROM silo_categories ORDER BY silo_cat_id";
+							$s = mysql_query($sql);
+							echo "<option value=''>-- Please Select --</option>";											
+							while ($row = mysql_fetch_array($s)) {
+								if ($is_search && param_get('category') == $row['silo_cat_id'])												
+									echo "<option value=".$row['silo_cat_id']." selected>".$row['type']."</option>";
+								else
+									echo "<option value=".$row['silo_cat_id'].">".$row['type']."</option>";												
+							}
+						?>
 					</select>
 				</td>			
-			</tr>
-			<tr>
-				<td align="left">
-					<table>
-						<tr>
-							<td width="30px">
-								<input type="radio" name="financial_account_type" value="PayPal"/>
-							</td>
-							<td>
-								<b>PayPal Account</b>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td><input type="text" name="paypal_account" id="paypal_account" style="width : 300px; font-weight: bold" value='<?php echo $paypal_account; ?>'/></td>			
-			</tr>
-			<tr>
-				<td align="left">
-					<table>
-						<tr>
-							<td width="30px" valign="top">
-							</td>
-							<td>
-								<b>Bank Account</b><br/>
-								Bank Name <br/>
-								Account Number <br/>
-								Routing Number <br/>
-							</td>
-						</tr>
-					</table>					
-				</td>
-				<td valign="top" align="left">					
-					Checking <input type="radio" name="financial_account_type" value="Checking Account" style="width: 50px" checked/>
-					Saving <input type="radio" name="financial_account_type" value="Saving Account" style="width: 50px"/>					
-					<br/><input type="text" name="bank_name" id="bank_name" style="width : 300px; font-weight: bold" value='<?php echo $bank_name; ?>'/>
-					<br/><input type="text" name="bank_account_number" id="bank_account_number" style="width : 120px; font-weight: bold; margin-top:2px;" value='<?php echo $bank_account_number; ?>'/> Re-enter <input type="text" name="reenter_bank_account_number" id="reenter_bank_account_number" style="width : 120px; font-weight: bold; margin-top: 2px;" value='<?php echo $reenter_bank_account_number; ?>'/>
-					<br/><input type="text" name="bank_routing_number" id="bank_routing_number" style="width : 120px; font-weight: bold; margin-top: 2px;" value='<?php echo $bank_routing_number; ?>'/> Re-enter <input type="text" name="reenter_bank_routing_number" id="reenter_bank_routing_number" style="width : 120px; font-weight: bold; margin-top: 2px;" value='<?php echo $reenter_bank_routing_number; ?>'/>
-					
-				</td>			
-			</tr>												
+			</tr>											
 			<tr>
 				<td>EIN (Emp. ID) for Tax-Ded.</td>
 				<td>
@@ -361,16 +377,17 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 						$.post(<?php echo "'".API_URL."'"; ?>, 
 							{	
 								request: 'verify_ein',
-								ein: document.getElementById('ein').value 
+								ein: document.getElementById('ein').value
 							}, 
 							function (data) {
 								if ($(data).find('status').text() == 'ok') {
-									alert("EIN is valid");
+									alert("Success! The EIN number has been found and the company information has been filled for you.");
 									document.getElementById('org_name').value = $(data).find('CompanyName').text();
 									document.getElementById('address').value = $(data).find('Address').text() + ", " +  $(data).find('City').text() + ", " +  $(data).find('State').text() + " " +  $(data).find('Zip').text();
+									document.getElementById('verified').value = 1; 
 								}
 								else {
-									alert($(data).find('npres\\:errmsg').text());
+									alert("We could not find a company with that EIN number. Please try again.");
 								}
 							}
 						);
@@ -380,11 +397,12 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 				</td>			
 			</tr>
 			<tr>
-				<td colspan="2">
-					Issue Emailed Tax-Ded. Receipts w/Donations/Sales? 
+				<td colspan="2" class="create-silo">
+					<input type="hidden" name="verified" id="verified">
+					Issue tax-deductible receipts with donations?**
 					&nbsp;&nbsp;&nbsp;
-					Yes <input type="radio" name="issue_receipts" value="1" style="width: 50px;" checked />
-					No <input type="radio" name="issue_receipts" value="0" style="width: 50px;"/>
+					<label>Yes</label> <input type="radio" name="issue_receipts" value="1" checked />
+					<label>No</label> <input type="radio" name="issue_receipts" value="0"/><br>
 				</td>
 			</tr>
 			<tr>
@@ -393,7 +411,7 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 			</tr>			
 			<tr>
 				<td>Official address <font color='red'>*</font></td>
-				<td><input type="text" name="address" id="address" style="width : 300px" value='<?php echo $address; ?>'/></td>			
+				<td><input type="text" name="address" id="address" style="width : 300px" value='<?=$address?>'/></td>			
 			</tr>						
 			<tr>
 				<td>Your title <font color='red'>*</font></td>
@@ -405,7 +423,7 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 			</tr>						
 			<tr>
 				<td>Duration <font color='red'>*</font></td>
-				<td>
+				<td class="create-silo">
 					<?php
 						if(!$_REQUEST["duration"]){$_REQUEST["duration"] = 3;} 
 						for($i=1; $i<4; $i++){
@@ -413,7 +431,7 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 							if($_REQUEST["duration"] == $days){$checked = "checked=\"checked\"";}
 							else{$checked = '';}
 					?>
-						<input type="radio" name="duration" id="duration"  value="<?= $days ;?>" <?= $checked ;?> /><?= $i ;?> Week
+						<label><?=$i?> Week<?php if ($i > 1) { echo "s"; } ?> </label> <input type="radio" name="duration" id="duration"  value="<?= $days ;?>" <?= $checked ;?> />
 					 <?php } ?>
 				</td>			
 			</tr>
@@ -427,7 +445,7 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 			</tr>
 			<tr>			
 				<td>Photo </td>
-				<td><input name="silo_photo" type="file"  style="width : 300px"/></td>
+				<td><input name="silo_photo" type="file"  style="height: 24px; width: 300px"/></td>
 			</tr>		
 			<tr>
 				<td colspan="2"><br/></td>
@@ -435,6 +453,11 @@ elseif ($success && !$filename) { header("Location: 'index.php?task=manage_silo'
 			<tr>
 				<td colspan="2" align="center">
 					<button type="submit" value="Publish" name="publish">Publish this Silo</button>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<br><font size="1">**To issue tax-deductible receipts your silos <b>must</b> have a valid EIN number <b>OR</b> be listed as an education, a public university, or a religious silo type.</font>
 				</td>
 			</tr>
 		</table>

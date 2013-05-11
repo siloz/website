@@ -1,249 +1,70 @@
 <?php
-class FlagRadar{
+class FlagRadar {
+	public $item_id;
+	public $silo_id;
 
-/**
- * FlagRadar()
- *
- * mysql> desc flag_radar;
- *+---------+----------------------------+------+-----+-------------------+----------------+
- *| Field   | Type                       | Null | Key | Default           | Extra          |
- *+---------+----------------------------+------+-----+-------------------+----------------+
- *| id      | int(11)                    | NO   | PRI | NULL              | auto_increment |
- *| who     | enum('user','silo','item') | YES  |     | NULL              |                |
- *| status  | enum('warn','cancel')      | YES  |     | NULL              |                |
- *| cause   | varchar(100)               | NO   |     | NULL              |                |
- *| user_id | int(11)                    | NO   |     | NULL              |                |
- *| silo_id | int(11)                    | NO   |     | NULL              |                |
- *| created | timestamp                  | NO   |     | CURRENT_TIMESTAMP |                |
- *| flag_id | int(11)                    | YES  |     | NULL              |                |
- *| active  | int(3)                     | YES  |     | NULL              |                |
- *| item_id | int(11)                    | YES  |     | NULL              |                |
- *+---------+----------------------------+------+-----+-------------------+----------------+
- *10 rows in set (0.00 sec)
- *
- */
-protected $id;
-var $who; // who is on the radar
-var $status; //status of the radar
-var $cause; //what caused this radar
-var $user_id; // the user id
-var $silo_id; //the silo associated with this radar entry
-var $created; //the day this record was created
-var $flag_id; // flag->id
-var $active; //if this record is 
-var $item_id; // items->item_id 
+function KillItem($item_id) {
+	$itemInfo = mysql_fetch_row(mysql_query("SELECT silo_id, user_id FROM items WHERE item_id = '$item_id'"));
 
-function _construct($id){
-	if($id){return $this->Populate($id);}
-}
-
-
-function Populate($id){
-	$query = 
-		"SELECT * "
-		."FROM flag_radar "
-		."WHERE "
-		."id = '".mysql_real_escape_string($id)."';"
-	;
-	return $this->PopulateThis($query);
-
-}
-
-function GetIds($value,$key=false,$other_value = false){
-	switch(strtolower($key)){
-		case "silo":
-		case "silo_id": $key = "silo_id"; break;
-		case "flag":
-		case "flag_id": $key = "flag_id";
-		case "status": $key = "status"; break;
-		case "who": $key = "who"; break;
-		default: $value = "all"; break;
+	$check = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE item_id = '$item_id'"));
+	if ($check) {
+		$upd = mysql_query("UPDATE flag_radar SET status = 'cancel', expired_date = NOW() WHERE item_id = '$item_id'");
+	} else {
+		$insert = mysql_query("INSERT INTO flag_radar (type, status, item_id, user_id, silo_id, expired_date) VALUES ('item', 'cancel', '$item_id', '$itemInfo[1]', '$itemInfo[0]', NOW())");
 	}
-	$query = "SELECT id from flag_radar WHERE ";
-	if($value === "all"){
-		$query .= 
-			"active = '1' "
-		;
-	}else{
-		$query .= 
-			"AND `".$key."` = '".mysql_real_escape_string($value)."' "
-		;	
+
+	$killItem = mysql_query("UPDATE items SET status = 'flagged' WHERE item_id = '$item_id'");
+
+   }
+
+function WarnItem($item_id) {
+	$itemInfo = mysql_fetch_row(mysql_query("SELECT silo_id, user_id FROM items WHERE item_id = '$item_id'"));
+
+	$check = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE item_id = '$item_id'"));
+	if ($check) {
+		$upd = mysql_query("UPDATE flag_radar SET status = 'warn' WHERE item_id = '$item_id'");
+	} else {
+		$insert = mysql_query("INSERT INTO flag_radar (type, status, item_id, user_id, silo_id, created) VALUES ('item', 'warn', '$item_id', '$itemInfo[1]', '$itemInfo[0]', NOW())");
 	}
-	if($other_value === "view_radar"){
-		$query .= "AND (hidden IS NULL OR hidden = '0') ";
+
+   }
+
+function KillSilo($silo_id) {
+	$silo = mysql_fetch_row(mysql_query("SELECT admin_id FROM silos WHERE silo_id = '$silo_id'"));
+
+	$check = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE silo_id = '$silo_id' AND type = 'silo'"));
+	if ($check) {
+		$upd = mysql_query("UPDATE flag_radar SET status = 'cancel', expired_date = NOW() WHERE silo_id = '$silo_id' AND type = 'silo'");
+	} else {
+		$insert = mysql_query("INSERT INTO flag_radar (type, status, user_id, silo_id, expired_date) VALUES ('silo', 'cancel', '$silo[0]', '$silo_id', NOW())");
 	}
-	
-	$query .= "ORDER BY id DESC ";
-	$result = mysql_query($query);
-	if(mysql_affected_rows() >= 1){
-		while($row = mysql_fetch_object($result)){
-			$x[] = $row->id;
-		}
-		return $x;
-	}else{return false;}
-	
-}
 
-function PopulateByItemStatus($item_id,$flag_id,$status){
-	$query = 
-		"SELECT * "
-		."FROM flag_radar "
-		."WHERE "
-		."`item_id` = '".mysql_real_escape_string($item_id)."' "
-		."AND `flag_id` = '".mysql_real_escape_string($flag_id)."' "
-		."AND `status` = '".mysql_real_escape_string($status)."' "
-		."AND `who` = 'item' "
-		."AND `active` = '1' "
-	;
-	return $this->PopulateThis($query);
-}
+	$killSilo = mysql_query("UPDATE silos SET status = 'flagged' WHERE silo_id = '$silo_id'");
 
-function PopulateBySiloStatus($silo_id,$flag_id,$status){
-	$query = 
-		"SELECT * "
-		."FROM flag_radar "
-		."WHERE "
-		."`silo_id` = '".mysql_real_escape_string($silo_id)."' "
-		."AND `flag_id` = '".mysql_real_escape_string($flag_id)."' "
-		."AND `status` = '".mysql_real_escape_string($status)."' "
-		."AND `who` = 'silo' "
-		."AND `active` = '1' "
-		
-	;
-	return $this->PopulateThis($query);
-}
+   }
 
-private function PopulateThis($query){
-	$result = mysql_query($query);
-	if(mysql_affected_rows() >= 1){
-		while($row = mysql_fetch_object($result)){
-			foreach($row as $key => $value){$this->$key = $value;}
-		}
-		return $this;
-	}else{return false;}
-}
+function WarnSilo($silo_id) {
+	$silo = mysql_fetch_row(mysql_query("SELECT admin_id FROM silos WHERE silo_id = '$silo_id'"));
 
-function UpdateStatus($status){
-	$Radar = new Radar();
-	if($status == "restore"){
-		$this->active = 0;
-		if($this->who === "item"){
-			$Radar->RestoreItem($this->item_id,$this->id);
-		}elseif($this->who === "silo"){
-			$Radar->RestoreSilo($this->silo_id,$this->id);
-		}
-		return $this->Save();
-	}elseif($status == "cancel"){
-		if($this->status != "cancel"){
-			$this->hidden = 1;
-			$this->Save();
-			$this->id = false;
-			$this->status = "cancel";
-			$this->id = $this->Save();
-		}
-		if($this->who === "item"){
-			$Radar->CancelItem($this->item_id,$this->id);
-		}elseif($this->who === "silo"){
-			$Radar->CancelSilo($this->silo_id,$this->id);
-		}
-		return $this->id;
-	}else{return false;}
-}
+	$check = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE silo_id = '$silo_id' AND type = 'silo'"));
+	if ($check) {
+		$upd = mysql_query("UPDATE flag_radar SET status = 'warn' WHERE silo_id = '$silo_id' AND type = 'silo'");
+	} else {
+		$insert = mysql_query("INSERT INTO flag_radar (type, status, user_id, silo_id, created) VALUES ('silo', 'warn', '$silo[0]', '$silo_id', NOW())");
+	}
 
+   }
 
+function VouchWarnSilo($silo_id) {
+	$silo = mysql_fetch_row(mysql_query("SELECT admin_id FROM silos WHERE silo_id = '$silo_id'"));
 
-function Save(){
-	if($this->id){ return $this->Update(); }
-	else{ return $this->Insert(); }
-}
+	$check = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE silo_id = '$silo_id' AND status = 'vouch'"));
+	if ($check) {
+		$upd = mysql_query("UPDATE flag_radar SET status = 'vouch' WHERE silo_id = '$silo_id' AND status = 'vouch'");
+	} else {
+		$insert = mysql_query("INSERT INTO flag_radar (type, status, user_id, silo_id, created, expired_date) VALUES ('silo', 'vouch', '$silo[0]', '$silo_id', NOW(), NOW() + INTERVAL 3 DAY)");
+	}
 
-private function Update(){
-	$query = (
-		"UPDATE "
-		."`flag_radar` "
-		."SET "
-		."`who` = '".mysql_real_escape_string($this->who)."', "
-		."`cause` = '".mysql_real_escape_string($this->cause)."', "
-		."`status` = '".mysql_real_escape_string($this->status)."', "
-		."`user_id` = '".mysql_real_escape_string($this->user_id)."', "
-		."`silo_id` = '".mysql_real_escape_string($this->silo_id)."', "
-		."`flag_id` = '".mysql_real_escape_string($this->flag_id)."', "
-		."`active` = '".mysql_real_escape_string($this->active)."', "
-		."`item_id` = '".mysql_real_escape_string($this->item_id)."', "
-		."`hidden` = '".mysql_real_escape_string($this->hidden)."' "
-		."WHERE "
-		."`id` = '".mysql_real_escape_string($this->id)."'"
-	);
-	return Common::MysqlQuery($query);
-}
-
-private function Insert(){
-	
-	$query = 
-		"INSERT INTO flag_radar "
-		."(`who`,`status`,`cause`,`user_id`,`silo_id`,`flag_id`,`item_id`,`created`,`active`) "
-		."VALUES "
-		."("
-			."'".mysql_real_escape_string($this->who)."',"
-			."'".mysql_real_escape_string($this->status)."',"
-			."'".mysql_real_escape_string($this->cause)."',"
-			."'".mysql_real_escape_string($this->user_id)."',"
-			."'".mysql_real_escape_string($this->silo_id)."',"
-			."'".mysql_real_escape_string($this->flag_id)."',"
-			."'".mysql_real_escape_string($this->item_id)."',"
-			."'".mysql_real_escape_string(date("Y-m-d H:i:s"))."',"
-			."'1'"
-		.");"	
-	;
-	return Common::MysqlQuery($query,"id");
-} //end insert
-
-/**
- *
- *
- */
-function CheckItemWarnedBeforeCancel($item_id,$flag_id){
-	$query = 
-		"select id "
-		."from flag_radar "
-		."where "
-		."item_id = '".mysql_real_escape_string($item_id)."' "
-		."and flag_id = '".mysql_real_escape_string($flag_id)."' "
-		."and who = 'item' "
-		."and created < '".mysql_real_escape_string(Common::DaysAgo(3))."' "
-		."and active = '1' ORDER BY created DESC limit 1 "
-	;
-	$result = Common::MysqlQuery($query);
-	if($result){
-		$row = mysql_fetch_object($result);
-		return $row->id;
-	}else{ return false; }
-} //CheckIfItemWarnedBeforeCancel
-
-/**
- *
- *
- */
-function CheckSiloWarnedBeforeCancel($silo_id,$flag_id){
-	$query = 
-		"select id "
-		."from flag_radar "
-		."where "
-		."silo_id = '".mysql_real_escape_string($silo_id)."' "
-		."and flag_id = '".mysql_real_escape_string($flag_id)."' "
-		."and who = 'silo' "
-		."and created < '".mysql_real_escape_string(Common::DaysAgo(3))."' "
-		."and active = '1' ORDER BY created DESC limit 1 "
-	;
-	$result = Common::MysqlQuery($query);
-	if($result){
-		$row = mysql_fetch_object($result);
-		return $row->id;
-	}else{ return false; }
-} //CheckIfSiloWarnedBeforeCancel
-
-function GetId(){return $this->id;}
-function UnsetId(){$this->id = false;}
-
+   }
 }
 ?>

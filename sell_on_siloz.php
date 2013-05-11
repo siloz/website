@@ -1,7 +1,12 @@
 <?php
+include("include/timeout.php");
+
 if ($_SESSION['is_logged_in'] != 1) {
 	echo "<script>create_silo_need_login();</script>";
-}	
+}
+elseif ($addInfo_full) {
+	echo "<script>window.location = 'index.php?task=my_account&redirect=1';</script>";
+}
 else {
 	$user_id = $_SESSION['user_id'];	
 	$user = new User($user_id);
@@ -26,7 +31,7 @@ else {
 		
 		//test for form errors //comment added sept 8th 2012 james kenny
 		if (strlen(trim($title)) == 0) {
-			$err .= "Item ".$silo->silo_id." ".$user_id." title must not be empty. <br/>";
+			$err .= "Item title must not be empty. <br/>";
 		}
 		if (strlen(trim($title)) > 40) {
 			$err .= "Your item title is too long. Please shorten it. <br/>";
@@ -44,32 +49,36 @@ else {
 			$err .= "Item's price exceeds the allowed maximum. For more information, contact siloz through the link in our footer. <br/>";
 		}
 		if (strlen(trim($avail)) > 30) {
-			$err .= "Please limit your availablitiy to 30 characters.";
+			$err .= "Please limit your availablitiy to 30 characters.<br>";
 		}
 		if (strlen(trim($description)) > 500) {
-			$err .= "Please limit your description to 500 characters.";
+			$err .= "Please limit your description to 500 characters.<br>";
+		}
+		if ( (!$_FILES['item_photo_1']['name']) && (!$_FILES['item_photo_2']['name']) && (!$_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_4']['name']) ) {
+			$err .= "Please submit at least one image.<br>";
 		}
 		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_2']['name']) ) {
-			$err .= "Please submit a second image for your item or remove the third image.";
+			$err .= "Please submit a second image for your item or remove the third image.<br>";
 		}
 		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_4']['name']) && ((!$_FILES['item_photo_2']['name']) || (!$_FILES['item_photo_3']['name']))  ) {
-			$err .= "Please submit a second and third image for your item or remove the fourth image.";
+			$err .= "Please submit a second and third image for your item or remove the fourth image.<br>";
 		}
 		if ( (!$_FILES['item_photo_1']['name']) && (($_FILES['item_photo_2']['name']) || ($_FILES['item_photo_3']['name']) || ($_FILES['item_photo_4']['name']))  ) {
-			$err .= "Please submit your image in the first slot before adding more images.";
+			$err .= "Please submit your image in the first slot before adding more images.<br>";
 		}
 
 		$adr = urlencode($address);
 		$zip_code = urlencode($zip);
-		$url = "http://maps.google.com/maps/geo?q=".$adr."".$zip_code;
-		$xml = file_get_contents($url);
-		$geo_json = json_decode($xml, TRUE);
-		if ($geo_json['Status']['code'] == '200') {
-			$precision = $geo_json['Placemark'][0]['AddressDetails']['Accuracy'];
-			$new_adr = $geo_json['Placemark'][0]['address'];
-			$long = $geo_json['Placemark'][0]['Point']['coordinates'][0];
-			$lat = $geo_json['Placemark'][0]['Point']['coordinates'][1];
-		} else {
+		$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."+".$zip_code."&sensor=false");
+		$loc = json_decode($json);
+
+		if ($loc->status == 'OK') {
+			$new_adr = $loc->results[0]->formatted_address;
+			$address = $new_adr;
+			$lat = $loc->results[0]->geometry->location->lat;
+			$long = $loc->results[0]->geometry->location->lng;
+		}
+		 else {
 			$err .= 'Invalid address.<br/>';
 		}
 		
@@ -77,7 +86,7 @@ else {
 		//added sept 8th 2012 james kenny
 		//make sure they selct their association with the silo
 		if(!$vouch_type_id){
-			$err .= "Please use tell us how you are associated with this Silo<br />";
+			$err .= "Please use tell us how you are associated with this silo<br />";
 		}
 		if (strlen($err) == 0) {
 
@@ -100,6 +109,9 @@ else {
 
 			$sqladr = "UPDATE users SET address = '$new_adr' WHERE user_id = $user_id";
 			mysql_query($sqladr);
+
+			$joined = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$user_id'"));
+			if ($joined) { $status = "Pledged"; } else { $status = "Joined"; } 
 
 			$Feed = new Feed();
 			$Feed->silo_id = $silo->silo_id;
@@ -152,11 +164,24 @@ else {
         						break;
 						}
 
-						unlink($temporary_name);
-						imagejpeg($img,"uploads/".$id."_".$i.".jpg",80);
+							$name = "uploads/".$id."_".$i.".jpg";
+							$targ_w = "900";
+							$img_w = getimagesize($temporary_name);
+
+							if ($img_w[0] > $targ_w) {
+      								$image = new Photo();
+      								$image->load($temporary_name);
+      								$image->resizeToWidth($targ_w);
+								$image->save($name);
+							} else {
+								imagejpeg($img,$name,80);
+							}
+
+							unlink($temporary_name);
 					}
 				}							
 			}
+
 			if (strlen($err) > 0) {
 				$sql = "DELETE FROM items WHERE id = $id";
 				mysql_query($sql);
@@ -166,8 +191,8 @@ else {
 		if (strlen($err) == 0) {
 			if ($joined) { //Already joined
 				$subject = "Thank you for pledging for ".$silo->name;
-				$message = "<br/>You have pledged on silo <b>".$silo->name."</b> with your item - <b>$title</b> ($price$).<br/><br/>";
-				$message .= "Remember: you can share the silo you joined/pledged on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser’s need for member.  Click <a href='".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
+				$message = "<br/>You have pledged on silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
+				$message .= "Remember: you can share the silo you joined/pledged on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
 				$message .= "We thank you for participating in silo ".$silo->name." and for using siloz.com.<br/><br/>
 							Sincerely,<br/><br/>
 							Siloz Staff.";			
@@ -175,18 +200,16 @@ else {
 			}
 			else {
 				$subject = "Thank you for joining ".$silo->name;
-				$message = "<br/>Congratulations on joining silo <b>".$silo->name."</b> with your item - <b>$title</b> ($price$).<br/><br/>";
+				$message = "<br/>Congratulations on joining silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
 				$message .= "<h3>Getting Started</h3>";
-				$message .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser’s need for member.  Click <a href='".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
+				$message .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
 				$message .= "We thank you for participating in your silo and for using siloz.com.<br/><br/>
 							Sincerely,<br/><br/>
 							Siloz Staff.";			
 			    email_with_template($user->email, $subject, $message);
 				
 			}
-			if (strlen($err) == 0) {
-				$success = "true";
-			}
+			$success = "true";
 		}
 	}
 	else {
@@ -321,15 +344,23 @@ else {
 
 		</script>
 
-		<div class="heading">
-			<b>Join this Silo: <?php echo "<a href=".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id.">".$silo->name."</a></b> (".$silo->type." Silo)";?>
-		</div>
+<span class="greyFont">
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">
+		<b>Donate an item to join the Silo: <?php echo "<u><a href=".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id.">".$silo->name."</a></b></u>";?>
+	</span>
+</div>
+
+<div class="headingPad"></div>
 
 <?php
 if ($success && $_FILES['item_photo_1']['name']) {
 ?>
 		<center>
-				<h1>Create a Silo</h1>
+				<h1>Donate to a Silo</h1>
 		To finish pledging your item, please crop all of the images you uploaded below (Image 1):<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$id?>_1.jpg" id="cropbox" />
@@ -362,7 +393,7 @@ elseif ($success && !$filename) { echo "<script>window.location = 'index.php?tas
 if ($crop == "2") {
 ?>
 		<center>
-				<h1>Create a Silo</h1>
+				<h1>Donate to a Silo</h1>
 		To finish pledging your item, please crop the image you uploaded below (Image 2):<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$id?>_2.jpg" id="cropbox" />
@@ -391,7 +422,7 @@ die;
 if ($crop == "3") {
 ?>
 		<center>
-				<h1>Create a Silo</h1>
+				<h1>Donate to a Silo</h1>
 		To finish pledging your item, please crop the image you uploaded below (Image 3):<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$id?>_3.jpg" id="cropbox" />
@@ -419,7 +450,7 @@ die;
 if ($crop == "4") {
 ?>
 		<center>
-				<h1>Create a Silo</h1>
+				<h1>Donate to a Silo</h1>
 		To finish pledging your item, please crop the image you uploaded below (Image 4):<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$id?>_4.jpg" id="cropbox" />
@@ -497,64 +528,52 @@ die;
 							</tr>
 							<tr>
 								<td><b>Description</b> </td>
-								<td><textarea name="description" style="width: 300px; height: 50px"><?php echo $description; ?></textarea></td>
+								<td><textarea name="description" style="width: 300px; height: 50px; resize: none;"><?php echo $description; ?></textarea></td>
 							</tr>
 						</table>
 					</td>
 					<td valign="top">
 						<table>
 							<tr>
-								<td><b>Photo file 1</b> </td>
-								<td><input name="item_photo_1" type="file" style="width: 200px; height: 20px;"/></td>
+								<td><b>Photo </b> </td>
+								<td><input name="item_photo_1" type="file" style="width: 200px; height: 24px;"/></td>
 							</tr>		
 							<tr>
-								<td><b>Photo file 2</b> </td>
-								<td><input name="item_photo_2" type="file" style="width: 200px;height: 20px;"/></td>
+								<td><b>Photo </b> </td>
+								<td><input name="item_photo_2" type="file" style="width: 200px;height: 24px;"/></td>
 							</tr>		
 							<tr>
-								<td><b>Photo file 3</b> </td>
-								<td><input name="item_photo_3" type="file" style="width: 200px;height: 20px;"/></td>
+								<td><b>Photo </b> </td>
+								<td><input name="item_photo_3" type="file" style="width: 200px;height: 24px;"/></td>
 							</tr>		
 							<tr>
-								<td><b>Photo file 4</b> </td>
-								<td><input name="item_photo_4" type="file" style="width: 200px;height: 20px;"/></td>
+								<td><b>Photo </b> </td>
+								<td><input name="item_photo_4" type="file" style="width: 200px;height: 24px;"/></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
-				<td>
-					<p style="line-height:1.0em; margin:0; padding:0;"><b>The data from the survey (below) will be compiled and displayed on a silo's page, and is only an index to the silo's probable legitimacy.</b></p><br>
+				<td align="center">
+					<h2>Choose One</h2>
+					<span class="blue">Your response will impact the Familiarity Index for this silo</span>
 				</td>
 				</tr>
-
-				<?php
-					//php block added september 8th, 2012 james kenny
-					if(!$VouchType){$VouchType = new VouchType();}
-					$vouchTypeIds = $VouchType->GetIds();
-					if(!$Vouch){$Vouch = new Vouch();}
-					$userLastVouchType = $Vouch->GetUsersLastVouchId($user_id,$silo->silo_id);
-				?>
 				<tr>
-					<td style="line-height:1.0em; margin:0; padding:0;">
-						<?php 
-							foreach($vouchTypeIds as $vid){
-								$VouchType->Populate($vid); 
-								if($userLastVouchType === $vid){$selected = "checked='checked' ";}
-								else{$selected = '';}
-								?>
-								<input type="radio" name="vouch" value="<?php echo $vid ;?>" <?php echo $selected ;?>/><?php echo $VouchType->text; ?><br />
-							<?php }
-						?>
+					<td>
+						<div class="<?php if ($vouch_type_id == 75) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_75"><div class="famIndex">I researched this silo</div></div>
+						<div class="<?php if ($vouch_type_id == 76) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_76"><div class="famIndex">I know this silo administrator</div></div>
+						<div class="<?php if ($vouch_type_id == 77) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_77">I didn't research this silo, and I don't know this silo administrator</div>
+						<div class="<?php if ($vouch_type_id == 78) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_78">I researched this silo, and I know this silo administrator</div>
+						<input type="hidden" id="famIndex" name="vouch" value="<?=$vouch_type_id?>" />
 					</td>
-				</tr>
 				<tr>
 				<td><br>
 						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of information posted on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  By using siloz, members you agree to hold siloz harmless and not liable for  fraud, misrepresentation, tortious acts committed by a silo administrator, and crimes incidental to the sale of items.</p>
 				</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center">
+					<td align="center">
 						<button type="submit" name="submit" value="Finish">Finish</button>
 					</td>
 				</tr>			
@@ -571,3 +590,32 @@ die;
 <?php
 }
 ?>
+
+</span>
+
+
+<script type="text/javascript">
+	$("#famIndex_75").click(function () {
+		$('#famIndex_76, #famIndex_77, #famIndex_78').removeClass('buttonFamIndexSel').addClass('buttonFamIndex');
+		$(this).addClass('buttonFamIndexSel');
+		$('#famIndex').val('75');
+	});
+
+	$("#famIndex_76").click(function () {
+		$('#famIndex_75, #famIndex_77, #famIndex_78').removeClass('buttonFamIndexSel').addClass('buttonFamIndex');
+		$(this).addClass('buttonFamIndexSel');
+		$('#famIndex').val('76');
+	});
+
+	$("#famIndex_77").click(function () {
+		$('#famIndex_75, #famIndex_76, #famIndex_78').removeClass('buttonFamIndexSel').addClass('buttonFamIndex');
+		$(this).addClass('buttonFamIndexSel');
+		$('#famIndex').val('77');
+	});
+
+	$("#famIndex_78").click(function () {
+		$('#famIndex_75, #famIndex_76, #famIndex_77').removeClass('buttonFamIndexSel').addClass('buttonFamIndex');
+		$(this).addClass('buttonFamIndexSel');
+		$('#famIndex').val('78');
+	});
+</script>

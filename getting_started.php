@@ -1,6 +1,11 @@
-<div class="heading">
-	<b>Getting Started</b>
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Getting Started</span>
 </div>
+
+<div class="headingPad"></div>
+
 <table cellspacing="10px">
 	<tr>
 		<td width="30%" align="right">
@@ -8,7 +13,7 @@
 		</td>
 		<td width="70%">
 			<div style="font-size: 12px; color: #000" align="justify">
-				<p>Siloz is much like an 'online church rummage sale', where people pledge the sale of items and remittance of donations to a silo's administrator (creator), in a fund-raising effort.  Every item listed on the site benefits some fund-raiser (called a 'silo').  In our initial (2011) version, no items are actually sold on the site, and no money is sent through the site.</p>
+				<p><?=SITE_NAME?> is much like an 'online church rummage sale', where people pledge the sale of items and remittance of donations to a silo's administrator (creator), in a fund-raising effort.  Every item listed on the site benefits some fund-raiser (called a 'silo').  In our initial (2011) version, no items are actually sold on the site, and no money is sent through the site.</p>
 
 				<p>A silo can be for personal (wedding, birthday present or event, Bar Mitzvah, funeral, legal or medical costs, etc.), or a community fund-raiser (youth sports team, church, neighborhood association, etc.).</p>
 
@@ -29,7 +34,7 @@
 
 				<p>Personal silos are not visible on the site and are not visible in an Internet search, and only items benefiting community silos indicate which silo they benefit.  These are security features.  Personal silos can be shared through their unique URL (web address).  This is a feature prevents someone, from, say, falsely claiming they have a child dying from cancer, and inviting strangers to pledge items or money. </p>
 
-				<p>Siloz uses transparency, checks and balances, and accountability to create a safe, effective, fun, fund-raising experience for personal and community causes alike.</p>
+				<p><?=SITE_NAME?> uses transparency, checks and balances, and accountability to create a safe, effective, fun, fund-raising experience for personal and community causes alike.</p>
 			</div>									
 		</td>
 	</tr>
@@ -50,7 +55,7 @@
 
 				<p>Since items are not for sale on the site, but only represented, it is up to silo members to keep the status of pledged items up-to-date.</p>
 
-				<p>If you are selling an item online, it helps to list it (on Craigslist or Ebay), first.  Then you can provide a link to the listed item on Siloz.com.  Or, you re-build the pledge with a photo and copying/pasting text.</p>
+				<p>If you are selling an item online, it helps to list it (on Craigslist or Ebay), first.  Then you can provide a link to the listed item on <?=SITE_NAME?>.com.  Or, you re-build the pledge with a photo and copying/pasting text.</p>
 			</div>									
 		</td>
 	</tr>

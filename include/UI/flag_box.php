@@ -1,4 +1,5 @@
 <?php
+	$siloFlagged = mysql_num_rows(mysql_query("SELECT * FROM flag_silo WHERE user_id = '$user_id' AND silo_id = '$silo->silo_id'"));
 /* a ui element for flagging
  *
  *
@@ -6,7 +7,7 @@
  */
  if($_REQUEST["task"] === "view_item"){
  	$flag_box_type = "item";
- }elseif($_REQUEST["task"] === "view_silo"){
+ }elseif($_REQUEST["task"] === "view_silo" || "manage_silo"){
  	$flag_box_type = "silo";
  }
 
@@ -15,6 +16,16 @@
  $flag_ids = $Flag->GetIds();
 
 ?>
+
+<div class="login" id="flagged_silo" style="width: 300px;">
+	<div id="flagged_silo_drag" style="float:right">
+		<img id="flagged_silo_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h2>You have flagged this silo already. You can only flag each silo once.</h2>
+	</div>
+</div>
+
 <script type="text/javascript">
 function submit_flag(flag_id){
 	var url ="submit_flag.php?";
@@ -93,11 +104,14 @@ function hide_flag_box(){
 			
 			<?php if($flag_box_type === "silo"){ 
 				$flag_count = $Flag->GetSiloFlaggedCount($silo->silo_id);
+				if (!$flag_count) { $fCount = "no flags"; } elseif ($flag_count == 1) { $fCount = "1 flag"; } else { $fCount = $fCount = $flag_count." flags"; }
+				if (!$tax_ded) { $tax = "<b><u>not</u></b>"; }
 				$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
 				$pctV = $vouchTotal/($silo->getTotalItems());
-				$pctVouch = round($pctV * 100);
+				$pctVouch = round($pctV * 100); 
 			?>
-			<div class="voucherText"><?=$pctVouch?>% (<?=$vouchTotal?> members) of those who pledged items to this silo either know, or have researched, this Administrator - or both!
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?=$pctVouch?>% (<?=$vouchTotal?> members) of those who pledged items to this silo either know, or have researched, this Administrator - or both!</div>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt">This Administrator is Facebook Connected with 345 friends.</div>
 			<?php }elseif($flag_box_type === "item"){ 
 				$flag_count = $Flag->GetItemFlaggedCount($item->item_id);
 			?>
@@ -107,15 +121,26 @@ function hide_flag_box(){
 		<td></td>
 	</tr>
 			<?php if($flag_box_type === "silo"){ ?>
-	<tr class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);">
-		<td width="30%" align="right">
-			<font size="1">Flag this silo</font>
+	<tr>
+		<td style="padding-top: 5px" width="45%" align="center">
+			<span class="voucherText<?=$closed_silo?>">This silo has <?=$fCount?></span>
 		</td>
-		<td width="5%" align="left">
-			<img height="40px" width="auto" src="img/flag.png" alt="Flag this item" />
-		</td>
-		<td>
-			<font size="1"><b>ID: <?=($silo->id)?></b></font>
+	<?php if ($isAdmin) { ?>
+		<td style="padding-top: 17px; padding-bottom: 13px" align="center">
+			You're the admin.
+	<?php } elseif ($siloFlagged) { ?>
+		<td style="padding-top: 17px" align="center" class="click_me" onclick="javascript:popup_show('flagged_silo', 'flagged_silo_drag', 'flagged_silo_exit', 'screen-center', 0, 0);">
+			<span class="voucherText<?=$closed_silo?>"><b>Silo flagged</b></font></span>
+			<div class="floatR"><img height="20px" src="img/flag.png" alt="Flag this item" /></div>
+	<?php } elseif ($closed_silo) { ?>
+		<td style="padding-top: 17px" align="center">
+		<br>
+	<?php } else { ?>
+		<td style="padding-top: 17px" align="center" class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);">
+			<span class="voucherText<?=$closed_silo?>"><b>Flag this silo</b></font></span>
+			<div class="floatR"><img height="20px" src="img/flag.png" alt="Flag this item" /></div>
+	<?php } ?>
+
 		</td>
 	</tr>
 <?php } ?>
@@ -137,7 +162,7 @@ function hide_flag_box(){
 					<?php } ?>
 				</ul>
 			<?php }else{ ?>
-				<h1 class="blue">Sorry you must be logged in to flag items</h1>
+				<h1 class="blue">Sorry you must be logged in to flag a silo</h1>
 			<?php }?>
 		</td>
 	</tr>

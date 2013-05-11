@@ -1,3 +1,5 @@
+<?php include_once("include/GoogleAnalytics.php"); ?>
+
 <!-- Add mousewheel plugin (this is optional) -->
 <script type="text/javascript" src="js/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
 
@@ -13,7 +15,14 @@
 <link rel="stylesheet" href="js/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" type="text/css" media="screen" />
 <script type="text/javascript" src="js/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
 
-<h1>Siloz Stories</h1>
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Stories on <?=SITE_NAME?></span>
+</div>
+
+<div class="headingPad"></div>
+
 <div id="stories" style="padding: 0px 20px;"></div>
 
 <script>

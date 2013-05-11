@@ -9,6 +9,8 @@
 	require_once('classes/photo.class.php');
 	
 	require_once('classes/feed.class.php');
+	require_once('classes/notification.class.php');
+	require_once('classes/paycodes.class.php');
 	require_once("classes/Vouch.class.php");
 	require_once("classes/VouchType.class.php");
 	
