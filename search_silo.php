@@ -66,11 +66,9 @@
 		$order_by_clause = " ORDER BY distance ";
 	}
 
-	$sql = "SELECT COUNT(*) FROM silos WHERE 1 > 0 $search_clause";
-	$tmp = mysql_fetch_array(mysql_query($sql));
-	$count_silos = $tmp[0];
+	$count_silos = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE 1 > 0 $search_clause"));
 
-	if ($count_silos == "0") { $no_res = "<center>We cannot find any matches. Please broaden your search!</center>"; }
+	if ($count_silos == "0") { $no_res = "<center>We cannot find any silos in your area that match your search. Please broaden your search!</center>"; }
 
 	$total_pages = ceil($count_silos / $silosPerPage);
 

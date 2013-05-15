@@ -1,23 +1,43 @@
 <?php
 
-$silo_latent_check = mysql_query("UPDATE silos SET status = 'latent', end_date = NOW() WHERE status = 'active' AND (end_date <= NOW() OR goal <= collected)");
-	if (mysql_affected_rows() > 0) {
-		$updItem = mysql_query("UPDATE items, silos SET items.status = 'inert', items.end_date = NOW() WHERE items.silo_id = silos.silo_id AND items.status = 'pledged' AND silos.status = 'latent'");
+mysql_query("UPDATE silos SET status = 'active'");
+mysql_query("UPDATE items SET status = 'pledged'");
+
+$silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND (end_date <= NOW() OR goal <= collected)");
+	if (mysql_num_rows($silo_check) > 0) {
+		while ($silo = mysql_fetch_array($silo_check)) {
+			$silo_id = $silo['silo_id'];
+			$updSilo = mysql_query("UPDATE silos SET status = 'latent', end_date = NOW() WHERE silo_id = '$silo_id'");
+			$updItem = mysql_query("UPDATE items SET status = 'inert', end_date = NOW() WHERE silo_id = '$silo_id'");
+		}
 	}
 
-$offerCheck = mysql_query("UPDATE offers SET status = 'declined' WHERE expired_date < NOW()");
-	if (mysql_affected_rows() > 0) {
-		$updItem = mysql_query("UPDATE items, offers SET items.status = 'pledged' WHERE offers.status = 'declined' AND offer.expired_date = 0");
+$offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW()");
+	if (mysql_num_rows($offerCheck) > 0) {
+		while ($offer = mysql_fetch_array($offerCheck)) {
+			$item_id = $offer['item_id'];
+			$updOffer = mysql_query("UPDATE offers SET status = 'declined' WHERE item_id = '$item_id'");
+			$updItem = mysql_query("UPDATE items SET status = 'pledged' WHERE status = 'offer' AND item_id = '$item_id'");
+		}
 	}
 
-$purchaseCheck = mysql_query("UPDATE item_purchase SET status = 'declined' WHERE expired_date < NOW()");
-	if (mysql_affected_rows() > 0) {
-		$updItem = mysql_query("UPDATE items, item_purchase SET items.status = 'pledged' WHERE item_purchase.status = 'declined'");
+$purchaseCheck = mysql_query("SELECT item_id FROM item_purchase WHERE expired_date < NOW()");
+	if (mysql_num_rows($purchaseCheck) > 0) {
+		while ($pur = mysql_fetch_array($purchaseCheck)) {
+			$item_id = $pur['item_id'];
+			$updPurchase = mysql_query("UPDATE item_purchase SET status = 'declined' WHERE item_id = '$item_id'");
+			$updItem = mysql_query("UPDATE items SET status = 'pledged' WHERE status = 'pending' AND item_id = '$item_id'");
+		}
 	}
 
-$lowVouchCheck = mysql_query("UPDATE flag_radar SET active = 0 WHERE status = 'vouch' AND expired_date < NOW()");
-	if (mysql_affected_rows() > 0) {
-		$killSilo = mysql_query("UPDATE silos, flag_radar SET silos.status = 'flagged' WHERE flag_radar.status = 'vouch' AND flag_radar.active = 0 AND silos.silo_id = flag_radar.silo_id");
+$lowFamIndexCheck = mysql_query("SELECT silo_id FROM flag_radar WHERE status = 'vouch' AND expired_date < NOW()");
+	if (mysql_num_rows($lowFamIndexCheck) > 0) {
+		while ($famIndex = mysql_fetch_array($lowFamIndexCheck)) {
+			$silo_id = $famIndex['silo_id'];
+			$updFlagRadar = mysql_query("UPDATE flag_radar SET status = 'cancel' WHERE silo_id = '$silo_id'");
+			$updFlagSilo = mysql_query("UPDATE flag_silo SET active = 0 WHERE silo_id = '$silo_id'");
+			$killSilo = mysql_query("UPDATE silos SET status = 'flagged' WHERE silo_id = '$silo_id'");
+		}
 	}
 
 $email24HourCheck = mysql_query("SELECT user_id, email FROM users WHERE info_emails < 2 AND joined_date + INTERVAL 1 DAY <= NOW()");

@@ -1,5 +1,6 @@
 <?php
 	$redirect = param_get('redirect');
+	$linkedin_upd = param_get('connect');
 
 if ($_SESSION['is_logged_in'] != 1) {
 	echo "<script>window.location = 'index.php';</script>";
@@ -9,6 +10,8 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 
 	if (param_post('crop') == 'Crop') {
 		$id = trim(param_post('user_id'));
+		$fb = param_post('fb');
+		if ($fb) { $fb_upd = true; }
 		$crop = true;
 		$targ_w = 300;
 		$targ_h = 225;
@@ -46,6 +49,7 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 			$address = param_post('address');
 			$zip_code = param_post('zip_code');
 			$phone = param_post('phone');
+			$fb_photo = param_post('fb_photo');
 
 			$sql = "SELECT * FROM users WHERE email='$email'";
 			$res = mysql_query($sql);
@@ -61,6 +65,9 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 			}
 			if (strlen(trim($lname)) == 0) {
 				$err .= 'Last name must not be empty.<br/>';		
+			}
+			if (strlen(trim($phone)) == 0) {
+				$err .= 'Please enter a phone number.<br/>';		
 			}
 			if (strlen(trim($email)) == 0) {
 				$err .= 'Email must not be empty.<br/>';		
@@ -102,6 +109,21 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 			$address = $loc->results[0]->formatted_address;
 			$lat = $loc->results[0]->geometry->location->lat;
 			$long = $loc->results[0]->geometry->location->lng;
+		}
+		
+		if ($fb_photo) {
+			$img = 'uploads/'.$id.'.jpg';
+			$img_url = 'https://graph.facebook.com/'.$fb_photo.'/picture?width=500';
+			file_put_contents($img, file_get_contents($img_url));
+			$targ_w = "900";
+			$img_w = getimagesize($img);
+
+			if ($img_w[0] > $targ_w) {
+      				$image = new Photo();
+      				$image->load($img);
+      				$image->resizeToWidth($targ_w);
+				$image->save($img);
+			}
 		}
 		
 			if ($zip_code == '') {
@@ -273,6 +295,9 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 
 	$updatemsg = "Your account has been updated!";
 
+	if ($fb_upd) { $updatemsg = "Your account has been updated using Facebook!"; }
+	elseif ($linkedin_upd) { $updatemsg = "Your account has been updated using LinkedIn!"; }
+
 	if (!$fname || !$lname || !$address || !$phone || !$photo_file) { $addInfo_account = true; }
 
 	if ($redirect && !$addInfo_account && !$filename) {
@@ -329,7 +354,7 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 					if ((param_post('task') == 'update_account') && !$filename && strlen($err) == 0) { 
 						echo "<span id='success' class='error'>".$updatemsg."</span>";
 					}
-					elseif ($crop == "true") { 
+					elseif ($crop == "true" || $linkedin_upd) { 
 						echo "<span id='success' class='error'>".$updatemsg."</span>";
 					}
 
@@ -349,7 +374,7 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 
 <?php
 //If account info updated
-if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filename)) {
+if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filename || $fb_photo)) {
 ?>
 		<center>
 				<h1>New Profile Photo - My Account</h1>
@@ -366,6 +391,7 @@ if ((param_post('task') == 'update_account') && (strlen($err) == 0) && ($filenam
 			<input type="hidden" id="w" name="w" />
 			<input type="hidden" id="h" name="h" />
 			<input type="hidden" name="user_id" value="<?=$id?>" />
+			<?php if ($fb_photo) { echo '<input type="hidden" name="fb" value="true" />'; } ?>
 			<button type="submit" name="crop" value="Crop">Crop</button>
 		</form>
 		</center>
@@ -400,7 +426,7 @@ die;
 }
 ?>
 
-	<form enctype="multipart/form-data"  name="my_account_form" class="my_account_form" method="POST">
+	<form enctype="multipart/form-data"  name="my_account_form" id="account_form" class="my_account_form" method="POST">
 		<input type="hidden" name="task" value="update_account"/>		
 		<table cellpadding="10px">
 			<tr>
@@ -411,6 +437,7 @@ die;
 						</tr>
 						<tr>
 							<td><input name="member_photo" type="file" style="height: 24px"/></td>
+								<input type="hidden" name="fb_photo" id="fb_photo" value="" />
 						</tr>		
 					</table>
 				</td>
@@ -480,10 +507,10 @@ die;
 				<td></td>
 				<td colspan="2">
 					<p>
-      						<fb:login-button perms="email,user_address,user_mobile_phone">Connect with Facebook
-      						</fb:login-button>
+      						<div id="fb"><fb:login-button perms="email,user_address,user_mobile_phone">Connect your Facebook account with <?=SITE_NAME?>
+      						</fb:login-button></div>
 						<br><br>
-						<a href="include/apis/linkedin.php"><img src="images/linkedin_connect.png" id="linkedin" style="margin-left: -3px"></img></a>
+						<a href="linkedin.php?user_id=<?=$user_id?>&redirect=<?=$redirect?>"><img src="images/linkedin_connect.png" id="linkedin" style="margin-left: -3px"></img></a>
 					</p>
 
 					<p><font color="red"><b>E-mail notifications</b></font> 
@@ -573,4 +600,87 @@ die;
 	</div>
 </div>
 
+<div class="login" id="fb_connect" style="width: 500px;">
+	<div id="fb_connect_drag" style="float:right">
+		<img id="fb_connect_exit" src="images/close.png"/>
+	</div>
+	<div>
+			<h2>You are connected with Facebook!</h2>
+			You have successfully linked your Facebook profile with <?=SHORT_URL?>. If you would like to update your profile information, click the button below. Don't forget to click 'Update' afterwords.<br><br>
+			<button type="button" id="fb-update" onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb_connect').style.display='none';">Update profile now</button>
+			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb_connect').style.display='none';">Later</button>
+	</div>
+</div>
+
 </span>
+
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '<?=FACEBOOK_ID?>', // App ID
+    channelUrl : '//<?=ACTIVE_URL?>include/fb.html', // Channel File
+    status     : true, // check login status
+    cookie     : true, // enable cookies to allow the server to access the session
+    xfbml      : true  // parse XFBML
+  });
+
+  // Here we subscribe to the auth.authResponseChange JavaScript Event. This event is fired
+  // for any auth related change, such as login, logout or session refresh. This means that
+  // whenever someone who was previously logged out then logs in, the correct case below 
+  // will be handled.
+  FB.Event.subscribe('auth.authResponseChange', function(response) {
+    // Here we specify what we do with the response anytime this event occurs. 
+    if (response.status === 'connected') {
+      // The response object is returned with a status field that lets us know what the current
+      // login status of the person is. In this case, we're handling the situation where they 
+      // have logged in to the app.
+	$('#fb').html("<img src='images/fb-connect.png'></img> (Click to update your profile)");
+    } else if (response.status === 'not_authorized') {
+      // In this case, the person is logged into Facebook, but not into the app, so we call
+      // FB.login() to prompt them to do so. 
+      // In real-life usage, you wouldn't want to immediately prompt someone to login 
+      // like this, for two reasons:
+      // (1) JavaScript created popup windows are blocked by most browsers unless they 
+      // result from direct user interaction (such as a mouse click)
+      // (2) it is a bad experience to be continually prompted to login upon page load.
+    } else {
+      // In this case, the person is not logged into Facebook, so we call the login() 
+      // function to prompt them to do so. Note that at this stage there is no indication
+      // of whether they are logged into the app. If they aren't then they'll see the Login
+      // Dialog right after they login to Facebook.
+      // The same caveats as above apply to the FB.login() call here.
+    }
+  });
+  };
+
+  // Load the SDK Asynchronously
+  (function(d){
+   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement('script'); js.id = id; js.async = true;
+   js.src = "//connect.facebook.net/en_US/all.js";
+   ref.parentNode.insertBefore(js, ref);
+  }(document));
+
+$("#fb").live('click', function() {
+	testAPI();
+});
+
+  // Here we are just running a very simple test of the Graph API after login is successful. 
+  // This testAPI() function is only called in those cases. 
+  function testAPI() {
+    FB.api('/me', function(response) {
+	fname = response.first_name;
+	lname = response.last_name;
+	//email = response.email;
+	photo = response.username;
+
+	$("#fname").val(fname);
+	$("#lname").val(lname);
+	//$("#email").val(email);
+       $('#fb_photo').val(photo);
+	$("#account_form").submit();
+    });
+  }
+</script>

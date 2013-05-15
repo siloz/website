@@ -1632,13 +1632,61 @@ margin-left: 5px;
 	cursor: pointer;
 }
 
+.aconsole {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+    	border-radius: 8px;
+    	border: 1px solid lightgray;
+	color: #2f8ECB;
+
+	padding: 10px;
+	font-size: 12pt;
+	width: 700px;
+	height: 500px;
+	text-align: center;
+}
+
+.aconsole h3 {
+	font-size: 11pt;
+}
+
+.aconsole-heading {
+	color: #2f8ECB;
+	font-size: 20pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+.aconsole-section {
+	height: 100px;
+   	background-color: #fff;
+    	border-radius: 8px;
+    	border: 1px solid lightgray;
+	color: #2f8ECB;
+
+	padding: 10px;
+	font-size: 12pt;
+	text-align: center;
+}
+
+.aconsole-smtxt {
+	color: #3A3A3A;
+	font-size: 9pt;
+}
+
 .aconsole-metrics {
 	-moz-border-radius: 8px;
     	-webkit-border-radius: 8px;
     	-khtml-border-radius: 8px;
     	border-radius: 8px;     
     	border: 7px solid #84bfe5;
-	width: 600px;
+	width: 750px;
 	height: 250px;
 	padding: 0px 4px;
 	font-family: Arial, Helvetica,sans-serif;

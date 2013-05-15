@@ -358,7 +358,10 @@
 								</tr>
 								<tr>
 									<td><b>Listed on:</b></td>
-									<td><?php echo $item->added_date;?></td>
+									<td><?php 	$added = strtotime($item->added_date);
+											$added_date = date("M jS, Y", $added);
+											echo $added_date;	?>
+									</td>
 								</tr>
 							</table>
 							</div>

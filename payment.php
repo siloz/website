@@ -184,7 +184,7 @@ include("include/timeout.php");
 				</tr>
 				<tr>
 					<td>Credit Number<td>
-					<td><input type="text" style="width: 150px" name="credit_card[number]" value="5105105105105100"/></td>
+					<td><input type="text" style="width: 150px" name="credit_card[number]" value=""/></td>
 				</tr>
 				<tr>
 					<td>CVV Code<td>

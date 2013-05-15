@@ -47,10 +47,9 @@
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $itemsPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
-	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE $search_clause"));
+	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*), $sqlDist AS distance FROM items WHERE $search_clause HAVING distance <= 75"));
 	$count_items = $tmp[0];	
-	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(DISTINCT silo_id) FROM items WHERE $search_clause AND deleted_date = 0"));
-	$count_silos = $tmp[0];
+	$count_silos = mysql_num_rows(mysql_query("SELECT *, $sqlDist AS distance FROM items WHERE $search_clause AND deleted_date = 0 HAVING distance <= 75"));
 
 	$new_sort_order = '';
 	$sort_order = param_get('sort_order');
@@ -66,7 +65,7 @@
 		$order_by_clause = " ORDER BY distance ";
 	}
 
-	if ($count_silos == "0") { $no_res = "<center>We cannot find any matches. Please broaden your search!</center>"; }
+	if ($count_silos == "0") { $no_res = "<center>We cannot find any items in your area that match your search. Please broaden your search!</center>"; }
 
 	$total_pages = ceil($count_items / $itemsPerPage);
 
@@ -79,7 +78,7 @@
 
 	$start_from = ($page-1) * $itemsPerPage;
 
-	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE $search_clause $order_by_clause LIMIT $start_from, $itemsPerPage";
+	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE $search_clause HAVING distance <= 75 $order_by_clause LIMIT $start_from, $itemsPerPage";
 	$tmp = mysql_query($sql);
 	
 	$items_html = "<div class='row'><div class='span12'>";
@@ -108,6 +107,10 @@
 	}
 
 	if ($page == $total_pages) {
+		$items_html .= "</div>";
+	}
+
+	if ($i == 5) {
 		$items_html .= "</div>";
 	}
 

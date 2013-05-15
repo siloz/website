@@ -223,7 +223,7 @@
 
 <div class="headingPad"></div>
 
-<table width="100%">
+<table width="100%" style="padding-right: 50px;">
 <tr>
 <td rowspan="2">
 <table class='siloInfo'>
@@ -288,49 +288,84 @@
 	</tr>
 </table>
 </td>
-<td align="center" valign="top">
+<td align="center" valign="top" style="padding-top: 10px;">
 
-<table class="aconsole">
+<table class="aconsole-metrics">
 <tr>
-<td class="aconsole-heading" colspan="4" align="center">
-silo administration console
+<td rowspan="2" align="center">
+<b><font size="4">Metrics</font></b>
 </td>
-<tr>
-<td colspan="4">
-<h3 align="left" style="padding-left: 10px">statistics</h3>
-	<table class="aconsole-section" width="100%" style="margin-top: -10px;"><tr>
-		<td align="left">no. of members: <br> <span class="aconsole-smtxt"><?php echo $silo->getTotalMembersAC();?></span></td>
-		<td align="left">no. of items: <br> <span class="aconsole-smtxt"><?php echo $silo->getTotalItemsAC();?></span></td>
-		<td align="left">total value pledged: <br> <span class="aconsole-smtxt"><?php echo money_format('%(#10n', $silo->getPledgedAmount());?></span></td>
-		<td align="left" class="orange"><b>goal: <br> <span class="aconsole-smtxt"><?php echo money_format('%(#10n', floatval($silo->goal));?></b></span></td>
-	</tr><tr>
-		<td align="left">avg. listings/member: <br> <span class="aconsole-smtxt"><?php echo $silo->getAvgListings();?></span></td>
-		<td align="left">avg. val. of items: <br> <span class="aconsole-smtxt"><?php $avgprice = $silo->getAvgItemPrice(); echo money_format('%(#10n', floatval($avgprice));?></span></td>
-		<td align="left">total value sold: <br> <span class="aconsole-smtxt"><?php $collected = $silo->getCollectedAmount(); $pct = round($collected*100.0/floatval($silo->goal),1); echo money_format('%(#10n', $collected);?></span></td>
-		<td align="left" class="orange"><b>deadline: <br> <span class="aconsole-smtxt"><?=$silo->getDeadline();?></b></span></td>
-	</tr></table>
+<td valign="top">
+<div class='floatL'><div class='padding'><b>Progress:</b> &nbsp; <div style='float: right; width: 100px; height: 15px; border: 1px solid #000;'><div style='float: left; width: <?=$pct;?>%; height:15px; background: #000;'></div></div></div></div>
+</td>
+<td rowspan="2" align="center">
+Average Item Price: <?php $avgprice = $silo->getAvgItemPrice(); echo money_format('%(#10n', floatval($avgprice));?><br><br>
+Listings per Member: <?php echo $silo->getAvgListings();?>
+</td>
+<td width="100px" rowspan="3">
 </td>
 </tr>
 <tr>
-<td colspan="4">
-	<table class="aconsole-section" width="100%" style="margin-top: 10px"><tr>
-		<td width="100px" align="left"><h3 align="left">member <br> growth</h3></td>
-		<td align="left">
-			<?php $runTime = $silo->getRunTime(); $totalM = $silo->getTotalMembersAC();
-			include "include/charts/charts.php";
-			echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart.php?run=".$runTime, 550, 150 ); ?>
-		</td>
-	</tr></table>
+<td align="center">
+<div class='floatL'><div class='padding'><b>Deadline:</b> &nbsp;&nbsp; <div style='float: right; width: 100px; height: 15px; border: 1px solid #000;'><div style='float: left; width: <?=$pct_day;?>%; height:15px; background: #000;'></div></div></div></div>
 </td>
 </tr>
 <tr>
-<td colspan="4">
-	<table class="aconsole-section" width="100%" style="margin-top: 10px"><tr>
-		<td width="100px" align="left"><h3 align="left">item <br> growth</h3></td>
-		<td align="left">
-			<?php echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart-item.php", 550, 150 ); ?>
-		</td>
-	</tr></table>
+<td align="center">
+<b>Goal:</b> <?php echo money_format('%(#10n', floatval($silo->goal));?>
+</td>
+<td align="center">
+<b>Pledged:</b> <?php echo money_format('%(#10n', $silo->getPledgedAmount());?>
+</td>
+<td align="center">
+<b>Collected:</b> <?php $collected = $silo->getCollectedAmount(); $pct = round($collected*100.0/floatval($silo->goal),1); echo money_format('%(#10n', $collected);?>
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<?php
+include "include/charts/charts.php";
+echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart.php", 380, 250 );
+?>
+</td>
+<td valign="top">
+View:<br><br>
+<div class="metrics-text-blue">
+Members<br><br>
+Money Raised
+</div>
+</td>
+</tr>
+</table>
+
+<br>
+
+<table class="aconsole-promote">
+<tr>
+<td width="15%" align="center">
+<font size="4">Promote</font>
+</td>
+<td width="50%" align="center">
+<?=ACTIVE_URL?><?=$silo->shortname;?>
+</td>
+<td rowspan="3" align="center" valign="top" class="promote-text-blue" style="padding-top: 30px;">
+Share your silo on Facebook<br><br>
+<img src="images/f_share.gif">
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center" class="promote-text-blue" style="padding: 0px 60px;">
+<form action="business_card.php" method="post" target="_blank">
+	<input type="hidden" name="id" value="<?=$silo->id?>" />
+	<input type="submit" class="promote-text-blue" style="font-size: 12px; font-weight: bold; background: transparent; border: 0px;" value="Print Promotional Business Cards" />
+</form>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center" class="promote-text-blue" style="padding: 0px 60px;">
+<a href="index.php?task=invite_promote&id=<?php echo $silo->id; ?>" target="_blank">
+Link to your e-mail address book via OpenInviter (to tell your friends)<br><br>
+<img src="images/mail-icon.png"></a>
 </td>
 </tr>
 </table>

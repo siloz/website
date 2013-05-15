@@ -544,7 +544,7 @@ while ($item = mysql_fetch_array($qry)) {
 
 	$cleared = mysql_num_rows(mysql_query("SELECT * FROM seller_cleared WHERE user_id = '$user_id' AND item_id = '$item_id'"));
 
-	if ($cleared > 0) { continue; }
+	if ($cleared > 0) { $item_id = ""; continue; }
 	elseif ($status == "pledged") { $cStatus = "Listed"; $notif = "Silo ends on ".$end; $contact = "No other party at this time"; $actions = "<a onclick=\"popup_show('editItem_".$item_id."', 'editItem_".$item_id."_drag', 'editItem_".$item_id."_exit', 'screen-center', 0, 0);\">Edit Item</a> | <a onclick=\"popup_show('delItem_".$item_id."', 'delItem_".$item_id."_drag', 'delItem_".$item_id."_exit', 'screen-center', 0, 0);\">Delete Item</a>"; }
 	elseif ($status == "offer") {
 		$offer = mysql_fetch_array(mysql_query("SELECT buyer_id, amount, status, expired_date FROM offers WHERE seller_id = '$user_id' AND item_id = '$item_id' AND status != 'canceled' ORDER BY id DESC"));
@@ -594,8 +594,10 @@ while ($item = mysql_fetch_array($qry)) {
 
 <?php
 	include ("include/UI/transaction_console.php");
+	}
 }
-} else { echo "There is currently no selling activity for your account."; }
+
+if (!mysql_num_rows($qry) || !$item_id) { echo "There is currently no selling activity for your account."; }
 ?>
 
 </td>
@@ -636,7 +638,7 @@ while ($item = mysql_fetch_array($qry)) {
 
 		if ($status == "pending") { $cStatus = "You made payment and have an option to buy this item."; $notif = "You and the seller have until ".$exp." for the seller to enter your Voucher code into the site. <b>Your Voucher code is '".$paykey."'. Don't provide a false Voucher code or share unless you collect your item."; $contact = $sellerInfo; $actions = "<a onclick=\"popup_show('decItem_".$item_id."', 'decItem_".$item_id."_drag', 'decItem_".$item_id."_exit', 'screen-center', 0, 0);\">Decline Item</a>"; }
 		elseif ($status == "sold") { $cStatus = "You bought this item for $".$amt."."; $notif = "No notifications"; $contact = "No other party at this time"; $actions = "<a onclick=\"popup_show('clearItem_".$item_id."', 'clearItem_".$item_id."_drag', 'clearItem_".$item_id."_exit', 'screen-center', 0, 0);\">Clear Item</a>"; }
-		elseif ($status == "declined") { $cStatus = "You declined this item."; $notif = "<span style='color: red; font-weight: bold;'>You have until ".$exp." to make payment, or this sale will cancel.</span>"; $contact = "No other party at this time"; $actions = "<a onclick=\"popup_show('clearItem_".$item_id."', 'clearItem_".$item_id."_drag', 'clearItem_".$item_id."_exit', 'screen-center', 0, 0);\">Clear Item</a> | <a onclick=\"popup_show('cancelOffer_".$item_id."', 'cancelOffer_".$item_id."_drag', 'cancelOffer_".$item_id."_exit', 'screen-center', 0, 0);\">Cancel Offer</a>"; }
+		elseif ($status == "declined") { $cStatus = "You declined this item."; $notif = "No notifications"; $contact = "No other party at this time"; $actions = "<a onclick=\"popup_show('clearItem_".$item_id."', 'clearItem_".$item_id."_drag', 'clearItem_".$item_id."_exit', 'screen-center', 0, 0);\">Clear Item</a> | <a onclick=\"popup_show('cancelOffer_".$item_id."', 'cancelOffer_".$item_id."_drag', 'cancelOffer_".$item_id."_exit', 'screen-center', 0, 0);\">Cancel Offer</a>"; }
 	}
 	elseif ($offer) {
 		$off = mysql_fetch_array(mysql_query("SELECT status, amount, expired_date FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item_id'"));

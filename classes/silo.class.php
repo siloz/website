@@ -116,6 +116,13 @@ class Silo {
 		return $total;
 	}
 
+	public function getTotalMembersAC() {
+		$sql = "SELECT COUNT(DISTINCT user_id) FROM silo_membership WHERE silo_id = ".$this->silo_id." AND removed_date = 0";
+		$res = mysql_fetch_row(mysql_query($sql));
+		$total = intval($res[0]);
+		return $total;
+	}
+
 	public function getDaysLeft() {
 		$end_date = $this->end_date;
 		$end = strtotime("$end_date");
@@ -124,6 +131,13 @@ class Silo {
 		$days = ceil($timeleft/86400);		
 		if ($days > 1) { $days .= " Days Left"; } elseif ($days == 1) { $days .= " Day Left"; } else { $days = "Ended on ".date("m/d/y", $end); }
 		return $days;
+	}
+
+	public function getDeadline() {
+		$end_date = $this->end_date;
+		$end = strtotime("$end_date");
+		$deadline = date("M jS, Y", $end);
+		return $deadline;
 	}
 
 	public function getAvgItemPrice() {
@@ -153,6 +167,25 @@ class Silo {
 		if ($total == 1) { $total .= " item"; } else { $total .= " items"; }
 		return $total;
 	}
+
+	public function getTotalItemsAC() {
+		$sql = "SELECT COUNT(DISTINCT item_id) FROM items WHERE silo_id = ".$this->silo_id." AND status != 'flagged' AND status != 'deleted'";
+		$res = mysql_fetch_row(mysql_query($sql));		
+		$total = intval($res[0]);
+		return $total;
+	}
+
+	public function getRunTime() {
+		$sql = "SELECT created_date, end_date FROM silos WHERE silo_id = ".$this->silo_id."";
+		$res = mysql_fetch_array(mysql_query($sql));
+		$end = strtotime($sql['end_date']);
+		$created = strtotime($sql['created_date']);		
+		$runtime = $end - $created;
+		$days = date("j", $end);
+		if ($days < 8) { $runtime = 1; } elseif ($days > 7 && $days < 21) { $runtime = 2; } else { $runtime = 3; }
+		return $runtime;
+	}
+
 	public function getPurpose() {
 		$order   = array("\r\n", "\n", "\r");
 		$replace = '<br />';

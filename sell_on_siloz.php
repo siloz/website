@@ -104,7 +104,7 @@ else {
 			$actual_id = $db->insert_id;
 			$id = "02".time()."0".$actual_id;
 			
-			$sql = "UPDATE items SET id = '$id', avail = '$avail', longitude = '$long', latitude = '$lat' WHERE item_id = $actual_id";
+			$sql = "UPDATE items SET id = '$id', avail = '$avail', longitude = '$long', latitude = '$lat', added_date = NOW() WHERE item_id = $actual_id";
 			mysql_query($sql);
 
 			$sqladr = "UPDATE users SET address = '$new_adr' WHERE user_id = $user_id";
@@ -195,7 +195,7 @@ else {
 				$message .= "Remember: you can share the silo you joined/pledged on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
 				$message .= "We thank you for participating in silo ".$silo->name." and for using siloz.com.<br/><br/>
 							Sincerely,<br/><br/>
-							Siloz Staff.";			
+							".SITE_NAME." Staff.";			
 			    email_with_template($user->email, $subject, $message);
 			}
 			else {
@@ -205,7 +205,7 @@ else {
 				$message .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
 				$message .= "We thank you for participating in your silo and for using siloz.com.<br/><br/>
 							Sincerely,<br/><br/>
-							Siloz Staff.";			
+							".SITE_NAME." Staff.";			
 			    email_with_template($user->email, $subject, $message);
 				
 			}

@@ -1,31 +1,13 @@
 <?php
 include 'charts.php';
-include '../../utils.php';
-
-$conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
-mysql_select_db(DB_NAME, $conn);
-
-$runTime =  $_REQUEST['run'];
-
-$test = mysql_num_rows(mysql_query("SELECT * FROM items"));
-
-if ($test < 1) { exit; }
-
-if ($runTime == 1) {
-	$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
-} elseif ($runTime == 2) {
-	$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 2","Day 4","Day 6","Day 8","Day 10","Day 12","Day 14" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
-} else {
-	$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 3","Day 6","Day 9","Day 12","Day 15","Day 18","Day 21" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
-}
 
 $chart[ 'axis_category' ] = array ( 'size'=>11, 'color'=>"3A3A3A", 'font'=>"arial", 'bold'=>true, 'skip'=>0 ,'orientation'=>"horizontal" ); 
 //$chart[ 'axis_ticks' ] = array ( 'value_ticks'=>true, 'category_ticks'=>true, 'major_thickness'=>2, 'minor_thickness'=>1, 'minor_count'=>1, 'major_color'=>"000000", 'minor_color'=>"222222" ,'position'=>"outside" );
 $chart[ 'axis_value' ] = array (  'min'=>0, 'max'=>48, 'font'=>"arial", 'bold'=>true, 'size'=>10, 'color'=>"000000", 'alpha'=>50, 'steps'=>6, 'prefix'=>"", 'suffix'=>"", 'decimals'=>0, 'separator'=>"", 'show_min'=>true );
 
 $chart[ 'chart_border' ] = array ( 'color'=>"3A3A3A", 'top_thickness'=>2, 'bottom_thickness'=>2, 'left_thickness'=>2, 'right_thickness'=>2 );
-//$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
-//$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 2","Day 4","Day 6","Day 8","Day 10","Day 12","Day 14" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
+$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
+$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 2","Day 4","Day 6","Day 8","Day 10","Day 12","Day 14" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
 //$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 3","Day 6","Day 9","Day 12","Day 15","Day 18","Day 21" ), array ( "Region A",0,2,5,7,13,25,28,48 ) );
 //$chart[ 'chart_data' ] = array ( array ( "","Day 1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21" ), array ( "Region A",2,5,7,13,25,28,48 ) );
 //$chart[ 'chart_data' ] = array ( array ( "","Jan","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31" ), array ( "Region A",10,12,11,15,20,22,21,25,31,32,28,29,40,41,45,50,65,45,50,51,65,60,62,65,45,55,59,52,53,40,45 ) );
@@ -41,8 +23,7 @@ $chart[ 'draw' ] = array ( array ( 'type'=>"text", 'color'=>"ffffff", 'alpha'=>1
 
 $chart[ 'legend_rect' ] = array ( 'x'=>-100, 'y'=>-100, 'width'=>10, 'height'=>10, 'margin'=>10 ); 
 
-$chart[ 'series_color' ] = array ( "2f8ECB" );
-
+$chart[ 'series_color' ] = array ( "2f8ECB" ); 
 
 SendChartData ( $chart );
 ?>

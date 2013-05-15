@@ -112,7 +112,7 @@
 	<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
 
 	<?php
-		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
+		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' HAVING distance <= 75 ORDER BY distance LIMIT 6";
 		$tmp = mysql_query($sql);
 		$items_html = "<div class='row'><div class='span12'>";
 		
@@ -140,6 +140,8 @@
 		//}
 		
 		$items_html .= "</div></div>";
+
+		if ($num_items == 0) { $items_html = "<div class='greyFont' style='line-height: 155px; text-align: center'>There are currently no items being pledged in your area</div>"; }
 		
 		echo $items_html;
 	?>
@@ -155,7 +157,7 @@
 				<h2>What is <?=SITE_NAME?>?</h2>
 				<p>You could think of a silo as a rummage sale, online, to benefit a local cause, whether private or public.  We think <?=SITE_NAME?> is transparent, safe, and fun.  Everybody wins: Buyers get merchandise while helping local causes.  Those donating items often receive a tax-deduction for a sold item and silo administrators raise money without asking for cash!</p>
 				<h2>How Does <?=SITE_NAME?> Work?</h2>
-				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div> <a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><img src="images/how-it-works.png" width="100%" height="100%"></img></a>
+				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div> <a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><img src="images/how-it-works.png" width="452" height="321"></img></a>
 				<h2>How Do I Join A silo?</h2>
 				<p>You join a silo by pledging (donating) an item to a cause in your area.  That item then appears on the site, for sale to the local public.</p>
 				<h2>What Are The silo Types?</h2>
@@ -165,7 +167,7 @@
 					<b><i>Public</i></b><br>
 					A public silo is visible to anyone on the site, and anybody can donate an item for one.
 					<div style="text-align: center">(click to enlarge)</div> 
-					<a onclick="popup_show('silo_types', 'silo_types_drag', 'silo_types_exit', 'screen-center', 0, 0);"><img src="images/silo-types.png" width="100%" height="100%"></img></a> <br><br>
+					<a onclick="popup_show('silo_types', 'silo_types_drag', 'silo_types_exit', 'screen-center', 0, 0);"><img src="images/silo-types.png" width="452" height="277"></img></a> <br><br>
 					Public silos must fall into one of the following categories: <br><br>
 					Religious Organization <br>
 					Public K-12 School (PTA, student group) <br>
@@ -189,7 +191,7 @@
 					3) If the buyer wishes to purchase the item, he/she provides the seller the Voucher.  The sale is considered 'closed' when the seller enters the buyer's Voucher into the site. <br><br>
 					At the end of a silo (1, 2, or 3 weeks), all the money from 'closed' sales are paid-out to a silo administrator through either PayPal (private silos) or an e-check (public silos).  This usually takes no more than a week.
 					<div style="text-align: center">(click to enlarge)</div> 
-					<a onclick="popup_show('items_sold', 'items_sold_drag', 'items_sold_exit', 'screen-center', 0, 0);"><img src="images/items-sold.png" width="100%" height="100%"></img></a> <br><br>
+					<a onclick="popup_show('items_sold', 'items_sold_drag', 'items_sold_exit', 'screen-center', 0, 0);"><img src="images/items-sold.png" width="452" height="321"></img></a> <br><br>
 					Note: If a seller enters the Voucher <?=SITE_NAME?> issued to the buyer into the site within the designated time, <?=SITE_NAME?> WILL NOT refund payment to the buyer, whether the item has actually been collected or not.  If the seller has not done so, <?=SITE_NAME?> WILL refund payment to the buyer, whether the item was actually collected or not. <br><br>
 					So, buyers should not provide a seller with a Voucher via email or over the telephone, or if they do not wish to collect an item.  Sellers should never accept a Voucher that does not match to their Voucher Key.  Contact us if you suspect any trickery!
 				</p>
