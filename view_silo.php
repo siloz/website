@@ -517,6 +517,7 @@ foreach ($items as $item) {
 }
 ?>
 
+<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script  type="text/javascript">
 
 function initialize() {
@@ -591,6 +592,7 @@ function initialize() {
 	map.mapTypes.set('Styled', styledMapType);
 
 	var bounds = new google.maps.LatLngBounds();
+	var markers = [];
 	bounds.extend(siloLocation);
 	<?php
 	foreach ($plates as $item_id => $plate) {
@@ -603,7 +605,7 @@ function initialize() {
 			icon: 'images/red_square.png',
 	       	position: pos<?=$item_id?>
 	   	});
-		
+		markers.push(marker<?=$item_id?>);
 		bounds.extend(pos<?=$item_id?>);	    
 		google.maps.event.addListener(marker<?=$item_id?>, 'click', (function(marker) {
 	        return function() {
@@ -616,6 +618,7 @@ function initialize() {
 	}
 	?>
 	map.fitBounds(bounds);
+	var markerCluster = new MarkerClusterer(map, markers, {maxZoom: 13, gridSize:10});
 }
 
 function loadScript() {
