@@ -50,6 +50,7 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 			$zip_code = param_post('zip_code');
 			$phone = param_post('phone');
 			$fb_photo = param_post('fb_photo');
+			$friend_count = param_post('friend_count');
 
 			$sql = "SELECT * FROM users WHERE email='$email'";
 			$res = mysql_query($sql);
@@ -145,7 +146,8 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 					}
 					else {
 						$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', city = '$city', state = '$state',
-								zip_code = '$zip_code', phone = '$phone', password='$enc_new', longitude = '$long', latitude = '$lat' WHERE id = $id";
+								zip_code = '$zip_code', phone = '$phone', password='$enc_new', longitude = '$long', latitude = '$lat', friend_count = '$friend_count' 
+								WHERE id = $id";
 						mysql_query($sql);
 
 						if ($_FILES['member_photo']['name'] != '') {
@@ -202,7 +204,8 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 				}				
 				else {
 					$sql = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', address = '$address', city = '$city', state = '$state', 
-							zip_code = '$zip_code', phone = '$phone', longitude = '$long', latitude = '$lat' WHERE id = $id";
+							zip_code = '$zip_code', phone = '$phone', longitude = '$long', latitude = '$lat', friend_count = '$friend_count' 
+							WHERE id = $id";
 					mysql_query($sql);
 					if ($_FILES['member_photo']['name'] != '') {
 						$allowedExts = array("png", "jpg", "jpeg", "gif");							
@@ -438,6 +441,7 @@ die;
 						<tr>
 							<td><input name="member_photo" type="file" style="height: 24px"/></td>
 								<input type="hidden" name="fb_photo" id="fb_photo" value="" />
+								<input type="hidden" name="friend_count" id="friend_count" value="" />
 						</tr>		
 					</table>
 				</td>
@@ -671,6 +675,7 @@ $("#fb").live('click', function() {
   // This testAPI() function is only called in those cases. 
   function testAPI() {
     FB.api('/me', function(response) {
+	uid = response.id;
 	fname = response.first_name;
 	lname = response.last_name;
 	//email = response.email;
@@ -682,5 +687,15 @@ $("#fb").live('click', function() {
        $('#fb_photo').val(photo);
 	$("#account_form").submit();
     });
+    FB.api(
+        {
+            method: 'fql.query',
+            query: 'SELECT friend_count FROM user WHERE uid = me()'
+        },
+        function(data) {
+		fcount = data[0].friend_count;
+    		$("#friend_count").val(fcount);
+        }
+     );
   }
 </script>

@@ -1,15 +1,13 @@
 <?php
 
-mysql_query("UPDATE silos SET status = 'active'");
-mysql_query("UPDATE items SET status = 'pledged'");
+//mysql_query("UPDATE silos SET status = 'active'");
+//mysql_query("UPDATE items SET status = 'pledged'");
 
-$silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND (end_date <= NOW() OR goal <= collected)");
-	if (mysql_num_rows($silo_check) > 0) {
-		while ($silo = mysql_fetch_array($silo_check)) {
-			$silo_id = $silo['silo_id'];
-			$updSilo = mysql_query("UPDATE silos SET status = 'latent', end_date = NOW() WHERE silo_id = '$silo_id'");
-			$updItem = mysql_query("UPDATE items SET status = 'inert', end_date = NOW() WHERE silo_id = '$silo_id'");
-		}
+$silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND ((end_date <= NOW()) OR (goal <= collected))");
+	while ($silo = mysql_fetch_array($silo_check)) {
+		$silo_id_close = $silo['silo_id'];
+		$updSilo = mysql_query("UPDATE silos SET status = 'latent' WHERE silo_id = '$silo_id_close'");
+		$updItem = mysql_query("UPDATE items SET status = 'inert', end_date = NOW() WHERE silo_id = '$silo_id_close'");
 	}
 
 $offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW()");

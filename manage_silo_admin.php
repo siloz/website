@@ -318,7 +318,7 @@ silo administration console
 		<td align="left">
 			<?php $runTime = $silo->getRunTime(); $totalM = $silo->getTotalMembersAC();
 			include "include/charts/charts.php";
-			echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart.php?run=".$runTime, 550, 150 ); ?>
+			echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart.php?silo_id=".$silo->silo_id."&run=".$runTime, 550, 150 ); ?>
 		</td>
 	</tr></table>
 </td>
@@ -328,16 +328,57 @@ silo administration console
 	<table class="aconsole-section" width="100%" style="margin-top: 10px"><tr>
 		<td width="100px" align="left"><h3 align="left">item <br> growth</h3></td>
 		<td align="left">
-			<?php echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart-item.php", 550, 150 ); ?>
+			<?php echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart-item.php?silo_id=".$silo->silo_id."&run=".$runTime, 550, 150 ); ?>
 		</td>
 	</tr></table>
 </td>
 </tr>
+
+<tr>
+<td colspan="4">
+<h3 align="left" style="padding-left: 10px">promote</h3>
+	<table width="100%" style="padding: 0 10px"><tr>
+		<td align="left" onclick="postToFeed();" class="onClick-link"><span class="greyFont"><b>post to Facebook</b></span> <div style="padding-top: 15px"></div> <center><img src="images/facebook.jpg"></img></center></b></span></td>
+		<td align="left" onclick="window.location='silo_flyers.php?id=<?=$silo->id?>';" class="onClick-link"><span class="greyFont"><b>print 1/4 page flyers</b></span> <div style="padding-top: 15px"></div> <center><img src="images/page-flyer.png" height="32"></img></center></b></span></td>
+		<td align="left"><a href="mailto:?Subject=Come check out my silo on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_silo%26id=<?php echo $silo->id;?>" style="text-decoration: none"><span class="greyFont"><b>email contacts from your email</b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></img></center></b></span></a></td>
+		<td align="left" onclick="window.location='index.php?task=invite_promote';" class="onClick-link"><span class="greyFont"><b>email from <?=SITE_NAME?></b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></img></center></b></span></td>
+	</tr></table>
+</td>
+</tr>
+
 </table>
 
 </td>
 </tr>
 </table>
+
+<?php
+	$url = ACTIVE_URL."index.php?task=view_silo&id=".$silo->id;
+	$photo_url = ACTIVE_URL.'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;
+	$name = $silo->getTitle();
+	$caption = "Help this silo reach their goal of $".$silo->goal."!";
+	$description = $silo->getTitle()."<b>'s purpose:</b> ".$silo->getPurpose()." <br><br> Donate an item today!";
+?>
+<div id='fb-root'></div>
+<script src='http://connect.facebook.net/en_US/all.js'></script>
+<script> 
+FB.init({
+	appId      : <?php echo "'".FACEBOOK_ID."'"; ?>,
+	status     : true, 
+	cookie     : true,
+	xfbml      : true
+});
+function postToFeed() {
+	FB.ui({
+		method: 'feed',
+		link: "<?php echo $url; ?>",
+		picture: "<?php echo $photo_url; ?>",
+		name: "<?php echo $name; ?>",
+		caption: "<?php echo $caption; ?>",
+		description: "<?php echo $description; ?>"
+	});
+}
+</script>
 
 
 <div style="padding-bottom: 10px;"></div>

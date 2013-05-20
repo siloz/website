@@ -28,6 +28,7 @@ else {
 		$vouch_type_id = param_post('vouch');
 		$address = param_post('address');
 		$zip = param_post('zip');
+		$joined_silo = trim(param_post('joined_silo'));
 		
 		//test for form errors //comment added sept 8th 2012 james kenny
 		if (strlen(trim($title)) == 0) {
@@ -85,15 +86,11 @@ else {
 		$joined = true;
 		//added sept 8th 2012 james kenny
 		//make sure they selct their association with the silo
-		if(!$vouch_type_id){
+		if(!$vouch_type_id && !$joined_silo){
 			$err .= "Please use tell us how you are associated with this silo<br />";
 		}
 		if (strlen($err) == 0) {
 
-			//added vouch sept 8th, 2012 james kenny
-			if(!$Vouch){$Vouch = new Vouch();}
-			$Vouch->Save($silo->silo_id,$user_id,$vouch_type_id);
-			
 			$sql = "INSERT INTO items(silo_id, user_id, title, price, item_cat_id, description, status) VALUES (?,?,?,?,?,?,?);";
 			$stmt->prepare($sql);			
 			$status = "Pledged";
@@ -110,9 +107,6 @@ else {
 			$sqladr = "UPDATE users SET address = '$new_adr' WHERE user_id = $user_id";
 			mysql_query($sqladr);
 
-			$joined = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$user_id'"));
-			if ($joined) { $status = "Pledged"; } else { $status = "Joined"; } 
-
 			$Feed = new Feed();
 			$Feed->silo_id = $silo->silo_id;
 			$Feed->user_id = $user_id;
@@ -120,11 +114,16 @@ else {
 			$Feed->status = $status;
 			$Feed->Save();
 
-			$silo_member = "SELECT * FROM silo_membership WHERE silo_id = $silo->silo_id AND user_id = $user_id";
-			if (mysql_num_rows(mysql_query($silo_member)) == 0) {
+			if ($joined_silo == 0) {
+				if(!$Vouch){$Vouch = new Vouch();}
+				$Vouch->Save($silo->silo_id,$user_id,$vouch_type_id);
+
 				$joined = false;
 				$member = "INSERT INTO silo_membership (silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
 				mysql_query($member);
+				$status = "Joined";
+			} else { 
+				$status = "Pledged"; 
 			}
 						
 			for ($i=1; $i<=4; ++$i) {
@@ -189,7 +188,7 @@ else {
 			}			
 		}
 		if (strlen($err) == 0) {
-			if ($joined) { //Already joined
+			if ($joined_silo) { //Already joined
 				$subject = "Thank you for pledging for ".$silo->name;
 				$message = "<br/>You have pledged on silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
 				$message .= "Remember: you can share the silo you joined/pledged on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
@@ -219,6 +218,7 @@ else {
 		}
 		else {
 			$silo = new Silo($id);
+			$joined_silo = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$user_id'"));
 		}
 	}
 
@@ -478,7 +478,8 @@ die;
 			<input type="hidden" name="task" value="sell_on_siloz"/>
 			<input type="hidden" name="silo_id" value="<?php echo $silo->id;?>"/>
 			<input type="hidden" name="address" value="<?php echo $user->address;?>"/>					
-			<input type="hidden" name="zip" value="<?php echo $user->zip_code;?>"/>					
+			<input type="hidden" name="zip" value="<?php echo $user->zip_code;?>"/>
+			<input type="hidden" name="joined_silo" value="<?=$joined_silo?>"/>					
 			<table width="80%" cellpadding="10px" align="center">
 				<tr>
 					<td colspan="2" align="center">
@@ -553,6 +554,8 @@ die;
 						</table>
 					</td>
 				</tr>
+
+<?php if (!$joined_silo) { ?>
 				<tr>
 				<td align="center">
 					<h2>Choose One</h2>
@@ -567,6 +570,8 @@ die;
 						<div class="<?php if ($vouch_type_id == 78) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_78">I researched this silo, and I know this silo administrator</div>
 						<input type="hidden" id="famIndex" name="vouch" value="<?=$vouch_type_id?>" />
 					</td>
+				</tr>
+<?php } ?>
 				<tr>
 				<td><br>
 						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of information posted on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  By using siloz, members you agree to hold siloz harmless and not liable for  fraud, misrepresentation, tortious acts committed by a silo administrator, and crimes incidental to the sale of items.</p>

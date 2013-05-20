@@ -97,10 +97,11 @@ function hide_flag_box_silo(){
 				if (!$tax_ded) { $tax = "<b><u>not</u></b>"; }
 				$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
 				$pctV = $vouchTotal/($silo->getTotalItems());
-				$pctVouch = round($pctV * 100); 
+				$pctVouch = round($pctV * 100);
+				$friend_count = $silo->getAdminFCount();
 			?>
 			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?=$pctVouch?>% (<?=$vouchTotal?> members) of those who pledged items to this silo either know, or have researched, this Administrator - or both!</div>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt">This Administrator is Facebook Connected with 345 friends.</div>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?php if ($friend_count) { echo "This Administrator is Facebook Connected with ".$friend_count." friends."; } else { echo "This Administrator is <b><u>not</u></b> Facebook Connected."; } ?></div>
 			<?php }elseif($flag_box_type === "item"){ 
 				$flag_count = $Flag->GetItemFlaggedCount($item->item_id);
 			?>

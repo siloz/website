@@ -67,7 +67,7 @@ else {
 		$shortname = trim(param_post('shortname'));
 		$ein = param_post('ein');
 		$verified = param_post('verified');
-		$issue_receipts = param_post('issue_receipts');		
+		$issue_receipts = 1;		
 		$org_name = param_post('org_name');		
 		$title = param_post('title');
 		$phone_number = param_post('phone_number');
@@ -80,9 +80,8 @@ else {
 		$ein = ($verified == 1) ? $ein : '0';
 		$s_types = array(2, 5, 6);
 
-		if ($issue_receipts == 0) { $issue_receipts = 0; }
-		elseif ($ein > 0) { $issue_receipts = 1; }
-		elseif ($ein == 0 && in_array($silo_cat_id, $s_types)) { $issue_receipts = 1; }
+		if ($ein > 0) { $issue_receipts = 1; }
+		elseif (in_array($silo_cat_id, $s_types)) { $issue_receipts = 1; }
 		else { $issue_receipts = 0; }
 
 		if($_REQUEST["duration"]){
@@ -349,6 +348,8 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				<td>Silo short name <font color='red'>*</font></td>
 				<td><input type="text" name="shortname" style="width : 300px" value='<?php echo $shortname; ?>'/></td>			
 			</tr>
+
+<?php if ($silo_type == "public") { ?>
 			<tr>
 				<td valign="top">Silo Type <font color='red'>*</font></td>
 				<td>
@@ -396,6 +397,7 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 					</script>
 				</td>			
 			</tr>
+<!--
 			<tr>
 				<td colspan="2" class="create-silo">
 					<input type="hidden" name="verified" id="verified">
@@ -405,18 +407,27 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 					<label>No</label> <input type="radio" name="issue_receipts" value="0"/><br>
 				</td>
 			</tr>
+-->
 			<tr>
 				<td>Name of the organization <font color='red'>*</font></td>
 				<td><input type="text" name="org_name" id="org_name" style="width : 300px" value='<?php echo $org_name; ?>'/></td>			
-			</tr>			
+			</tr>
 			<tr>
 				<td>Official address <font color='red'>*</font></td>
 				<td><input type="text" name="address" id="address" style="width : 300px" value='<?=$address?>'/></td>			
-			</tr>						
+			</tr>
+				
 			<tr>
 				<td>Your title <font color='red'>*</font></td>
 				<td><input type="text" name="title" id="title" style="width : 150px" value='<?php echo $title; ?>'/></td>			
-			</tr>						
+			</tr>
+<?php } else { ?>
+			<tr>
+				<td>Your relationship to cause <font color='red'>*</font></td>
+				<td><input type="text" name="title" id="title" style="width : 150px" value='<?php echo $title; ?>'/></td>			
+			</tr>
+<?php } ?>
+		
 			<tr>
 				<td>Official telephone number <font color='red'>*</font></td>
 				<td><input type="text" name="phone_number" id="phone_number" style="width : 150px" value='<?php echo $phone_number; ?>'/></td>			
@@ -457,7 +468,7 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 			</tr>
 			<tr>
 				<td colspan="2" align="center">
-					<br><font size="1">**To issue tax-deductible receipts your silos <b>must</b> have a valid EIN number <b>OR</b> be listed as an education, a public university, or a religious silo type.</font>
+					<br><font size="1">**To issue tax-deductible receipts your silo <b>must</b> have a valid EIN number <b>OR</b> be listed as an education, a public university, or a religious silo type.</font>
 				</td>
 			</tr>
 		</table>

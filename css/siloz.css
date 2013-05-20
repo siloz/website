@@ -668,7 +668,7 @@ div.plate_pending a {
 	border-radius: 8px;     
     	border: 1px solid lightgray;
 	width: 140px;
-	height: 155px;	
+	height: 160px;	
 	padding: 0px 4px;
 	color: #0F5684;
 	font-size: 11px;
@@ -1680,50 +1680,13 @@ margin-left: 5px;
 	font-size: 9pt;
 }
 
-.aconsole-metrics {
-	-moz-border-radius: 8px;
-    	-webkit-border-radius: 8px;
-    	-khtml-border-radius: 8px;
-    	border-radius: 8px;     
-    	border: 7px solid #84bfe5;
-	width: 750px;
-	height: 250px;
-	padding: 0px 4px;
-	font-family: Arial, Helvetica,sans-serif;
-	padding: 5px;
-}
-
-.metrics-text-blue {
-	color: #2f8dcb;
-	font-weight: bold;
-	font-size: 11pt;
-}
-
-.aconsole-promote {
-	-moz-border-radius: 8px;
-    	-webkit-border-radius: 8px;
-    	-khtml-border-radius: 8px;
-    	border-radius: 8px;     
-    	border: 7px solid #84bfe5;
-	width: 600px;
-	height: 200px;
-	padding: 0px 4px;
-	font-family: Arial, Helvetica,sans-serif;
-	padding: 5px 15px;
-	font-weight: bold;
-}
-
-.promote-text-blue {
-	color: #2f8dcb;
-	font-weight: bold;
-	font-size: 10pt;
-}
-
-.promote-text-blue a {
-	color: #2f8dcb;
-	font-weight: bold;
-	font-size: 10pt;
+.onClick-link {
 	text-decoration: none;
+}
+
+.onClick-link :hover {
+	opacity: .8;
+	cursor: pointer;
 }
 
 .greyFont {

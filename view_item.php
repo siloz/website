@@ -369,7 +369,7 @@
 					<table width="100%">
 						<tr>
 							<?php if (!$closed_silo) { ?>
-							<td rowspan="2"><a href="mailto:?Subject=<?=ACTIVE_URL?>index.php?task=view_item%26<?php echo $item->id;?>&Body=Check out this item on <?=SITE_NAME?>!"><img src="images/mail-icon.png"></a></td>
+							<td rowspan="2"><a href="mailto:?Subject=Check out this item on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_item%26id=<?php echo $item->id;?>"><img src="images/mail-icon.png" width="32" height="32"></a></td>
 							<td rowspan="2"><img src="images/facebook.jpg" onclick='postToFeed();'/></td>
 							<?php } if ($closed_silo) { ?>
 							<td><div class="voucherText"><font size="1">&nbsp;</font></div></td>
@@ -648,11 +648,29 @@ var map = new google.maps.Map(div, options);
 var styledMapType = new google.maps.StyledMapType(styles, { name: 'Item Location' });
 map.mapTypes.set('Styled', styledMapType);
 
+<?php
+	$plate = $item->getItemCell($silo_id, $c_user_id);
+	$plate = str_replace("<td>", "",$plate);
+	$plate = str_replace("</td>", "",$plate);
+?>
+
 
 infoWindow = new google.maps.InfoWindow();
     infoWindow.setOptions({
-        content: "<div align='center'><img src='uploads/items/<?=$item->photo_file_1?>?<?=$item->last_update?>' width=100px id='current_item_photo'/></div>",
+        content: "<?=$plate?>",
         position: myLocation,
+    });
+
+    var infowindow = new InfoBubble({
+		maxWidth: 200,
+		shadowStyle: 1,
+		padding: 0,
+		borderRadius: 4,
+		arrowSize: 10,
+		arrowPosition: 10,
+      	arrowStyle: 2,	          
+		borderWidth: 0,
+		borderColor: '#2c2c2c'
     });
 
 infoWindow.open(map);

@@ -178,11 +178,11 @@ class Notification {
 			$silo = mysql_fetch_array(mysql_query("SELECT admin_id, name, id FROM silos WHERE silo_id = '$this->silo_id'"));
 			$email = mysql_fetch_row(mysql_query("SELECT email FROM users WHERE user_id = '$silo[0]'"));
 
-			$subject = "Silo low vouch score";
-			$message = "<h3>'".$silo[1]."' has too low of a vouching score on ".SITE_NAME.".com</h3>";
+			$subject = "Silo low familiarity index";
+			$message = "<h3>'".$silo[1]."' has too low of a familiarity index on ".SITE_NAME.".com</h3>";
 			$message .= "Your silo has less than 80% of its members who have researched or have any personal knowledge about your silo's purpose.<br><br>";
-			$message .= "You have <b>72</b> hours to raise your vouching score. If the vouching score is still too low after <b>72</b> hours, it will be shut down immediately!<br><br>";
-			$message .= "Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo[2]."'>here</a> to view the silo that has too low of a vouching score.";
+			$message .= "You have <b>72</b> hours to raise your familiarity index score. If the familiarity index is still too low after <b>72</b> hours, it will be shut down immediately!<br><br>";
+			$message .= "Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo[2]."'>here</a> to view the silo that has too low of a familiarity index.";
 		}
 		elseif ($this->type == "Reactivate") {
 			$silo = mysql_fetch_array(mysql_query("SELECT admin_id, name, id FROM silos WHERE silo_id = '$this->silo_id'"));

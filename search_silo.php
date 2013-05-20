@@ -223,97 +223,112 @@ if ($view == "map") {
 
 <br>
 
-<?php
-//Get silos for map
-$qry = mysql_query("SELECT * FROM silos WHERE status = 'active'");
-$num = mysql_num_rows($qry);
-
-    echo "<script> var locations = [";
-
-        while ($map = mysql_fetch_array($qry)){
-
-        echo "['" . $map['title'] . "', " . $map['latitude'] . ", " . $map['longitude'] . "],";
-
-        }
-
-    echo " ];</script>";
-
-?>
-</div>
-
+<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script  type="text/javascript">
 
 function initialize() {
-var styles = [
-	{
-		featureType: 'water',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#84BFE5' },
-			{ saturation: 37 },
-			{ lightness: -7 },
-			{ visibility: 'on' }
-		]
-	},{
-		featureType: 'landscape.man_made',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#FFFFFF' },
-			{ saturation: -100 },
-			{ lightness: 100 },
-			{ visibility: 'on' }
-		]
-	},{
-		featureType: 'road.highway',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#FFC92F' },
-			{ saturation: 100 },
-			{ lightness: -7 },
-			{ visibility: 'on' }
-		]
-	},{
-		featureType: 'road.arterial',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#FFE18C' },
-			{ saturation: 100 },
-			{ lightness: 2 },
-			{ visibility: 'on' }
-		]
+	var styles = [
+		{
+			featureType: 'water',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#84BFE5' },
+				{ saturation: 37 },
+				{ lightness: -7 },
+				{ visibility: 'on' }
+			]
+		},{
+			featureType: 'landscape.man_made',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#FFFFFF' },
+				{ saturation: -100 },
+				{ lightness: 100 },
+				{ visibility: 'on' }
+			]
+		},{
+			featureType: 'road.highway',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#FFC92F' },
+				{ saturation: 100 },
+				{ lightness: -7 },
+				{ visibility: 'on' }
+			]
+		},{
+			featureType: 'road.arterial',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#FFE18C' },
+				{ saturation: 100 },
+				{ lightness: 2 },
+				{ visibility: 'on' }
+			]
+		}
+	];
+
+	siloLat = <?=$silo->latitude?>;
+	siloLong = <?=$silo->longitude?>;
+    var infowindow = new InfoBubble({
+		maxWidth: 200,
+		shadowStyle: 1,
+		padding: 0,
+		borderRadius: 4,
+		arrowSize: 10,
+		arrowPosition: 10,
+      	arrowStyle: 2,	          
+		borderWidth: 0,
+		borderColor: '#2c2c2c'
+    });
+
+	var siloLocation = new google.maps.LatLng(siloLat, siloLong);
+	var options = {
+		mapTypeControlOptions: {
+			mapTypeIds: [ 'Styled']
+		},
+		center: siloLocation,
+		zoom: 5,
+		maxZoom: 13,
+		mapTypeId: 'Styled'
+	};
+
+	var div = document.getElementById('map_canvas');
+	var map = new google.maps.Map(div, options);
+	var styledMapType = new google.maps.StyledMapType(styles, { name: 'Silo Map' });
+	map.mapTypes.set('Styled', styledMapType);
+
+	var bounds = new google.maps.LatLngBounds();
+	var markers = [];
+	bounds.extend(siloLocation);
+	<?php
+	$getSilos = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND silo_type = 'public'");
+	while ($res = mysql_fetch_array($getSilos)) {
+		$silo_id = $res['silo_id'];
+		$silo = new Silo($silo_id);
+		$plate = $silo->getPlate();
+	?>
+		var pos<?=$silo_id?> = new google.maps.LatLng(<?=$silo->latitude?>, <?=$silo->longitude?>);				
+		
+	   	var marker<?=$silo_id?> = new google.maps.Marker({
+	       	map: map,
+			animation: google.maps.Animation.DROP,
+			icon: 'images/red_square.png',
+	       	position: pos<?=$silo_id?>
+	   	});
+		markers.push(marker<?=$silo_id?>);
+		bounds.extend(pos<?=$silo_id?>);	    
+		google.maps.event.addListener(marker<?=$silo_id?>, 'click', (function(marker) {
+	        return function() {
+	          infowindow.setContent(<?="\"$plate\""?>);
+	          infowindow.open(map, marker);
+	        }
+	      })(marker<?=$silo_id?>));
+		
+		<?php
 	}
-];
-
-siloLat = <?=$silo->latitude?>;
-siloLong = <?=$silo->longitude?>;
-
-var siloLocation = new google.maps.LatLng(siloLat, siloLong);
-var options = {
-	mapTypeControlOptions: {
-		mapTypeIds: [ 'Styled']
-	},
-	center: siloLocation,
-	zoom: 3,
-	maxZoom: 13,
-	mapTypeId: 'Styled'
-};
-
-var div = document.getElementById('map_canvas');
-var map = new google.maps.Map(div, options);
-var styledMapType = new google.maps.StyledMapType(styles, { name: 'Silo Map' });
-map.mapTypes.set('Styled', styledMapType);
-
-    var marker, i;
-
-    for (i = 0; i < locations.length; i++) {  
-            	marker = new google.maps.Marker({
-            	position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            	map: map,
-		animation: google.maps.Animation.DROP
-            });
-}
-
-infoWindow.open(map);
+	?>
+	map.fitBounds(bounds);
+	var markerCluster = new MarkerClusterer(map, markers, {maxZoom: 13, gridSize:10});
 }
 
 function loadScript() {

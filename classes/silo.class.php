@@ -93,7 +93,12 @@ class Silo {
 	}
 	
 	public function getAdmin() {
-		return $this->admin;
+		return $this->admin_id;
+	}
+
+	public function getAdminFCount() {
+		$friend_count = mysql_fetch_row(mysql_query("SELECT friend_count FROM users WHERE user_id = '$this->admin_id'"));
+		return $friend_count[0];
 	}
 	
 	public function getPledgedAmount() {
@@ -176,12 +181,9 @@ class Silo {
 	}
 
 	public function getRunTime() {
-		$sql = "SELECT created_date, end_date FROM silos WHERE silo_id = ".$this->silo_id."";
+		$sql = "SELECT DATEDIFF(end_date, created_date) AS days FROM silos WHERE silo_id = ".$this->silo_id."";
 		$res = mysql_fetch_array(mysql_query($sql));
-		$end = strtotime($sql['end_date']);
-		$created = strtotime($sql['created_date']);		
-		$runtime = $end - $created;
-		$days = date("j", $end);
+		$days = $res['days'];
 		if ($days < 8) { $runtime = 1; } elseif ($days > 7 && $days < 21) { $runtime = 2; } else { $runtime = 3; }
 		return $runtime;
 	}
@@ -255,7 +257,7 @@ class Silo {
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
 		$cell = "<div class='plateSilo span2' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<div style='text-align: center; height: 30px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=100px width=135px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
+		$cell .= "<div style='text-align: center; height: 40px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=126px width=168px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 	
@@ -282,7 +284,7 @@ class Silo {
 				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=136px width=182px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='orange'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
-	
+
 	public function isEnded() {
 		$today = date('Y-m-d')."";
 		//return $this->end_date < $today;

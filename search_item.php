@@ -47,9 +47,9 @@
 	$from = param_get('from') == '' ? 1 : intval(param_get('from'));
 	$to = param_get('to') == '' ? $itemsPerPage : intval(param_get('to'));		
 	$offset = $to - $from + 1;
-	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*), $sqlDist AS distance FROM items WHERE $search_clause HAVING distance <= 75"));
+	$tmp = mysql_fetch_array(mysql_query("SELECT COUNT(*), $sqlDist AS distance FROM items WHERE $search_clause"));
 	$count_items = $tmp[0];	
-	$count_silos = mysql_num_rows(mysql_query("SELECT *, $sqlDist AS distance FROM items WHERE $search_clause AND deleted_date = 0 HAVING distance <= 75"));
+	$count_silos = mysql_num_rows(mysql_query("SELECT *, $sqlDist AS distance FROM items WHERE $search_clause AND deleted_date = 0"));
 
 	$new_sort_order = '';
 	$sort_order = param_get('sort_order');
@@ -78,7 +78,7 @@
 
 	$start_from = ($page-1) * $itemsPerPage;
 
-	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE $search_clause HAVING distance <= 75 $order_by_clause LIMIT $start_from, $itemsPerPage";
+	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE $search_clause $order_by_clause LIMIT $start_from, $itemsPerPage";
 	$tmp = mysql_query($sql);
 	
 	$items_html = "<div class='row'><div class='span12'>";
@@ -219,99 +219,118 @@ if ($view == "map") {
 
 <div id='map_canvas' class="map-canvas" style='width: 930px; height: 400px; margin: 20px;'></div>
 
+
 <br>
 
-<?php
-//Get items for map
-$qry = mysql_query("SELECT * FROM items WHERE status = 'pledged' OR status = 'offer'");
-$num = mysql_num_rows($qry);
-
-    echo "<script> var locations = [";
-
-        while ($map = mysql_fetch_array($qry)){
-
-        echo "['" . $map['title'] . "', " . $map['latitude'] . ", " . $map['longitude'] . "],";
-
-        }
-
-    echo " ];</script>";
-
-?>
-</div>
-
+<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script  type="text/javascript">
 
 function initialize() {
-var styles = [
-	{
-		featureType: 'water',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#84BFE5' },
-			{ saturation: 37 },
-			{ lightness: -7 },
-			{ visibility: 'on' }
-		]
-	},{
-		featureType: 'landscape.man_made',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#FFFFFF' },
-			{ saturation: -100 },
-			{ lightness: 100 },
-			{ visibility: 'on' }
-		]
-	},{
-		featureType: 'road.highway',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#FFC92F' },
-			{ saturation: 100 },
-			{ lightness: -7 },
-			{ visibility: 'on' }
-		]
-	},{
-		featureType: 'road.arterial',
-		elementType: 'all',
-		stylers: [
-			{ hue: '#FFE18C' },
-			{ saturation: 100 },
-			{ lightness: 2 },
-			{ visibility: 'on' }
-		]
-	}
-];
+	var styles = [
+		{
+			featureType: 'water',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#84BFE5' },
+				{ saturation: 37 },
+				{ lightness: -7 },
+				{ visibility: 'on' }
+			]
+		},{
+			featureType: 'landscape.man_made',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#FFFFFF' },
+				{ saturation: -100 },
+				{ lightness: 100 },
+				{ visibility: 'on' }
+			]
+		},{
+			featureType: 'road.highway',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#FFC92F' },
+				{ saturation: 100 },
+				{ lightness: -7 },
+				{ visibility: 'on' }
+			]
+		},{
+			featureType: 'road.arterial',
+			elementType: 'all',
+			stylers: [
+				{ hue: '#FFE18C' },
+				{ saturation: 100 },
+				{ lightness: 2 },
+				{ visibility: 'on' }
+			]
+		}
+	];
 
-siloLat = 33.761272;
-siloLong = -84.390556;
+	userLat = <?=$userLat?>;
+	userLong = <?=$userLong?>;
+    var infowindow = new InfoBubble({
+		maxWidth: 200,
+		shadowStyle: 1,
+		padding: 0,
+		borderRadius: 4,
+		arrowSize: 10,
+		arrowPosition: 10,
+      	arrowStyle: 2,	          
+		borderWidth: 0,
+		borderColor: '#2c2c2c'
+    });
 
-var siloLocation = new google.maps.LatLng(siloLat, siloLong);
-var options = {
-	mapTypeControlOptions: {
-		mapTypeIds: [ 'Styled']
-	},
-	center: siloLocation,
-	zoom: 3,
-	maxZoom: 13,
-	mapTypeId: 'Styled'
-};
+	var userLocation = new google.maps.LatLng(userLat, userLong);
 
-var div = document.getElementById('map_canvas');
-var map = new google.maps.Map(div, options);
-var styledMapType = new google.maps.StyledMapType(styles, { name: 'Item Map' });
-map.mapTypes.set('Styled', styledMapType);
+	var options = {
+		mapTypeControlOptions: {
+			mapTypeIds: [ 'Styled']
+		},
+		center: userLocation,
+		zoom: 5,
+		maxZoom: 13,
+		mapTypeId: 'Styled'
+	};
 
-    var marker, i;
+	var div = document.getElementById('map_canvas');
+	var map = new google.maps.Map(div, options);
+	var styledMapType = new google.maps.StyledMapType(styles, { name: 'Item Map' });
+	map.mapTypes.set('Styled', styledMapType);
 
-    for (i = 0; i < locations.length; i++) {  
-            	marker = new google.maps.Marker({
-            	position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            	map: map,
-		animation: google.maps.Animation.DROP,
-            });
-}
-
-infoWindow.open(map);
+	var bounds = new google.maps.LatLngBounds();
+	var markers = [];
+	bounds.extend(userLocation);
+	<?php
+	$map = mysql_query($sql);
+	while ($res = mysql_fetch_array($map)) {
+		$item_id = $res['item_id'];
+		$item = new Item($res['id']);
+		$plate = $item->getItemCell($silo_id, $c_user_id);
+		$plate = str_replace("<td>", "",$plate);
+		$plate = str_replace("</td>", "",$plate);
+	?>
+		var pos<?=$item_id?> = new google.maps.LatLng(<?=$item->latitude?>, <?=$item->longitude?>);				
+		
+	   	var marker<?=$item_id?> = new google.maps.Marker({
+	       	map: map,
+			animation: google.maps.Animation.DROP,
+			icon: 'images/red_square.png',
+	       	position: pos<?=$item_id?>
+	   	});
+		markers.push(marker<?=$item_id?>);
+		bounds.extend(pos<?=$item_id?>);	    
+		google.maps.event.addListener(marker<?=$item_id?>, 'click', (function(marker) {
+	        return function() {
+	          infowindow.setContent(<?="\"$plate\""?>);
+	          infowindow.open(map, marker);
+	        }
+	      })(marker<?=$item_id?>));
+		
+		<?php
+		}
+	?>
+	map.fitBounds(bounds);
+	var markerCluster = new MarkerClusterer(map, markers, {maxZoom: 13, gridSize:10});
 }
 
 function loadScript() {

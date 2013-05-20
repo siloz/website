@@ -571,7 +571,7 @@ function initialize() {
 		arrowSize: 10,
 		arrowPosition: 10,
       	arrowStyle: 2,	          
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: '#2c2c2c'
     });
 
@@ -581,7 +581,7 @@ function initialize() {
 			mapTypeIds: [ 'Styled']
 		},
 		center: siloLocation,
-		zoom: 8,
+		zoom: 5,
 		maxZoom: 13,
 		mapTypeId: 'Styled'
 	};
