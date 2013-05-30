@@ -1,10 +1,11 @@
 <?php
 	$item_id = param_get('id');
+
 	require("include/autoload.class.php");
 	if ($item_id == '') {
 		echo "<script>window.location = 'index.php';</script>";			
 	}
-	else {		
+	else {
 		$item = new Item($item_id);
 		$item->Update();
 		$seller = $item->owner;
@@ -307,29 +308,19 @@
 	<tr>
 		<td valign='top' width="610px">
 			<div id="items" style="width: 610px;">	
-				<table>
+				<table class="item-page">
 					<tr>
-						<td colspan="2">
-							<table width="100%" class="titleHeading">
-								<tr>
-									<td align="left">
-										<b style="font-size: 14px;"><?php echo $item->title; ?></b>
-									</td>
-									<td align="right">
-										<b style="font-size: 14px; color:#f60; text-align:right">$<?php echo $price; ?></b>							
-									</td>
-								</tr>
-							</table>
-							<br/>					
+						<td style="padding-bottom: 5px" colspan="2">
+							<b style="font-size: 18pt;"><?php echo $item->title; ?>, $<?php echo $price; ?></b>
 						</td>
 					</tr>
 					<tr>
 						<td valign="top" width="290px" class="item-details">
 							<?php
 								if ($item->photo_file_1 != '')
-									echo "<img src='uploads/items/".$item->photo_file_1."?".$item->last_update."' width=280px height=210px id='current_item_photo'/> &nbsp;&nbsp;";
+									echo "<img src='uploads/items/".$item->photo_file_1."?".$item->last_update."' width=280px height=210px id='current_item_photo' /> &nbsp;&nbsp;";
 							?>
-							<br/>
+							<div style="padding-top: 5px;"></div>
 							<?php
 								for ($i = 1; $i <=4; $i++) {
 									$fn = $item->getPhoto($i);
@@ -340,134 +331,98 @@
 								}									
 							?>							
 						</td>
-						<td valign="top" width="340px">
-							<div style="text-align:justify; margin-left: 5px; height: 240px;">
-								<?php 
-									$desc = preg_replace("/\n/","<br>",html_entity_decode($item->description));
-									echo $desc;
-								?>
-							<div style="margin-top: 15px;">
-							<table cellpadding="2px">
-								<tr>
-									<td><b>ID:</b></td>
-									<td><?php echo $item->id;?></td>
-								</tr>
-								<tr>
-									<td><b>Seller:</b></td>
-									<td><a href="index.php?task=view_user&id=<?php echo $seller->id;?>"><font color="#2f8dcb"><?php echo $seller->fname?></font></a></td>
-								</tr>
-								<tr>
-									<td><b>Listed on:</b></td>
-									<td><?php 	$added = strtotime($item->added_date);
-											$added_date = date("M jS, Y", $added);
-											echo $added_date;	?>
-									</td>
-								</tr>
-							</table>
-							</div>
-					<div style="margin-top: 15px; z-index: 200;">
-					<table width="100%">
-						<tr>
-							<?php if (!$closed_silo) { ?>
-							<td rowspan="2"><a href="mailto:?Subject=Check out this item on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_item%26id=<?php echo $item->id;?>"><img src="images/mail-icon.png" width="32" height="32"></a></td>
-							<td rowspan="2"><img src="images/facebook.jpg" onclick='postToFeed();'/></td>
-							<?php } if ($closed_silo) { ?>
-							<td><div class="voucherText"><font size="1">&nbsp;</font></div></td>
-							<?php } elseif (!$_SESSION['is_logged_in']) { ?>
-							<td class="click_me" onclick="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><div class="voucherText"><font size="1">Flag this item</font></div></td>
-							<?php } elseif (!$distBuyerSeller) { ?>
-							<td class="click_me" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);"><div class="voucherText"><font size="1">Flag this item</font></div></td>
-							<?php } elseif ($itemFlagged) { ?>
-							<td class="click_me" onclick="javascript:popup_show('flagged', 'flagged_drag', 'flagged_exit', 'screen-center', 0, 0);"><div class="voucherText"><font size="1">Item Flagged</font></div></td>
-							<?php } elseif (!$isSeller) { ?>
-							<td class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><div class="voucherText"><font size="1">Flag this item</font></div></td>
+						<td valign="top">
+						<div class="item-page-box">
+							<?php 
+								$desc = preg_replace("/\n/","<br>",html_entity_decode($item->description));
+								echo $desc;
+							?><br><br>
+							<b>Seller Availability:</b> <?php if($item->avail == "") { echo "The seller did not list specific availability times"; }
+							else { echo "<i>\"$item->avail\"</i>"; } ?><br>
+							<?php $checkFlag = new Flag(); $flagCount = $checkFlag->GetItemFlaggedCount($item->item_id); if ($flagCount == 1) { $flagPlural = "flag"; } else { $flagPlural = "flags"; } ?>
+							<b>Flags</b>: this item has <?=$flagCount?> <?=$flagPlural?> <br>
+						</div>
+						<div style="padding: 5px;"></div>
+						<div class="item-page-box">
+							Item ID: <?php echo $item->id;?> <br>
+							Listing <?php if ($closed_silo) { echo "expired"; } else { echo "expires"; } ?>:
+								<?php $end = strtotime($silo->end_date); $ended_date = date("M jS, Y", $end); echo $ended_date; ?> <br>
+							Seller: <a href="index.php?task=view_user&id=<?php echo $seller->id;?>"><font color="#2f8dcb"><?php echo $seller->fname?> (view other items)</font></a>
+						</div>
+
+				<?php if ($closed_silo) { echo "<div style='margin-top: 30px; text-align: center;'>The silo this item belongs to is closed. <br> Items in a closed silo are not interactive.</div>"; } 
+				elseif ($isSeller) { echo "<div style='margin-top: 30px; text-align: center;'>You are the seller of this item. <br> Some functions are hidden.</div>"; } else { ?>
+
+						<div style="padding: 5px;"></div>
+							<?php if (!$_SESSION['is_logged_in']) {?>
+								<button class="buttonBuyItem" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">buy this item</button>
+							<?php } elseif ($isSeller) {} elseif (!$distBuyerSeller) { ?>
+								<button class="buttonBuyItem" onclick="popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">buy this item</button>
+							<?php } elseif ($addInfo_full) { ?>
+								<button class="buttonBuyItem" onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">buy this item</button>
+							<?php } else { ?>
+								<button class="buttonBuyItem" onclick="window.location = 'index.php?task=payment&id=<?php echo $item->id;?>'">buy this item</button>
 							<?php } ?>
-									<td align="center">
-											<?php if ($closed_silo) {} elseif (!$_SESSION['is_logged_in']) {
-											?>
-											<button onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">Buy This Item</button>
-											<?php
-											} elseif ($isSeller) {} elseif (!$distBuyerSeller) {
-											?>
-											<button onclick="popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">Buy This Item</button>
-											<?php
-											} elseif ($addInfo_full) {
-											?>
-											<button onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">Buy This Item</button>
-											<?php
-											} else {
-											?>
-											<button onclick="window.location = 'index.php?task=payment&id=<?php echo $item->id;?>'">Buy This Item</button>
-											<?php
-											}
-											?>
-									</td>
-						</tr>
-						<tr>
-							<?php if ($closed_silo) { ?>
-							<td>&nbsp;</td>
-							<?php } elseif (!$_SESSION['is_logged_in']) { ?>
-							<td class="click_me" onclick="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="40px" src="img/flag.png" alt="Flag this item" /></td>
+						<table width="100%" style="padding-top: 5px"><tr>
+						<td width="155px">
+							<?php if (!$_SESSION['is_logged_in']) { ?>
+								<button class="buttonItemPage" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">make other offer
+							<?php } elseif ($addInfo_full) { ?>
+								<button class="buttonItemPage" onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">make other offer
+							<?php } elseif ($isSeller) {} elseif ($offerStatus == 'declined' || $offerStatus == 'canceled') { ?>
+								<button class="buttonItemPage" style="color: red;">offer <?=$offerStatus?>
+							<?php } elseif ($offerStatus == 'pending') { ?>
+								<button class="buttonItemPage offer" onclick="javascript:popup_show('offerp', 'offerp_drag', 'offerp_exit', 'screen-center', 0, 0);">offer pending
+							<?php } elseif ($offerStatus == 'accepted') { ?>
+								<button class="buttonItemPage" style="color: green">offer accepted!
+							<?php } elseif ($itemOffer) { ?>
+								<button class="buttonItemPage" onclick="javascript:popup_show('ioffer', 'ioffer_drag', 'ioffer_exit', 'screen-center', 0, 0);">another offer pending
 							<?php } elseif (!$distBuyerSeller) { ?>
-							<td class="click_me" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);"><img height="40px" src="img/flag.png" alt="Flag this item" /></td>
+								<button class="buttonItemPage" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">make other offer
+							<?php } else { ?>
+								<button class="buttonItemPage" onclick="javascript:popup_show('offer', 'offer_drag', 'offer_exit', 'screen-center', 0, 0);">make other offer
+							<?php } ?></button>
+						</td>
+						<td align="center" valign="middle" rowspan="2">
+							<?php if (!$_SESSION['is_logged_in']) { ?>
+								<div class="click_me flagItem" onclick="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
+							<?php } elseif (!$distBuyerSeller) { ?>
+								<div class="click_me flagItem" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
 							<?php } elseif ($itemFlagged) { ?>
-							<td class="click_me" onclick="javascript:popup_show('flagged', 'flagged_drag', 'flagged_exit', 'screen-center', 0, 0);"><img height="40px" src="img/flag.png" alt="Flag this item" /></td>
+								<div class="click_me flagItem" onclick="javascript:popup_show('flagged', 'flagged_drag', 'flagged_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
 							<?php } elseif (!$isSeller || $closed_silo) { ?>
-							<td class="click_me" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="40px" src="img/flag.png" alt="Flag this item" /></td>
-							<?php } ?>
-
-							<td align="center">
-								<div class="voucherText"><b>
-								<?php if ($closed_silo) {} elseif (!$_SESSION['is_logged_in']) { ?>
-									<a onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">offer another amount
-									<?php } elseif ($addInfo_full) { ?>
-									<a onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">offer another amount
-									<?php } elseif ($isSeller) {} elseif ($offerStatus == 'declined' || $offerStatus == 'canceled') { ?>
-									<font color="red">offer <?=$offerStatus?> </font>
-									<?php } elseif ($offerStatus == 'pending') { ?>
-									<div class="offer"><a href="javascript:popup_show('offerp', 'offerp_drag', 'offerp_exit', 'screen-center', 0, 0);">offer pending</div>
-									<?php } elseif ($offerStatus == 'accepted') { ?>
-									<div style="color: green">offer accepted!</div>
-									<?php } elseif ($itemOffer) { ?>
-									<a href="javascript:popup_show('ioffer', 'ioffer_drag', 'ioffer_exit', 'screen-center', 0, 0);">another offer pending
-									<?php } elseif (!$distBuyerSeller) { ?>
-									<a href="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">offer another ammount
-									<?php } else { ?>
-									<a href="javascript:popup_show('offer', 'offer_drag', 'offer_exit', 'screen-center', 0, 0);">offer another amount
-									<?php } ?></div></a></b><br>
-
-								<div class="voucherText">
-								<?php if ($closed_silo) { echo "The silo this item belongs to is closed. <br> Items in a closed silo are not interactive."; } elseif (!$_SESSION['is_logged_in']) { ?>
-									<a onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">add to favorites
-								<?php } elseif ($isSeller) { echo "You are the seller of this item. <br> Some functions are hidden."; } elseif ($fav) { ?>
-									<form method="post" action="">
-										<input type="hidden" name="user_id" value="<?=$user_id?>">
-										<input type="hidden" name="item_id" value="<?=$item->item_id?>">
-										<input style="color: red; background: #fff;" type="submit" name="fav" value="remove from favorites">
-									</form>
-									<?php } elseif (!$distBuyerSeller) { ?>
-									<a href="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">add to favorites
-									<?php } else { ?>
-									<form method="post" action="">
-										<input type="hidden" name="user_id" value="<?=$user_id?>">
-										<input type="hidden" name="item_id" value="<?=$item->item_id?>">
-										<input class="voucherText" type="submit" name="fav" value="add to favorites">
-									</form>
-									<?php } ?>
-								</div></a><br>
-							</td>
-						</tr>
-					</table>
-							</div>						
-							</div>
-
-						</td>						
-					</tr>
+								<div class="click_me flagItem" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
+							<?php } ?></div>
+						</td>
+						<td style="padding-left: 7px" align="center" valign="middle" rowspan="2">
+							<a href="mailto:?Subject=Check out this item on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_item%26id=<?php echo $item->id;?>"><img src="images/mail-icon.png" width="55" height="55"></a>
+						</td>
+						<td align="center" valign="middle" rowspan="2">
+							<img height="40" width="40" src="images/facebook.jpg" class="fbHover" onclick='postToFeed();'/>
+						</td></tr>
+						<tr><td>
+							<?php if ($fav) { ?>
+								<form method="post" action="">
+									<input type="hidden" name="user_id" value="<?=$user_id?>">
+									<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+									<button class="buttonItemPage" style="color: red;" type="submit" name="fav" value="remove from favorites">remove from favorites
+								</form>
+							<?php } elseif (!$distBuyerSeller) { ?>
+								<button class="buttonItemPage" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">add to favorites
+							<?php } else { ?>
+								<form method="post" action="">
+									<input type="hidden" name="user_id" value="<?=$user_id?>">
+									<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+									<button class="buttonItemPage" type="submit" name="fav" value="add to favorites">add to favorites
+								</form>
+							<?php } ?></button>
+						</td>
+						</tr></table>
+				<?php } ?>
+					</div>
 					<tr><td><br></td></tr>
 					<tr>
 						<td colspan="2">
-							<b>Seller Availability:</b> <?php if($item->avail == "") { echo "The seller did not list specific availability times"; }
-							else { echo "<i>\"$item->avail\"</i>"; } ?><br><br>
 							<div id="map_canvas" style="width: 600px; height: 345px;" class="map-canvas"></div>
 							<div id='fb-root'></div>
 							<script src='http://connect.facebook.net/en_US/all.js'></script>
@@ -507,7 +462,7 @@
 				</table>	
 			</div>
 		</td>
-		<td style='width: 10px'>
+		<td style='width: 4%'>
 		</td>
 		<td width="340px" align="left">
 				<div class="voucherText" style="margin-top: 7px; margin-left: 5px; font-size: 11pt;" align="left">You purchasing this item helps:</div><br>
@@ -654,13 +609,6 @@ map.mapTypes.set('Styled', styledMapType);
 	$plate = str_replace("</td>", "",$plate);
 ?>
 
-
-infoWindow = new google.maps.InfoWindow();
-    infoWindow.setOptions({
-        content: "<?=$plate?>",
-        position: myLocation,
-    });
-
     var infowindow = new InfoBubble({
 		maxWidth: 200,
 		shadowStyle: 1,
@@ -668,12 +616,17 @@ infoWindow = new google.maps.InfoWindow();
 		borderRadius: 4,
 		arrowSize: 10,
 		arrowPosition: 10,
-      	arrowStyle: 2,	          
+      		arrowStyle: 2,	          
 		borderWidth: 0,
 		borderColor: '#2c2c2c'
     });
 
-infoWindow.open(map);
+    infowindow.setOptions({
+        content: "<?=$plate?>",
+        position: myLocation,
+    });
+
+infowindow.open(map);
 }
 
 function loadScript() {

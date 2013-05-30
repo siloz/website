@@ -314,7 +314,7 @@ function initialize() {
 	   	var marker<?=$item_id?> = new google.maps.Marker({
 	       	map: map,
 			animation: google.maps.Animation.DROP,
-			icon: 'images/red_square.png',
+			icon: 'images/map-marker.png',
 	       	position: pos<?=$item_id?>
 	   	});
 		markers.push(marker<?=$item_id?>);

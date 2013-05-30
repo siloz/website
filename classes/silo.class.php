@@ -29,6 +29,8 @@ class Silo {
 	public $photo_file;
 	public $silo_cat_id;
 	public $type;
+	public $paid;
+	public $thanked;
 	
 	public $admin;
 	
@@ -75,6 +77,8 @@ class Silo {
 		$this->silo_cat_id = $res['silo_cat_id'];
 		$this->silo_type = $res['silo_type'];
 		$this->status = $res['status'];
+		$this->paid = $res['paid'];
+		$this->thanked = $res['thanked'];
 
 		$this->admin = new User($this->admin_id);
 	}
@@ -93,7 +97,7 @@ class Silo {
 	}
 	
 	public function getAdmin() {
-		return $this->admin_id;
+		return $this->admin;
 	}
 
 	public function getAdminFCount() {
@@ -109,8 +113,9 @@ class Silo {
 	
 	public function getCollectedAmount() {
 		$sql = "SELECT SUM(price) FROM items WHERE silo_id = ".$this->silo_id." AND status = 'sold'";
-		$res = mysql_fetch_row(mysql_query($sql));		
-		return floatval($res[0]);
+		$res = mysql_fetch_row(mysql_query($sql));
+		if ($this->silo_type == "public") { $pctOf = ".9"; } else { $pctOf = ".95"; }		
+		return floatval($res[0] * $pctOf);
 	}
 	
 	public function getTotalMembers() {

@@ -5,3 +5,5 @@ RewriteRule ^([^/\.]+)/?s$ index.php?search=$1
 RewriteRule ^administrator/$ administrator/index.php
 
 RewriteRule ^([^/\.]+)/?$ index.php?task=$1 [L]
+
+RewriteRule ^silos/([^/]*)$ index.php?task=view_silo&name=$1 [L]

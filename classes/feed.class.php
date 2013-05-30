@@ -59,6 +59,7 @@ public function InsertSold(){
 
 		$checkBefore = mysql_fetch_row(mysql_query("SELECT goal_reached FROM feed WHERE silo_id = '$this->silo_id' ORDER BY goal_reached DESC"));
 		$goalBefore = $checkBefore[0];
+		$silo_type = mysql_fetch_row(mysql_query("SELECT silo_type FROM silos WHERE silo_id = '$this->silo_id'"));
 
 		$query = (
 			"INSERT INTO `feed` "
@@ -74,7 +75,14 @@ public function InsertSold(){
 		mysql_query($query);
 
 		$checkAfter = mysql_fetch_row(mysql_query("SELECT SUM(price) FROM items WHERE silo_id = '$this->silo_id' AND status = 'Sold'"));
-		$totalAfter = ($checkAfter[0]/$this->goal)*10;
+		if ($this->silo_type == "public") {
+			$pctOf = ".9";
+		} else { 
+			$pctOf = ".95"; 
+		}
+		$finalCollected = $checkAfter[0] * $pctOf;
+
+		$totalAfter = ($finalCollected/$this->goal)*10;
 		$this->goal_reached = floor($totalAfter)*10;
 
 		if ($this->goal_reached - $goalBefore) {

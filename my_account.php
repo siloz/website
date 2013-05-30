@@ -6,8 +6,6 @@ if ($_SESSION['is_logged_in'] != 1) {
 	echo "<script>window.location = 'index.php';</script>";
 }
 
-mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
-
 	if (param_post('crop') == 'Crop') {
 		$id = trim(param_post('user_id'));
 		$fb = param_post('fb');
@@ -84,7 +82,7 @@ mysql_query("UPDATE items SET status = 'inert' WHERE silo_id != 139");
 			}
 
 			$filesize = $_FILES['member_photo']['size'];
-			if ($filesize > 250000) {
+			if ($filesize > 2097152) {
 				$err .= "Image file is too large. Please scale it down.";
 			}
 
@@ -514,7 +512,7 @@ die;
       						<div id="fb"><fb:login-button perms="email,user_address,user_mobile_phone">Connect your Facebook account with <?=SITE_NAME?>
       						</fb:login-button></div>
 						<br><br>
-						<a href="linkedin.php?user_id=<?=$user_id?>&redirect=<?=$redirect?>"><img src="images/linkedin_connect.png" id="linkedin" style="margin-left: -3px"></img></a>
+						<img src="images/linkedin_connect.png" id="linkedin" style="margin-left: -3px"></img>
 					</p>
 
 					<p><font color="red"><b>E-mail notifications</b></font> 
@@ -668,7 +666,10 @@ die;
   }(document));
 
 $("#fb").live('click', function() {
-	testAPI();
+       javascript:popup_show('fb-confirm', 'fb-confirm_drag', 'fb-confirm_exit', 'screen-center', 0, 0);
+});
+$("#linkedin").live('click', function() {
+       javascript:popup_show('linkedin-confirm', 'linkedin-confirm_drag', 'linkedin-confirm_exit', 'screen-center', 0, 0);
 });
 
   // Here we are just running a very simple test of the Graph API after login is successful. 
@@ -699,3 +700,27 @@ $("#fb").live('click', function() {
      );
   }
 </script>
+
+<div class="login" id="fb-confirm" style="width: 500px;">
+	<div id="fb-confirm_drag" style="float:right">
+		<img id="fb-confirm_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h3>Please Read</h3>
+		When you Connect with Facebook, we will grab the information from your Facebook.com account and store your information in our own database. Your information will not be updated until you click the Facebook button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
+		<button onclick="testAPI();">Continue and Connect with Facebook</button>
+		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb-confirm').style.display='none';">Cancel</button>
+	</div>
+</div>
+
+<div class="login" id="linkedin-confirm" style="width: 500px;">
+	<div id="linkedin-confirm_drag" style="float:right">
+		<img id="linkedin-confirm_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h3>Please Read</h3>
+		When you Connect with LinkedIn, we will grab the information from your linkedin.com account and store your information in our own database. Your information will not be updated until you click the LinkedIn Connect button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
+		<button onclick="document.location='linkedin.php?user_id=<?=$user_id?>&redirect=<?=$redirect?>'">Continue and Connect with LinkedIn</button>
+		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('linkedin-confirm').style.display='none';">Cancel</button>
+	</div>
+</div>

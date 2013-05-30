@@ -20,7 +20,7 @@ function submit_flag_silo(flag_id){
 	var params = {
 		        action: 'flag_<?php echo $flag_box_type ;?>',
 		        silo_id: '<?php echo $silo->silo_id ;?>',
-		        user_id: '<?php echo $current_user["user_id"];?>',
+		        user_id: '<?php echo $user_id;?>',
 		        flag_id: flag_id,
 		        item_id: '<?php echo $item->item_id ;?>',
 		        user_ip: '<?php echo $_SERVER["REMOTE_ADDR"];?>'
@@ -122,14 +122,14 @@ function hide_flag_box_silo(){
 	<?php } elseif ($siloFlagged) { ?>
 		<td style="padding-top: 17px" align="center" class="click_me" onclick="javascript:popup_show('flagged_silo', 'flagged_silo_drag', 'flagged_silo_exit', 'screen-center', 0, 0);">
 			<span class="voucherText<?=$closed_silo?>"><b>Silo flagged</b></font></span>
-			<div class="floatR"><img height="20px" src="img/flag.png" alt="Flag this item" /></div>
+			<div class="floatR"><img height="20px" src="<?=ACTIVE_URL?>img/flag.png" alt="Flag this item" /></div>
 	<?php } elseif ($closed_silo) { ?>
 		<td style="padding-top: 17px" align="center">
 		<br>
 	<?php } else { ?>
 			<td style="padding-top: 17px" align="center" class="click_me" onclick="javascript:popup_show('flag_box_silo', 'login_silo_drag', 'login_silo_exit', 'screen-center', 0, 0);">
 			<span class="voucherText<?=$closed_silo?>"><b>Flag this silo</b></font></span>
-			<div class="floatR"><img height="20px" src="img/flag.png" alt="Flag this item" /></div>
+			<div class="floatR"><img height="20px" src="<?=ACTIVE_URL?>img/flag.png" alt="Flag this item" /></div>
 	<?php } ?>
 
 		</td>
@@ -140,10 +140,9 @@ function hide_flag_box_silo(){
 	<tr>
 		<td id="flag_box_silo_display">
 			<div id="login_silo_drag" style="float:right">
-				<img onclick="hide_flag_box_silo();" id="login_silo_exit" src="images/close.png"/>
+				<img onclick="hide_flag_box_silo();" id="login_silo_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 			</div>
-			<?php if($current_user["user_id"]){ ?>
-				<img  src="img/flag.png" />
+				<img  src="<?=ACTIVE_URL?>img/flag.png" />
 				<h1>Reasons for Flagging this <?php echo ucfirst($flag_box_type); ?></h1>
 				<ul>
 					<?php foreach($flag_ids as $x){ 
@@ -152,9 +151,6 @@ function hide_flag_box_silo(){
 					<li><a onclick="submit_flag_silo(<?php echo $Flag->id; ?>);" href="javascript: void(0);"><?php echo $Flag->type; ?></a></li>
 					<?php } ?>
 				</ul>
-			<?php }else{ ?>
-				<h1 class="blue">Sorry you must be logged in to flag a silo</h1>
-			<?php }?>
 		</td>
 	</tr>
 </table>

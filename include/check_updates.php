@@ -8,6 +8,8 @@ $silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND
 		$silo_id_close = $silo['silo_id'];
 		$updSilo = mysql_query("UPDATE silos SET status = 'latent' WHERE silo_id = '$silo_id_close'");
 		$updItem = mysql_query("UPDATE items SET status = 'inert', end_date = NOW() WHERE silo_id = '$silo_id_close'");
+		$notif = new Notification(); 
+		$notif->SiloEnded($silo_id_close);
 	}
 
 $offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW()");

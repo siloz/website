@@ -44,7 +44,7 @@
 	<?php
 			} elseif (mysql_num_rows($res) == 0) {
 	?>
-				<a href="index.php?task=create_silo"><span class="<?php if (param_get('task') == 'create_silo') { echo "orange"; } else { echo "blue"; } ?>">start a silo</span></a>
+				<a href="<?=ACTIVE_URL?>index.php?task=create_silo"><span class="<?php if (param_get('task') == 'create_silo') { echo "orange"; } else { echo "blue"; } ?>">start a silo</span></a>
 				<span class="blue separator">|</span>
 	<?php
 			} else {
@@ -52,14 +52,14 @@
 		$Silo = new Silo($sid[0]);
 		$silo_id = $Silo->silo_id;
 	?>
-				<a href="index.php?task=manage_silo"><span class="<?php if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin') { echo "orange"; } else { echo "blue"; } ?>">manage your silo</span></a>
+				<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="<?php if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin' || param_get('task') == 'manage_silo_thank') { echo "orange"; } else { echo "blue"; } ?>">manage your silo</span></a>
 				<span class="blue separator">|</span>
-				<a href="index.php?task=view_silo&id=<?=$Silo->id?>"><span  class="<?php if (param_get('task') == 'view_silo' && param_get('id') == $Silo->id) { echo "orange"; } else { echo "blue"; } ?>">view silo as user</span></a>
+				<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span  class="<?php if (param_get('task') == 'view_silo' && param_get('id') == $Silo->id) { echo "orange"; } else { echo "blue"; } ?>">view silo as user</span></a>
 				<span class="blue separator">|</span>
 	<?php
 			}
 	?>
-			<a href="index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account' || param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">my account</span></a>	
+			<a href="<?=ACTIVE_URL?>index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account' || param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">my account</span></a>	
 	<?php
 		} else {
 	?>
@@ -73,7 +73,7 @@
 </div>
 <div class="login" id="login">
 	<div id="login_drag" style="float:right">
-		<img id="login_exit" src="images/close.png"/>
+		<img id="login_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		<form name="login_form" id="login_form" method="POST">
@@ -138,7 +138,7 @@
 		<hr/>
 -->		
 		<h2>Forgot your e-mail/password?</h2>
-		<a href="index.php?task=reset_password"><button>Reset Password</button></a>			
+		<a href="<?=ACTIVE_URL?>index.php?task=reset_password"><button>Reset Password</button></a>			
 		<br/><br/>
 		<hr/>
 		<h2>Create a <?=SITE_NAME?> Account</h2>
@@ -148,7 +148,7 @@
 
 <div class="login" id="location" style="width: 300px;">
 	<div id="location_drag" style="float:right">
-		<img id="location_exit" src="images/close.png"/>
+		<img id="location_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 	<?php if (!$_SESSION['is_logged_in']) { ?>
@@ -167,7 +167,7 @@
 
 <form action='index.php' id="search_form" name="search_form">
 <div id="logo_container">
-	<a href="<?=$logo_redirect?>" style="text-decoration:none"><img src="images/logo-beta.png" width="289" height="62" /></a>			
+	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>" style="text-decoration:none"><img src="<?=ACTIVE_URL?>images/logo-beta.png" width="289" height="62" /></a>			
 </div>
 <!-- <div align="right" style="margin-top: 100px; margin-right: 10px; font-size: 12px; line-height: 25px;">
 	Raise money by accepting items, pledged items - all online. Start a silo now!
@@ -175,21 +175,21 @@
 <div id="status" align="right" style="width: 965px; margin-top: 45px; position: absolute; font-size: 8pt;">
 <?php
 	if ($_SESSION['admin_access']) {
-		$header = "<a href='administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
+		$header = "<a href='".ACTIVE_URL."administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
 	}
 
 	$qry = mysql_query("SELECT * FROM notifications WHERE user_id = '$user_id'");
 	$notif = mysql_fetch_array($qry);
 
 	if ($notif == 1) {
-		$header .= "<span id='notification'><a href='index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>1 new notification!</b></font></a></span>";
+		$header .= "<span id='notification'><a href='<?=ACTIVE_URL?>index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>1 new notification!</b></font></a></span>";
 	}
 	elseif ($notif > 1) {
-		$header .= "<span id='notification'><a href='index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
+		$header .= "<span id='notification'><a href='<?=ACTIVE_URL?>index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
 	}
 
 	if ($_SESSION['is_logged_in']) {
-		$header .= "<span style='padding-right: 10px;'>Welcome back <b>".$fname." ".$lname."</b>!</span> <a href='index.php?task=logout' class='status'>Logout</a>";
+		$header .= "<span style='padding-right: 10px;'>Welcome back <b>".$fname." ".$lname."</b>!</span> <a href='".ACTIVE_URL."index.php?task=logout' class='status'>Logout</a>";
 	}
 	echo $header;
 	$is_search = array_key_exists('keywords', $_GET) || array_key_exists('zip_code', $_GET) || array_key_exists('category', $_GET) || array_key_exists('amount_min', $_GET) || array_key_exists('amount_max', $_GET);
@@ -209,11 +209,11 @@ if ($sItems || $sSilos) {
 
 <table>
 <tr>
-	<td class="<?php if ($sItems) { echo "sbSelected"; } else { echo "sb"; } ?>" onClick="document.location.href='items';" style="cursor:pointer;cursor:hand">
-		<a href="items">shop</a>
+	<td class="<?php if ($sItems) { echo "sbSelected"; } else { echo "sb"; } ?>" onClick="document.location.href='<?=ACTIVE_URL?>items';" style="cursor:pointer;cursor:hand">
+		<a href="<?=ACTIVE_URL?>items">shop</a>
 	</td>
-	<td class="<?php if ($sSilos) { echo "sbSelected"; } else { echo "sb"; } ?>" onClick="document.location.href='silos';" style="cursor:pointer;cursor:hand">
-		<a href="silos">donate items</a>
+	<td class="<?php if ($sSilos) { echo "sbSelected"; } else { echo "sb"; } ?>" onClick="document.location.href='<?=ACTIVE_URL?>silos';" style="cursor:pointer;cursor:hand">
+		<a href="<?=ACTIVE_URL?>silos">donate items</a>
 	</td>
 	<td class="searchBar">
 		<table width="100%">
@@ -275,6 +275,14 @@ if ($sItems || $sSilos) {
 				<?php $high = str_replace($replace, "", param_get('price_high'));?>
 				<input type="text" name="price_high" id="price_high" size="5" onfocus="select();" value="<?=money_format('%n', $high)?>" placeholder="high" onkeypress="return isNumberKey(event)">
 			</td>
+
+	<?php if ($sSilos) { ?>
+			<td>
+				<?php $tax_ded = param_get('tax_ded');?>
+				tax-ded. <br> <input type="checkbox" name="tax_ded" id="tax_ded" value="1" <?php if ($tax_ded > 0) { echo "CHECKED"; } ?> >
+			</td>
+	<?php } ?>
+
 			<td align="right">
 				<button>search</button>
 			</td>
@@ -300,7 +308,7 @@ $('form').submit(function(){
 
 <div class="login" id="addInfo" style="width: 300px;">
 	<div id="addInfo_drag" style="float:right">
-		<img id="addInfo_exit" src="images/close.png"/>
+		<img id="addInfo_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		<h2>Please complete your profile.</h2>

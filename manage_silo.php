@@ -7,7 +7,11 @@
 	$itemsPerPage = "12";
 	$membersPerPage = "12";
 
-	$id = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id'"));
+	$id = mysql_fetch_array(mysql_query("SELECT id, status FROM silos WHERE admin_id = '$user_id'"));
+
+	if ($id['status'] != "active") {
+		echo "<script>window.location = 'index.php?task=manage_silo_admin';</script>";
+	}
 	
 	$view = param_get('view');
 	if ($view == '')
@@ -84,6 +88,11 @@
 				$err = 'Address must not be empty.<br/>';		
 			}
 
+			$filesize = $_FILES['silo_photo']['size'];
+			if ($filesize > 2097152) {
+				$err .= "Image file is too large. Please scale it down.";
+			}
+
 			$adr = urlencode($address);
 			$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."&sensor=false");
 			$loc = json_decode($json);
@@ -110,7 +119,6 @@
 							$filename = $_FILES['silo_photo']['name'];
 							$temporary_name = $_FILES['silo_photo']['tmp_name'];
 							$mimetype = $_FILES['silo_photo']['type'];
-							$filesize = $_FILES['silo_photo']['size'];
 
 							switch($mimetype) {
 
@@ -788,7 +796,7 @@ function initialize() {
 	   	var marker<?=$item_id?> = new google.maps.Marker({
 	       	map: map,
 			animation: google.maps.Animation.DROP,
-			icon: 'images/red_square.png',
+			icon: 'images/map-marker.png',
 	       	position: pos<?=$item_id?>
 	   	});
 		markers.push(marker<?=$item_id?>);

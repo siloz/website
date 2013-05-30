@@ -4,14 +4,19 @@
 	$membersPerPage = "12";
 
 	$id = param_get('id');
+	$shortname = param_get('name');
 	
 	$view = param_get('view');
 	if ($view == '')
 		$view = 'feed';
-	if ($id == '') {
+	if (!$id && !shortname) {
 		echo "<script>window.location = 'index.php';</script>";	
 	}	
 	else {
+		if ($shortname) {
+			$getSilos = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE shortname = '$shortname'"));
+			$id = $getSilos[0];
+		}
 		$silo = new Silo($id);
 		$silo_id = $silo->silo_id;
 		$today = date('Y-m-d')."";
@@ -75,7 +80,7 @@
 
 <div class="login" id="sold" style="width: 300px;">
 	<div id="sold_drag" style="float:right">
-		<img id="sold_exit" src="images/close.png"/>
+		<img id="sold_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		This Item Has Been Sold!
@@ -84,7 +89,7 @@
 
 <div class="login" id="pending" style="width: 300px;">
 	<div id="pending_drag" style="float:right">
-		<img id="pending_exit" src="images/close.png"/>
+		<img id="pending_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		This Item Is Pending To Be Sold!
@@ -93,7 +98,7 @@
 
 <div class="login" id="closed_silo" style="width: 300px;">
 	<div id="closed_silo_drag" style="float:right">
-		<img id="closed_silo_exit" src="images/close.png"/>
+		<img id="closed_silo_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		<h2>This function has been disabled because the silo is no longer active.</h2>
@@ -104,7 +109,7 @@
 
 <div class="contact_seller" id="contact_admin">
 	<div id="contact_admin_drag" style="float: right">
-		<img id="contact_admin_exit" src="images/close.png"/>
+		<img id="contact_admin_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		<form name="contact_admin_form" id="contact_admin_form" method="POST">
@@ -173,24 +178,33 @@
 
 <div class="headingPad"></div>
 
-<div id="nav" class="siloHeading<?=$closed_silo?>">
-	<?php echo $silo->getTitle(); ?>
+<table width="100%" id="nav" class="siloHeading<?=$closed_silo?>">
+<tr>
+	<td style="padding-left: 10px">
+		<?php echo $silo->getTitle(); ?>
+		<?php if ($closed_silo) { echo "(Closed - This silo is no longer active)"; } ?>
+	</td>
+	<td width="200px" style="padding-top: 5px;">
+		<?php if (!$closed_silo) { ?>
+			<a href="mailto:?Subject=Check out this silo on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_silo%26id=<?php echo $silo->id;?>"><img src="images/mail-icon.png" width="32" height="32"></a>
+			<img src="images/facebook.jpg" onclick='postToFeed();'/>
+
 		<?php
-			if($closed_silo) { echo "(Closed - This silo is no longer active)";
+			} if ($closed_silo) {
 		?>
-		<button type="submit" class="buttonDonations" onclick="popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>
+			<button type="submit" style="margin-bottom: -6px" class="buttonDonations" onclick="popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>
 		
 		<?php
 			}
-			elseif ($addInfo_full) {
+			elseif ($addInfo_full && $_SESSION['is_logged_in']) {
 		?>
-		<button type="submit" class="buttonDonations" onclick="popup_show('addInfo_donate', 'addInfo_donate_drag', 'addInfo_donate_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>
-
+			<button type="submit" class="buttonDonations" onclick="popup_show('addInfo_donate', 'addInfo_donate_drag', 'addInfo_donate_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>
+	
 		<?php
 			}
-			elseif ($checkUser) {
+			elseif ($checkUser && $_SESSION['is_logged_in']) {
 		?>
-		<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">donate items</button>
+			<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">donate items</button>
 
 		<?php
 			}
@@ -206,21 +220,24 @@
 			}
 			else {
 		?>
-		<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>						
+	<td>
+			<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>						
 		<?php
 			}
 		?>
-</div>
+	</td>
+</tr>
+</table>
 
 <div class="headingPad"></div>
 
 <table align="right" width="700px" style="padding-top: 5px;">
 	<tr>
 		<td height="35px" valign="top">
-			<a class="<?php if ($view == "feed") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="index.php?task=view_silo&id=<?php echo $silo->id;?>">feed</a>
-			<a class="<?php if ($view == "items") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>">items</a>
-			<a class="<?php if ($view == "members") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>">people</a>
-			<a class="<?php if ($view == "map") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>">map</a>
+			<a class="<?php if ($view == "feed") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?php echo $silo->id;?>">feed</a>
+			<a class="<?php if ($view == "items") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="<?=ACTIVE_URL?>index.php?task=view_silo&view=items&id=<?php echo $silo->id;?>">items</a>
+			<a class="<?php if ($view == "members") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="<?=ACTIVE_URL?>index.php?task=view_silo&view=members&id=<?php echo $silo->id;?>">people</a>
+			<a class="<?php if ($view == "map") { echo "siloNav_sel"; } else { echo "siloNav"; } ?>" href="<?=ACTIVE_URL?>index.php?task=view_silo&view=map&id=<?php echo $silo->id;?>">map</a>
 		</td>
 		<td align="right" valign="top">
 		<?php
@@ -231,13 +248,13 @@
 			else	{
 				if ($page != "1") {
 					$prev = $page - 1;
-						echo '<a href="index.php?task=view_silo&'.$param.'&id='.$silo->id.'&page='.$prev.'" class="nb_silo">< Prev</a> <span class="navPad"></span>';
+						echo '<a href="'.ACTIVE_URL.'index.php?task=view_silo&'.$param.'&id='.$silo->id.'&page='.$prev.'" class="nb_silo">< Prev</a> <span class="navPad"></span>';
 					}
 
 				for ($i=1; $i<=$total_pages; $i++) {			
 
 					if ($i != $page) {
-						echo '<a href="index.php?task=view_silo&'.$param.'&id='.$silo->id.'&page='.$i.'" class="nb_silo">' . $i . '</a> <span class="navPad"></span>';
+						echo '<a href="'.ACTIVE_URL.'index.php?task=view_silo&'.$param.'&id='.$silo->id.'&page='.$i.'" class="nb_silo">' . $i . '</a> <span class="navPad"></span>';
 					} 
 					else {
 						echo '<span class="nb_siloSelected">'.$i.'</span> <span class="navPad"></span>';
@@ -245,7 +262,7 @@
 				};
 				if ($page != $total_pages) {
 					$next = $page + 1;
-					echo '<a href="index.php?task=view_silo&'.$param.'&id='.$silo->id.'&page='.$next.'" class="nb_silo">>Next</a>';
+					echo '<a href="'.ACTIVE_URL.'index.php?task=view_silo&'.$param.'&id='.$silo->id.'&page='.$next.'" class="nb_silo">>Next</a>';
 				}
 			}
 		?>
@@ -284,33 +301,33 @@
 
 			if ($type == "Joined") {
 				$cellInfo = "<div class='nicebox'><table width='675px'><tr>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_user&id=".$user->id."'><img src='uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_item&id=".$item->id."'><img src='uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
-				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>New member <a href='index.php?task=view_user&id=".$user->id."'>".$user_name."</a> has joined this silo by pledging <a href='index.php?task=view_item&id=".$item->id."'>".$item->title."</a> for $".$item->price.".</td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'><img src='".ACTIVE_URL."uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'><img src='".ACTIVE_URL."uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
+				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>New member <a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'>".$user_name."</a> has joined this silo by pledging <a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'>".$item->title."</a> for $".$item->price.".</td>";
 				$cellInfo .= "</tr></table></div>";
 				if ($i) { echo "<hr class='sInfo'>"; }
 			}
 			if ($type == "Pledged") {
 				$cellInfo = "<div class='nicebox'><table width='675px'><tr>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_user&id=".$user->id."'><img src='uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_item&id=".$item->id."'><img src='uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
-				$cellInfo .= "<td valign='top' style='padding: 10px 15px'><a href='index.php?task=view_user&id=".$user->id."'>".$user_name."</a> has pledged an additional item, <a href='index.php?task=view_item&id=".$item->id."'>".$item->title."</a> for $".$item->price.".</td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'><img src='".ACTIVE_URL."uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'><img src='".ACTIVE_URL."uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
+				$cellInfo .= "<td valign='top' style='padding: 10px 15px'><a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'>".$user_name."</a> has pledged an additional item, <a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'>".$item->title."</a> for $".$item->price.".</td>";
 				$cellInfo .= "</tr></table></div>";
 				if ($i) { echo "<hr class='sInfo'>"; }
 			}
 			elseif ($type == "Sold") {
 				$cellInfo = "<div class='nicebox'><table width='675px'><tr>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_user&id=".$user->id."'><img src='uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_item&id=".$item->id."'><img src='uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
-				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>Sold! <br><br> <a href='index.php?task=view_item&id=".$item->id."'>".$item->title."</a> has been sold for $".$item->price.". <br><br> Thanks, <a href='index.php?task=view_user&id=".$user->id."'>".$user->fname."</a>!</td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'><img src='".ACTIVE_URL."uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'><img src='".ACTIVE_URL."uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
+				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>Sold! <br><br> <a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'>".$item->title."</a> has been sold for $".$item->price.". <br><br> Thanks, <a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'>".$user->fname."</a>!</td>";
 				$cellInfo .= "</tr></table></div>";
 				if ($i) { echo "<hr class='sInfo'>"; }
 			}
 			elseif ($type == "Goal") {
 				$cellInfo = "<div class='nicebox'><table width='675px'><tr>";
 				$cellInfo .= "<td width='15%'><button class='buttonGoal'>We reached ".$goal_reached."% of our Goal!</button></td>";
-				$cellInfo .= "<td width='15%'><a href='index.php?task=view_item&id=".$item->id."'><img src='uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
-				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>With <a href='index.php?task=view_user&id=".$user->id."'>".$user_name."</a>'s sale, we reached ".$goal_reached."% of our fundraising goal. <br><br> Thanks, <a href='index.php?task=view_user&id=".$user->id."'>".$user->fname."</a>!</td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'><img src='".ACTIVE_URL."uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
+				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>With <a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'>".$user_name."</a>'s sale, we reached ".$goal_reached."% of our fundraising goal. <br><br> Thanks, <a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'>".$user->fname."</a>!</td>";
 				$cellInfo .= "</tr></table></div>";
 				if ($i) { echo "<hr class='sInfo'>"; }
 			}
@@ -321,7 +338,7 @@
 		
 //VIEW ITEMS
 	if ($view == "items" && $sold_items == "") {
-		echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <font class='orange'><u>Pledged</u></font> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=sold&id=".$silo->id."' style='text-decoration: none' class='blue'>Sold</a> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=pending&id=".$silo->id."' style='text-decoration: none' class='blue'>Pending Sales</a></div>";
+		echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <font class='orange'><u>Pledged</u></font> &nbsp; | &nbsp; <a href='".ACTIVE_URL."index.php?task=view_silo&view=items&items=sold&id=".$silo->id."' style='text-decoration: none' class='blue'>Sold</a> &nbsp; | &nbsp; <a href='".ACTIVE_URL."index.php?task=view_silo&view=items&items=pending&id=".$silo->id."' style='text-decoration: none' class='blue'>Pending Sales</a></div>";
 
 		$limit = "LIMIT $start_from, $itemsPerPage";
 		$items = Item::getItems($silo_id, $order_by, $limit);
@@ -341,7 +358,7 @@
 		if (!$total_records) { echo "<br><br><center>There are currently no items being pledged in this silo. Once an item is pledged to this silo, it will be added to this list.</center>"; }
 	}
 	elseif ($sold_items == "sold") {
-		echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <a href='index.php?task=view_silo&view=items&id=".$silo->id."' style='text-decoration: none' class='blue'>Pledged</a> &nbsp; | &nbsp; <font class='orange'><u>Sold</u></font> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=pending&id=".$silo->id."' style='text-decoration: none' class='blue'>Pending Sales</a> </div>";
+		echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <a href='".ACTIVE_URL."index.php?task=view_silo&view=items&id=".$silo->id."' style='text-decoration: none' class='blue'>Pledged</a> &nbsp; | &nbsp; <font class='orange'><u>Sold</u></font> &nbsp; | &nbsp; <a href='".ACTIVE_URL."index.php?task=view_silo&view=items&items=pending&id=".$silo->id."' style='text-decoration: none' class='blue'>Pending Sales</a> </div>";
 
 		$limit = "LIMIT $start_from, $itemsPerPage";
 		$items = Item::getSoldItems($silo_id, $order_by, $limit);
@@ -361,7 +378,7 @@
 		if (!$total_records) { echo "<br><br><center>There are currently no items that have sold in this silo. Once an item has sold for this silo, it will be added to this list.</center>"; }
 	}
 	elseif ($sold_items == "pending") {
-		echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <a href='index.php?task=view_silo&view=items&id=".$silo->id."' style='text-decoration: none' class='blue'>Pledged</a> &nbsp; | &nbsp; <a href='index.php?task=view_silo&view=items&items=sold&id=".$silo->id."' style='text-decoration: none' class='blue'>Sold</a> &nbsp; | &nbsp; <font class='orange'><u>Pending Sales</u></font> </div>";
+		echo "<div class='blue' style='float: right'><i>View:</i> &nbsp; <a href='".ACTIVE_URL."index.php?task=view_silo&view=items&id=".$silo->id."' style='text-decoration: none' class='blue'>Pledged</a> &nbsp; | &nbsp; <a href='".ACTIVE_URL."index.php?task=view_silo&view=items&items=sold&id=".$silo->id."' style='text-decoration: none' class='blue'>Sold</a> &nbsp; | &nbsp; <font class='orange'><u>Pending Sales</u></font> </div>";
 
 		$limit = "LIMIT $start_from, $itemsPerPage";
 		$items = Item::getPendingItems($silo_id, $order_by, $limit);
@@ -427,7 +444,7 @@
 						$showA = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
 						if ($showA) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
 					?>
-			<img src="<?php echo 'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
+			<img src="<?=ACTIVE_URL?><?php echo 'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
 			<div class="siloImgOverlay">
 			<div class="progress-bg"><div class="progress-bar" style="width: <?=$pct?>%; <?=$radius?>"></div></div>
 			goal: $<?=number_format($silo->goal)?> (<?=$pct?>%)
@@ -437,8 +454,8 @@
 	<tr class="infoSpacer"></tr>
 	<tr>
 		<td class="siloInnerInfo<?=$closed_silo?>">
-			<a href='index.php?task=view_silo&view=members&id=<?=$silo->id;?>'><?=$silo->getTotalMembers();?></a>
-			<a href='index.php?task=view_silo&view=items&id=<?=$silo->id;?>'><?=$silo->getTotalItems();?></a>
+			<a href='<?=ACTIVE_URL?>index.php?task=view_silo&view=members&id=<?=$silo->id;?>'><?=$silo->getTotalMembers();?></a>
+			<a href='<?=ACTIVE_URL?>index.php?task=view_silo&view=items&id=<?=$silo->id;?>'><?=$silo->getTotalItems();?></a>
 			<?=$silo->getDaysLeft()?>
 			<div style="padding-top: 10px;"></div>
 		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
@@ -450,7 +467,7 @@
 	<tr>
 		<td class="siloInnerInfo<?=$closed_silo?>">
 			<span class="floatL">
-				<img src="<?php echo 'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
+				<img src="<?=ACTIVE_URL?><?php echo 'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
 				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "javascript:popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);"; } else { echo "javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);"; }?>">Email Admin.</a>
 			</span>
 			<div align="left">
@@ -602,7 +619,7 @@ function initialize() {
 	   	var marker<?=$item_id?> = new google.maps.Marker({
 	       	map: map,
 			animation: google.maps.Animation.DROP,
-			icon: 'images/red_square.png',
+			icon: 'images/map-marker.png',
 	       	position: pos<?=$item_id?>
 	   	});
 		markers.push(marker<?=$item_id?>);
@@ -636,7 +653,7 @@ window.onload = loadScript;
 
 <div class="login" id="addInfo_donate" style="width: 300px;">
 	<div id="addInfo_donate_drag" style="float:right">
-		<img id="addInfo_donate_exit" src="images/close.png"/>
+		<img id="addInfo_donate_exit" src="<?=ACTIVE_URL?>images/close.png"/>
 	</div>
 	<div>
 		<h2>Please complete your profile.</h2>

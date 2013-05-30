@@ -29,6 +29,10 @@
 		$saveSearch .= "&price_high=".$high;
 		$search_clause .= " AND goal <= ".$high;
 	}
+	if (strlen($tax_ded) > 0) {
+		$saveSearch .= "&tax_ded=1";
+		$search_clause .= " AND ein > 0 ";
+	}
 	if (strlen(param_get('category')) > 0) {
 		$saveSearch .= "&category=".param_get('category');		
 		$search_clause .= " AND silo_cat_id = ".param_get('category');
@@ -312,7 +316,7 @@ function initialize() {
 	   	var marker<?=$silo_id?> = new google.maps.Marker({
 	       	map: map,
 			animation: google.maps.Animation.DROP,
-			icon: 'images/red_square.png',
+			icon: 'images/map-marker.png',
 	       	position: pos<?=$silo_id?>
 	   	});
 		markers.push(marker<?=$silo_id?>);

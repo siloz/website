@@ -1,6 +1,6 @@
 <?php
 	define(SITE_NAME, "s&igrave;loz");
-	define(TAG_LINE, "Siloz - Comerce That Counts");
+	define(TAG_LINE, "s&igrave;loz - Comerce That Counts");
 	define(DB_USERNAME, "admin");
 	define(DB_PASSWORD, "w@1kingded");
 	define(DB_HOST, "localhost");

@@ -278,8 +278,8 @@ else {
 					if (param_post('task') == 'markPaid') {
 						$paid_status = param_post('paid');
 						$silo_id = param_post('silo_id');
-						$paid = "UPDATE silos SET paid = '$paid_status' WHERE silo_id = '$silo_id'";
-						mysql_query($paid);
+						$paid = mysql_query("UPDATE silos SET status = 'completed', paid = '$paid_status' WHERE silo_id = '$silo_id'");
+						if ($paid_status == "yes") { $notif = new Notification(); $notif->SiloPaid($silo_id); }
 						header('Location: '.$_SERVER['REQUEST_URI']);
 						exit;
 					}
@@ -333,7 +333,7 @@ else {
 					echo "<h2>Ended silos</h2>";
 					$today = date("Y-m-d")."";
 					$silos = mysql_query("SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE status = 'latent' OR status = 'completed' ORDER BY paid, id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='30%'>Silo Name</th><th width='16%'>Category</th><th width='8%'>Admin Name</th><th width='8%'>Phone</th><th width='8%'>E-mail</th><th width='10%' style='text-align:right'>Goal</th><th width='5%' style='text-align:center'>%</th><th width='5%'>Listings</th><th width='7%' style='text-align:center'>Paid?</th></tr>";
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='25%'>Silo Name</th><th width='16%'>Category</th><th width='8%'>Admin Name</th><th width='8%'>Phone</th><th width='8%'>E-mail</th><th width='10%' style='text-align:right'>Goal</th><th width='5%' style='text-align:center'>%</th><th width='5%'>Listings</th><th width='10%' style='text-align:center'>Paid?</th></tr>";
 					while ($silo = mysql_fetch_array($silos)) {
 						$silo_id = $silo['silo_id'];						
 						$admin = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$silo['admin_id']));
@@ -347,7 +347,12 @@ else {
 						$opt .= '<option value="' . $paid . '">' . $paid . '</option>';
 						if ($paid == "no") { $other_opt .= '<option value="yes">yes</option>'; } else { $other_opt .= '<option value="no">no</option>'; }
 						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$silo['type']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['fname']." ".$admin['lname']."</a></td><td>".$admin['phone']."</td><td>".$admin['email']."</td><td align=right>".money_format('%(#10n', floatval($silo['goal']))."</td><td align=center>".$pct."</td><td align=center>".$listings[0]."</td><td align=center>";
-						$html .= "<form action='' method='POST'>
+							$pur = mysql_fetch_array(mysql_query("SELECT expired_date  FROM item_purchase WHERE silo_id = '$silo_id' ORDER BY expired_date DESC LIMIT 1"));
+							$expired = strtotime($pur[0]);
+							$now = strtotime("now");
+							$exp_date = date("D, M jS (g:i a)", $expired);
+						if ($expired < $now) {
+							$html .= "<form action='' method='POST'>
 								<input type='hidden' name='task' value='markPaid'>
 								<input type='hidden' name='silo_id' value='$silo_id'>
     								<select name='paid' onchange='this.form.submit()'>
@@ -355,6 +360,7 @@ else {
 									".$other_opt."
     								</select>
 							</form></td></tr>";
+						} else { $html .= "Pay after: ".$exp_date; }
 					}
 					$html .= "</table>";					
 					echo $html;									

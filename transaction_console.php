@@ -176,7 +176,11 @@ if (param_post('fav') == 'Remove') {
 	
 		if (strlen($err) == 0) {
 			for ($i=1; $i<=4; ++$i) {
-				if ($_FILES['item_photo_'.$i]['name'] != '') {
+				$filesize = $_FILES['item_photo_'.$i]['size'];
+				if ($filesize > 2097152) {
+					$err .= "Image file is too large. Please scale it down.";
+				}
+				elseif ($_FILES['item_photo_'.$i]['name'] != '') {
 					$allowedExts = array("png", "jpg", "jpeg", "gif");
 					$ext = end(explode('.', strtolower($_FILES['item_photo_'.$i]['name'])));
 					if (!in_array($ext, $allowedExts)) {
@@ -187,7 +191,6 @@ if (param_post('fav') == 'Remove') {
 						$filename = $_FILES['item_photo_'.$i]['name'];
 						$temporary_name = $_FILES['item_photo_'.$i]['tmp_name'];
 						$mimetype = $_FILES['item_photo_'.$i]['type'];
-						$filesize = $_FILES['item_photo_'.$i]['size'];
 						$uploaded = $i;
 
 						switch($mimetype) {
@@ -544,8 +547,9 @@ while ($item = mysql_fetch_array($qry)) {
 
 	$cleared = mysql_num_rows(mysql_query("SELECT * FROM seller_cleared WHERE user_id = '$user_id' AND item_id = '$item_id'"));
 
-	if ($cleared > 0) { $item_id = ""; continue; }
-	elseif ($status == "pledged") { $cStatus = "Listed"; $notif = "Silo ends on ".$end; $contact = "No other party at this time"; $actions = "<a onclick=\"popup_show('editItem_".$item_id."', 'editItem_".$item_id."_drag', 'editItem_".$item_id."_exit', 'screen-center', 0, 0);\">Edit Item</a> | <a onclick=\"popup_show('delItem_".$item_id."', 'delItem_".$item_id."_drag', 'delItem_".$item_id."_exit', 'screen-center', 0, 0);\">Delete Item</a>"; }
+	if ($cleared > 0) { continue; } else { $sellingItem = true; }
+
+	if ($status == "pledged") { $cStatus = "Listed"; $notif = "Silo ends on ".$end; $contact = "No other party at this time"; $actions = "<a onclick=\"popup_show('editItem_".$item_id."', 'editItem_".$item_id."_drag', 'editItem_".$item_id."_exit', 'screen-center', 0, 0);\">Edit Item</a> | <a onclick=\"popup_show('delItem_".$item_id."', 'delItem_".$item_id."_drag', 'delItem_".$item_id."_exit', 'screen-center', 0, 0);\">Delete Item</a>"; }
 	elseif ($status == "offer") {
 		$offer = mysql_fetch_array(mysql_query("SELECT buyer_id, amount, status, expired_date FROM offers WHERE seller_id = '$user_id' AND item_id = '$item_id' AND status != 'canceled' ORDER BY id DESC"));
 		$buyer_id = $offer['buyer_id'];
@@ -597,7 +601,7 @@ while ($item = mysql_fetch_array($qry)) {
 	}
 }
 
-if (!mysql_num_rows($qry) || !$item_id) { echo "There is currently no selling activity for your account."; }
+if (!mysql_num_rows($qry) || $sellingItem != "true") { echo "There is currently no selling activity for your account."; }
 ?>
 
 </td>

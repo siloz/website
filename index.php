@@ -166,6 +166,10 @@ if (!isset($_SESSION['is_logged_in'])) {
 		session_destroy();
 		echo "<script type='text/javascript'>window.location = 'index.php';</script>";		
 	}
+
+	if (param_get('name')) {
+		$rewrite = "../";
+	}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
@@ -175,28 +179,28 @@ if (!isset($_SESSION['is_logged_in'])) {
 	<head>
 		<title><?=TAG_LINE?></title>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<link rel="shortcut icon" href="favicon.ico?v=6" />
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz.css" />	
-		<link rel="stylesheet" type="text/css" href="css/siloz_header.css" />	
-		<link rel="stylesheet" type="text/css" href="css/siloz_footer.css" />	
-		<link rel="stylesheet" tyle="text/css" href="css/jquery-ui-1.8.16.css"/>
-    		<link href="themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="include/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
-		<link rel='stylesheet' type='text/css' href='include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
-		<script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>	
-		<script type="text/javascript" src="js/jquery-ui-1.8.16.min.js"></script> 
-		<script type="text/javascript" src="include/fancybox/source/jquery.fancybox.pack.js?v=2.1.0"></script>			
-		<script type='text/javascript' src='include/OpenInviter/more_examples/js/jquery.fancybox-1.3.4.pack.js'></script>							
-		<script type="text/javascript" src="js/popup-window.js"></script>	  
-	    <script type="text/javascript" src="js/jquery.placeholder.js"></script>		
-	    <script type="text/javascript" src="js/jquery.jconfirmation.js"></script>				
-		<script type="text/javascript" src="js/jquery.truncator.js"></script>
+		<link rel="shortcut icon" href="<?=ACTIVE_URL?>favicon.ico?v=6" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.custom.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz.css" />	
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />	
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />	
+		<link rel="stylesheet" tyle="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
+    		<link href="<?=ACTIVE_URL?>themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
+		<link rel='stylesheet' type='text/css' href='<?=ACTIVE_URL?>include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery-1.9.0.min.js"></script>	
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery-ui-1.8.16.min.js"></script> 
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.pack.js?v=2.1.0"></script>			
+		<script type='text/javascript' src='<?=ACTIVE_URL?>include/OpenInviter/more_examples/js/jquery.fancybox-1.3.4.pack.js'></script>							
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/popup-window.js"></script>	  
+	    <script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.placeholder.js"></script>		
+	    <script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.jconfirmation.js"></script>				
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.truncator.js"></script>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false"></script>
-		<script type="text/javascript" src="js/infobubble-compiled.js"></script>	  								
-		<script type="text/javascript" src="js/util.js"></script>	
-		<script type="text/javascript" src="js/change_location.js"></script>
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/infobubble-compiled.js"></script>	  								
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/util.js"></script>	
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/change_location.js"></script>
 	  	<script type="text/javascript">
 			$(document).ready(function() {
 		      	$('.max1500').truncate({max_length: 1500});			    
@@ -207,13 +211,13 @@ if (!isset($_SESSION['is_logged_in'])) {
 			});
 	  	</script>
 
-		<script src="jCrop/js/jquery.min.js"></script>
-		<script src="jCrop/js/jquery.Jcrop.js"></script>
-		<script src="js/md5.js"></script>
-		<link rel="stylesheet" href="jCrop/css/jquery.Jcrop.css" type="text/css" />
-		<link rel="stylesheet" href="demo_files/demos.css" type="text/css" />
+		<script src="<?=ACTIVE_URL?>jCrop/js/jquery.min.js"></script>
+		<script src="<?=ACTIVE_URL?>jCrop/js/jquery.Jcrop.js"></script>
+		<script src="<?=ACTIVE_URL?>js/md5.js"></script>
+		<link rel="stylesheet" href="<?=ACTIVE_URL?>jCrop/css/jquery.Jcrop.css" type="text/css" />
+		<link rel="stylesheet" href="<?=ACTIVE_URL?>demo_files/demos.css" type="text/css" />
 
-    		<script src="themes/1/js-image-slider.js" type="text/javascript"></script>
+    		<script src="<?=ACTIVE_URL?>themes/1/js-image-slider.js" type="text/javascript"></script>
 
 		<?php
 			//SPECIAL REDIRECT CASES
@@ -224,7 +228,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 				$res = mysql_query($sql);
 				$row = mysql_fetch_array($res);	
 				$id = $row['id'];
-				echo "<script>window.location = '/index.php?task=view_silo&id=$id';</script>";
+				echo "<script>window.location = 'index.php?task=view_silo&id=$id';</script>";
 			}		
 		?>
 
@@ -256,9 +260,9 @@ if (!isset($_SESSION['is_logged_in'])) {
 	  	</script>
 		<div id="notice" style="position: fixed; z-index: 1000; top: 50%; left: 50%; margin-left: -300px; margin-top: -200px;">
 			<div id="notice_drag" style="float:right;margin-left: -5px;">
-				<img id="notice_exit" src="images/close_white.png" onclick="document.getElementById('notice').style.display = 'none';document.getElementById('overlay').style.display='none';"/>
+				<img id="notice_exit" src="<?=ACTIVE_URL?>images/close_white.png" onclick="document.getElementById('notice').style.display = 'none';document.getElementById('overlay').style.display='none';"/>
 			</div>						
-			<img src="images/notice.png"/>
+			<img src="<?=ACTIVE_URL?>images/notice.png"/>
 		</div>
 		<?php
 			setcookie('notice', '1');

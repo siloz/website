@@ -127,7 +127,11 @@ else {
 			}
 						
 			for ($i=1; $i<=4; ++$i) {
-				if ($_FILES['item_photo_'.$i]['name'] != '') {
+				$filesize = $_FILES['item_photo_'.$i]['size'];
+				if ($filesize > 2097152) {
+					$err .= "Image file is too large. Please scale it down.";
+				}
+				elseif ($_FILES['item_photo_'.$i]['name'] != '') {
 					$ext = end(explode('.', strtolower($_FILES['item_photo_'.$i]['name'])));
 					if (!in_array($ext, $allowedExts)) {
 						$err .= $_FILES['item_photo_'.$i]['name']." is invalid file type.<br/>";
