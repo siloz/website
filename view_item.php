@@ -19,7 +19,7 @@
 		$user_lat = urlencode($user['latitude']);
 		$distBuyerSeller = $item->getDistance($item_long, $item_lat, $user_long, $user_lat);
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));
-		if ($checkClosed > 0) { $closed_silo = "_closed"; }
+		//if ($checkClosed > 0) { echo "<script>window.location = 'index.php?task=view_silo&id=".$silo->id."';</script>"; }
 
 	if (param_post('fav') == 'add to favorites') {
 		$user_id = param_post('user_id');
@@ -395,7 +395,7 @@
 							<?php } ?></div>
 						</td>
 						<td style="padding-left: 7px" align="center" valign="middle" rowspan="2">
-							<a href="mailto:?Subject=Check out this item on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_item%26id=<?php echo $item->id;?>"><img src="images/mail-icon.png" width="55" height="55"></a>
+							<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="images/mail-icon.png" width="55" height="55"></a>
 						</td>
 						<td align="center" valign="middle" rowspan="2">
 							<img height="40" width="40" src="images/facebook.jpg" class="fbHover" onclick='postToFeed();'/>
@@ -465,8 +465,7 @@
 		<td style='width: 4%'>
 		</td>
 		<td width="340px" align="left">
-				<div class="voucherText" style="margin-top: 7px; margin-left: 5px; font-size: 11pt;" align="left">You purchasing this item helps:</div><br>
-<table class='siloInfo<?=$closed_silo?>' style="margin-top: -7px;" >
+<table class='siloInfo<?=$closed_silo?>' >
 	<tr>
 		<td class="titleHeading">
 			<a href='index.php?task=view_silo&id=<?=$silo->id;?>'><?=$silo->name?><?php if($closed_silo) { echo " (Closed)"; }?></a>
@@ -621,12 +620,19 @@ map.mapTypes.set('Styled', styledMapType);
 		borderColor: '#2c2c2c'
     });
 
+    var marker = new google.maps.Marker({
+	       map: map,
+		animation: google.maps.Animation.DROP,
+		icon: 'images/map-marker.png',
+	      	position: myLocation
+    });
+    markers.push(marker);
+
     infowindow.setOptions({
         content: "<?=$plate?>",
         position: myLocation,
     });
 
-infowindow.open(map);
 }
 
 function loadScript() {
@@ -649,5 +655,18 @@ window.onload = loadScript;
 		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
 		<button type="button" onclick="document.location='index.php?task=my_account&redirect=view_item&id=<?=$item->id?>'">Finish it now</button>
 		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_item').style.display='none';">Later</button>
+	</div>
+</div>
+
+<div class="login" id="mail" style="width: 300px;">
+	<div id="mail_drag" style="float:right">
+		<img id="mail_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h2>Select your mail client:</h2>
+		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Check out this item on sìloz.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
+		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
+		<a href="http://compose.mail.yahoo.com/?&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
 	</div>
 </div>

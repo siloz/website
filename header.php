@@ -182,10 +182,10 @@
 	$notif = mysql_fetch_array($qry);
 
 	if ($notif == 1) {
-		$header .= "<span id='notification'><a href='<?=ACTIVE_URL?>index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>1 new notification!</b></font></a></span>";
+		$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>1 new notification!</b></font></a></span>";
 	}
 	elseif ($notif > 1) {
-		$header .= "<span id='notification'><a href='<?=ACTIVE_URL?>index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
+		$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
 	}
 
 	if ($_SESSION['is_logged_in']) {

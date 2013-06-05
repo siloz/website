@@ -12,7 +12,7 @@ $silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND
 		$notif->SiloEnded($silo_id_close);
 	}
 
-$offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW()");
+$offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW() AND status = 'pending'");
 	if (mysql_num_rows($offerCheck) > 0) {
 		while ($offer = mysql_fetch_array($offerCheck)) {
 			$item_id = $offer['item_id'];
@@ -21,12 +21,14 @@ $offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW()
 		}
 	}
 
-$purchaseCheck = mysql_query("SELECT item_id FROM item_purchase WHERE expired_date < NOW()");
+$purchaseCheck = mysql_query("SELECT item_id FROM item_purchase WHERE expired_date < NOW() AND status = 'pending'");
 	if (mysql_num_rows($purchaseCheck) > 0) {
 		while ($pur = mysql_fetch_array($purchaseCheck)) {
 			$item_id = $pur['item_id'];
-			$updPurchase = mysql_query("UPDATE item_purchase SET status = 'declined' WHERE item_id = '$item_id'");
-			$updItem = mysql_query("UPDATE items SET status = 'pledged' WHERE status = 'pending' AND item_id = '$item_id'");
+			$updPurchase = mysql_query("UPDATE item_purchase SET status = 'refunded' WHERE item_id = '$item_id'");
+			$updItem = mysql_query("UPDATE items SET status = 'pledged' WHERE item_id = '$item_id'");
+
+			include('braintree/refunds.php');
 		}
 	}
 

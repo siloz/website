@@ -6,7 +6,7 @@
 	$silo_id = param_get('silo_id');
 	$user = new User($view_user_id);
 
-	$count = "SELECT COUNT(*) AS num FROM items WHERE user_id = '$user->user_id'";
+	$count = "SELECT COUNT(*) AS num FROM items WHERE user_id = ".$user->user_id." AND (items.status = 'pledged' OR items.status = 'offer')";
 	$countRow = mysql_fetch_array(mysql_query($count));
 	$total_records = $countRow['num'];
 	$total_pages = ceil($total_records / $itemsPerPage);
@@ -15,13 +15,13 @@
 	$start_from = ($page-1) * $itemsPerPage;
 
 	if ($silo_id != '') {
-		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE deleted_date = 0 AND user_id = $user_id AND silo_id = $silo_id ORDER BY item_id LIMIT $start_from, $itemsPerPage";
+		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE user_id = ".$user->user_id." AND (items.status = 'pledged' OR items.status = 'offer') ORDER BY item_id LIMIT $start_from, $itemsPerPage";		
 		$tmp = mysql_query("SELECT * FROM silos WHERE silo_id = $silo_id");
 		$silo = mysql_fetch_array($tmp);
 		$silo_text = " in <b><a href='index.php?task=view_silo&id=".$silo_id."'>".$silo['name']."</a></b> Silo";			
 	}
 	else {
-		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE deleted_date = 0 AND user_id = ".$user->user_id." ORDER BY item_id LIMIT $start_from, $itemsPerPage";		
+		$sql = "SELECT * FROM items INNER JOIN silos USING (silo_id) WHERE user_id = ".$user->user_id." AND (items.status = 'pledged' OR items.status = 'offer') ORDER BY item_id LIMIT $start_from, $itemsPerPage";		
 	}
 	$items = mysql_query($sql);
 ?>
@@ -70,7 +70,7 @@
 	$num = mysql_num_rows($items);
 
 	if (!$num) {
-    		echo "<br><br><center>This user has not pledged any items to any silos yet.</center>";
+    		echo "<br><br><center>This user does not have any active listings right now.</center>";
   	}
 
 		$n = 0;

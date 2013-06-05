@@ -186,14 +186,10 @@
 	<td style="padding-right: 15px;">
 		<?=$sortBy?>
 	</td>
-	<td style="padding-right: 5px;">
-		view:
-	</td>
 	<td>
-		<a href="index.php?<?=$saveSearch?>&search=silo&view=map"> map <input style="float: right; margin-top: 5px; margin-left: 5px;" type="radio" <?php if ($view) { echo "CHECKED"; } ?>></input></a>
-	</td>
-	<td>
-		<a href="index.php?search=silo<?=$saveSearch?>&view=">grid <input style="float: right; margin-top: 5px; margin-left: 5px;" type="radio" <?php if (!$view) { echo "CHECKED"; } ?>></input></a>
+		<span style="padding-right: 5px;">view:</span>
+		<span style="padding-right: 5px; <?php if($view) { echo "text-decoration: underline;"; } ?>"><a href="index.php?<?=$saveSearch?>&search=silo&view=map">map</a></span>
+		<span style="<?php if(!$view) { echo "text-decoration: underline;"; } ?>"><a href="index.php?search=silo<?=$saveSearch?>&view=">grid</a></span>
 	</td>
 </tr>
 </table>
@@ -223,7 +219,7 @@ if ($view == "map") {
 </div>
 -->
 
-<div id='map_canvas' class="map-canvas" style='width: 930px; height: 400px; margin: 20px;'></div>
+<div id='map_canvas' class="map-canvas" style='width: 930px; height: 380px; margin: 20px 20px 0 20px;'></div>
 
 <br>
 
@@ -316,7 +312,7 @@ function initialize() {
 	   	var marker<?=$silo_id?> = new google.maps.Marker({
 	       	map: map,
 			animation: google.maps.Animation.DROP,
-			icon: 'images/map-marker.png',
+			icon: 'images/map-marker-silo.png',
 	       	position: pos<?=$silo_id?>
 	   	});
 		markers.push(marker<?=$silo_id?>);
@@ -347,7 +343,7 @@ window.onload = loadScript;
 </script>
 
 <?php
-}
+} else {
 ?>
 
 <!--
@@ -389,5 +385,4 @@ window.onload = loadScript;
 
 <?php echo $siloz_html;?>
 
-<div style="margin-left: 10px;">
-</div>
+<?php } ?>

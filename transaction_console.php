@@ -8,13 +8,15 @@ if (param_post('item') == 'Delete') {
 	$user_id = param_post('user_id');
 	$decline = mysql_query("UPDATE items SET status = 'deleted' WHERE item_id = '$item_id' AND user_id = '$user_id'");
 
-	$updatemsg = "Item has been declined.";
+	$updatemsg = "Item has been deleted.";
 }
 
 if (param_post('item') == 'Decline') {
 	$item_id = param_post('item_id');
 	$user_id = param_post('user_id');
 	$decline = mysql_query("UPDATE item_purchase SET status = 'declined' WHERE item_id = '$item_id' AND user_id = '$user_id'");
+
+	include('braintree/refunds.php');
 
 	$updatemsg = "Item has been declined.";
 }

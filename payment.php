@@ -30,6 +30,7 @@ include("include/timeout.php");
 		Braintree_Configuration::merchantId('sf9ngrv2pjv7vmcm');
 		Braintree_Configuration::publicKey('4xywwjd3vzdz2b73');
 		Braintree_Configuration::privateKey('tsqksyy97dck5gyf');
+
 		$cc = $_POST['credit_card'];
 		$billing = $cc['billing_address'];
 		//die(print_r($billing));
@@ -54,9 +55,14 @@ include("include/timeout.php");
 			'options' => array(
 			    'storeInVault' => false
 			)
+    			'customFields' => array(
+       			'item_id' => '$item->item_id',
+    			)
 		));
 
 		if ($result->success) {
+			$transaction = $result->transaction;
+			$trans_id = $transaction->id;
 		    	$codes = $item->GetPayCode($_SESSION["user_id"], $item->owner->user_id);
 		    	$paylock = $codes[0];
 			$paykey = $codes[1];
@@ -67,6 +73,7 @@ include("include/timeout.php");
 		    	$ItemPurchase->item_id = $item->item_id;
 		    	$ItemPurchase->silo_id = $item->silo_id;
 		    	$ItemPurchase->user_id = $user_id;
+		    	$ItemPurchase->trans_id = $trans_id;
 		    	$ItemPurchase->ip = Common::RemoteIp();
 		    	$ItemPurchase->amount = $_POST["amount"];
 		    	$ItemPurchase->status = "pending";
@@ -184,7 +191,7 @@ include("include/timeout.php");
 				</tr>
 				<tr>
 					<td>Credit Number<td>
-					<td><input type="text" style="width: 150px" name="credit_card[number]" value=""/></td>
+					<td><input type="text" style="width: 150px" name="credit_card[number]" value="" /></td>
 				</tr>
 				<tr>
 					<td>CVV Code<td>

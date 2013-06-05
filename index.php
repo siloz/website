@@ -186,7 +186,13 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />	
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />	
 		<link rel="stylesheet" tyle="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
-    		<link href="<?=ACTIVE_URL?>themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
+
+	<?php if (param_get('task') == 'view_silo') { ?> 
+		<link href="<?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />
+	<?php } else { ?>
+		<link href="<?=ACTIVE_URL?>themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
+	<?php } ?>
+
 		<link rel="stylesheet" href="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
 		<link rel='stylesheet' type='text/css' href='<?=ACTIVE_URL?>include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
 		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery-1.9.0.min.js"></script>	

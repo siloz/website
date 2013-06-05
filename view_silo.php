@@ -7,8 +7,11 @@
 	$shortname = param_get('name');
 	
 	$view = param_get('view');
-	if ($view == '')
+	if ($view == '') {
 		$view = 'feed';
+		$view_track = "";
+	} else { $view_track = "set"; }
+
 	if (!$id && !shortname) {
 		echo "<script>window.location = 'index.php';</script>";	
 	}	
@@ -186,7 +189,7 @@
 	</td>
 	<td width="200px" style="padding-top: 5px;">
 		<?php if (!$closed_silo) { ?>
-			<a href="mailto:?Subject=Check out this silo on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_silo%26id=<?php echo $silo->id;?>"><img src="images/mail-icon.png" width="32" height="32"></a>
+			<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="images/mail-icon.png" width="55" height="55"></a>
 			<img src="images/facebook.jpg" onclick='postToFeed();'/>
 
 		<?php
@@ -660,5 +663,81 @@ window.onload = loadScript;
 		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
 		<button type="button" onclick="document.location='index.php?task=my_account&redirect=sell_on_siloz&id=<?=$silo->id?>'">Finish it now</button>
 		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_donate').style.display='none';">Later</button>
+	</div>
+</div>
+
+
+<?php
+	$checkThanked = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active' AND thanked = '1'"));
+	if ($checkThanked && $view_track == "") {
+	$siloInfo = mysql_fetch_array(mysql_query("SELECT id, admin_id, collected, end_date FROM silos WHERE silo_id = '$silo_id'"));
+	$siloAdmin = mysql_fetch_array(mysql_query("SELECT fname, lname FROM users WHERE user_id = '$siloInfo[admin_id]'"));
+	$siloThank = mysql_fetch_array(mysql_query("SELECT * FROM silo_thank WHERE silo_id = '$silo_id'"));
+	$end = strtotime($siloInfo['end_date']); $ended_date = date("F jS, Y", $end);
+	$thanked = strtotime($siloThank['date']); $thanked_date = date("F jS, Y", $thanked);
+?>
+		<script type="text/javascript">
+			$(document).ready(function () {
+        			javascript:popup_show('thank_you', 'thank_you_drag', 'thank_you_exit', 'screen-center', 0, 0);
+			})
+		</script>
+
+<div class="greyFont" style="font-weight: bold">
+<div class="login" id="thank_you" style="width: 650px;">
+	<div id="thank_you_drag" style="float:right">
+		<img id="thank_you_exit" src="<?=ACTIVE_URL?>images/close.png"/>
+	</div>
+	<div>
+		This silo raised $<?=$siloInfo['collected']?>, and ended on <?=$ended_date?>. The silo administrator, <span class="blue"><?=$siloAdmin['fname']?> <?=$siloAdmin['lname']?></span>, started the 'Thank You' phase of this silo on <?=$thanked_date?>. Thanks to all who pledged items and donated funds!<br><br>
+
+<div class="row">
+	<div id="slider_frame">
+		<div id="slider">
+			<?php if ($siloThank['photo_1']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_1']?>" alt="" />
+			<?php } if ($siloThank['photo_2']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_2']?>" alt="" />
+			<?php } if ($siloThank['photo_3']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_3']?>" alt="" />
+			<?php } if ($siloThank['photo_4']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_4']?>" alt="" />
+			<?php } if ($siloThank['photo_5']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_5']?>" alt="" />
+			<?php } if ($siloThank['photo_6']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_6']?>" alt="" />
+			<?php } if ($siloThank['photo_7']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_7']?>" alt="" />
+			<?php } if ($siloThank['photo_8']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_8']?>" alt="" />
+			<?php } if ($siloThank['photo_9']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_9']?>" alt="" />
+			<?php } if ($siloThank['photo_10']) { ?>
+				<img src="uploads/thank-you/<?=$siloInfo['id']?>/<?=$siloThank['photo_10']?>" alt="" />
+			<?php } ?>
+		</div>
+	</div>
+</div>
+
+<br><br>
+
+<?php if ($siloThank['comments']) { ?>
+	<span style="font-weight: normal">Silo administrator comments:</span> "<?=$siloThank['comments']?>"
+<?php } ?>
+	</div>
+</div>
+</div>
+
+<?php } ?>
+
+<div class="login" id="mail" style="width: 300px;">
+	<div id="mail_drag" style="float:right">
+		<img id="mail_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h2>Select your mail client:</h2>
+		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
+		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
+		<a href="http://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
 	</div>
 </div>

@@ -13,7 +13,7 @@ function GetIds($value , $key=false){
 function Populate($id){
 	$query = (
 		"select "
-		."id,silo_id,item_id,amount,paykey,status,ip,created,last_update "
+		."id,silo_id,item_id,trans_id,amount,paykey,status,ip,created,last_update "
 		."from item_purchase "
 		."where id = '".mysql_real_escape_string($id)."'"
 	);
@@ -66,6 +66,7 @@ private function Update(){
 		."silo_id = '".mysql_real_escape_string($this->silo_id)."',"
 		."item_id = '".mysql_real_escape_string($this->item_id)."',"
 		."user_id = '".mysql_real_escape_string($this->user_id)."',"
+		."trans_id = '".mysql_real_escape_string($this->trans_id)."',"
 		."amount = '".mysql_real_escape_string($this->amount)."',"
 		."paylock = '".mysql_real_escape_string($this->paylock)."',"
 		."paykey = '".mysql_real_escape_string($this->paykey)."',"
@@ -84,16 +85,17 @@ private function Update(){
 
 
 private function Insert(){
-	$exp = date('Y-m-d H:i:s', strtotime('+3 day'));
+	$exp = date('Y-m-d H:i:s', strtotime('+7 day'));
 
 	$query = (
 		"insert into item_purchase "
-		."(silo_id,item_id,user_id,amount,paylock,paykey,status,ip,created,expired_date) "
+		."(silo_id,item_id,user_id,trans_id,amount,paylock,paykey,status,ip,created,expired_date) "
 		."values "
 		."("
 			."'".mysql_real_escape_string($this->silo_id)."',"
 			."'".mysql_real_escape_string($this->item_id)."',"
 			."'".mysql_real_escape_string($this->user_id)."',"
+			."'".mysql_real_escape_string($this->trans_id)."',"
 			."'".mysql_real_escape_string($this->amount)."',"
 			."'".mysql_real_escape_string($this->paylock)."',"
 			."'".mysql_real_escape_string($this->paykey)."',"

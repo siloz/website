@@ -283,11 +283,11 @@ class Notification {
 
 	public function SiloEnded($silo_id) {
 	
-		$silo = mysql_fetch_array(mysql_query("SELECT name, admin_id, collected FROM silos WHERE silo_id = '$silo_id'"));
+		$silo = mysql_fetch_array(mysql_query("SELECT id, name, admin_id, collected FROM silos WHERE silo_id = '$silo_id'"));
 		$admin = mysql_fetch_array(mysql_query("SELECT email FROM users WHERE user_id = '$silo[admin_id]'"));
 
 			$subjectAdmin = "Your silo has ended";
-			$messageAdmin = "<h3>The silo titled <b>".$silo['name']."</b> has either reached its deadline or passed its goal. Congratulations! </h3>";
+			$messageAdmin = "<h3>The silo titled <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo['id']."'><b>".$silo['name']."</b></a> has either reached its deadline or passed its goal. Congratulations! </h3>";
 			$messageAdmin .= "We are still waiting for some members of the silo to finish their transactions. Once all of the transactions in your silo have been completed, you (as the administrator) will be paid.<br><br>";
 			$messageAdmin .= "Right now, your silo is inert. You do not need to do anything until you have been paid. We will send you an e-mail once you been paid successfully.<br><br>";
 			$messageAdmin .= "Thank you for using ".SITE_NAME." and we will contact you very soon regarding the money that you have raised!";
@@ -298,7 +298,7 @@ class Notification {
 		while ($getUser = mysql_fetch_array($getUsers)) {
 			$user = mysql_fetch_array(mysql_query("SELECT email FROM users WHERE user_id = '$getUser[0]'"));
 				$subjectUser = "A silo has ended";
-				$messageUser = "<h3>The silo titled <b>".$silo['name']."</b> has ended.</h3>";
+				$messageUser = "<h3>The silo titled <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo['id']."'><b>".$silo['name']."</b></a> has ended.</h3>";
 				$messageUser .= "This silo is no longer active, which means that either the silo reached its goal, or the runtime has surpassed. Since this silo is inacitve, no more transactions will be allowed. The silo administator will be paid once all of the current pending transactions have finished. Once the silo administrator has been paid, we will send you another e-mail with more information about the silo and how much money it raised.<br><br>";
 				$messageUser .= "Thank you for participating in this silo. All of the help is always greatly appreciated! You will be hearing back from us very soon.";
 
@@ -310,11 +310,11 @@ class Notification {
 
 	public function SiloPaid($silo_id) {
 	
-		$silo = mysql_fetch_array(mysql_query("SELECT name, admin_id, collected FROM silos WHERE silo_id = '$silo_id'"));
+		$silo = mysql_fetch_array(mysql_query("SELECT id, name, admin_id, collected FROM silos WHERE silo_id = '$silo_id'"));
 		$admin = mysql_fetch_array(mysql_query("SELECT email FROM users WHERE user_id = '$silo[admin_id]'"));
 
 			$subjectAdmin = "Your silo has been paid!";
-			$messageAdmin = "<h3>You have been paid for the silo titled <b>".$silo['name']."</b>! </h3>";
+			$messageAdmin = "<h3>You have been paid for the silo titled <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo['id']."'><b>".$silo['name']."</b></a>! </h3>";
 			$messageAdmin .= "Now that you have been paid, it is time to thank the members who pledged items to your silo. We strongly encourage you to upload images or files that give your members proof regarding what the money helped pay for.<br><br>";
 			$messageAdmin .= "To thank your members, you can click on the 'manage silo' tab under your account page or you can simply click <a href='".ACTIVE_URL."index.php?task=manage_silo_thank'>here</a>.<br><br>";
 			$messageAdmin .= "Great job on the completion of your silo! We hope the money will help your organziation a great deal. We hope to see you back at ".SITE_NAME." soon!";
@@ -340,7 +340,7 @@ class Notification {
 		while ($getUser = mysql_fetch_array($getUsers)) {
 			$user = mysql_fetch_array(mysql_query("SELECT email FROM users WHERE user_id = '$getUser[0]'"));
 				$subjectUser = "A silo has been paid!";
-				$messageUser = "<h3>The silo titled <b>".$silo['name']."</b> has been paid out!</h3>";
+				$messageUser = "<h3>The silo titled <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo['id']."'><b>".$silo['name']."</b></a> has been paid out!</h3>";
 				$messageUser .= "Thanks for helping this silo reach their goal. Every item counts! You can look at how much money was raised and how much each member raised in the report below:<br><br>";
 				$messageUser .= $siloReport;
 
