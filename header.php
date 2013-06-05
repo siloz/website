@@ -169,6 +169,31 @@
 <div id="logo_container">
 	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>" style="text-decoration:none"><img src="<?=ACTIVE_URL?>images/logo-beta.png" width="289" height="62" /></a>			
 </div>
+
+<!-- Facebook code button. -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=291023471032128";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div style="float: left; margin: 25px 25px;"> 
+	<div class="fb-like" data-href="http://www.siloz.com/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
+	<div class="g-plusone"></div>
+</div>
+
+<!-- Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+
 <!-- <div align="right" style="margin-top: 100px; margin-right: 10px; font-size: 12px; line-height: 25px;">
 	Raise money by accepting items, pledged items - all online. Start a silo now!
 </div> -->
