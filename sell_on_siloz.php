@@ -87,7 +87,7 @@ else {
 		$joined = true;
 		//added sept 8th 2012 james kenny
 		//make sure they selct their association with the silo
-		if(!$vouch_type_id && !$joined_silo){
+		if(!$vouch_type_id && !$joined_silo && !$disaster){
 			$err .= "Please use tell us how you are associated with this silo<br />";
 		}
 		if (strlen($err) == 0) {
