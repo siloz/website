@@ -360,7 +360,7 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				<td>
 					<select name="silo_cat_id" id="silo_cat_id" size="1" placeholder="-- Please Select --">
 						<?php
-							$sql = "SELECT * FROM silo_categories ORDER BY silo_cat_id";
+							$sql = "SELECT * FROM silo_categories ORDER BY silo_cat_id WHERE silo_cat_id != '99'";
 							$s = mysql_query($sql);
 							echo "<option value=''>-- Please Select --</option>";											
 							while ($row = mysql_fetch_array($s)) {

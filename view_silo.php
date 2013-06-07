@@ -218,7 +218,7 @@
 			}
 			elseif ($_SESSION['is_logged_in']) {			
 		?>
-			<button type="submit" class="buttonDonations" onclick="window.open('index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">donate items</button>						
+			<button type="submit" class="buttonDonations" onclick="window.open('<?=ACTIVE_URL?>index.php?task=sell_on_siloz<?php echo "&id=".$silo->id;?>', '_parent');" id="sell_on_siloz">donate items</button>						
 
 			<?php
 				$ref = "S".$silo->id."-U".$current_user['id']."-".date('m/d/Y H:i:s');	
