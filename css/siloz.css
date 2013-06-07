@@ -708,7 +708,7 @@ div.plate_pending a {
 	height: 160px;	
 	padding: 0px 4px;
 	color: #0F5684;
-	font-size: 11px;
+	font-size: 9pt;
 	background: #EEF7FC;
 	font-family: Arial, Helvetica,sans-serif;
 	margin-left: 15px;
@@ -757,14 +757,14 @@ div.plateItemOLD {
 	height: 198px;	
 	padding: 0px 4px;
 	color: #0F5684;
-	font-size: 11px;
+	font-size: 9pt;
 	background: #FFF;
 	font-family: Arial, Helvetica,sans-serif;
 	margin-left: 15px;
 }
 
 .plateSilo a {
-	font-size: 12pt;
+	font-size: 10pt;
 }
 
 .plateSilo:hover {
@@ -779,14 +779,14 @@ div.plateItemOLD {
 	height: 198px;	
 	padding: 0px 4px;
 	color: #fff;
-	font-size: 11px;
+	font-size: 9pt;
 	background: #FF642F;
 	font-family: Arial, Helvetica,sans-serif;
 	margin-left: 15px;
 }
 
 .plateSilo_disaster a {
-	font-size: 12pt;
+	font-size: 10pt;
 	color: #fff;
 	text-decoration: none;
 }
@@ -833,7 +833,7 @@ div.first_element {
 .siloInfo_closed {
 	background: #3A3A3A;
 
-    	border-radius: 8px;  
+    	border-radius: 8px;
     	border: 1px solid lightgray;
 	color: #fff;
 

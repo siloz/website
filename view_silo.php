@@ -33,7 +33,7 @@
 		$showU = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date = 0"));
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));
 		if ($checkClosed > 0) { $closed_silo = "_closed"; }
-		elseif ($silo->silo_cat_id == "99") { $disaster_silo = "_disaster"; $disaster_silo_text = "Relief -"; }
+		elseif ($silo->silo_cat_id == "99") { $disaster_silo = "_disaster"; $disaster_silo_text = "Relief"; }
 		if ($silo->issue_receipts == 1) { $tax_ded = "true"; }
 
 //Determine number of pages

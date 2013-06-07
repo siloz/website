@@ -142,7 +142,7 @@ class Item {
 		
 		$cell .= "' id=item_".$this->id." onclick='window.location = \"index.php?task=view_item&id=".$this->id."\"'>";
 		$cell .= "<img class='photoItem' height=110px width=149px src='uploads/items/".$this->photo_file_1."?".$this->last_update."'><div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: middle; text-align: center;'>
-			<a href='index.php?task=view_item&id=".$this->id."'><span style='color: #0F5684;'><b>".$this->getShortTitle(35)."</b></span></a><br><span style='color: #f60'><b>$".$this->priceOffer."</b></span></div></div></a></div>";
+			<a href='index.php?task=view_item&id=".$this->id."'><span style='color: #0F5684;'><b>".$this->getShortTitle(30)."</b></span></a><br><span style='color: #f60'><b>$".$this->priceOffer."</b></span></div></div></a></div>";
 		return $cell;
 	}
 	

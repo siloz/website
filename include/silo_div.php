@@ -1,4 +1,7 @@
-<?php if ($silo->silo_type == "private" && !$showDiv) { ?>
+<?php 
+if ($silo->silo_cat_id == "99") { $disaster = "true"; }
+
+if ($silo->silo_type == "private" && !$showDiv) { ?>
 
 <table class='siloInfo<?=$closed_silo?>' style="height: 730px">
 	<tr>
@@ -10,7 +13,15 @@
 
 <?php } else { ?>
 
-<table class='siloInfo<?=$closed_silo?>'>
+<table class='siloInfo<?=$closed_silo?>' style="height: 600px">
+
+<?php if (param_get('task') == "view_item") { ?>
+	<tr>
+		<td class="titleHeading">
+			<?=$silo->getShortTitle(35); ?>
+		</td>
+	</tr>
+<?php } ?>
 
 	<tr class="infoSpacer"></tr>
 	<tr>
@@ -66,8 +77,12 @@
 	<tr>
 		<td class="siloInnerInfo<?=$closed_silo?>">
 			<div align="left">
-			<span class='voucher'>Donate only to local causes that you know or have researched!</span><br><br>
-			<?php include('include/UI/flag_box_silo.php'); ?>
+		<span class='voucher'>
+		<?php if ($disaster) { ?>
+			This silo was sanctioned by the benefiting organization. The amount raised (shown on this page), represents a 90% of actual funds raised. Of the 10% not represented in the status bar, roughly 7.5% goes to <?=SHORT_URL?>, and rougly 2.5% goes to our payment gateway.</span><br><br>
+		<?php } else { ?>
+			Donate only to local causes that you know or have researched!</span><br><br>
+		<?php include('include/UI/flag_box_silo.php'); } ?>
 			<center>Silo ID: <?=$silo->id?></center>
 		</div>
 		</td>

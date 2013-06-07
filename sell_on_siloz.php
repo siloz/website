@@ -20,6 +20,7 @@ else {
 	if (param_post('submit') == 'Finish') {	
 		$silo_id = param_post('silo_id');
 		$silo = new Silo($silo_id);
+		if ($silo->silo_cat_id == "99") { $disaster = "true"; }
 		$title = param_post('title');
 		$avail = param_post('avail');
 		$price = param_post('price');
@@ -225,6 +226,8 @@ else {
 			$joined_silo = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$user_id'"));
 		}
 	}
+
+	if ($silo->silo_cat_id == "99") { $disaster = "true"; }
 
 	if (param_post('crop') == 'Crop1') {
 		$id = trim(param_post('item_id'));
@@ -536,7 +539,7 @@ die;
 								<td><textarea name="description" style="width: 300px; height: 50px; resize: none;"><?php echo $description; ?></textarea></td>
 							</tr>
 						</table>
-<?php if (!$joined_silo) { ?>
+<?php if (!$joined_silo && !$disaster) { ?>
 					<center><h2 style="margin-bottom: -5px;">Choose One</h2>
 					<span class="blue">Your response will impact the Familiarity Index for this silo</span></center>
 						<div class="<?php if ($vouch_type_id == 75) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_75">I researched this silo</div>
@@ -568,7 +571,7 @@ die;
 					</td>
 				</tr>
 
-<?php if (!$joined_silo) { ?>
+<?php if (!$joined_silo && !$disaster) { ?>
 				<tr>
 					<td valign="middle">
 						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of information posted on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  By using siloz, members you agree to hold siloz harmless and not liable for  fraud, misrepresentation, tortious acts committed by a silo administrator, and crimes incidental to the sale of items.</p>

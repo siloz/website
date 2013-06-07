@@ -96,6 +96,15 @@ class Silo {
 	public function getTitle() {
 		return "<b>".$this->name."</b>";
 	}
+
+	function getShortTitle($len) {
+		if (strlen($this->name) > $len) {
+			return substr($this->name, 0, $len)."..";
+		}
+		else {
+			return $this->name;
+		}		
+	}
 	
 	public function getAdmin() {
 		return $this->admin;
@@ -263,7 +272,7 @@ class Silo {
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
 		$cell = "<div class='plateSilo span2' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<div style='text-align: center; height: 40px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div><center><img height=126px width=168px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
+		$cell .= "<div style='text-align: center; height: 40px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".$this->getShortTitle(30)."</b></a></div><center><img height=126px width=168px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 	
@@ -289,7 +298,7 @@ class Silo {
 		
 		$cell .= "' id=silo_".$this->id." onclick='window.location = \"index.php?task=view_silo&id=".$this->id."\"'>";				
 		$cell .= "<div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: top; text-align: center;'>
-				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=136px width=181px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='".$goalClass."'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
+				<a href='index.php?task=view_silo&id=".$this->id."'><b>".$this->getShortTitle(30)."</b></a></div></div><center><img height=136px width=181px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='".$goalClass."'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 
