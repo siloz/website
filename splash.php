@@ -11,7 +11,7 @@
 </h2> 
 </div>
 
-<div class="row_splash">
+<div class="row">
 	<div id="slider_frame">
 		<div id="slider">
 			<img src="images/splash/field-trip.jpg" alt="<span class='sliderText'>Public silo:</span> Raise money for students' arts, sports, and extracurricular programs." />
@@ -35,9 +35,9 @@
 </div>
 
 
-<div id="action_call" class="row_splash">
+<div id="action_call" class="row">
 	<!-- shop button -->
-	<div class="row_splash">
+	<div class="row">
 		<div class="splash-shop" onClick="window.location = 'items'"></div>
 		<div class="splashText-shop">buy items whose sale helps a silo</div>
 		<p class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
@@ -46,7 +46,7 @@
 	</div>
 
 	<!-- donate button -->
-	<div class="row_splash">
+	<div class="row">
 		<div class="splash-donate" onClick="window.location = 'silos'"></div>
 		<div class="splashText-donate">sell items to benefit a public silo</div>
 		<p class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
@@ -55,7 +55,7 @@
 	</div>
 	
 	<!-- start silo button -->
-	<div class="row_splash">
+	<div class="row">
 		<table class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
 		<tr>
 			<td style="text-align: center" class="splashText-shop">create a private silo</td>
@@ -72,14 +72,14 @@
 		</div>
 </div>
 
-<div class="row_splash">
+<div class="row">
 		<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
 	
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' AND silo_type = 'public' ORDER BY distance LIMIT 5";
 			$tmp = mysql_query($sql);
 
-			$siloz_html = "<div class='row_splash'><div class='span12'>";
+			$siloz_html = "<div class='row'><div class='span12'>";
 			
 			$num_siloz = 0;
 			
@@ -87,7 +87,7 @@
 				$silo = new Silo($s['id']);		
 				
 				if ($num_siloz % 5 == 0) {
-					$siloz_html .= "<div class='row_splash item_row'>";
+					$siloz_html .= "<div class='row item_row'>";
 				}
 				
 				$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
@@ -108,13 +108,13 @@
 		?>
 </div>
 
-<div class="row_splash">
+<div class="row">
 	<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
 
 	<?php
 		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
 		$tmp = mysql_query($sql);
-		$items_html = "<div class='row_splash'><div class='span12'>";
+		$items_html = "<div class='row'><div class='span12'>";
 		
 		$num_items = 0;
 		
@@ -122,7 +122,7 @@
 			$it = new Item($item['id']);
 			
 			if ($num_items % 6 == 0) {
-				$items_html .= "<div class='row_splash item_row'>";
+				$items_html .= "<div class='row item_row'>";
 			}
 			
 			$items[] = $it;	
@@ -149,7 +149,7 @@
 
 <div id="quick-start"></div>
 
-<div id="footer_container" class="row_splash">
+<div id="footer_container" class="row">
 	<div id="quick_start_bg">
 		<table width="100%" class="quick_start">
 			<tr>

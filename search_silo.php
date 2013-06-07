@@ -90,7 +90,7 @@
 	$tmp = mysql_query($sql);		
 	$closed_silos = array();
 	
-	$siloz_html = "<div class='row'><div class='span12'>";
+	$siloz_html = "<div class='row_search'><div class='span12'>";
 	
 	$i = 0;
 

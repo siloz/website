@@ -81,7 +81,7 @@
 	$sql = "SELECT *, $sqlDist AS distance FROM items INNER JOIN item_categories USING (item_cat_id) WHERE $search_clause $order_by_clause LIMIT $start_from, $itemsPerPage";
 	$tmp = mysql_query($sql);
 	
-	$items_html = "<div class='row'><div class='span12'>";
+	$items_html = "<div class='row_search'><div class='span12'>";
 	$i = 0;
 	$items = array();
 
