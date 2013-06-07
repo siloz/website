@@ -8,9 +8,11 @@
 	define(DB_PASSWORD, "w@1kingded");
 	define(DB_HOST, "localhost");
 	define(DB_NAME, "siloz");
-	define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
+	//define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
+	//define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
+	define(ABS_PATH, "/var/www/vhosts/stage.james.siloz.com/httpdocs/");
+	define(ACTIVE_URL, "http".$secure."://stage.james.siloz.com/website/"); // **Don't forget slash at end** //
 	define(API_URL, "/api.php");
-	define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
 	define(SHORT_URL, "siloz.com");
 	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
 	define(FAM_INDEX_KILL, "off"); // **Disable silos/items with low fam index scores - on/off** //
