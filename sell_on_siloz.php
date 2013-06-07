@@ -495,7 +495,7 @@ die;
 					</td>
 				</tr>		
 				<tr>
-					<td valign="top">
+					<td valign="top" rowspan="2">
 						<table>
 							<tr>
 								<td><b>Listing Title</b> </td>
@@ -536,6 +536,15 @@ die;
 								<td><textarea name="description" style="width: 300px; height: 50px; resize: none;"><?php echo $description; ?></textarea></td>
 							</tr>
 						</table>
+<?php if (!$joined_silo) { ?>
+					<center><h2 style="margin-bottom: -5px;">Choose One</h2>
+					<span class="blue">Your response will impact the Familiarity Index for this silo</span></center>
+						<div class="<?php if ($vouch_type_id == 75) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_75">I researched this silo</div>
+						<div class="<?php if ($vouch_type_id == 76) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_76">I know this silo administrator</div>
+						<div class="<?php if ($vouch_type_id == 77) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_77">I didn't research this silo, and I don't know this silo administrator</div>
+						<div class="<?php if ($vouch_type_id == 78) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_78">I researched this silo, and I know this silo administrator</div>
+						<input type="hidden" id="famIndex" name="vouch" value="<?=$vouch_type_id?>" />
+<?php } ?>
 					</td>
 					<td valign="top">
 						<table>
@@ -561,32 +570,17 @@ die;
 
 <?php if (!$joined_silo) { ?>
 				<tr>
-				<td align="center">
-					<h2>Choose One</h2>
-					<span class="blue">Your response will impact the Familiarity Index for this silo</span>
-				</td>
-				</tr>
-				<tr>
-					<td>
-						<div class="<?php if ($vouch_type_id == 75) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_75"><div class="famIndex">I researched this silo</div></div>
-						<div class="<?php if ($vouch_type_id == 76) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_76"><div class="famIndex">I know this silo administrator</div></div>
-						<div class="<?php if ($vouch_type_id == 77) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_77">I didn't research this silo, and I don't know this silo administrator</div>
-						<div class="<?php if ($vouch_type_id == 78) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_78">I researched this silo, and I know this silo administrator</div>
-						<input type="hidden" id="famIndex" name="vouch" value="<?=$vouch_type_id?>" />
-					</td>
-				</tr>
-<?php } ?>
-				<tr>
-				<td><br>
+					<td valign="middle">
 						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of information posted on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  By using siloz, members you agree to hold siloz harmless and not liable for  fraud, misrepresentation, tortious acts committed by a silo administrator, and crimes incidental to the sale of items.</p>
-				</td>
-				</tr>
-				<tr>
-					<td align="center">
-						<button type="submit" name="submit" value="Finish">Finish</button>
+						<br>
+						<center><button type="submit" name="submit" value="Finish">Finish</button></center>
 					</td>
-				</tr>			
+				</tr>
 			</table>	
+<?php } else { ?>
+			</table>
+				<center><button type="submit" name="submit" value="Finish">Finish</button></center>
+<?php } ?>
 		</form>
 		<!-- <div style='width: 75%; margin: auto'>
 			<br/>

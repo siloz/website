@@ -10,12 +10,8 @@
 
 <?php } else { ?>
 
-<table class='siloInfo<?=$closed_silo?>' >
-	<tr>
-		<td class="titleHeading">
-			<a href='index.php?task=view_silo&id=<?=$silo->id;?>'><?=$silo->name?><?php if($closed_silo) { echo " (Closed)"; }?></a>
-		</td>
-	<tr>
+<table class='siloInfo<?=$closed_silo?>'>
+
 	<tr class="infoSpacer"></tr>
 	<tr>
 		<td>

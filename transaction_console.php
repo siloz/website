@@ -7,6 +7,7 @@ if (param_post('item') == 'Delete') {
 	$item_id = param_post('item_id');
 	$user_id = param_post('user_id');
 	$decline = mysql_query("UPDATE items SET status = 'deleted' WHERE item_id = '$item_id' AND user_id = '$user_id'");
+	$rmFeed = mysql_query("DELETE FROM feed WHERE item_id = '$item_id' AND user_id = '$user_id'");
 
 	$updatemsg = "Item has been deleted.";
 }
@@ -547,6 +548,7 @@ while ($item = mysql_fetch_array($qry)) {
 	$last_update = strtotime($item['last_update']);
 	$photo = $item['photo_file_1'];
 	$status = $item['status'];
+	$description = $item['description'];
 
 	$silo = mysql_fetch_array(mysql_query("SELECT end_date FROM silos WHERE silo_id = '$silo_id'"));
 	$end_date = strtotime($silo['end_date']); $end = date('g:i a F j, Y', $end_date);

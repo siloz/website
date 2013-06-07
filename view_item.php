@@ -20,6 +20,7 @@
 		$distBuyerSeller = $item->getDistance($item_long, $item_lat, $user_long, $user_lat);
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));
 		if ($checkClosed > 0) { echo "<script>window.location = 'index.php?task=view_silo&id=".$silo->id."';</script>"; }
+		if ($item->status == "deleted" || $item->status == "flagged") { echo "<script>window.location = 'index.php';</script>"; }
 
 	if (param_post('fav') == 'add to favorites') {
 		$user_id = param_post('user_id');

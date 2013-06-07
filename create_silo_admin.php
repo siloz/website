@@ -11,7 +11,7 @@ if ($_SESSION['is_logged_in'] != 1 || !in_array($user_id, $userArray)) {
 	$filename = "";
 	$today = date('Y-m-d')."";
 	if (mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = ".$_SESSION['user_id']." AND end_date >= '".$today."'")) > 0) {
-		//echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
+		echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
 	}	
 	if (param_post('publish') == 'Publish') {
 		

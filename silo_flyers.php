@@ -33,7 +33,7 @@
 	<link rel="stylesheet" type="text/css" media="print" href="print.css" />
 </head>
 
-<table style="font-weight: bold; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;" border=1 width="100%" height="100%">
+<table style="font-weight: bold; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;" width="100%" height="100%">
 <tr>
 	<?=$flyer?>
 	<?=$flyer?>

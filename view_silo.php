@@ -33,7 +33,7 @@
 		$showU = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date = 0"));
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));
 		if ($checkClosed > 0) { $closed_silo = "_closed"; }
-		elseif ($silo->silo_cat_id == "99") { $disaster_silo = "_disaster"; $disaster_silo_text = "Disaster Relief -"; }
+		elseif ($silo->silo_cat_id == "99") { $disaster_silo = "_disaster"; $disaster_silo_text = "Relief -"; }
 		if ($silo->issue_receipts == 1) { $tax_ded = "true"; }
 
 //Determine number of pages
@@ -190,7 +190,7 @@
 <tr>
 	<td style="padding-left: 10px">
 		<?php echo $silo->getTitle(); ?>
-		<?php if ($closed_silo) { echo "(Closed - This silo is no longer active)"; } elseif ($tax_ded) { echo "(".$disaster_silo_text." donations <b>are</b> tax-deductible!)"; }  elseif ($silo->silo_type == "private") { echo "(Private silo)"; } ?>
+		<?php if ($closed_silo) { echo "(Closed - This silo is no longer active)"; } elseif ($tax_ded) { echo "(".$disaster_silo_text.")"; }  elseif ($silo->silo_type == "private") { echo "(Private silo)"; } ?>
 	</td>
 	<td width="200px" style="padding-top: 5px;">
 		<?php if (!$closed_silo) { ?>
