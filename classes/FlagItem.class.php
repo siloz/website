@@ -114,6 +114,7 @@ function Insert($item_id,$user_id,$flag_id,$ip){
 	$result = mysql_query($query);
 	$id = mysql_insert_id();
 
+if (FLAG_KILL == "on") {
 	$checkTotal = mysql_num_rows(mysql_query("SELECT * FROM flag_item WHERE item_id = '$item_id'"));
 	if ($checkTotal > 4) {
 		$notification = new Notification();
@@ -144,6 +145,7 @@ function Insert($item_id,$user_id,$flag_id,$ip){
 		$radar = new FlagRadar();
 		$radar->WarnItem($item_id);
 	}
+}
 
 	if($id >= 1){return $id;}
 	else{return false;}

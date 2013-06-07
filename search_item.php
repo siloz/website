@@ -84,45 +84,22 @@
 	$items_html = "<div class='row'><div class='span12'>";
 	$i = 0;
 	$items = array();
-	
+
 	while ($item = mysql_fetch_array($tmp)) {
-		if ($i % $itemsPerRow == 0) {
-			$items_html .= "<div class='row item_row-search'>";
+		$i++;				
+		if ($i % $itemsPerRow == 1 && $i > 1) {
+			$items_html .= "</tr><tr>";
 		}
-		
+		else if ($i % $itemsPerRow == 1) {
+			$items_html .= "<tr>";
+		}
 		$it = new Item($item['id']);
 		$items[] = $it;
 		
-		$items_html .= $it->getItemPlate($i % $itemsPerRow == 0);
-
-		if ($i % $itemsPerRow == $itemsPerRow - 1) {
-			$items_html .= "</div>";
-		}		
-
-		$i++;
+		$items_html .= "<td>".$it->getItemPlate()."</td>";				
 	}
 	
-	if ($i % $itemsPerRow < $itemsPerRow - 1) {
-		$items_html .= "</div>";
-	}
-
-	if ($page == $total_pages) {
-		$items_html .= "</div>";
-	}
-
-	if ($i == 5) {
-		$items_html .= "</div>";
-	}
-
-	if ($i != 6) {
-		$items_html .= "</div>";
-	}
-
-	if ($view != map) {
-		$items_html .= "</div>";
-	}
-	
-	$items_html .= "</div>";
+	$items_html .= "</tr></table></div></div>";	
 
 	$user_id = $_SESSION["user_id"];
 	$offerUser = mysql_fetch_array(mysql_query("SELECT status, amount FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item->item_id'"));
@@ -197,7 +174,7 @@
 <div class="spacer"></div>
 
 <?php
-if ($view == "map") {
+if ($view == "map" && !$no_res) {
 ?>
 
 <!-- <div id="result_nav" class="heading">
@@ -218,7 +195,7 @@ if ($view == "map") {
 
 <br>
 
-<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+<script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script  type="text/javascript">
 
 function initialize() {
@@ -332,7 +309,7 @@ function initialize() {
 function loadScript() {
   var script = document.createElement("script");
   script.type = "text/javascript";
-  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
   document.body.appendChild(script);
 }
 

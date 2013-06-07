@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} !^www.siloz.com$ [NC]
+RewriteRule ^(.*)$ http://www.siloz.com/alpha$1 [L,R=301]

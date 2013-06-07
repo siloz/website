@@ -93,39 +93,20 @@
 	$siloz_html = "<div class='row'><div class='span12'>";
 	
 	$i = 0;
-	
+
 	while ($s = mysql_fetch_array($tmp)) {	
-		
-		$silo = new Silo($s['id']);
-		
-		if ($i % $silosPerRow == 0) {
-			$siloz_html .= "<div class='row item_row-search'>";
-		}
-					
-		$siloz_html .= $silo->getSiloPlate($i % $silosPerRow == 0);
-		
-		if ($i % $silosPerRow == $silosPerRow - 1) {
-			$siloz_html .= "</div>";
-		}
-		
-		$closed_silos[] = $silo;	
-
 		$i++;
+		$silo = new Silo($s['id']);
+		if ($i % $silosPerRow == 1 && $i > 1) {
+			$siloz_html .= "</tr><tr>";
+		}
+		else if ($i % $silosPerRow == 1) {
+			$siloz_html .= "<tr>";
+		}
+		$siloz_html .= "<td>".$silo->getSiloPlate()."</td>";
+		$closed_silos[] = $silo;		
 	}
-	
-	if ($i % $silosPerRow < $silosPerRow - 1) {
-		$siloz_html .= "</div>";
-	}
-
-	if ($i == 4) {
-		$siloz_html .= "</div>";
-	}
-
-	if ($view != map) {
-		$siloz_html .= "</div>";
-	}
-	
-	$siloz_html .= "</div>";
+	$siloz_html .= "</tr></table></div></div>";
 
 	$prev = "";
 	if ($from >= $silosPerPage)
@@ -201,7 +182,7 @@
 <div class="spacer"></div>
 
 <?php
-if ($view == "map") {
+if ($view == "map" && !$no_res) {
 ?>
 
 <!--
@@ -223,7 +204,7 @@ if ($view == "map") {
 
 <br>
 
-<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+<script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script  type="text/javascript">
 
 function initialize() {
@@ -334,7 +315,7 @@ function initialize() {
 function loadScript() {
   var script = document.createElement("script");
   script.type = "text/javascript";
-  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
   document.body.appendChild(script);
 }
 

@@ -78,7 +78,7 @@ else {
 		$purpose = param_post('purpose');
 
 		$ein = ($verified == 1) ? $ein : '0';
-		$s_types = array(2, 5, 6);
+		$s_types = array(2, 6);
 
 		if ($ein > 0) { $issue_receipts = 1; }
 		elseif (in_array($silo_cat_id, $s_types)) { $issue_receipts = 1; }
@@ -110,14 +110,14 @@ else {
 		if (mysql_num_rows(mysql_query($sql)) > 0) {
 			$err .= "Silo's short name is already used by another silo. <br/>";
 		}
-		if ($silo_cat_id == '') {
+		if ($silo_cat_id == '' && $silo_type == "public") {
 			$err .= 'Please select a Silo type.<br/>';		
 		}		
-		if (strlen(trim($org_name)) == 0) {
+		if (strlen(trim($org_name)) == 0 && $silo_type == "public") {
 			$err .= "Silo's organization name must not be empty. <br/>";
 		}
 
-		if (strlen(trim($address)) == 0) {
+		if (strlen(trim($address)) == 0 && $silo_type == "public") {
 			$err .= 'Address must not be empty.<br/>';		
 		}
 		if (strlen(trim($title)) == 0) {
@@ -161,12 +161,17 @@ else {
 		$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."&sensor=false");
 		$loc = json_decode($json);
 
-		if ($loc->status == 'OK') {
-			$address = $loc->results[0]->formatted_address;
-			$latitude = $loc->results[0]->geometry->location->lat;
-			$longitude = $loc->results[0]->geometry->location->lng;
+		if ($silo_type == "public") {
+			if ($loc->status == 'OK') {
+				$address = $loc->results[0]->formatted_address;
+				$latitude = $loc->results[0]->geometry->location->lat;
+				$longitude = $loc->results[0]->geometry->location->lng;
+			}
+			else { $err .= "Invalid business address!"; }
+		} else {
+			$address = "Private";
+			$silo_cat_id = "8";
 		}
-		else { $err .= "Invalid business address!"; }
 			
 		
 		if (strlen($err) == 0) {
@@ -466,11 +471,14 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 					<button type="submit" value="Publish" name="publish">Publish this Silo</button>
 				</td>
 			</tr>
+
+<?php if ($silo_type == "public") { ?>
 			<tr>
 				<td colspan="2" align="center">
 					<br><font size="1">**To issue tax-deductible receipts your silo <b>must</b> have a valid EIN number <b>OR</b> be listed as an education, a public university, or a religious silo type.</font>
 				</td>
 			</tr>
+<?php } ?>
 		</table>
 	</div>
 </form>

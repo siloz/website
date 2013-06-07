@@ -420,6 +420,21 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 	font-size: 14pt;
 }
 
+.siloHeading_disaster {
+   	background-color: #FF642F;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+    	border-radius: 8px;     
+    	border: 1px solid lightgrey;
+	color: #fff;
+	height: 20px;
+	line-height: 20px;
+	font-size: 14pt;
+}
+
 .siloHeading a {
 	text-decoration: none;
 }
@@ -755,6 +770,33 @@ div.plateItemOLD {
 .plateSilo:hover {
 	cursor: pointer;
 	background-color: #EEF7FC;
+}
+
+.plateSilo_disaster {
+    	border-radius: 8px;     
+   	border: 1px solid lightgrey;
+	width: 173px;
+	height: 198px;	
+	padding: 0px 4px;
+	color: #fff;
+	font-size: 11px;
+	background: #FF642F;
+	font-family: Arial, Helvetica,sans-serif;
+	margin-left: 15px;
+}
+
+.plateSilo_disaster a {
+	font-size: 12pt;
+	color: #fff;
+	text-decoration: none;
+}
+
+.plateSilo_disaster:hover a { color: #FF642F; }
+
+.plateSilo_disaster:hover {
+	cursor: pointer;
+	background-color: #FFF;
+	color: #FF642F;
 }
 
 div.item_row {
@@ -1402,7 +1444,7 @@ button:hover {
     	border-top-right-radius: 8px;     
     	border-width: 0px;
 	width: 100px;
-	height: 41px;
+	height: 42px;
 	position: relative;
 	top: -5px;
 	right: -2px;

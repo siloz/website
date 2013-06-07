@@ -1,14 +1,19 @@
 <?php
+	//Determine if user is using secure connection (https) or not. This will ensure everything is using a secure connection, if they are
+	if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) { $secure = "s"; }
+
 	define(SITE_NAME, "s&igrave;loz");
 	define(TAG_LINE, "s&igrave;loz - Comerce That Counts");
 	define(DB_USERNAME, "admin");
 	define(DB_PASSWORD, "w@1kingded");
 	define(DB_HOST, "localhost");
-	define(DB_NAME, "james_siloz");
-	define(ABS_PATH, "/var/www/vhosts/stage.james.siloz.com/httpdocs/website");
-	define(API_URL, "http://stage.james.siloz.com/website/api.php");
-	define(ACTIVE_URL, "http://stage.james.siloz.com/website/"); // **Don't forget slash at end** //
+	define(DB_NAME, "siloz");
+	define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
+	define(API_URL, "/api.php");
+	define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
 	define(SHORT_URL, "siloz.com");
+	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
+	define(FAM_INDEX_KILL, "off"); // **Disable silos/items with low fam index scores - on/off** //
 	define(FACEBOOK_ID, "291023471032128");
 	// OLD define(FACEBOOK_ID, "164873893645808");
 	define(OPENINVITER_KEY, "848c26c450b38b89fc9de61013811701");

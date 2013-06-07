@@ -2,7 +2,6 @@
 class User {
 	public $user_id;
 	public $id;
-	public $username;
 	public $password;
 	public $fname;
 	public $lname;
@@ -36,7 +35,6 @@ class User {
 		}
 		$this->user_id = $res['user_id'];
 		$this->id = $res['id'];
-		$this->username = $res['username'];
 		$this->password = md5($res['password']);
 		$this->fname = $res['fname'];
 		$this->lname = $res['lname'];
@@ -81,7 +79,7 @@ class User {
 	public static function getMembers($silo_id, $order_by, $limit) {
 		$order_by_clause = "";
 		if ($order_by == 'name')
-			$order_by_clause = " ORDER BY username $sort_order ";
+			$order_by_clause = " ORDER BY fname $sort_order ";
 		if ($order_by == 'date')
 			$order_by_clause = " ORDER BY joined_date $sort_order ";			
 		$sql = "SELECT * FROM users WHERE user_id IN (SELECT user_id FROM silo_membership WHERE silo_id = $silo_id AND removed_date = 0) $order_by_clause $limit";
@@ -144,14 +142,13 @@ class User {
 	private function Insert(){
 		$query = (
 			"INSERT INTO `users` "
-			."(`username`,`password`,`fname`,`lname`,`phone`,`email`,`address`,`city`,`state`,`zip_code`,`longitude`,`latitude`,"
+			."(`fname`,`lname`,`password`,`phone`,`email`,`address`,`city`,`state`,`zip_code`,`longitude`,`latitude`,"
 			."`user_type`,`joined_date`,`validation_code`,`status`) "
 			."VALUES "
 			."("
-				."'".mysql_real_escape_string($this->username)."',"
-				."'".mysql_real_escape_string($this->password)."',"
 				."'".mysql_real_escape_string($this->fname)."',"
 				."'".mysql_real_escape_string($this->lname)."',"
+				."'".mysql_real_escape_string($this->password)."',"
 				."'".mysql_real_escape_string($this->phone)."',"
 				."'".mysql_real_escape_string($this->email)."',"
 				."'".mysql_real_escape_string($this->address)."',"
@@ -183,7 +180,6 @@ class User {
 		$query = (
 			"UPDATE `users` "
 			."SET "
-			."`username` = '".mysql_real_escape_string($this->username)."',"
 			."`fname` = '".mysql_real_escape_string($this->fname)."',"
 			."`lname` = '".mysql_real_escape_string($this->lname)."',"
 			."`phone` = '".mysql_real_escape_string($this->phone)."',"

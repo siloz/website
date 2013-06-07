@@ -93,6 +93,7 @@
 				$err .= "Image file is too large. Please scale it down.";
 			}
 
+		if ($silo->silo_type == "public" || $address != "Private") {
 			$adr = urlencode($address);
 			$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."&sensor=false");
 			$loc = json_decode($json);
@@ -103,6 +104,7 @@
 				$longitude = $loc->results[0]->geometry->location->lng;
 			}
 			else { $err = "Invalid Location! <br>"; }
+		}
 
 			if (strlen($err) == 0) {
 
@@ -863,6 +865,7 @@ window.onload = loadScript;
 								<input type="text" name="address" style="width : 300px" value='<?php echo $Silo->address; ?>'/>
 							</td>
 						</tr>
+					<?php if ($silo->silo_type == "public") { ?>
 						<tr>
 							<td>
 								<b>Organization:</b><br/>
@@ -870,7 +873,8 @@ window.onload = loadScript;
 							<td>
 								<input type="text" name="org_name" style="width : 300px" value='<?php echo $Silo->org_name; ?>'/>
 							</td>
-						</tr>						
+						</tr>
+					<?php } ?>					
 						<tr>
 							<td>
 								<b>Phone Number:</b>

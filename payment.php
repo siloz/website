@@ -18,6 +18,10 @@ if ($_SESSION['is_logged_in'] != 1 || (!$id)) {
 elseif ($addInfo_full) {
 	echo "<script>window.location = 'index.php?task=my_account&redirect=1';</script>";
 }
+elseif (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
+    echo "<script>window.location = 'https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
+    exit();
+}
 
 include("include/timeout.php");
 
@@ -54,9 +58,9 @@ include("include/timeout.php");
 			),
 			'options' => array(
 			    'storeInVault' => false
-			)
+			),
     			'customFields' => array(
-       			'item_id' => '$item->item_id',
+       			'item_id' => $item->item_id
     			)
 		));
 
@@ -234,23 +238,23 @@ include("include/timeout.php");
 				<table>
 					<tr>
 						<td>First Name</td>
-						<td><input type="text" style="width: 200px" name="credit_card[billing_address][first_name]"/></td>
+						<td><input type="text" style="width: 200px" name="credit_card[billing_address][first_name]" value="<?=$current_user->fname?>" /></td>
 					</tr>
 					<tr>
 						<td>Last Name</td>
-						<td><input type="text" style="width: 200px" name="credit_card[billing_address][last_name]"/></td>
+						<td><input type="text" style="width: 200px" name="credit_card[billing_address][last_name]" value="<?=$current_user->lname?>" /></td>
 					</tr>
 					<tr>
 						<td>Street Address</td>
-						<td><input type="text" style="width: 200px" name="credit_card[billing_address][street_address]"/></td>
+						<td><input type="text" style="width: 200px" name="credit_card[billing_address][street_address]" value="<?=$current_user->address?>" /></td>
 					</tr>
 					<tr>
 						<td>State</td>
-						<td><input type="text" style="width: 50px" name="credit_card[billing_address][region]"/></td>
+						<td><input type="text" style="width: 50px" name="credit_card[billing_address][region]" value="<?=$current_user->state?>" /></td>
 					</tr>
 					<tr>
 						<td>Postal Code</td>
-						<td><input type="text" style="width: 50px" name="credit_card[billing_address][postal_code]"/></td>
+						<td><input type="text" style="width: 50px" name="credit_card[billing_address][postal_code]" value="<?=$current_user->zip_code?>" /></td>
 					</tr>
 				</table>
 			</td>

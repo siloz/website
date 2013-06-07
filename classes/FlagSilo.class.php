@@ -112,6 +112,7 @@ function Insert($user_id,$silo_id,$flag_id,$ip){
 	$result = mysql_query($query);
 	$id = mysql_insert_id();
 
+if (FLAG_KILL == "on") {
 	$checkTotal = mysql_num_rows(mysql_query("SELECT * FROM flag_silo WHERE silo_id = '$silo_id'"));
 	if ($checkTotal > 4) {
 		$notification = new Notification();
@@ -142,6 +143,7 @@ function Insert($user_id,$silo_id,$flag_id,$ip){
 		$radar = new FlagRadar();
 		$radar->WarnSilo($silo_id);
 	}
+}
 
 	if($id >= 1){return $id;}
 	else{return false;} 

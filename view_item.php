@@ -19,7 +19,7 @@
 		$user_lat = urlencode($user['latitude']);
 		$distBuyerSeller = $item->getDistance($item_long, $item_lat, $user_long, $user_lat);
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));
-		//if ($checkClosed > 0) { echo "<script>window.location = 'index.php?task=view_silo&id=".$silo->id."';</script>"; }
+		if ($checkClosed > 0) { echo "<script>window.location = 'index.php?task=view_silo&id=".$silo->id."';</script>"; }
 
 	if (param_post('fav') == 'add to favorites') {
 		$user_id = param_post('user_id');
@@ -425,7 +425,7 @@
 						<td colspan="2">
 							<div id="map_canvas" style="width: 600px; height: 345px;" class="map-canvas"></div>
 							<div id='fb-root'></div>
-							<script src='http://connect.facebook.net/en_US/all.js'></script>
+							<script src='https://connect.facebook.net/en_US/all.js'></script>
 							<?php
 								$url = ACTIVE_URL."index.php?task=view_item&id=".$item->id;
 								$photo_url = ACTIVE_URL.'uploads/items/'.$item->photo_file_1.'?'.$item->last_update;
@@ -465,74 +465,7 @@
 		<td style='width: 4%'>
 		</td>
 		<td width="340px" align="left">
-<table class='siloInfo<?=$closed_silo?>' >
-	<tr>
-		<td class="titleHeading">
-			<a href='index.php?task=view_silo&id=<?=$silo->id;?>'><?=$silo->name?><?php if($closed_silo) { echo " (Closed)"; }?></a>
-		</td>
-	<tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td>
-					<?php
-						$admin = $silo->getAdmin();
-						$admin_name = $admin->fname;
-						$collected = $silo->getCollectedAmount();
-						$pct = round($collected*100.0/floatval($silo->goal));
-						if ($pct == 100) { $radius = "border-radius: 4px;"; } else { $radius = "border-top-left-radius: 4px; border-bottom-left-radius: 4px"; }
-						
-						$c_user_id = $current_user['user_id'];
-					?>
-			<a href='index.php?task=view_silo&id=<?=$silo->id;?>'><img src="<?php echo 'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
-			<div class="siloImgOverlay">
-			<div class="progress-bg"><div class="progress-bar" style="width: <?=$pct?>%; <?=$radius?>"></div></div>
-			goal: $<?=number_format($silo->goal)?> (<?=$pct?>%)
-			</div></a>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo<?=$closed_silo?>">
-			<a href='index.php?task=view_silo&view=members&id=<?=$silo->id;?>'><?=$silo->getTotalMembers();?></a>
-			<a href='index.php?task=view_silo&view=items&id=<?=$silo->id;?>'><?=$silo->getTotalItems();?></a>
-			<?=$silo->getDaysLeft();?>
-			<div style="padding-top: 10px;"></div>
-		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>Purpose:</b> <?=$silo->getPurpose();?></div>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left">This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo<?=$closed_silo?>">
-			<span class="floatL">
-				<img src="<?php echo 'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
-				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "javascript:popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);"; } else { echo "javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);"; }?>">Email Admin.</a>
-			</span>
-			<div align="left">
-			<span class="infoDetails">
-				Administrator:<br>
-				<span class="notBold"><?=$admin_name?></span><br>
-				Official Address:<br>
-				<span class="notBold"><?=$silo->address?></span><br>
-				Telephone:<br>
-				<span class="notBold"><?=$silo->phone_number?></span>
-			</span>
-			</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo<?=$closed_silo?>">
-			<div align="left">
-			<span class='voucher'>Donate only to local causes that you know or have researched!</span><br><br>
-			<?php include('include/UI/flag_box_silo.php'); ?>
-			<center>Silo ID: <?=$silo->id?></center>
-		</div>
-		</td>
-	</tr>
-</table>
-
+			<?php include("include/silo_div.php"); ?>
 		</td>
 	</tr>
 </table>
@@ -638,7 +571,7 @@ map.mapTypes.set('Styled', styledMapType);
 function loadScript() {
   var script = document.createElement("script");
   script.type = "text/javascript";
-  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
   document.body.appendChild(script);
 }
 

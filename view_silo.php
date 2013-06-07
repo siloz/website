@@ -22,6 +22,9 @@
 		}
 		$silo = new Silo($id);
 		$silo_id = $silo->silo_id;
+	if (!$silo_id) {
+		echo "<script>window.location = 'index.php';</script>";	
+	}
 		$today = date('Y-m-d')."";
 		$silo_ended = $silo->end_date < $today;
 		$admin = $silo->admin;
@@ -30,6 +33,8 @@
 		$showU = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date = 0"));
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));
 		if ($checkClosed > 0) { $closed_silo = "_closed"; }
+		elseif ($silo->silo_cat_id == "99") { $disaster_silo = "_disaster"; $disaster_silo_text = "Disaster Relief -"; }
+		if ($silo->issue_receipts == 1) { $tax_ded = "true"; }
 
 //Determine number of pages
 	if ($view == 'feed') {
@@ -181,16 +186,16 @@
 
 <div class="headingPad"></div>
 
-<table width="100%" id="nav" class="siloHeading<?=$closed_silo?>">
+<table width="100%" id="nav" class="siloHeading<?=$closed_silo?><?=$disaster_silo?>">
 <tr>
 	<td style="padding-left: 10px">
 		<?php echo $silo->getTitle(); ?>
-		<?php if ($closed_silo) { echo "(Closed - This silo is no longer active)"; } ?>
+		<?php if ($closed_silo) { echo "(Closed - This silo is no longer active)"; } elseif ($tax_ded) { echo "(".$disaster_silo_text." donations <b>are</b> tax-deductible!)"; }  elseif ($silo->silo_type == "private") { echo "(Private silo)"; } ?>
 	</td>
 	<td width="200px" style="padding-top: 5px;">
 		<?php if (!$closed_silo) { ?>
-			<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="images/mail-icon.png" width="55" height="55"></a>
-			<img src="images/facebook.jpg" onclick='postToFeed();'/>
+			<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="<?=ACTIVE_URL?>images/mail-icon.png" width="32" height="32"></a>
+			<img src="<?=ACTIVE_URL?>images/facebook.jpg" onclick='postToFeed();'/>
 
 		<?php
 			} if ($closed_silo) {
@@ -435,64 +440,11 @@
 	</tr>
 </table>
 
-<table class='siloInfo<?=$closed_silo?>' style="margin-top: -5px;">
-	<tr>
-		<td>
-					<?php
-						$collected = $silo->getCollectedAmount();
-						$pct = round($collected*100.0/floatval($silo->goal));
-						if ($pct == 100) { $radius = "border-radius: 4px;"; } else { $radius = "border-top-left-radius: 4px; border-bottom-left-radius: 4px"; }
-						
-						$c_user_id = $current_user['user_id'];
-						$showA = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
-						if ($showA) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
-					?>
-			<img src="<?=ACTIVE_URL?><?php echo 'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
-			<div class="siloImgOverlay">
-			<div class="progress-bg"><div class="progress-bar" style="width: <?=$pct?>%; <?=$radius?>"></div></div>
-			goal: $<?=number_format($silo->goal)?> (<?=$pct?>%)
-			</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo<?=$closed_silo?>">
-			<a href='<?=ACTIVE_URL?>index.php?task=view_silo&view=members&id=<?=$silo->id;?>'><?=$silo->getTotalMembers();?></a>
-			<a href='<?=ACTIVE_URL?>index.php?task=view_silo&view=items&id=<?=$silo->id;?>'><?=$silo->getTotalItems();?></a>
-			<?=$silo->getDaysLeft()?>
-			<div style="padding-top: 10px;"></div>
-		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left;"><b>Purpose:</b> <?=$silo->getPurpose();?></div>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left">This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo<?=$closed_silo?>">
-			<span class="floatL">
-				<img src="<?=ACTIVE_URL?><?php echo 'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
-				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "javascript:popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);"; } else { echo "javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);"; }?>">Email Admin.</a>
-			</span>
-			<div align="left">
-			<span class="infoDetails">
-				Administrator:<br>
-				<span class="notBold"><?=$admin_name?></span><br>
-				Official Address:<br>
-				<span class="notBold"><?=$silo->address?></span><br>
-				Telephone:<br>
-				<span class="notBold"><?=$silo->phone_number?></span>
-			</span>
-			</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo<?=$closed_silo?>">
-			<div align="left">
-			<span class='voucher'>Donate only to local causes that you know or have researched!</span><br><br>
-			<?php include('include/UI/flag_box.php'); ?>
+<div style="margin-top: -5px;"></div>
+<?php $showDiv = "true"; include("include/silo_div.php"); ?>
+
 		<div id='fb-root'></div>
-		<script src='http://connect.facebook.net/en_US/all.js'></script>
+		<script src='https://connect.facebook.net/en_US/all.js'></script>
 		<?php
 			$url = ACTIVE_URL."index.php?task=view_silo&id=$silo->id";
 			$photo_url = ACTIVE_URL.'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;
@@ -517,13 +469,17 @@
 		    	});
 		  	}
 		</script>
-		</div>
-		Silo ID: <?=$silo->id?>
-		</td>
-	</tr>
-</table>
 
 <?php
+if ($silo->silo_type == "public") {
+	$mapLat = $silo->latitude;
+	$mapLong = $silo->longitude;
+} else {
+	$user = new User($admin->user_id);
+	$mapLat = $user->latitude;
+	$mapLong = $user->longitude;
+}
+
 //Get items in silo for map
 
 $items = Item::getItems($silo_id, $order_by, "");
@@ -537,7 +493,7 @@ foreach ($items as $item) {
 }
 ?>
 
-<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+<script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script  type="text/javascript">
 
 function initialize() {
@@ -580,9 +536,10 @@ function initialize() {
 			]
 		}
 	];
+	
+	mapLat = <?=$mapLat?>;
+	mapLong = <?=$mapLong?>;
 
-	siloLat = <?=$silo->latitude?>;
-	siloLong = <?=$silo->longitude?>;
     var infowindow = new InfoBubble({
 		maxWidth: 200,
 		shadowStyle: 1,
@@ -595,12 +552,12 @@ function initialize() {
 		borderColor: '#2c2c2c'
     });
 
-	var siloLocation = new google.maps.LatLng(siloLat, siloLong);
+	var mapLocation = new google.maps.LatLng(mapLat, mapLong);
 	var options = {
 		mapTypeControlOptions: {
 			mapTypeIds: [ 'Styled']
 		},
-		center: siloLocation,
+		center: mapLocation,
 		zoom: 5,
 		maxZoom: 13,
 		mapTypeId: 'Styled'
@@ -613,7 +570,7 @@ function initialize() {
 
 	var bounds = new google.maps.LatLngBounds();
 	var markers = [];
-	bounds.extend(siloLocation);
+	bounds.extend(mapLocation);
 	<?php
 	foreach ($plates as $item_id => $plate) {
 		?>
@@ -644,7 +601,7 @@ function initialize() {
 function loadScript() {
   var script = document.createElement("script");
   script.type = "text/javascript";
-  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false&callback=initialize";
   document.body.appendChild(script);
 }
 
@@ -735,9 +692,9 @@ window.onload = loadScript;
 	</div>
 	<div>
 		<h2>Select your mail client:</h2>
-		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+		<a href="https://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
 		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
 		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
-		<a href="http://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
+		<a href="https://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
 	</div>
 </div>

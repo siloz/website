@@ -1,5 +1,5 @@
 <?php
-	ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website"); 
+	ini_set("include_path", "/var/www/vhosts/siloz.com/httpdocs/"); 
 	require_once("include/autoload.class.php");
 	require_once('utils.php');
 	require_once('config.php');
@@ -13,7 +13,7 @@
 		$password = mysql_escape_string(trim($_POST['password']));
 		$enc_pw = md5($password);
 
-        	$res = mysql_query("SELECT user_id, username FROM users WHERE email = '$email' and password='$enc_pw' and admin = 'yes'");
+        	$res = mysql_query("SELECT user_id FROM users WHERE email = '$email' AND password='$enc_pw' AND admin = 'yes'");
 
        	if (empty($_POST['email']))
         	{
@@ -92,7 +92,10 @@
 	</head>
 
 <?php
-if (!isset($_SESSION['admin_access'])) {
+if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
+	echo "<script>window.location = 'https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
+    	exit();
+} elseif (!isset($_SESSION['admin_access'])) {
 ?>
 <div align="center" style="margin-top: 100px;" class="login" id="login">
 	<div>
@@ -115,8 +118,7 @@ if (!isset($_SESSION['admin_access'])) {
 			<font color="red"><b><?=$error?></b></font>
 		</form>
 <?php
-}
-else {
+} else {
 ?>
 
 	<body style="background: #fff">
@@ -283,6 +285,7 @@ else {
 						header('Location: '.$_SERVER['REQUEST_URI']);
 						exit;
 					}
+					echo "<br><a href='".ACTIVE_URL."index.php?task=create_silo_admin'>Create a Disaster Relief Silo</a>";
 					$checkSilos = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE type = 'silo'"));
 					if ($checkSilos) {
 					echo "<br/><form name='silos' id='silos' action='index.php?view=silos' method=post>";

@@ -149,7 +149,11 @@ if (param_post('fav') == 'Remove') {
 	if ($_SESSION['is_logged_in'] != 1) {
 		echo "<script>window.location = 'index.php';</script>";
 	}
-
+	elseif (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
+    		echo "<script>window.location = 'https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
+    		exit();
+	}
+	
 	if (param_post('item') == 'Update') {			
 		$item_id = param_post('item_id');
 		$title = param_post('title');

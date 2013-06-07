@@ -66,6 +66,7 @@
 				$err .= "Image file is too large. Please scale it down.";
 			}
 
+		if ($silo->silo_type == "public" || $address != "Private") {
 			$adr = urlencode($address);
 			$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$adr."&sensor=false");
 			$loc = json_decode($json);
@@ -76,6 +77,7 @@
 				$longitude = $loc->results[0]->geometry->location->lng;
 			}
 			else { $err = "Invalid Location! <br>"; }
+		}
 
 			if (strlen($err) == 0) {
 
@@ -353,9 +355,9 @@ silo administration console
 <h3 align="left" style="padding-left: 10px">promote</h3>
 	<table width="100%" style="padding: 0 10px"><tr>
 		<td align="left" onclick="postToFeed();" class="onClick-link"><span class="greyFont"><b>post to Facebook</b></span> <div style="padding-top: 15px"></div> <center><img src="images/facebook.jpg"></img></center></b></span></td>
-		<td align="left" onclick="window.location='silo_flyers.php?id=<?=$silo->id?>';" class="onClick-link"><span class="greyFont"><b>print 1/4 page flyers</b></span> <div style="padding-top: 15px"></div> <center><img src="images/page-flyer.png" height="32"></img></center></b></span></td>
-		<td align="left"><a href="mailto:?Subject=Come check out my silo on <?=SHORT_URL?>!&Body=<?=ACTIVE_URL?>index.php?task=view_silo%26id=<?php echo $silo->id;?>" style="text-decoration: none"><span class="greyFont"><b>email contacts from your email</b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></img></center></b></span></a></td>
-		<td align="left" onclick="window.location='index.php?task=invite_promote';" class="onClick-link"><span class="greyFont"><b>email from <?=SITE_NAME?></b></span> <div style="padding-top: 15px"></div> <center>							<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="images/mail-icon.png" width="55" height="55"></a></center></b></span></td>
+		<td align="left" onclick="window.open('silo_flyers.php?id=<?=$silo->id?>');" class="onClick-link"><span class="greyFont"><b>print 1/4 page flyers</b></span> <div style="padding-top: 15px"></div> <center><img src="images/page-flyer.png" height="32"></img></center></b></span></td>
+		<td align="left" onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><span class="greyFont"><b>email contacts from your email</b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></img></center></b></span></td>
+		<td align="left" onclick="window.location='index.php?task=invite_promote';" class="onClick-link"><span class="greyFont"><b>email from <?=SITE_NAME?></b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></center></b></span></td>
 	</tr></table>
 </td>
 </tr>
@@ -433,6 +435,7 @@ function postToFeed() {
 								<input type="text" name="address" style="width : 300px" value='<?php echo $silo->address; ?>'/>
 							</td>
 						</tr>
+					<?php if ($silo->silo_type == "public") { ?>
 						<tr>
 							<td>
 								<b>Organization:</b><br/>
@@ -440,7 +443,8 @@ function postToFeed() {
 							<td>
 								<input type="text" name="org_name" style="width : 300px" value='<?php echo $silo->org_name; ?>'/>
 							</td>
-						</tr>						
+						</tr>
+					<?php } ?>					
 						<tr>
 							<td>
 								<b>Phone Number:</b>

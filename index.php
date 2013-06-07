@@ -2,6 +2,15 @@
 	require_once("include/autoload.class.php");
 	require_once("include/check_updates.php");
 
+//Ensure the page is supposed to be secured, otherwise redirect to non-secure link
+$secure_pages = array("", "payment", "my_account", "transaction_console");
+$current_page = param_get('task');
+
+if (!in_array($current_page, $secure_pages) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] !== 'off') { 
+   	echo "<script>window.location = 'http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
+    	exit();
+}
+
 if ($_SESSION['is_logged_in']) {
 	$cur_user = mysql_fetch_array(mysql_query("SELECT city, state, longitude, latitude FROM users WHERE user_id = '".$_SESSION['user_id']."'"));
 		$userCity = $cur_user['city'];
@@ -42,7 +51,7 @@ else {
 	if (param_post('location') == 'Update') {
 		$zip = urlencode(param_post('zip'));
 
-		$json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=".$zip."&sensor=false");
+		$json = file_get_contents("https://maps.google.com/maps/api/geocode/json?address=".$zip."&sensor=false");
 		$loc = json_decode($json);
 
 		if ($loc->status == 'OK') {
@@ -203,7 +212,6 @@ if (!isset($_SESSION['is_logged_in'])) {
 	    <script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.placeholder.js"></script>		
 	    <script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.jconfirmation.js"></script>				
 		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.truncator.js"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAPWSU0w9OpPxv60eKx70x3MM5b7TtK9Og&sensor=false"></script>
 		<script type="text/javascript" src="<?=ACTIVE_URL?>js/infobubble-compiled.js"></script>	  								
 		<script type="text/javascript" src="<?=ACTIVE_URL?>js/util.js"></script>	
 		<script type="text/javascript" src="<?=ACTIVE_URL?>js/change_location.js"></script>
@@ -255,7 +263,6 @@ if (!isset($_SESSION['is_logged_in'])) {
 	<meta name="google-site-verification" content="Yx4Ns5zGDP4tabuxvwAtGTY10jyw_CC4NjvBTISPcqc" />
 	</head>
 	<body>
-
 		<div id="overlay">	
 		</div>
 		<?php

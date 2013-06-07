@@ -3,7 +3,6 @@
 	require('utils.php');
 	require('classes/silo.class.php');
 	require('classes/user.class.php');
-	require('pdf/fpdf.php');
 	$conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
 	mysql_select_db(DB_NAME, $conn);
 	$id = param_get('id');
@@ -34,7 +33,7 @@
 	<link rel="stylesheet" type="text/css" media="print" href="print.css" />
 </head>
 
-<table style="font-weight: bold; font-size: 15pt;" border=1 width="100%" height="100%">
+<table style="font-weight: bold; font-family: Arial, Helvetica, sans-serif; font-size: 15pt;" border=1 width="100%" height="100%">
 <tr>
 	<?=$flyer?>
 	<?=$flyer?>

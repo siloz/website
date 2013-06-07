@@ -1,8 +1,5 @@
 <?php
 
-//mysql_query("UPDATE silos SET status = 'active'");
-//mysql_query("UPDATE items SET status = 'pledged'");
-
 $silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND ((end_date <= NOW()) OR (goal <= collected))");
 	while ($silo = mysql_fetch_array($silo_check)) {
 		$silo_id_close = $silo['silo_id'];
@@ -32,7 +29,8 @@ $purchaseCheck = mysql_query("SELECT item_id FROM item_purchase WHERE expired_da
 		}
 	}
 
-$lowFamIndexCheck = mysql_query("SELECT silo_id FROM flag_radar WHERE status = 'vouch' AND expired_date < NOW()");
+if (FAM_INDEX_KILL == "on") {
+	$lowFamIndexCheck = mysql_query("SELECT silo_id FROM flag_radar WHERE status = 'vouch' AND expired_date < NOW()");
 	if (mysql_num_rows($lowFamIndexCheck) > 0) {
 		while ($famIndex = mysql_fetch_array($lowFamIndexCheck)) {
 			$silo_id = $famIndex['silo_id'];
@@ -41,6 +39,7 @@ $lowFamIndexCheck = mysql_query("SELECT silo_id FROM flag_radar WHERE status = '
 			$killSilo = mysql_query("UPDATE silos SET status = 'flagged' WHERE silo_id = '$silo_id'");
 		}
 	}
+}
 
 $email24HourCheck = mysql_query("SELECT user_id, email FROM users WHERE info_emails < 2 AND joined_date + INTERVAL 1 DAY <= NOW()");
 $num24Hour = mysql_num_rows($email24HourCheck);

@@ -28,6 +28,7 @@ class Silo {
 	public $purpose;
 	public $photo_file;
 	public $silo_cat_id;
+	public $silo_type;
 	public $type;
 	public $paid;
 	public $thanked;
@@ -277,8 +278,10 @@ class Silo {
 		$daysleft = ceil($timeleft/86400);
 		
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
+
+		if ($this->silo_cat_id == '99') { $disaster = "_disaster"; } else { $goalClass = "orange"; }
 														
-		$cell = "<div class='plateSilo span2";
+		$cell = "<div class='plateSilo".$disaster." span2";
 		
 		if ($first) {
 			$cell .= " first_element";
@@ -286,7 +289,7 @@ class Silo {
 		
 		$cell .= "' id=silo_".$this->id." onclick='window.location = \"index.php?task=view_silo&id=".$this->id."\"'>";				
 		$cell .= "<div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: top; text-align: center;'>
-				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=136px width=182px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='orange'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
+				<a href='index.php?task=view_silo&id=".$this->id."'><b>".substr($this->name, 0, 40)."</b></a></div></div><center><img height=136px width=181px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='".$goalClass."'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 

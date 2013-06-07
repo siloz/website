@@ -33,7 +33,11 @@ if ($_SESSION['is_logged_in'] != 1) {
 //If account info is updated
 	if ($_SESSION['is_logged_in'] != 1) {
 		echo "<script>window.location = 'index.php';</script>";
-	}	
+	}
+	elseif (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
+    		echo "<script>window.location = 'https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
+    		exit();
+	}
  	else {
 		$err = '';
 		if (param_post('task') == 'update_account') {				
