@@ -50,8 +50,8 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<?=$silo->getDaysLeft();?>
 			<div style="padding-top: 10px;"></div>
 		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>Purpose:</b> <?=$silo->getPurpose();?></div>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left">This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>Purpose: <?=$silo->getPurpose();?></div></b>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div></b>
 		</td>
 	</tr>
 	<tr class="infoSpacer"></tr>
@@ -64,11 +64,11 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<div align="left">
 			<span class="infoDetails">
 				Administrator:<br>
-				<span class="notBold"><?=$admin_name?></span><br>
+				<?=$admin_name?><br>
 				Official Address:<br>
-				<span class="notBold"><?=$silo->address?></span><br>
+				<?=$silo->address?><br>
 				Telephone:<br>
-				<span class="notBold"><?=$silo->phone_number?></span>
+				<?=$silo->phone_number?>
 			</span>
 			</div>
 		</td>
@@ -79,7 +79,7 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<div align="left">
 		<span class='voucher'>
 		<?php if ($disaster) { ?>
-			This silo was sanctioned by the benefiting organization. The amount raised (shown on this page), represents a 90% of actual funds raised. Of the 10% not represented in the status bar, roughly 7.5% goes to <?=SHORT_URL?>, and rougly 2.5% goes to our payment gateway.</span><br><br>
+			This silo was sanctioned by the benefiting organization. The amount raised (shown on this page), represents 90% of actual funds raised. Of the 10% not represented in the status bar, roughly 7.5% goes to <?=SHORT_URL?>, and rougly 2.5% goes to our payment gateway.</span><br><br>
 		<?php } else { ?>
 			Donate only to local causes that you know or have researched!</span><br><br>
 		<?php include('include/UI/flag_box_silo.php'); } ?>

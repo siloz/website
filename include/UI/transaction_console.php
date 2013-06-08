@@ -20,7 +20,7 @@
 						<table>
 							<tr>
 								<td><b>Listing Title</b> </td>
-								<td><input type="text" name="title" style="width : 300px" value='<?php echo $title; ?>'/></td>
+								<td><input type="text" name="title" style="width : 300px" value='<?php echo $title_edit; ?>'/></td>
 							</tr>		
 							<tr>
 								<td><b>Price</b> </td>

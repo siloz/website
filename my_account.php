@@ -365,12 +365,6 @@ if ($_SESSION['is_logged_in'] != 1) {
 
 				?>
 			</td>
-			<td align="center">
-				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio" onclick="window.location = 'index.php?task=transaction_console'">Transaction Console</input></a>
-			</td>
-			<td align="center">
-				<a href="index.php?task=my_account" class="blue" style="float: left"><input type="radio" CHECKED>Account Settings</input></a>
-			</td>
 		</form></tr>
 	</table>
 </div>

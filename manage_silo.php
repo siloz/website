@@ -611,63 +611,9 @@ die;
 	</tr>
 </table>
 
-<table class='siloInfo' style="margin-top: -5px;">
-	<tr>
-		<td>
-					<?php
-						$collected = $Silo->getCollectedAmount();
-						$pct = round($collected*100.0/floatval($Silo->goal));
-						if ($pct == 100) { $radius = "border-radius: 4px;"; } else { $radius = "border-top-left-radius: 4px; border-bottom-left-radius: 4px"; }
-						
-						$c_user_id = $current_user['user_id'];
-						$showA = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$Silo->silo_id' AND user_id = '$c_user_id' AND removed_date = 0"));
-						if ($showA) { $admin_name = $admin->fname; $admin_name .= "&nbsp;".$admin->lname; } else { $admin_name = $admin->fname; };
-					?>
-			<img src="<?php echo 'uploads/silos/'.$Silo->photo_file.'?'.$Silo->last_update;?>" width='250px' class="siloImg"/>
-			<div class="siloImgOverlay">
-			<div class="progress-bg"><div class="progress-bar" style="width: <?=$pct?>%; <?=$radius?>"></div></div>
-			goal: $<?=number_format($Silo->goal)?> (<?=$pct?>%)
-			</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo">
-			<a href='index.php?task=manage_silo&view=members'><?=$Silo->getTotalMembers();?></a>
-			<a href='index.php?task=manage_silo&view=items'><?=$Silo->getTotalItems();?></a>
-			<?=$Silo->getDaysLeft()?>
-			<div style="padding-top: 10px;"></div>
-		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
-			<div class="voucherText" style="font-size: 10pt; text-align: left"><b>Purpose:</b> <?=$silo->getPurpose();?></div>
-			<div class="voucherText" style="font-size: 10pt; text-align: left">This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo">
-			<span class="floatL">
-				<img src="<?php echo 'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
-				<a class='buttonEmail' href="javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);">Email Admin.</a>
-			</span>
-			<div align="left">
-			<span class="infoDetails">
-				Administrator:<br>
-				<span class="notBold"><?=$admin_name?></span><br>
-				Official Address:<br>
-				<span class="notBold"><?=$Silo->address?></span><br>
-				Telephone:<br>
-				<span class="notBold"><?=$Silo->phone_number?></span>
-			</span>
-			</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo">
-			<div align="left">
-			<span class='voucher'>Donate only to local causes that you know or have researched!</span><br><br>
-			<?php include('include/UI/flag_box.php'); ?>
-			<center>Silo ID: <?=$silo->id?></center>
+<div style="margin-top: -5px;"></div>
+<?php $showDiv = "true"; include("include/silo_div.php"); ?>
+
 		<div id='fb-root'></div>
 		<script src='http://connect.facebook.net/en_US/all.js'></script>
 		<?php
@@ -694,10 +640,6 @@ die;
 		    	});
 		  	}
 		</script>
-		</div>
-		</td>
-	</tr>
-</table>
 
 <?php
 //Get items in silo for map

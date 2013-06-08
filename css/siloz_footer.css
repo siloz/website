@@ -31,7 +31,7 @@
 
 #bottom_menu {
 	text-align: center;
-	color: #2F8ECB;
+	color: #2f8ECB;
 	margin-top: 25px;
 	margin-left: -10px;
 	background: #fff;
@@ -40,18 +40,16 @@
 	height: 50px;
 	line-height: 50px;
 	font-weight: bold;
-	font-size: 12pt;
-	font-family: Arial;
+	font-size: 11pt;
 	margin-bottom: -20px;
 }
 
 #bottom_menu a {
 	text-decoration: none;
-	color: #2F8ECB;
+	color: #2f8ECB;
 	font-weight: bold;
-	font-size: 12pt;
+	font-size: 11pt;
 	padding: 5px;
-	font-family: Arial;
 }
 
 #bottom_menu a:hover {

@@ -23,8 +23,7 @@
 </script>
 
 <div id="top_menu">
-	<span class="gray">Your location:</span> 
-	<span class="blue"><?=$userLocation?>
+	<span class="gray"><?=$userLocation?></span>
 
 	<?php if (!isset($_SESSION['user_id'])) {
 		echo "<span class='change_location'>change</span>";
@@ -36,6 +35,10 @@
 			$user_id = $_SESSION['user_id'];
 			$sql = "SELECT * FROM silos WHERE admin_id = $user_id";
 			$res = mysql_query($sql);
+	?>
+			<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">favorite silos</span></a>
+			<span class="blue separator">|</span>
+	<?php
 			if ($addInfo_full) {
 	?>
 				<a href="javascript:popup_show('addInfo', 'addInfo_drag', 'addInfo_exit', 'screen-center', 0, 0);"><span class="blue">start a silo</span></a>
@@ -50,15 +53,20 @@
 		$sid = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id'"));
 		$Silo = new Silo($sid[0]);
 		$silo_id = $Silo->silo_id;
-	?>
-				<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="<?php if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin' || param_get('task') == 'manage_silo_thank') { echo "orange"; } else { echo "blue"; } ?>">manage your silo</span></a>
-				<span class="blue separator">|</span>
-				<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span  class="<?php if (param_get('task') == 'view_silo' && param_get('id') == $Silo->id) { echo "orange"; } else { echo "blue"; } ?>">view silo as user</span></a>
+			
+			if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin' || param_get('task') == 'manage_silo_thank') { 
+		?>
+				<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span class="blue">view silo as user</span></a>
+			<?php } else { ?>
+				<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="blue">manage silo</span></a>
+			<?php } ?>
 				<span class="blue separator">|</span>
 	<?php
 			}
 	?>
-			<a href="<?=ACTIVE_URL?>index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account' || param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">my account</span></a>	
+			<a href="https://www.<?=SHORT_URL?>/index.php?task=transaction_console"><span class="<?php if (param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">transactions</span></a>
+			<span class="blue separator">|</span>
+			<a href="https://www.<?=SHORT_URL?>/index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account') { echo "orange"; } else { echo "blue"; } ?>">my account</span></a>	
 	<?php
 		} else {
 	?>

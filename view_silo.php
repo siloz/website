@@ -572,7 +572,7 @@ function initialize() {
 	var markers = [];
 	bounds.extend(mapLocation);
 	<?php
-	foreach ($plates as $item_id => $plate) {
+	foreach ($plates as $item_id => $plate) { $item = new Item($item_id);
 		?>
 		var pos<?=$item_id?> = new google.maps.LatLng(<?=$item->latitude?> + (2*Math.random()-1)*0.005, <?=$item->longitude?> + (2*Math.random()-1)*0.005);				
 		
@@ -692,9 +692,9 @@ window.onload = loadScript;
 	</div>
 	<div>
 		<h2>Select your mail client:</h2>
-		<a href="https://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
 		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
 		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
-		<a href="https://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
+		<a href="http://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
 	</div>
 </div>

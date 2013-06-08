@@ -23,7 +23,7 @@ else {
 		if ($silo->silo_cat_id == "99") { $disaster = "true"; }
 		$title = param_post('title');
 		$avail = param_post('avail');
-		$price = param_post('price');
+		$price = round(param_post('price'));
 		$item_cat_id = param_post('item_cat_id');
 		$description = param_post('description');
 		$vouch_type_id = param_post('vouch');

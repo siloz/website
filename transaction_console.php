@@ -388,16 +388,10 @@ if (param_post('fav') == 'Remove') {
 	<table width="100%" style="border-spacing: 0px;">
 		<tr><form action="">
 			<td>
-				<span class="accountHeading">User Account</span>
+				<span class="accountHeading">Transaction Console</span>
 			</td>
 			<td align="center" width="500px">
 				<?php echo "<span id='success' class='error'>".$updatemsg."</span>"; ?>
-			</td>
-			<td align="center">
-				<a href="index.php?task=transaction_console" class="blue" style="float: left"><input type="radio" CHECKED>Transaction Console</input></a>
-			</td>
-			<td align="center">
-				<a href="index.php?task=my_account" class="blue" style="float: left"><input type="radio" onclick="window.location = 'index.php?task=my_account'">Account Settings</input></a>
 			</td>
 		</form></tr>
 	</table>
@@ -543,6 +537,7 @@ while ($item = mysql_fetch_array($qry)) {
 	$item_id = $item['item_id'];
 	$silo_id = $item['silo_id'];
 	$title = (strlen($item['title']) > 22) ? substr($item['title'], 0, 22) . '...' : $item['title'];
+	$title_edit = $item['title'];
 	$price = $item['price'];
 	$item_cat_id = $item['item_cat_id'];
 	$last_update = strtotime($item['last_update']);

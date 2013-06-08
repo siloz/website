@@ -241,67 +241,7 @@
 <table width="100%">
 <tr>
 <td rowspan="2">
-<table class='siloInfo'>
-	<tr>
-		<td>
-					<?php
-						$admin = $silo->getAdmin();
-						$admin_name = $admin->fname;
-						$collected = $silo->getCollectedAmount();
-						$pct = round($collected*100.0/floatval($silo->goal));
-						if ($pct == 100) { $radius = "border-radius: 4px;"; } else { $radius = "border-top-left-radius: 4px; border-bottom-left-radius: 4px"; }
-						
-						$c_user_id = $current_user['user_id'];
-					?>
-			<a href='index.php?task=view_silo&id=<?=$silo->id;?>'><img src="<?php echo 'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
-			<div class="siloImgOverlay">
-			<div class="progress-bg"><div class="progress-bar" style="width: <?=$pct?>%; <?=$radius?>"></div></div>
-			goal: $<?=number_format($silo->goal)?> (<?=$pct?>%)
-			</div></a>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo">
-			<a href='index.php?task=view_silo&view=members&id=<?=$silo->id;?>'><?=$silo->getTotalMembers();?></a>
-			<a href='index.php?task=view_silo&view=items&id=<?=$silo->id;?>'><?=$silo->getTotalItems();?></a>
-			<?=$silo->getDaysLeft();?>
-			<div style="padding-top: 10px;"></div>
-		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
-			<div class="voucherText" style="font-size: 10pt; text-align: left"><b>Purpose:</b> <?=$silo->getPurpose();?></div>
-			<div class="voucherText" style="font-size: 10pt; text-align: left">This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo">
-			<span class="floatL">
-				<img src="<?php echo 'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
-				<a class="buttonEmail">Email Admin.</a>
-			</span>
-			<div align="left">
-			<span class="infoDetails">
-				Administrator:<br>
-				<span class="notBold"><?=$admin_name?></span><br>
-				Official Address:<br>
-				<span class="notBold"><?=$silo->address?></span><br>
-				Telephone:<br>
-				<span class="notBold"><?=$silo->phone_number?></span>
-			</span>
-			</div>
-		</td>
-	</tr>
-	<tr class="infoSpacer"></tr>
-	<tr>
-		<td class="siloInnerInfo">
-			<div align="left">
-			<span class='voucher'>Donate only to local causes that you know or have researched!</span><br><br>
-			<?php include('include/UI/flag_box_silo.php'); ?>
-		</div>
-		Silo ID: <?=$silo->id?>
-		</td>
-	</tr>
-</table>
+	<?php $showDiv = "true"; include("include/silo_div.php"); ?>
 </td>
 <td align="center" valign="top">
 

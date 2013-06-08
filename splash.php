@@ -5,7 +5,7 @@
 	?>
 </div>
 
-<div class="row_splash top_row">
+<div class="row top_row">
 	<h2 class="tagline">A marketplace for items donated for causes in your community
 	<span class="blue" style="font-size: 9pt;"><a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a></span>
 </h2> 
