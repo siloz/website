@@ -36,8 +36,8 @@
 			$sql = "SELECT * FROM silos WHERE admin_id = $user_id";
 			$res = mysql_query($sql);
 	?>
-			<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">favorite silos</span></a>
-			<span class="blue separator">|</span>
+			<!-- <a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">favorite silos</span></a>
+			<span class="blue separator">|</span> -->
 	<?php
 			if ($addInfo_full) {
 	?>

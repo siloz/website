@@ -1317,6 +1317,28 @@ button:hover {
 	cursor: pointer;
 }
 
+.buttonEditItem {
+	background-color: #FF642F;
+    	color: #FFF;
+    	font-size: 12pt;
+    	font-weight: bold;
+    	-moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+    	-khtml-border-radius: 4px;
+    	border-radius: 4px;     
+    	padding: 3px 20px;
+	width: 100%;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+}
+
+.buttonEditItem:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
 .buttonItemPage {
 	color: #2f8dcb;
     	background-color: #fff;
