@@ -1,5 +1,6 @@
 <?php 
 if ($silo->silo_cat_id == "99") { $disaster = "true"; }
+if ($silo->issue_receipts == 1) { $tax_ded = "true"; }
 
 if ($silo->silo_type == "private" && !$showDiv) { ?>
 
