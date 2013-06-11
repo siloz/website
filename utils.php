@@ -62,6 +62,17 @@
 			return "failed";
 		}
 	}
+
+	function genRandomString($length) {
+    		$characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz";
+    		$string = "";
+
+    		for ($p = 0; $p < $length; $p++) {
+        		$string .= $characters[mt_rand(0, strlen($characters))];
+    		}
+
+    		return $string;
+	}
 		
 	function param_get($key) {
 		if (array_key_exists($key, $_GET)) {
@@ -176,5 +187,5 @@
 	   } else {
 	       return $false;
 	   }
-	}	
+	}
 ?>

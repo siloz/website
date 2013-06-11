@@ -488,6 +488,14 @@ die;
 
 			if ($showU) { $user_name = $user->fname; $user_name .= "&nbsp;".$user->lname; } else { $user_name = $user->fname; };
 
+			if ($type == "Joined") {
+				$cellInfo = "<div class='nicebox'><table width='675px'><tr>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'><img src='".ACTIVE_URL."uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";
+				$cellInfo .= "<td width='15%'><a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'><img src='".ACTIVE_URL."uploads/items/".$item->photo_file_1."?".$item->last_update."'></a></td>";
+				$cellInfo .= "<td valign='top' style='padding: 10px 15px'>New member <a href='".ACTIVE_URL."index.php?task=view_user&id=".$user->id."'>".$user_name."</a> has joined this silo by pledging <a href='".ACTIVE_URL."index.php?task=view_item&id=".$item->id."'>".$item->title."</a> for $".$item->price.".</td>";
+				$cellInfo .= "</tr></table></div>";
+				if ($i) { echo "<hr class='sInfo'>"; }
+			}
 			if ($type == "Pledged") {
 				$cellInfo = "<div class='nicebox'><table width='675px'><tr>";
 				$cellInfo .= "<td width='15%'><a href='index.php?task=view_user&id=".$user->id."'><img src='uploads/members/".$user->photo_file."?".$user->last_update."'></a></td>";

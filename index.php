@@ -301,28 +301,11 @@ if (!isset($_SESSION['is_logged_in'])) {
 					$search = param_get('search');
 					if ($task == 'validate_registration') {
 						$User = new User(param_get('id'));
-
 						$code = param_get('code');
 						$activate = $User->ValidateRegistration($_REQUEST["id"],$code);
 						error_log("ACTIVATE: ".$activate);
 						if ($activate === "success"){
-							$headline = "Your account has been activated, please login!";
-							$subject = "Make a difference in your community, as a shopper, item donor, or silo administrator!";
-							$message = "<h2>Welcome to ".SITE_NAME."!</h2>";
-							$message .= "We want to thank you for creating an account with ".SITE_NAME."! We wanted to briefly tell you what you can expect as a user. ".SITE_NAME." allows local organizations to raise money by accepting donated items from local supporters.  Those items then appear for sale to the general public. <br><br>";
-							$message .= "We believe ".SITE_NAME." is, quite simply, the best way for a community – private or public – to raise money for a cause.  Here are some reasons why: <br><br>";
-							$message .= "<ul>
-									<li>It's not shaking a collection jar; it's asking for items.</li>
-									<li>Whether private or public, causes are local, and assist people you know, involve features you drive by every day, and organizations that make a real-world difference in the life of your community.</li>
-									<li>Everybody wins – the silo administrator, the donor (who often receives a tax-deduction), and the buyer, who not only gets an item, but the knowledge that he or she is helping a local cause of their choosing.</li>
-									<li>It's designed for viral promotion. There is no limit to a fundraising goal, and no limit to how many members can be part of a given silo.</li>
-									<li>It's safe, it's transparent, and it's 90% efficient for public silos, and 95% efficient for private silos.</li>
-									</ul> <br>";
-							$message .= "We invite you to communicate your questions and concerns with us.<br><br>";
-							$message .= "Thank You, and Happy Fundraising, <br><br><br>";
-							$message .= "Zackery West <br><br> CEO, ".SITE_NAME." LLC";
-							email_with_template($User->email, $subject, $message);
-							mysql_query("UPDATE users SET info_emails = 1 WHERE user_id = '$User->user_id'");
+							$headline = "Your account in now activated, please login!";
 						}
 						else if ($activate === "active") {
 							$headline = "Your account was already activated, please login!";							

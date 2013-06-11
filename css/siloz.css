@@ -429,7 +429,7 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 
     	border-radius: 8px;     
     	border: 1px solid lightgrey;
-	color: #FF642F;
+	color: #fe5300;
 	height: 20px;
 	line-height: 20px;
 	font-size: 14pt;
@@ -454,7 +454,7 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
    	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
 
     	border-radius: 8px;     
-    	border: 2px solid #FF642F;
+    	border: 2px solid #fe5300;
 	color: #2f8dcb;
 
 	padding: 10px;
@@ -712,7 +712,8 @@ div.plate_pending a {
 	font-size: 9pt;
 	background: #EEF7FC;
 	font-family: Arial, Helvetica,sans-serif;
-	margin-left: 15px;
+	margin-left: 13px;
+	margin-bottom: 13px;
 	text-align: center;
 }
 
@@ -761,7 +762,8 @@ div.plateItemOLD {
 	font-size: 9pt;
 	background: #FFF;
 	font-family: Arial, Helvetica,sans-serif;
-	margin-left: 15px;
+	margin-left: 13px;
+	margin-bottom: 13px;
 }
 
 .plateSilo a {
@@ -779,16 +781,17 @@ div.plateItemOLD {
 	width: 173px;
 	height: 198px;	
 	padding: 0px 4px;
-	color: #FF642F;
+	color: #fe5300;
 	font-size: 9pt;
 	background: #FFF;
 	font-family: Arial, Helvetica,sans-serif;
-	margin-left: 15px;
+	margin-left: 13px;
+	margin-bottom: 13px;
 }
 
 .plateSilo_disaster a {
 	font-size: 10pt;
-	color: #FF642F;
+	color: #fe5300;
 	text-decoration: none;
 }
 
@@ -796,7 +799,7 @@ div.plateItemOLD {
 
 .plateSilo_disaster:hover {
 	cursor: pointer;
-	background-color: #FF642F;
+	background-color: #fe5300;
 	color: #FFF;
 }
 
@@ -977,6 +980,78 @@ div.first_element {
 	height: 83px;
 }
 
+.splash-shop {
+	background-position: 0px -82px;
+	margin-left: 5px;
+	margin-right: -5px;
+	padding-right: 15px;
+}
+
+.splash-donate {
+	background-position: 0px 0px;
+	margin-left: -2px;
+	margin-right: 2px;
+	padding-right: 15px;
+}
+
+.splash-create {
+	background-color: #fff;
+	width: 375px;
+    	color: grey;
+    	font-size: 9pt;
+    	font-weight: normal;
+    	border-radius: 4px;
+    	border: 1px solid lightgrey;  
+    	padding: 5px;
+	margin-left: 3px;
+	text-align: center;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+}
+
+.splash-pledge {
+	float: right;
+	background-color: #fe5300;
+	width: 375px;
+    	color: #fff;
+    	font-size: 9pt;
+	font-weight: normal;
+    	border-radius: 4px;
+    	padding: 5px;
+	margin-left: 3px;
+	text-align: center;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+}
+
+.splash-shop:hover, .splash-donate:hover, .splash-create:hover, .splash-pledge:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
+.splashText-shop {
+	text-align: left;
+	margin-top: 10px;
+	margin-bottom: -20px;
+	color: #2f8dcb;
+	font-size: 20pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+.splashText-donate {
+	text-align: left;
+	margin-top: 10px;
+	margin-bottom: -20px;
+	color: #2f8dcb;
+	font-size: 20pt;
+	font-weight: bold;
+}
+
 .mail-aol, .mail-gmail, .mail-hotmail, .mail-yahoo {
 	background: url(../images/mail-clients.png) no-repeat;
 }
@@ -1005,59 +1080,6 @@ div.first_element {
 .mail-aol:hover, .mail-gmail:hover, .mail-hotmail:hover, .mail-yahoo:hover {
 	opacity: .8;
 	cursor: pointer
-}
-
-.splash-shop {
-	background-position: 0px -82px;
-	margin-left: 5px;
-	margin-right: -5px;
-	padding-right: 15px;
-}
-
-.splash-donate {
-	background-position: 0px 0px;
-	margin-left: -2px;
-	margin-right: 2px;
-	padding-right: 15px;
-}
-
-.splash-create {
-	background-color: #fff;
-	width: 800px;
-    	color: grey;
-    	font-size: 9pt;
-    	font-weight: normal;
-    	border-radius: 4px;
-    	border: 1px solid lightgrey;  
-    	padding: 5px;
-	margin-left: 3px;
-
-	-moz-box-shadow: 2px 2px 5px grey;
-	-webkit-box-shadow: 2px 2px 5px grey;
-	box-shadow: 2px 2px 5px grey;
-}
-
-.splash-shop:hover, .splash-donate:hover, .splash-create:hover {
-	opacity: .8;
-	cursor: pointer;
-}
-
-.splashText-shop {
-	text-align: left;
-	margin-top: 10px;
-	margin-bottom: -20px;
-	color: #2f8dcb;
-	font-size: 20pt;
-	font-weight: bold;
-}
-
-.splashText-donate {
-	text-align: left;
-	margin-top: 10px;
-	margin-bottom: -20px;
-	color: #2f8dcb;
-	font-size: 20pt;
-	font-weight: bold;
 }
 
 .notBold {
@@ -1318,7 +1340,7 @@ button:hover {
 }
 
 .buttonEditItem {
-	background-color: #FF642F;
+	background-color: #fe5300;
     	color: #FFF;
     	font-size: 12pt;
     	font-weight: bold;
@@ -1522,7 +1544,7 @@ button:hover {
 }
 
 .buttonFamIndexSel {
-	background-color: #FF642F
+	background-color: #fe5300
 ;
     	color: #fff;
 	font-size: 10pt;
@@ -1738,7 +1760,7 @@ margin-left: 5px;
 
 .voucher {
 	padding-top: 5px;
-	color: #FF642F;
+	color: #fe5300;
 	font-weight: bold;
 }
 
@@ -1775,12 +1797,12 @@ margin-left: 5px;
 }
 
 .offer {
-	color: #FF642F;
+	color: #fe5300;
 	background: #fff;
 }
 
 .offer a {
-	color: #FF642F;
+	color: #fe5300;
 	text-decoration: none;
 }
 
@@ -1830,9 +1852,13 @@ margin-left: 5px;
 }
 
 .change_location {
-	cursor: pointer;
 	font-size: 9pt; 
 	font-weight: normal;
+}
+
+.change_location:hover {
+	cursor: pointer;
+	opacity: .8;
 }
 
 .s_change_location {
@@ -1915,7 +1941,7 @@ margin-left: 5px;
 }
 
 .orange {
-	color: #FF642F;
+	color: #fe5300;
 }
 
 .blk {

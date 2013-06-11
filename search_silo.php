@@ -90,7 +90,7 @@
 	$tmp = mysql_query($sql);		
 	$closed_silos = array();
 	
-	$siloz_html = "<div class='row_search'><div class='span12'>";
+	$siloz_html = "<div class='row_search'><div class='span12'><table>";
 	
 	$i = 0;
 
@@ -144,32 +144,45 @@
 		}
 	}
 
-	if ($sort_order == 'asc') {
-		$new_sort_order = '&sort_order=desc';
-		if ($order_by == 'date')
-			$img2_path = 'images/up.png';
-		else if ($order_by != '')
-			$img1_path = 'images/up.png';
+	if ($order_by == 'price') {
+		if ($sort_order == 'asc') {
+			$low_price = '<u>low</u>'; $high_price = 'high';
+		} elseif ($sort_order == 'desc') {
+			$high_price = '<u>high</u>'; $low_price = 'low';
 		}
-	else {
-		$new_sort_order = '&sort_order=asc';										
-		if ($order_by == 'date')
-			$img2_path = 'images/down.png';
-		else if ($order_by != '')
-			$img1_path = 'images/down.png';
+	} else {
+		$high_price = 'high'; $low_price = 'low';
+	}
+
+	if ($order_by == 'date') {
+		if ($sort_order == 'asc') {
+			$low_date = '<u>low</u>'; $high_date = 'high';
+		} elseif ($sort_order == 'desc') {
+			$high_date = '<u>high</u>'; $low_date = 'low';
 		}
-	$sortBy = "<b>sort: <a href=index.php?".$saveSearch."&search=silo&sort_by=goal$new_sort_order style='text-decoration:none;'> value <img src=$img1_path></a> &nbsp; <a href=index.php?".$saveSearch."&search=silo&sort_by=date$new_sort_order style='text-decoration:none;'> date <img src=$img2_path></a></b>";
-			?>
+	} else {
+		$high_date = 'high'; $low_date = 'low';
+	}
+
+	$tax_ded = param_get('tax_ded'); 
+	if ($tax_ded > 0) { 
+		$td_text = '<a href="index.php?'.$saveSearch.'&search=silo&tax_ded=0"><u>tax-ded.</u></a>'; 
+	} else { 
+		$td_text = '<a href="index.php?'.$saveSearch.'&search=silo&tax_ded=1">tax-ded.</a>'; 
+	}
+
+	$sortBy = "<b><span style='padding-right: 5px;'>goal:</span> <span style='padding-right: 2px;'><a href='index.php?".$saveSearch."&search=silo&sort_by=price&sort_order=asc' style='text-decoration:none;'>".$low_price."</a></span> <a href='index.php?".$saveSearch."&search=silo&sort_by=price$new_sort_order&sort_order=desc' style='text-decoration:none;'>".$high_price."</a> &nbsp; <span style='padding-right: 5px;'>date:</span> <span style='padding-right: 3px;'><a href='index.php?".$saveSearch."&search=silo&sort_by=date&sort_order=asc' style='text-decoration:none;'>".$low_date."</a></span> <a href='index.php?".$saveSearch."&search=silo&sort_by=date$new_sort_order&sort_order=desc' style='text-decoration:none;'>".$high_date."</a></b>";
+?>
 
 <div class="searchOpt">
 <table width="100%">
 <tr>
-	<td style="padding-right: 15px;">
+	<td>
 		<?=$sortBy?>
 	</td>
 	<td>
 		<span style="padding-right: 5px;">view:</span>
-		<span style="padding-right: 5px; <?php if($view) { echo "text-decoration: underline;"; } ?>"><a href="index.php?<?=$saveSearch?>&search=silo&view=map">map</a></span>
+		<span style="padding-right: 3px; <?php if($view) { echo "text-decoration: underline;"; } ?>"><a href="index.php?<?=$saveSearch?>&search=silo&view=map">map</a></span>
 		<span style="<?php if(!$view) { echo "text-decoration: underline;"; } ?>"><a href="index.php?search=silo<?=$saveSearch?>&view=">grid</a></span>
 	</td>
 </tr>

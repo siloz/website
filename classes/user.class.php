@@ -133,6 +133,11 @@ class User {
 		$cell .= "<div style='height: 15px'><a href='index.php?task=view_user&id=".$this->id."'><b>".$admin_name."</b></a></div><b>Member Since: </b>".$date."<br/><img height=100px width=135px src=uploads/members/".$this->photo_file." style='margin-bottom: 5px; margin-top: 5px;'><br/><b>Pledged: </b><span style='color: #f60'>$".$this->getPledgedAmount()."</span><br/><b>Sold: </b><span style='color: #f60'>$".$this->getCollectedAmount()."</span><br/>View Items: <a href='index.php?task=view_user&id=".$this->id."&silo_id=$silo_id'>This</a> | <a href=#><a href='index.php?task=view_user&id=".$this->id."'>All Silos</a></td></table></div></td>";
 		return $cell;
 	}
+
+	public function getFullName() {
+		$name = $this->fname." ".$this->lname;
+		return $name;
+	}
 	
 	public function Save(){
 		if($this->id){return $this->Update();}
@@ -209,8 +214,27 @@ class User {
 		);
 		error_log($query);
 		mysql_query($query);
-		if(mysql_affected_rows() >= 1){return "success";}
-		else{
+		if (mysql_affected_rows() >= 1) {
+			$subject = "Make a difference in your community, as a shopper, item donor, or silo administrator!";
+			$message = "<h2>Welcome to ".SITE_NAME."!</h2>";
+			$message .= "We want to thank you for creating an account with ".SITE_NAME."! We wanted to briefly tell you what you can expect as a user. ".SITE_NAME." allows local organizations to raise money by accepting donated items from local supporters.  Those items then appear for sale to the general public. <br><br>";
+			$message .= "We believe ".SITE_NAME." is, quite simply, the best way for a community – private or public – to raise money for a cause.  Here are some reasons why: <br><br>";
+			$message .= "<ul>
+					<li>It's not shaking a collection jar; it's asking for items.</li>
+					<li>Whether private or public, causes are local, and assist people you know, involve features you drive by every day, and organizations that make a real-world difference in the life of your community.</li>
+					<li>Everybody wins – the silo administrator, the donor (who often receives a tax-deduction), and the buyer, who not only gets an item, but the knowledge that he or she is helping a local cause of their choosing.</li>
+					<li>It's designed for viral promotion. There is no limit to a fundraising goal, and no limit to how many members can be part of a given silo.</li>
+					<li>It's safe, it's transparent, and it's 90% efficient for public silos, and 95% efficient for private silos.</li>
+				      </ul> <br>";
+			$message .= "We invite you to communicate your questions and concerns with us.<br><br>";
+			$message .= "Thank You, and Happy Fundraising, <br><br><br>";
+			$message .= "Zackery West <br><br> CEO, ".SITE_NAME." LLC";
+			email_with_template($this->email, $subject, $message);
+			mysql_query("UPDATE users SET info_emails = 1 WHERE user_id = '$this->user_id'");
+
+			return "success";
+		}
+		else {
 			$query = (
 				"SELECT `activation_code` FROM `users` "
 				."WHERE `id` = '".mysql_real_escape_string($id)."' "

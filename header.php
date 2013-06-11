@@ -26,18 +26,18 @@
 	<span class="gray"><?=$userLocation?></span>
 
 	<?php if (!isset($_SESSION['user_id'])) {
-		echo "<span class='change_location'>change</span>";
+		echo "<span class='change_location gray'>change</span>";
 		}
 	?>
 	<span class="blue separator">|</span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
 			$user_id = $_SESSION['user_id'];
-			$sql = "SELECT * FROM silos WHERE admin_id = $user_id";
+			$sql = "SELECT * FROM silos WHERE admin_id = '$user_id' AND status != 'pending'";
 			$res = mysql_query($sql);
 	?>
-			<!-- <a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">favorite silos</span></a>
-			<span class="blue separator">|</span> -->
+			<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">favorite silos</span></a>
+			<span class="blue separator">|</span>
 	<?php
 			if ($addInfo_full) {
 	?>
@@ -50,7 +50,7 @@
 				<span class="blue separator">|</span>
 	<?php
 			} else {
-		$sid = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id'"));
+		$sid = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id' AND status != 'pending'"));
 		$Silo = new Silo($sid[0]);
 		$silo_id = $Silo->silo_id;
 			
@@ -273,7 +273,7 @@ if ($sItems || $sSilos) {
 					</select>
 			</td>
 			<td>
-				price
+				<?php if ($sSilos) { echo "goal:"; } else { echo "price:"; } ?>
 			</td>
 			<td>
 				<?php $replace = array("$", ","); $low = str_replace($replace, "", param_get('price_low'));?>
@@ -283,14 +283,6 @@ if ($sItems || $sSilos) {
 				<?php $high = str_replace($replace, "", param_get('price_high'));?>
 				<input type="text" name="price_high" id="price_high" size="5" onfocus="select();" value="<?=money_format('%n', $high)?>" placeholder="high" onkeypress="return isNumberKey(event)">
 			</td>
-
-	<?php if ($sSilos) { ?>
-			<td>
-				<?php $tax_ded = param_get('tax_ded');?>
-				tax-ded. <br> <input type="checkbox" name="tax_ded" id="tax_ded" value="1" <?php if ($tax_ded > 0) { echo "CHECKED"; } ?> >
-			</td>
-	<?php } ?>
-
 			<td align="right">
 				<button>search</button>
 			</td>

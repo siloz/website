@@ -58,12 +58,18 @@
 	<div class="row">
 		<table class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
 		<tr>
-			<td style="text-align: center" class="splashText-shop">create a private silo</td>
-			<td style="text-align: center" class="splashText-shop">create a public silo</td>
+			<td class="splashText-shop">create a private/public silo</td>
 		</tr>
 		<tr>
-			<td style="text-align: center">create a viral fundraiser without waiving a collection cup!</td>
-			<td style="text-align: center">allow the local public to donate to your cause; keep 90%</td>
+			<td>private silos keep 95%, public silos keep 90%.</td>
+		</tr>
+		</table>
+		<table class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
+		<tr>
+			<td class="splashText-shop" style="color: #FFF;">pledge first</td>
+		</tr>
+		<tr>
+			<td>notify someone who you think should start a silo.</td>
 		</tr>
 		</table>
 	</div>

@@ -3,6 +3,7 @@ class Feed {
 	public $silo_id;
 	public $user_id;
 	public $item_id;
+	public $status;
 
 	public function Save(){
 		$silo = mysql_fetch_row(mysql_query("SELECT silo_id FROM items WHERE item_id = '$this->item_id'"));

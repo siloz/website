@@ -29,6 +29,12 @@
 		$silo_ended = $silo->end_date < $today;
 		$admin = $silo->admin;
 
+	if ($silo->silo_type == "private") {
+		$check = mysql_num_rows(mysql_query("SELECT * FROM silo_private WHERE silo_id = '$silo->silo_id' AND user_id = '$user_id'"));
+		if (!$check)
+			$upd = mysql_query("INSERT INTO silo_private (silo_id, user_id) VALUES ('$silo->silo_id', '$user_id')");
+	}
+
 		$checkUser = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date > 0"));
 		$showU = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND user_id = '$user_id' AND removed_date = 0"));
 		$checkClosed = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE silo_id = '$silo_id' AND status != 'active'"));

@@ -1,5 +1,6 @@
 <?php
 include("include/timeout.php");
+	$refer_id = param_get('id');
 
 if ($_SESSION['is_logged_in'] != 1) {
 	echo "<script>window.location = 'index.php';</script>";
@@ -7,7 +8,10 @@ if ($_SESSION['is_logged_in'] != 1) {
 elseif ($addInfo_full) {
 	echo "<script>window.location = 'index.php?task=my_account&redirect=create_silo';</script>";
 }
-else if (!param_get('type')) { ?>
+elseif (mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = '$user_id' AND status != 'pending'")) > 0) {
+		echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
+}
+elseif (!param_get('type')) { ?>
 	<div class="spacer"></div>
 	<div class="spacer"></div>
 
@@ -42,10 +46,10 @@ else if (!param_get('type')) { ?>
 	</tr>
 	<tr>
 		<td align="center">
-			<a href="index.php?task=create_silo&type=private" style="text-decoration: none"><div class="buttonSilo">start a private silo</div></a>
+			<a href="index.php?task=create_silo&type=private&id=<?=$refer_id?>" style="text-decoration: none"><div class="buttonSilo">start a private silo</div></a>
 		</td>
 		<td align="center">
-			<a href="index.php?task=create_silo&type=public" style="text-decoration: none"><div class="buttonSilo">start a public silo</div></a>
+			<a href="index.php?task=create_silo&type=public&id=<?=$refer_id?>" style="text-decoration: none"><div class="buttonSilo">start a public silo</div></a>
 		</td>
 	</tr>
 	</table>
@@ -57,9 +61,7 @@ else {
 	$address = "";
 	$filename = "";
 	$today = date('Y-m-d')."";
-	if (mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = ".$_SESSION['user_id']." AND end_date >= '".$today."'")) > 0) {
-		echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
-	}	
+	
 	if (param_post('publish') == 'Publish') {
 			
 		$admin_id = $_SESSION['user_id'];
@@ -175,8 +177,16 @@ else {
 			
 		
 		if (strlen($err) == 0) {
-			$status = "active";
+			$status = 'pending';
 			$Silo = new Silo();
+			if ($refer_id) {
+				$getSilo = mysql_fetch_array(mysql_query("SELECT id FROM silos WHERE admin_id = '$admin_id'"));
+				$silo_id = $getSilo[0];
+				$Silo->id = $silo_id;
+				$refer = new User($refer_id);
+				$updItem = mysql_fetch_array(mysql_query("UPDATE items SET status = 'pledged' WHERE user_id = '$refer->user_id'"));
+			}
+
 			$Silo->admin_id = $admin_id;
 			
 			include("include/set_silo_params.php");
@@ -257,7 +267,21 @@ else {
 		imagejpeg($dst_r, $name, $jpeg_quality);
 		unlink($src);
 
-		mysql_query("UPDATE silos SET photo_file = '$id.jpg' WHERE id = '$id'");
+		mysql_query("UPDATE silos SET status = 'active', photo_file = '$id.jpg' WHERE id = '$id'");
+		
+		$silo = new Silo($id);
+		$seller = new User($refer_id);
+		$item_id = mysql_fetch_array(mysql_query("SELECT item_id FROM items WHERE silo_id = '$silo->silo_id' AND user_id = '$seller->user_id'"));
+			$Notification = new Notification();
+			$Notification->user_id = $seller->user_id;
+			$Notification->item_id = $item_id[0];
+			$Notification->Send();
+		$subject = "Your item is now active!";
+		$message = "<h3>Congratulations! You have helped start a silo.</h3>";
+		$message .= "You have helped <b>".$silo->admin->getFullName()."</b> start the silo titled ".$silo->getTitle().". Now that this silo is active, your item is now set as pledged and it will be shown on ".SHORT_URL.". For more information about this newly created silo, please click on the link below: <br><br>";
+		$message .= "<a href='".ACTIVE_URL."index.php?task=view_silo&id=".$id."'>".ACTIVE_URL."index.php?task=view_silo&id=".$id."</a> <br><br>";
+		$message .= "Thank you for being an active member on ".SITE_NAME."!";
+		email_with_template($seller->email, $subject, $message);
 	}
 	
 	$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$_SESSION['user_id']));
@@ -462,7 +486,17 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 			<tr>			
 				<td>Photo </td>
 				<td><input name="silo_photo" type="file"  style="height: 24px; width: 300px"/></td>
-			</tr>		
+			</tr>
+
+<?php if ($refer_id) { $refer = new User($refer_id); ?>
+			<tr>
+				<td colspan="2"><br/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><b>Referred by:</b> <?=$refer->getFullName()?></td>
+			</tr>
+<?php } ?>
+
 			<tr>
 				<td colspan="2"><br/></td>
 			</tr>				

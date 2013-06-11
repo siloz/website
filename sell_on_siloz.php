@@ -12,7 +12,6 @@ else {
 	$user = new User($user_id);
 	$title = "";
 	$avail = "";
-	$price = "";
 	$item_cat_id = "0";
 	$description = "";
 
@@ -23,7 +22,8 @@ else {
 		if ($silo->silo_cat_id == "99") { $disaster = "true"; }
 		$title = param_post('title');
 		$avail = param_post('avail');
-		$price = round(param_post('price'));
+		$price = param_post('price');
+		if ($price) { $price = round($price); }
 		$item_cat_id = param_post('item_cat_id');
 		$description = param_post('description');
 		$vouch_type_id = param_post('vouch');
@@ -44,8 +44,8 @@ else {
 		else if (!is_numeric($price)) {
 			$err .= "Item's price is not a valid number.<br/>";
 		}
-		else if (floatval($price) < 0) {
-			$err .= "Item's price is negative.<br/>";
+		else if (floatval($price) < 5) {
+			$err .= "The minimum price for an item is $5.<br/>";
 		}
 		else if (floatval($price) > 100000000) {
 			$err .= "Item's price exceeds the allowed maximum. For more information, contact siloz through the link in our footer. <br/>";
@@ -108,13 +108,6 @@ else {
 			$sqladr = "UPDATE users SET address = '$new_adr' WHERE user_id = $user_id";
 			mysql_query($sqladr);
 
-			$Feed = new Feed();
-			$Feed->silo_id = $silo->silo_id;
-			$Feed->user_id = $user_id;
-			$Feed->item_id = $actual_id;
-			$Feed->status = $status;
-			$Feed->Save();
-
 			if ($joined_silo == 0) {
 				if(!$Vouch){$Vouch = new Vouch();}
 				$Vouch->Save($silo->silo_id,$user_id,$vouch_type_id);
@@ -126,6 +119,13 @@ else {
 			} else { 
 				$status = "Pledged"; 
 			}
+
+			$Feed = new Feed();
+			$Feed->silo_id = $silo->silo_id;
+			$Feed->user_id = $user_id;
+			$Feed->item_id = $actual_id;
+			$Feed->status = $status;
+			$Feed->Save();
 						
 			for ($i=1; $i<=4; ++$i) {
 				$filesize = $_FILES['item_photo_'.$i]['size'];
@@ -581,18 +581,15 @@ die;
 				</tr>
 			</table>	
 <?php } else { ?>
+				<tr></tr>
+				<tr>
+					<td align="center">
+						<button type="submit" name="submit" value="Finish">Finish</button>
+					</td>
+				</tr>
 			</table>
-				<center><button type="submit" name="submit" value="Finish">Finish</button></center>
 <?php } ?>
 		</form>
-		<!-- <div style='width: 75%; margin: auto'>
-			<br/>
-			<b>Note: </b> While we think we're the easiest site to use, regrettably, we don't always have the traffic to sell items.  We invite you to - in addition to our site - list and sell your item on any website or through off-line means (yard sale, etc.) you wish!  
-			<ul>
-				<li>If your item sells here first, remove those ads!</li>
-				<li>If it sells elsewhere, change the status to 'Item Sold' or 'Payment Sent', as the case may be!</li>
-			</ul>
-		</div> -->
 <?php
 }
 ?>

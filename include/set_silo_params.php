@@ -5,8 +5,6 @@
  *
  */
 
-$Silo->id = "0";
-$Silo->id = $id[0];
 if($name){$Silo->name = $name;}
 if($shortname){$Silo->shortname = $shortname;}
 if($paypal_account){$Silo->paypal_account = $paypal_account;}
@@ -28,8 +26,8 @@ if($silo_cat_id){$Silo->silo_cat_id = $silo_cat_id;}
 if($start_date){$Silo->start_date = $start_date;}
 if($end_date){$Silo->end_date = $end_date;}
 if($goal){$Silo->goal = $goal;}
-if($admin_notice){$Silo->admin_notice = $admin_notice;}
 if($status){$Silo->status = $status;}
+if($admin_notice){$Silo->admin_notice = $admin_notice;}
 if($description){$Silo->description = $description;}
 if($purpose){$Silo->purpose = $purpose;}
 if(!$filename && !$success){ $Silo->photo_file = "default.png"; }

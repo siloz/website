@@ -1,10 +1,16 @@
 <?php
 	$redirect = param_get('redirect');
+	$redirect_id = param_get('id');
 	$linkedin_upd = param_get('connect');
 
-if ($_SESSION['is_logged_in'] != 1) {
-	echo "<script>window.location = 'index.php';</script>";
-}
+if ($_SESSION['is_logged_in'] != 1) { ?>
+	<script type="text/javascript">
+		$(document).ready(function () {
+        		javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);
+		})
+	</script>
+<?php 
+	die; }
 
 	if (param_post('crop') == 'Crop') {
 		$id = trim(param_post('user_id'));
@@ -31,10 +37,7 @@ if ($_SESSION['is_logged_in'] != 1) {
 	}
 
 //If account info is updated
-	if ($_SESSION['is_logged_in'] != 1) {
-		echo "<script>window.location = 'index.php';</script>";
-	}
-	elseif (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
+	if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
     		echo "<script>window.location = 'https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
     		exit();
 	}
@@ -277,16 +280,16 @@ if ($_SESSION['is_logged_in'] != 1) {
 			$valid_code = $row['validation_code'];
 		}
 
-		if ($valid_code == -1) { mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); ?>
-			<script type="text/javascript">
-				$(document).ready(function () {
-        				javascript:popup_show('new_account', 'new_account_drag', 'new_account_exit', 'screen-center', 0, 0);
-				})
-			</script>
-<?php 		} if ($redirect && (!param_post('task') == 'update_account')) { ?>
+		if ($redirect && (!param_post('task') == 'update_account')) { ?>
 			<script type="text/javascript">
 				$(document).ready(function () {
         				javascript:popup_show('addInfo_message', 'addInfo_message_drag', 'addInfo_message_exit', 'screen-center', 0, 0);
+				})
+			</script>
+<?php 		} elseif ($valid_code == -1) { mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); ?>
+			<script type="text/javascript">
+				$(document).ready(function () {
+        				javascript:popup_show('new_account', 'new_account_drag', 'new_account_exit', 'screen-center', 0, 0);
 				})
 			</script>
 <?php 		}
@@ -306,8 +309,7 @@ if ($_SESSION['is_logged_in'] != 1) {
 	if (!$fname || !$lname || !$address || !$phone || !$photo_file) { $addInfo_account = true; }
 
 	if ($redirect && !$addInfo_account && !$filename) {
-		$getId = param_get('id');
-		if ($getId) { $redirect_id = "&id=".$getId; }
+		if ($redirect_id) { $redirect_id = "&id=".$redirect_id; }
 		echo "<script>window.location = 'index.php?task=".$redirect."".$redirect_id."';</script>";
 	}
 ?>
@@ -581,7 +583,9 @@ die;
 
 <div class="login" id="addInfo_message" style="width: 500px;">
 	<div id="addInfo_message_drag" style="float:right">
-		<img id="addInfo_message_exit" src="images/close.png"/>
+		<?php if ($valid_code != -1) { ?>
+			<img id="addInfo_message_exit" src="images/close.png"/>
+		<?php } ?>
 	</div>
 	<div>
 			<h2>Completing your <?=SITE_NAME?> profile</h2>
@@ -596,7 +600,11 @@ die;
 			</b></blockquote>
 			Remember, you can always connect with Facebook or LinkedIn to get started right away without the hassle!<br><br>
 			Once you have finished, we will redirect you back to where you were.<br><br>
+		<?php if ($valid_code == -1) { mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); ?>
+			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_message').style.display='none'; javascript:popup_show('new_account', 'new_account_drag', 'new_account_exit', 'screen-center', 0, 0);">Next message</button>
+		<?php } else { ?>
 			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_message').style.display='none';">Continue to my account</button>
+		<?php } ?>
 	</div>
 </div>
 

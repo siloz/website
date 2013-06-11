@@ -12,23 +12,20 @@ else {
 	$user = new User($user_id);
 	$title = "";
 	$avail = "";
-	$price = "";
 	$item_cat_id = "0";
 	$description = "";
 
 	$err = "";
-	if (param_post('submit') == 'Finish') {	
-		$silo_id = param_post('silo_id');
-		$silo = new Silo($silo_id);
+	if (param_post('submit') == 'Finish') {
 		$title = param_post('title');
 		$avail = param_post('avail');
 		$price = param_post('price');
+		if ($price) { $price = round($price); }
 		$item_cat_id = param_post('item_cat_id');
 		$description = param_post('description');
-		$vouch_type_id = param_post('vouch');
 		$address = param_post('address');
 		$zip = param_post('zip');
-		$joined_silo = trim(param_post('joined_silo'));
+		$admin_email = param_post('admin_email');
 		
 		//test for form errors //comment added sept 8th 2012 james kenny
 		if (strlen(trim($title)) == 0) {
@@ -43,8 +40,8 @@ else {
 		else if (!is_numeric($price)) {
 			$err .= "Item's price is not a valid number.<br/>";
 		}
-		else if (floatval($price) < 0) {
-			$err .= "Item's price is negative.<br/>";
+		else if (floatval($price) < 5) {
+			$err .= "The minimum price for an item is $5.<br/>";
 		}
 		else if (floatval($price) > 100000000) {
 			$err .= "Item's price exceeds the allowed maximum. For more information, contact siloz through the link in our footer. <br/>";
@@ -67,6 +64,20 @@ else {
 		if ( (!$_FILES['item_photo_1']['name']) && (($_FILES['item_photo_2']['name']) || ($_FILES['item_photo_3']['name']) || ($_FILES['item_photo_4']['name']))  ) {
 			$err .= "Please submit your image in the first slot before adding more images.<br>";
 		}
+		if (strlen($admin_email) == 0) {
+			$err .= "Please enter the admininstator's e-mail address.<br/>";		
+		}
+		else if (!is_valid_email($admin_email)) {
+			$err .= "The address '$admin_email' is not a valid e-mail address.<br/>";		
+		}
+		else {
+			$checkAdmin = mysql_fetch_array(mysql_query("SELECT user_id FROM users WHERE email = '$admin_email'"));
+			$checkAdmin_id = $checkAdmin[0];
+			$checkSilo = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = '$checkAdmin_id'"));
+			if ($checkSilo > 0 && $checkAdmin_id) {
+				$err .= "The e-mail address '$admin_email' is already assosciated with another account that has already began a silo.<br/>";
+			}
+		}
 
 		$adr = urlencode($address);
 		$zip_code = urlencode($zip);
@@ -84,16 +95,11 @@ else {
 		}
 		
 		$joined = true;
-		//added sept 8th 2012 james kenny
-		//make sure they selct their association with the silo
-		if(!$vouch_type_id && !$joined_silo){
-			$err .= "Please use tell us how you are associated with this silo<br />";
-		}
 		if (strlen($err) == 0) {
 
 			$sql = "INSERT INTO items(silo_id, user_id, title, price, item_cat_id, description, status) VALUES (?,?,?,?,?,?,?);";
 			$stmt->prepare($sql);			
-			$status = "Pledged";
+			$status = "Requested";
 			$stmt->bind_param("sssssss", $silo->silo_id, $user_id, $title, $price,$item_cat_id, htmlentities($description, ENT_QUOTES), $status);
 			$stmt->execute();
 			$stmt->close();
@@ -106,25 +112,6 @@ else {
 
 			$sqladr = "UPDATE users SET address = '$new_adr' WHERE user_id = $user_id";
 			mysql_query($sqladr);
-
-			$Feed = new Feed();
-			$Feed->silo_id = $silo->silo_id;
-			$Feed->user_id = $user_id;
-			$Feed->item_id = $actual_id;
-			$Feed->status = $status;
-			$Feed->Save();
-
-			if ($joined_silo == 0) {
-				if(!$Vouch){$Vouch = new Vouch();}
-				$Vouch->Save($silo->silo_id,$user_id,$vouch_type_id);
-
-				$joined = false;
-				$member = "INSERT INTO silo_membership (silo_id, user_id) VALUES (".$silo->silo_id.",".$user_id.")";
-				mysql_query($member);
-				$status = "Joined";
-			} else { 
-				$status = "Pledged"; 
-			}
 						
 			for ($i=1; $i<=4; ++$i) {
 				$filesize = $_FILES['item_photo_'.$i]['size'];
@@ -192,37 +179,87 @@ else {
 			}			
 		}
 		if (strlen($err) == 0) {
-			if ($joined_silo) { //Already joined
-				$subject = "Thank you for pledging for ".$silo->name;
-				$message = "<br/>You have pledged on silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
-				$message .= "Remember: you can share the silo you joined/pledged on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
-				$message .= "We thank you for participating in silo ".$silo->name." and for using siloz.com.<br/><br/>
+				$subjectItem = "Thank you for joining ".$silo->name;
+				$messageItem = "<br/>Congratulations on joining silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
+				$messageItem .= "<h3>Getting Started</h3>";
+				$messageItem .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
+				$messageItem .= "We thank you for participating in your silo and for using siloz.com.<br/><br/>
 							Sincerely,<br/><br/>
 							".SITE_NAME." Staff.";			
-			    email_with_template($user->email, $subject, $message);
-			}
-			else {
-				$subject = "Thank you for joining ".$silo->name;
-				$message = "<br/>Congratulations on joining silo <b>".$silo->name."</b> with your item - <b>$title</b> ($$price).<br/><br/>";
-				$message .= "<h3>Getting Started</h3>";
-				$message .= "Remember: you can share the silo you joined on <b>Facebook</b>, or, use our address book tool to generate an email to your frequent contacts to notify them of your fund-raiser's need for member.  Click <a href='".ACTIVE_URL."index.php?task=view_silo&id=".$silo->id."'>here</a> to notify your contacts.<br/><br/>";
-				$message .= "We thank you for participating in your silo and for using siloz.com.<br/><br/>
-							Sincerely,<br/><br/>
-							".SITE_NAME." Staff.";			
-			    email_with_template($user->email, $subject, $message);
+			    email_with_template($user->email, $subjectItem, $messageItem);
 				
+		//Add user that will start the silo if there is no account assos. with the e-mail provided
+			$getAdmin = mysql_fetch_array(mysql_query("SELECT user_id FROM users WHERE email = '$admin_email'"));
+			if (!$getAdmin) {
+				$code = rand(100000, 999999);
+				$adminUser = new User();
+				$adminUser->email = $admin_email;
+				$adminUser->validation_code = $code;
+				$admin_id = $adminUser->Save();
+				$adminUser = new User($admin_id);
+				$userStage = "Password";			
+			} else {
+				$admin_id = $getAdmin[0];
+				$adminUser = new User($admin_id);
+
+				if (!$adminUser->fname || !$adminUser->lname || !$adminUser->address || !$adminUser->phone || !$adminUser->photo_file) {
+					$userStage = "Info";
+				} else {
+					$userStage = "Complete";
+				}
 			}
+
+		//Create a silo in the database to link up the user and new admin user
+			$silo = new Silo();
+			$silo->admin_id = $adminUser->user_id;
+			$silo->status = "pending";
+			$silo_id = $silo->Save();
+			mysql_query("UPDATE items SET silo_id = '$silo_id' WHERE item_id = '$actual_id'");
+
+		//Send silo user info about creating a silo and activating their account
+			$subject = "Silo request from ".$user->fname." ".$user->lname."!";
+			$message = "<h3>".$user->fname." ".$user->lname." is requesing that you create a silo on ".SHORT_URL.".</h3>";
+			$message .= "<b>What is ".SITE_NAME."?</b> You could think of a silo as a rummage sale, online, to benefit a local cause, whether private or public. We think ".SITE_NAME." is transparent, safe, and fun. Everybody wins: Buyers get merchandise while helping local causes. Those donating items often receive a tax-deduction for a sold item and silo administrators raise money without asking for cash! For more information, please go to ".SHORT_URL." or click <a href='".ACTIVE_URL."#quick-start'>here</a>. <br><br>";
+			$message .= "To pursue your silo, you will need to respond within <b>2</b> weeks. You will be walked along the process the whole way. Please look below for instructions on how to start your first silo!<br><br>";
+
+			if ($userStage == "Password") {
+				$token = genRandomString(15);
+				$dbReset = mysql_query("INSERT INTO password_reset (user_id, token, exp_date) VALUES ('$adminUser->id', '$token', DATE_ADD(NOW(), INTERVAL 14 DAY))");
+				$link = ACTIVE_URL."index.php?task=reset_password&id=".$adminUser->id."&token=".$token."&validation_code=".$code."&refer_id=".$user->id;				
+				$message .= "We have determined, from your e-mail address, that you do not have an account on ".SITE_NAME." yet. We have already created an account for you. You will need to enter a password to gain access to this account. Once you have entered a password, you will be redirected to your new account page. All users are required to enter a certain amount of information to start a silo. User information is never shared with third-party websites and is only used for site-wide purposes. After you have filled out your profile and account information, you can proceed to create your public or private silo. You can start this quick proccess by clicking on the link below: <br><br>";
+				$message .= "<a href='".$link."'>".$link."</a> <br><br>";
+				$message .= "Welcome to ".SITE_NAME."!";
+			} elseif ($userStage == "Info") {
+				$link = ACTIVE_URL."index.php?task=my_account&redirect=create_silo&id=".$user->id;
+				$message .= "We have found an account with the e-mail address provided, but the account has not been fully filled out quite yet. In order to create a silo on ".SITE_NAME.", you will need to complete your profile information. User information is never shared with third-party websites and is only used for site-wide purposes. After completion of your profile, you will be redirected to a page to create your silo! You can begin right now by click on the link below: <br><br>";
+				$message .= "<a href='".$link."'>".$link."</a> <br><br>";
+				$message .= "We hope you enjoy ".SITE_NAME.".com and we wish your new silo the absolute best!";
+			} elseif ($userStage == "Complete") {
+				$link .= ACTIVE_URL."index.php?task=create_silo&id=".$user->id;
+				$message .= "We have determined that you have an account with ".SITE_NAME." and you do not have any active silos. All of the hard work is over! To start a new silo with an item already pledged towards your cause, click on the link below: <br><br>";
+				$message .= "<a href='".$link."'>".$link."</a> <br><br>";
+				$message .= "We hope you enjoy ".SITE_NAME.".com and we wish your new silo the absolute best!";
+			}
+
+			email_with_template($admin_email, $subject, $message);
+
+		//Proceed adding item, like normal
+			if(!$Vouch){$Vouch = new Vouch();}
+			$Vouch->Save($silo_id, $user_id, '76');
+
+			$joined = false;
+			$member = "INSERT INTO silo_membership (silo_id, user_id) VALUES (".$silo_id.",".$user_id.")";
+			mysql_query($member);
+			$status = "Joined";
+
+			$Feed = new Feed();
+			$Feed->silo_id = $silo->silo_id;
+			$Feed->user_id = $user_id;
+			$Feed->item_id = $actual_id;
+			$Feed->status = $status;
+			$Feed->Save();
+
 			$success = "true";
-		}
-	}
-	else {
-		$id = param_get('id');
-		if ($id == '') {
-			echo "<script>window.location = 'index.php';</script>";		
-		}
-		else {
-			$silo = new Silo($id);
-			$joined_silo = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo->silo_id' AND user_id = '$user_id'"));
 		}
 	}
 
@@ -354,7 +391,7 @@ else {
 
 <div class="userNav" align="center">
 	<span class="accountHeading">
-		<b>Donate an item to join the Silo: <?php echo "<u><a href=".ACTIVE_URL."/index.php?task=view_silo&id=".$silo->id.">".$silo->name."</a></b></u>";?>
+		<b>Donate an item to a silo that hasn't been created yet. Be the first to pledge an item!</b>
 	</span>
 </div>
 
@@ -480,10 +517,8 @@ die;
 		<p>Please enter your item details below, and upload up to 4 images for your item.</p>
 		<form enctype="multipart/form-data"  name="sell_on_siloz" class="my_account_form" method="POST">
 			<input type="hidden" name="task" value="sell_on_siloz"/>
-			<input type="hidden" name="silo_id" value="<?php echo $silo->id;?>"/>
 			<input type="hidden" name="address" value="<?php echo $user->address;?>"/>					
 			<input type="hidden" name="zip" value="<?php echo $user->zip_code;?>"/>
-			<input type="hidden" name="joined_silo" value="<?=$joined_silo?>"/>					
 			<table width="80%" cellpadding="10px" align="center">
 				<tr>
 					<td colspan="2" align="center">
@@ -558,44 +593,21 @@ die;
 						</table>
 					</td>
 				</tr>
-
-<?php if (!$joined_silo) { ?>
-				<tr>
-				<td align="center">
-					<h2>Choose One</h2>
-					<span class="blue">Your response will impact the Familiarity Index for this silo</span>
-				</td>
-				</tr>
 				<tr>
 					<td>
-						<div class="<?php if ($vouch_type_id == 75) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_75"><div class="famIndex">I researched this silo</div></div>
-						<div class="<?php if ($vouch_type_id == 76) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_76"><div class="famIndex">I know this silo administrator</div></div>
-						<div class="<?php if ($vouch_type_id == 77) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_77">I didn't research this silo, and I don't know this silo administrator</div>
-						<div class="<?php if ($vouch_type_id == 78) { echo "buttonFamIndexSel"; } else { echo "buttonFamIndex"; } ?>" id="famIndex_78">I researched this silo, and I know this silo administrator</div>
-						<input type="hidden" id="famIndex" name="vouch" value="<?=$vouch_type_id?>" />
+						Please enter the e-mail address of the person you want to start this silo below. They will be sent an e-mail with information about how to create an account and begin their silo. Once they finish the whole process, your item will be the first to be pledged towards that silo!
 					</td>
 				</tr>
-<?php } ?>
 				<tr>
-				<td><br>
-						<p style="line-height:1.0em; margin:0; padding:0;"><strong>Disclaimer:</strong> siloz makes no representation as to, and offers no guarantee of, the legitimacy of any organization or cause, the veracity of information posted on our site, or the fitness of a silo administrator to collect funds on behalf of the organization or cause.  Read our Terms of Use and FAQ for more information.  By using siloz, members you agree to hold siloz harmless and not liable for  fraud, misrepresentation, tortious acts committed by a silo administrator, and crimes incidental to the sale of items.</p>
-				</td>
+					<td align="center"><b>Admininistator's E-mail Address: </b> <input name="admin_email" type="text" style="width: 300px;" value="<?=$admin_email?>" /></td>
 				</tr>
 				<tr>
 					<td align="center">
 						<button type="submit" name="submit" value="Finish">Finish</button>
 					</td>
-				</tr>			
-			</table>	
+				</tr>
+			</table>
 		</form>
-		<!-- <div style='width: 75%; margin: auto'>
-			<br/>
-			<b>Note: </b> While we think we're the easiest site to use, regrettably, we don't always have the traffic to sell items.  We invite you to - in addition to our site - list and sell your item on any website or through off-line means (yard sale, etc.) you wish!  
-			<ul>
-				<li>If your item sells here first, remove those ads!</li>
-				<li>If it sells elsewhere, change the status to 'Item Sold' or 'Payment Sent', as the case may be!</li>
-			</ul>
-		</div> -->
 <?php
 }
 ?>
