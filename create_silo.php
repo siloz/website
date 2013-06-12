@@ -1,6 +1,7 @@
 <?php
 include("include/timeout.php");
 	$refer_id = param_get('id');
+	if ($refer_id) { $param_id = "&id=".$refer_id; }
 
 if ($_SESSION['is_logged_in'] != 1) {
 	echo "<script>window.location = 'index.php';</script>";
@@ -46,10 +47,10 @@ elseif (!param_get('type')) { ?>
 	</tr>
 	<tr>
 		<td align="center">
-			<a href="index.php?task=create_silo&type=private&id=<?=$refer_id?>" style="text-decoration: none"><div class="buttonSilo">start a private silo</div></a>
+			<a href="index.php?task=create_silo&type=private<?=$param_id?>" style="text-decoration: none"><div class="buttonSilo">start a private silo</div></a>
 		</td>
 		<td align="center">
-			<a href="index.php?task=create_silo&type=public&id=<?=$refer_id?>" style="text-decoration: none"><div class="buttonSilo">start a public silo</div></a>
+			<a href="index.php?task=create_silo&type=public<?=$param_id?>" style="text-decoration: none"><div class="buttonSilo">start a public silo</div></a>
 		</td>
 	</tr>
 	</table>
@@ -78,6 +79,7 @@ else {
 		$start_date = $today;				
 		$goal = param_post('goal');
 		$purpose = param_post('purpose');
+		$employee_discount = param_post('employee_discount');
 
 		$ein = ($verified == 1) ? $ein : '0';
 		$s_types = array(2, 6);
@@ -269,26 +271,28 @@ else {
 
 		mysql_query("UPDATE silos SET status = 'active', photo_file = '$id.jpg' WHERE id = '$id'");
 		
-		$silo = new Silo($id);
-		$seller = new User($refer_id);
-		$item_id = mysql_fetch_array(mysql_query("SELECT item_id FROM items WHERE silo_id = '$silo->silo_id' AND user_id = '$seller->user_id'"));
-			$Notification = new Notification();
-			$Notification->user_id = $seller->user_id;
-			$Notification->item_id = $item_id[0];
-			$Notification->Send();
-		$subject = "Your item is now active!";
-		$message = "<h3>Congratulations! You have helped start a silo.</h3>";
-		$message .= "You have helped <b>".$silo->admin->getFullName()."</b> start the silo titled ".$silo->getTitle().". Now that this silo is active, your item is now set as pledged and it will be shown on ".SHORT_URL.". For more information about this newly created silo, please click on the link below: <br><br>";
-		$message .= "<a href='".ACTIVE_URL."index.php?task=view_silo&id=".$id."'>".ACTIVE_URL."index.php?task=view_silo&id=".$id."</a> <br><br>";
-		$message .= "Thank you for being an active member on ".SITE_NAME."!";
-		email_with_template($seller->email, $subject, $message);
+		if ($refer_id) {
+			$silo = new Silo($id);
+			$seller = new User($refer_id);
+			$item_id = mysql_fetch_array(mysql_query("SELECT item_id FROM items WHERE silo_id = '$silo->silo_id' AND user_id = '$seller->user_id'"));
+				$Notification = new Notification();
+				$Notification->user_id = $seller->user_id;
+				$Notification->item_id = $item_id[0];
+				$Notification->Send();
+			$subject = "Your item is now active!";
+			$message = "<h3>Congratulations! You have helped start a silo.</h3>";
+			$message .= "You have helped <b>".$silo->admin->getFullName()."</b> start the silo titled ".$silo->getTitle().". Now that this silo is active, your item is now set as pledged and it will be shown on ".SHORT_URL.". For more information about this newly created silo, please click on the link below: <br><br>";
+			$message .= "<a href='".ACTIVE_URL."index.php?task=view_silo&id=".$id."'>".ACTIVE_URL."index.php?task=view_silo&id=".$id."</a> <br><br>";
+			$message .= "Thank you for being an active member on ".SITE_NAME."!";
+			email_with_template($seller->email, $subject, $message);
+		}
 	}
 	
 	$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$_SESSION['user_id']));
 	//die(print_r($user));
 
 	if ($crop == "true") {
-		header("Location: 'index.php?task=manage_silo'");
+		echo "<script>window.location = 'index.php?task=manage_silo';</script>";		
 	}
 ?>
 
@@ -484,8 +488,12 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				<td><textarea name="purpose" style="width : 300px; height: 50px"/><?php echo $purpose; ?></textarea></td>			
 			</tr>
 			<tr>			
-				<td>Photo </td>
+				<td>Photo <font color='red'>*</font></td>
 				<td><input name="silo_photo" type="file"  style="height: 24px; width: 300px"/></td>
+			</tr>
+			<tr>			
+				<td>Employee ID number** </td>
+				<td><input name="employee_discount" type="text" value="<?=$employee_discount?>" /></td>
 			</tr>
 
 <?php if ($refer_id) { $refer = new User($refer_id); ?>
@@ -505,14 +513,11 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 					<button type="submit" value="Publish" name="publish">Publish this Silo</button>
 				</td>
 			</tr>
-
-<?php if ($silo_type == "public") { ?>
 			<tr>
 				<td colspan="2" align="center">
-					<br><font size="1">**To issue tax-deductible receipts your silo <b>must</b> have a valid EIN number <b>OR</b> be listed as an education, a public university, or a religious silo type.</font>
+					<br><font size="1">**An employee ID is NOT required. Only available to a small number of silo administrators.</font>
 				</td>
 			</tr>
-<?php } ?>
 		</table>
 	</div>
 </form>

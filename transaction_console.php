@@ -545,8 +545,8 @@ while ($item = mysql_fetch_array($qry)) {
 	$status = $item['status'];
 	$description = $item['description'];
 
-	$silo = mysql_fetch_array(mysql_query("SELECT end_date FROM silos WHERE silo_id = '$silo_id'"));
-	$end_date = strtotime($silo['end_date']); $end = date('g:i a F j, Y', $end_date);
+	$silo = new Silo($silo_id);
+	$end_date = strtotime($silo->end_date); $end = date('g:i a F j, Y', $end_date);
 
 	$cleared = mysql_num_rows(mysql_query("SELECT * FROM seller_cleared WHERE user_id = '$user_id' AND item_id = '$item_id'"));
 
@@ -587,6 +587,7 @@ while ($item = mysql_fetch_array($qry)) {
 			<img src=uploads/items/<?=$photo?>?<?=$last_update?>>
 			<div style='padding-bottom: 0px;'><?=$title?></div>  <span class='blue'>$<?=$price?></span>
 			</a></div>
+			<span class="notBold" style="font-size: 9pt;"><a href="index.php?task=view_silo&id=<?=$silo->id?>">Silo: <?=$silo->getTitle()?></a></span>
 		</td>
 		<td>
 			Status: <span class="greyFont"><?=$cStatus?></span><br>
@@ -622,6 +623,7 @@ while ($item = mysql_fetch_array($qry)) {
 	$item_link = $item['id'];
 	$id_item = $item['id'];
 	$item_id = $item['item_id'];
+	$silo_id = $item['silo_id'];
 	$title = (strlen($item['title']) > 22) ? substr($item['title'], 0, 22) . '...' : $item['title'];
 
 	$offerUser = mysql_fetch_array(mysql_query("SELECT status, amount FROM offers WHERE buyer_id = '$user_id' AND item_id = '$item_id'"));
@@ -633,6 +635,8 @@ while ($item = mysql_fetch_array($qry)) {
 
 	$pur = $item['purchase'];
 	$offer = $item['offer'];
+
+	$silo = new Silo($silo_id);
 
 	if ($pur) {
 		$purchase = mysql_fetch_array(mysql_query("SELECT amount, status, paykey, expired_date FROM item_purchase WHERE user_id = '$user_id' AND item_id = '$item_id'"));
@@ -674,6 +678,7 @@ while ($item = mysql_fetch_array($qry)) {
 			<img src=uploads/items/<?=$photo?>?<?=$last_update?>>
 			<div style='padding-bottom: 0px;'><?=$title?></div>  <span class='blue'>$<?=$price?></span>
 			</a></div>
+			<span class="notBold" style="font-size: 9pt;"><a href="index.php?task=view_silo&id=<?=$silo->id?>">Silo: <?=$silo->getTitle()?></a></span>
 		</td>
 		<td>
 			Status: <span class="greyFont"><?=$cStatus?></span><br>

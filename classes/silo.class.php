@@ -27,6 +27,7 @@ class Silo {
 	public $goal;
 	public $purpose;
 	public $photo_file;
+	public $employee_discount;
 	public $silo_cat_id;
 	public $silo_type;
 	public $type;
@@ -72,6 +73,7 @@ class Silo {
 		$this->goal = $res['goal'];
 		$this->purpose = $res['purpose'];
 		$this->photo_file = $res['photo_file'];
+		$this->employee_discount = $res['employee_discount'];
 		$this->flag_radar_id = $res['flag_radar_id'];
 		$this->schedule_end_date = $res['schedule_end_date'];
 
@@ -363,6 +365,7 @@ class Silo {
 			."`purpose` = '".mysql_real_escape_string($this->purpose)."', "
 			."`status` = '".mysql_real_escape_string($this->status)."', "
 			."`photo_file` = '".mysql_real_escape_string($this->photo_file)."', "
+			."`employee_discount` = '".mysql_real_escape_string($this->employee_discount)."', "
 			."`flag_radar_id` = '".mysql_real_escape_string($this->flag_radar_id)."', "
 			."`end_date` = '".mysql_real_escape_string($this->end_date)."' "
 			."WHERE "
@@ -377,7 +380,8 @@ class Silo {
 
 	private function InsertNEW(){
 		$sql = mysql_query("INSERT INTO silos (admin_id, name, shortname, silo_cat_id, silo_type, org_name, ein, issue_receipts, 
-					title, phone_number, address, longitude, latitude, start_date, goal, purpose, photo_file, flag_radar_id, schedule_end_date, end_date) 
+					title, phone_number, address, longitude, latitude, start_date, goal, purpose, photo_file, employee_discount,
+					flag_radar_id, schedule_end_date, end_date) 
 			VALUES (
 				'".mysql_real_escape_string($this->admin_id)."',
 				'".mysql_real_escape_string($this->name)."',
@@ -396,6 +400,7 @@ class Silo {
 				'".mysql_real_escape_string($this->goal)."',
 				'".mysql_real_escape_string($this->purpose)."',
 				'".mysql_real_escape_string($this->photo_file)."',
+				'".mysql_real_escape_string($this->employee_discount)."',
 				'".mysql_real_escape_string($this->flag_radar_id)."',
 				'".mysql_real_escape_string($this->schedule_end_date)."',
 				'".mysql_real_escape_string($this->end_date)."'
@@ -413,7 +418,7 @@ class Silo {
 			."(`admin_id`,`name`,`shortname`,`silo_cat_id`,`silo_type`,`paypal_account`,`financial_account`,"
 			."`bank_name`,`bank_account_number`,`bank_routing_number`,`org_name`,`ein`,"
 			."`issue_receipts`,`title`,`phone_number`,`address`,`longitude`,`latitude`,"
-			."`start_date`,`goal`,`purpose`,`photo_file`,"
+			."`start_date`,`goal`,`purpose`,`photo_file`,`employee_discount`,"
 			."`flag_radar_id`,`end_date`,`created_date`,`status`) "
 			."VALUES "
 			."("
@@ -439,6 +444,7 @@ class Silo {
 				."'".mysql_real_escape_string($this->goal)."',"
 				."'".mysql_real_escape_string($this->purpose)."',"
 				."'".mysql_real_escape_string($this->photo_file)."',"
+				."'".mysql_real_escape_string($this->employee_discount)."',"
 				."'".mysql_real_escape_string($this->flag_radar_id)."',"
 				."'".mysql_real_escape_string($this->end_date)."',"
 				."'".mysql_real_escape_string(date('Y-m-d H:i:s'))."',"

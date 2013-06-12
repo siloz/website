@@ -31,6 +31,7 @@ if($admin_notice){$Silo->admin_notice = $admin_notice;}
 if($description){$Silo->description = $description;}
 if($purpose){$Silo->purpose = $purpose;}
 if(!$filename && !$success){ $Silo->photo_file = "default.png"; }
+if($employee_discount){ $Silo->employee_discount = "$employee_discount"; }
 if (param_post('publish') == 'Publish') { $Silo->silo_type = $silo_type; }
 $silo_id = $Silo->Save();
 ?>
