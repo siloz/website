@@ -212,6 +212,7 @@ else {
 		//Create a silo in the database to link up the user and new admin user
 			$silo = new Silo();
 			$silo->admin_id = $adminUser->user_id;
+			$silo->end_date = date('Y-m-d H:i:s', strtotime('+2 week'));
 			$silo->status = "pending";
 			$silo_id = $silo->Save();
 			mysql_query("UPDATE items SET silo_id = '$silo_id' WHERE item_id = '$actual_id'");

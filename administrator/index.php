@@ -1,6 +1,6 @@
 <?php
-	ini_set("include_path", "/var/www/vhosts/siloz.com/httpdocs/");
-	//ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website/"); 
+	//ini_set("include_path", "/var/www/vhosts/siloz.com/httpdocs/");
+	ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website/"); 
 	require_once("include/autoload.class.php");
 	require_once('utils.php');
 	require_once('config.php');
@@ -200,16 +200,32 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 				
 				//ITEMS
 				else if ($view == 'items') {
-					$checkItems = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE type = 'item'"));
-					if ($checkItems) {
+					if (param_post('delete') == 'items') {
+						$items_to_delete = param_post('items');
+						$in_clause = implode(',', $items_to_delete);
+						$delBuyer = mysql_query("DELETE FROM buyer WHERE item_id IN ($in_clause)");
+						$delFav = mysql_query("DELETE FROM favorites WHERE item_id IN ($in_clause)");
+						$delFeed = mysql_query("DELETE FROM feed WHERE item_id IN ($in_clause)");
+						$delFlagItem = mysql_query("DELETE FROM flag_item WHERE item_id IN ($in_clause)");
+						$delRadarItem = mysql_query("DELETE FROM flag_radar WHERE item_id IN ($in_clause)");
+						$delItem = mysql_query("DELETE FROM items WHERE item_id IN ($in_clause)");
+						$delItemPur = mysql_query("DELETE FROM item_purchase WHERE item_id IN ($in_clause)");
+						$delOffers = mysql_query("DELETE FROM offers WHERE item_id IN ($in_clause)");
+						$delSellerCleared = mysql_query("DELETE FROM seller_cleared WHERE item_id IN ($in_clause)");
+					}
+					echo "<form name='items' id='items' action='index.php?view=items' method='post' onSubmit=\"return confirm('Delete these item(s)?')\">";
+					echo "<input type='hidden' name='delete' value='items'>";
+					$checkFlag = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE type = 'item'"));
+					if ($checkFlag) {
 					echo "<h2>Flagged items</h2>";
 					$flagged_items = mysql_query("SELECT * FROM flag_radar WHERE type = 'item' ORDER BY item_id");				
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='30%'>Title</th><th width='16%'>Status</th><th width='8%'>Seller</th><th width='7%' style='text-align:center'>Override?</th></tr>";
-					while ($getItem = mysql_fetch_array($flagged_items)) {
-						$item = mysql_fetch_array(mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE item_id = '$getItem[item_id]' ORDER BY item_id"));
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Item ID</th><th width='4%' style='text-align: center'>Silo ID</th><th width='20%' style='text-align: center'>Title</th><th width='15%' style='text-align: center'>Category</th><th width='5%' style='text-align: center'>Seller's ID</th><th width='15%' style='text-align: center'>Seller's Name</th><th width='10%' style='text-align: center'>Status</th><th width='10%' style='text-align:center'>Price</th><th style='text-align:center'>Date Added</th></tr>";
+					while ($item = mysql_fetch_array($flagged_items)) {
 						$item_id = $item['item_id'];
-						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$item['user_id']));						
-						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td>#$item_id</td><td><a class='bluelink'  href='index.php?task=view_item&id=$item_id'>".$item['title']."</a></td><td>".$getItem['status']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$mem['user_id']."'>".$mem['fname']." ".$mem['lname']."</a></td><td align=center>";
+						$user_id = $item['user_id'];
+						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
+						$added_date = strtotime($item['added_date']); $date_added = date('m/d/y h:i a', $added_date);	
+						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td align='center'>".$item_id."</td><td align='center'>".$item['silo_id']."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_item&id=$item_id' target='_blank'>".$item['title']."</a></td><td align='center'>".$item['category']."</td><td align='center'>".$user_id."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$mem['user_id']."' target='_blank'>".$mem['fname']." ".$mem['lname']."</a></td><td align='center'>".$item['status']."</td><td align='center'>".money_format('%(#10n', floatval($item['price']))."</td><td align='center'>".$date_added."</tr>";
 						$html .= "<form action='' method='POST' name='unflag_".$item_id."'>
 								<input type='hidden' name='task' value='item unflag'>
 								<input type='hidden' name='item_id' value='$item_id'>
@@ -222,51 +238,85 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 
 					echo "<h2>Active items</h2>";
 					$active_items = mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE status = 'pledged' ORDER BY item_id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='7%'>Item #</th><th width='40%'>Title</th><th width='15%'>Category</th><th width='15%'>Seller</th><th width='10%'>Status</th><th width='10%' style='text-align:center'>Price</th></tr>";
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Item ID</th><th width='4%' style='text-align: center'>Silo ID</th><th width='20%' style='text-align: center'>Title</th><th width='15%' style='text-align: center'>Category</th><th width='5%' style='text-align: center'>Seller's ID</th><th width='15%' style='text-align: center'>Seller's Name</th><th width='10%' style='text-align: center'>Status</th><th width='10%' style='text-align:center'>Price</th><th style='text-align:center'>Date Added</th></tr>";
 					while ($item = mysql_fetch_array($active_items)) {
 						$item_id = $item['item_id'];
-						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$item['user_id']));						
-						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td>#$item_id</td><td><a class='bluelink'  href='index.php?task=view_item&id=$item_id'>".$item['title']."</a></td><td>".$item['category']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$mem['user_id']."'>".$mem['fname']." ".$mem['lname']."</a></td><td>".$item['status']."</td><td align=right>".money_format('%(#10n', floatval($item['price']))."</td></tr>";
+						$user_id = $item['user_id'];
+						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
+						$added_date = strtotime($item['added_date']); $date_added = date('m/d/y h:i a', $added_date);	
+						$html .= "<tr><td><input type='checkbox' name='items[]' value='$item_id'></td><td align='center'>".$item_id."</td><td align='center'>".$item['silo_id']."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_item&id=$item_id' target='_blank'>".$item['title']."</a></td><td align='center'>".$item['category']."</td><td align='center'>".$user_id."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$mem['user_id']."' target='_blank'>".$mem['fname']." ".$mem['lname']."</a></td><td align='center'>".$item['status']."</td><td align='center'>".money_format('%(#10n', floatval($item['price']))."</td><td align='center'>".$date_added."</tr>";
 					}
 					$html .= "</table>";
-					echo $html;					
+					echo $html;
 
+					$checkReq = mysql_num_rows(mysql_query("SELECT * FROM items WHERE status = 'requested'"));
+					if ($checkReq) {
+					echo "<h2>Requested items (Pending silo creation)</h2>";					
+					$requested_items = mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE status = 'requested' ORDER BY item_id");
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Item ID</th><th width='4%' style='text-align: center'>Silo ID</th><th width='20%' style='text-align: center'>Title</th><th width='15%' style='text-align: center'>Category</th><th width='5%' style='text-align: center'>Seller's ID</th><th width='15%' style='text-align: center'>Seller's Name</th><th width='10%' style='text-align: center'>Status</th><th width='10%' style='text-align:center'>Price</th><th style='text-align:center'>Date Added</th></tr>";
+					while ($item = mysql_fetch_array($requested_items)) {
+						$item_id = $item['item_id'];
+						$user_id = $item['user_id'];
+						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
+						$added_date = strtotime($item['added_date']); $date_added = date('m/d/y h:i a', $added_date);	
+						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td align='center'>".$item_id."</td><td align='center'>".$item['silo_id']."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_item&id=$item_id' target='_blank'>".$item['title']."</a></td><td align='center'>".$item['category']."</td><td align='center'>".$user_id."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$mem['user_id']."' target='_blank'>".$mem['fname']." ".$mem['lname']."</a></td><td align='center'>".$item['status']."</td><td align='center'>".money_format('%(#10n', floatval($item['price']))."</td><td align='center'>".$date_added."</tr>";
+					}
+					$html .= "</table>";
+					echo $html;
+					}			
+
+					$checkDel = mysql_num_rows(mysql_query("SELECT * FROM items WHERE status = 'deleted'"));
+					if ($checkDel) {
 					echo "<h2>Deleted items</h2>";					
 					$deleted_items = mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE status = 'deleted' ORDER BY item_id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='7%'>Item #</th><th width='40%'>Title</th><th width='15%'>Category</th><th width='15%'>Seller</th><th width='10%'>Status</th><th width='10%' style='text-align:center'>Price</th></tr>";
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Item ID</th><th width='4%' style='text-align: center'>Silo ID</th><th width='20%' style='text-align: center'>Title</th><th width='15%' style='text-align: center'>Category</th><th width='5%' style='text-align: center'>Seller's ID</th><th width='15%' style='text-align: center'>Seller's Name</th><th width='10%' style='text-align: center'>Status</th><th width='10%' style='text-align:center'>Price</th><th style='text-align:center'>Date Added</th></tr>";
 					while ($item = mysql_fetch_array($deleted_items)) {
 						$item_id = $item['item_id'];
-						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$item['user_id']));						
-						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td>#$item_id</td><td><a class='bluelink'  href='index.php?task=view_item&id=$item_id'>".$item['title']."</a></td><td>".$item['category']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$mem['user_id']."'>".$mem['fname']." ".$mem['lname']."</a></td><td>".$item['status']."</td><td align=right>".money_format('%(#10n', floatval($item['price']))."</td></tr>";
+						$user_id = $item['user_id'];
+						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
+						$added_date = strtotime($item['added_date']); $date_added = date('m/d/y h:i a', $added_date);	
+						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td align='center'>".$item_id."</td><td align='center'>".$item['silo_id']."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_item&id=$item_id' target='_blank'>".$item['title']."</a></td><td align='center'>".$item['category']."</td><td align='center'>".$user_id."</td><td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$mem['user_id']."' target='_blank'>".$mem['fname']." ".$mem['lname']."</a></td><td align='center'>".$item['status']."</td><td align='center'>".money_format('%(#10n', floatval($item['price']))."</td><td align='center'>".$date_added."</tr>";
 					}
 					$html .= "</table>";
-					echo $html;				
+					echo $html;
+					}
+
+					echo "<br/><button type='submit' value='Delete' class='round'>Delete</button>";
+					echo "</form>";		
 				}
 				
 				//MEMBERS
 				else if ($view == 'members') {
-					if (param_post('task') == 'delete') {
+					if (param_post('delete') == 'users') {
 						$users_to_delete = param_post('users');
 						$in_clause = implode(',', $users_to_delete);
-						$sql1 = "DELETE FROM users WHERE user_id IN ($in_clause)";
-						mysql_query($sql1);
-						$sql2 = "DELETE FROM silos WHERE admin_id IN ($in_clause)";
-						mysql_query($sql2);
-						$sql3 = "DELETE FROM items WHERE user_id IN ($in_clause)";
-						mysql_query($sql3);
-						$sql4 = "DELETE FROM silo_membership WHERE user_id IN ($in_clause)";
-						mysql_query($sql4);
+						$delBuyers = mysql_query("DELETE FROM buyer WHERE user_id IN ($in_clause)");
+						$delFavs = mysql_query("DELETE FROM favorites WHERE user_id IN ($in_clause)");
+						$delFeeds = mysql_query("DELETE FROM feed WHERE user_id IN ($in_clause)");
+						$delFlags = mysql_query("DELETE FROM flag_radar WHERE user_id IN ($in_clause)");
+						$delItems = mysql_query("DELETE FROM items WHERE user_id IN ($in_clause)");
+						$delNotifs = mysql_query("DELETE FROM notifications WHERE user_id IN ($in_clause)");
+						$delPWs = mysql_query("DELETE FROM password_reset WHERE user_id IN ($in_clause)");
+						$delSellers = mysql_query("DELETE FROM seller_cleared WHERE user_id IN ($in_clause)");
+						$delSilos = mysql_query("DELETE FROM silos WHERE admin_id IN ($in_clause)");
+						$delMembs = mysql_query("DELETE FROM silo_membership WHERE user_id IN ($in_clause)");
+						$delPrivs = mysql_query("DELETE FROM silo_private WHERE user_id IN ($in_clause)");
+						$delUsers = mysql_query("DELETE FROM users WHERE user_id IN ($in_clause)");
+						$delPCs = mysql_query("DELETE FROM user_paycodes WHERE user_id IN ($in_clause)");
+						$delSess = mysql_query("DELETE FROM user_sessions WHERE user_id IN ($in_clause)");
 					}
-					echo "<br/><form name='members' id='members' action='index.php?view=members' method=post>";
-					echo "<input type='hidden' name='task' value='delete'>";
+					echo "<br/><form name='members' id='members' action='index.php?view=members' onSubmit=\"return confirm('Delete these user(s)?')\" method='post'>";
+					echo "<input type='hidden' name='delete' value='users'>";
 					$users = mysql_query("SELECT * FROM users ORDER BY user_id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='7%'>Account #</th><th width='10%'>Name</th><th width='30%'>Address</th><th width='8%'>Since</th><th width='10%' style='text-align:right'>Sold</th><th width='10%' style='text-align:right'>Fees</th><th width='7%' style='text-align:center'>Listings</th><th width='5%' style='text-align:right'>Success</th><th width='5%' style='text-align:center'>Silos</th><th width='5%'>Flags</th></tr>";
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>User ID</th><th width='15%' style='text-align: center'>E-mail</th><th width='10%' style='text-align: center'>Name</th><th width='10%' style='text-align: center'>Phone</th><th width='30%' style='text-align: center'>Address</th><th width='5%' style='text-align: center'>Status</th><th width='8%' style='text-align: center'>Join Date</th><th width='5%' style='text-align: center'>Sold</th><th width='5%' style='text-align: center'>Listings</th><th width='10%' style='text-align:center'>Silos</th><th style='text-align:center'>Admin</td></tr>";
 					while ($user = mysql_fetch_array($users)) {
 						$user_id = $user['user_id'];
+						$j_date = strtotime($user['joined_date']); $joined_date = date('m/d/y', $j_date);	
+						$sold = mysql_fetch_array(mysql_query("SELECT SUM(price) FROM items WHERE user_id = '$user_id' AND status = 'sold'"));
 						$listings = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE deleted_date = 0 AND user_id=$user_id"));
-						$siloz = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM silos WHERE admin_id=$user_id"));
+						$silos = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM silos WHERE admin_id = '$user_id'"));
 						
-						$html .= "<tr><td><input type='checkbox' name='users[]' value=$user_id></td><td>$user_id</td><td><a class='bluelink'  href='index.php?task=view_user&id=$user_id'>".$user['fname']." ".$user['lname']."</a></td><td>".$user['address']."</td><td>".substr($user['joined_date'],0,10)."</td><td align=right>".money_format('%(#10n', floatval("5000"))."</td><td align=right>".money_format('%(#10n', floatval("200"))."</td><td align=center>".$listings[0]."</td><td align=center>77%</td><td align=center>".$siloz[0]."</td><td align=center>2</td></tr>";
+						$html .= "<tr><td><input type='checkbox' name='users[]' value=$user_id></td><td align='center'>$user_id</td><td align='center'>".$user['email']."<td align='center'><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_user&id=$user_id' target='_blank'>".$user['fname']." ".$user['lname']."</a></td><td align='center'>".$user['phone']."<td align='center'>".$user['address']."</td><td align='center'>".$user['status']."<td align='center'>".$joined_date."</td><td align='center'>".money_format('%(#10n', floatval(".$sold[0]."))."</td><td align='center'>".$listings[0]."</td><td align='center'>".$silos[0]."</td><td align='center'>".$user['admin']."</tr>";
 					}
 					$html .= "</table><br/>";
 					echo $html;		
@@ -276,15 +326,19 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 				
 				//SILOS
 				else if ($view == 'silos') {
-					if (param_post('task') == 'delete') {
+					if (param_post('delete') == 'silos') {
 						$silos_to_delete = param_post('silos');
 						$in_clause = implode(',', $silos_to_delete);
-						$sql2 = "DELETE FROM silos WHERE silo_id IN ($in_clause)";
-						mysql_query($sql2);
-						$sql3 = "DELETE FROM items WHERE silo_id IN ($in_clause)";
-						mysql_query($sql3);
-						$sql4 = "DELETE FROM silo_membership WHERE silo_id IN ($in_clause)";
-						mysql_query($sql4);
+						$delFlag = mysql_query("DELETE FROM flag_radar WHERE silo_id IN ($in_clause)");
+						$delSiloFlag = mysql_query("DELETE FROM flag_silo WHERE silo_id IN ($in_clause)");
+						$delSilos = mysql_query("DELETE FROM silos WHERE silo_id IN ($in_clause)");
+
+						$delItems = mysql_query("DELETE FROM items WHERE silo_id IN ($in_clause)");
+						$delSilos = mysql_query("DELETE FROM silos WHERE silo_id IN ($in_clause)");
+						$delMembs = mysql_query("DELETE FROM silo_membership WHERE silo_id IN ($in_clause)");
+						$delPriv = mysql_query("DELETE FROM silo_private WHERE silo_id IN ($in_clause)");
+						$delThank = mysql_query("DELETE FROM silo_thank WHERE silo_id IN ($in_clause)");
+						$delVouch = mysql_query("DELETE FROM vouch WHERE silo_id IN ($in_clause)");
 					}
 					if (param_post('task') == 'markPaid') {
 						$paid_status = param_post('paid');
@@ -295,23 +349,21 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 						exit;
 					}
 					echo "<br><a href='".ACTIVE_URL."index.php?task=create_silo_admin'>Create a Disaster Relief Silo</a>";
-					$checkSilos = mysql_num_rows(mysql_query("SELECT * FROM flag_radar WHERE type = 'silo'"));
-					if ($checkSilos) {
-					echo "<br/><form name='silos' id='silos' action='index.php?view=silos' method=post>";
-					echo "<input type='hidden' name='task' value='delete'>";					
+					echo "<br/><form name='silos' id='silos' action='index.php?view=silos' onsubmit=\"return confirm('Delete these silo(s)?')\" method='post'>";
+					echo "<input type='hidden' name='delete' value='silos'>";
+					$checkRadar = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE type = 'flagged'"));
+					if ($checkRadar) {					
 					echo "<h2>Flagged silos</h2>";
 					$today = date("Y-m-d")."";
 					$silos = mysql_query("SELECT * FROM flag_radar WHERE type = 'silo' ORDER BY silo_id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='30%'>Silo Name</th><th width='16%'>Status</th><th width='8%'>Admin Name</th><th width='8%'>Phone</th><th width='8%'>E-mail</th><th width='7%' style='text-align:center'>Override?</th></tr>";
-					while ($getSilo = mysql_fetch_array($silos)) {
-						$silo_id = $getSilo['silo_id'];
-						$silo = mysql_fetch_array(mysql_query("SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE silo_id = '$silo_id' ORDER BY silo_id"));						
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Silo ID</th><th width='20%' style='text-align: center'>Silo Name</th><th width='5%' style='text-align: center'>Type</th><th width='10%' style='text-align: center'>Category</th><th width='8%' style='text-align: center'>Employee ID</th><th width='5%' style='text-align: center'>Admin ID</th><th width='8%' style='text-align: center'>Admin Name</th><th width='8%' style='text-align: center'>Phone</th><th width='8%' style='text-align: center'>E-mail</th><th width='10%' style='text-align: center'>Goal</th><th width='5%' style='text-align:center'>Complete</th><th width='5%' style='text-align:center'>Listings</th><th width='7%' style='text-align:center'>Ends</th></tr>";
+					while ($silo = mysql_fetch_array($silos)) {
+						$silo_id = $silo['silo_id'];						
 						$admin = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$silo['admin_id']));
-						$sql = "SELECT SUM(price) FROM items WHERE deleted_date = 0 AND silo_id = $silo_id AND status = 'Sold'";
-						$s2 = mysql_fetch_row(mysql_query($sql));
-						$pct = round(floatval($s2[0])*100.0/floatval($silo['goal']),1);
+						$pct = round(floatval($silo['collected'])*100.0/floatval($silo['goal']),1);
 						$listings = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE deleted_date = 0 AND silo_id=$silo_id"));
-						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$getSilo['status']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['fname']." ".$admin['lname']."</a></td><td>".$admin['phone']."</td><td>".$admin['email']."</td><td align=center>";
+						$ends_in = floor((strtotime($silo['end_date']) - strtotime($today))/(60*60*24));
+						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td align='center'>$silo_id</td><td align='center'><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_silo&id=$silo_id' target='_blank'>".$silo['name']."</a></td><td align='center'>".$silo['silo_type']."<td align='center'>".$silo['type']."</td><td align='center'>".$silo['employee_discount']."</td><td align='center'>".$admin['user_id']."<td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$admin['user_id']."' target='_blank'>".$admin['fname']." ".$admin['lname']."</a></td><td align='center'>".$admin['phone']."</td><td align='center'>".$admin['email']."</td><td align='center'>".money_format('%.0n', $silo['goal'])."</td><td align='center'>".$pct."%</td><td align='center'>".$listings[0]."</td><td align='center'>$ends_in days</td></tr>";
 						$html .= "<form action='' method='POST' name='unflag_".$silo_id."'>
 								<input type='hidden' name='task' value='unflag'>
 								<input type='hidden' name='silo_id' value='$silo_id'>
@@ -322,26 +374,41 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 					echo $html;
 					}
 
-					echo "<br/><form name='silos' id='silos' action='index.php?view=silos' method=post>";
 					echo "<input type='hidden' name='task' value='delete'>";					
 					echo "<h2>Active silos</h2>";
 					$today = date("Y-m-d")."";
 					$silos = mysql_query("SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE status = 'active' ORDER BY silo_id");
-					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='5%'>ID #</th><th width='30%'>Silo Name</th><th width='16%'>Category</th><th width='16%'>Employee ID - Discount</th><th width='8%'>Admin Name</th><th width='8%'>Phone</th><th width='8%'>E-mail</th><th width='10%' style='text-align:right'>Goal</th><th width='5%' style='text-align:center'>%</th><th width='5%'>Listings</th><th width='7%' style='text-align:center'>Ends</th></tr>";
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Silo ID</th><th width='20%' style='text-align: center'>Silo Name</th><th width='5%' style='text-align: center'>Type</th><th width='10%' style='text-align: center'>Category</th><th width='8%' style='text-align: center'>Employee ID</th><th width='5%' style='text-align: center'>Admin ID</th><th width='8%' style='text-align: center'>Admin Name</th><th width='8%' style='text-align: center'>Phone</th><th width='8%' style='text-align: center'>E-mail</th><th width='10%' style='text-align: center'>Goal</th><th width='5%' style='text-align:center'>Complete</th><th width='5%' style='text-align:center'>Listings</th><th width='7%' style='text-align:center'>Ends</th></tr>";
 					while ($silo = mysql_fetch_array($silos)) {
 						$silo_id = $silo['silo_id'];						
 						$admin = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id=".$silo['admin_id']));
-						$sql = "SELECT SUM(price) FROM items WHERE deleted_date = 0 AND silo_id = $silo_id AND status = 'Sold'";
-						$s2 = mysql_fetch_row(mysql_query($sql));
-						$pct = round(floatval($s2[0])*100.0/floatval($silo['goal']),1);
+						$pct = round(floatval($silo['collected'])*100.0/floatval($silo['goal']),1);
 						$listings = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE deleted_date = 0 AND silo_id=$silo_id"));
 						$ends_in = floor((strtotime($silo['end_date']) - strtotime($today))/(60*60*24));
-						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$silo['type']."</td><td>".$silo['employee_discount']."<td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['fname']." ".$admin['lname']."</a></td><td>".$admin['phone']."</td><td>".$admin['email']."</td><td align=right>".money_format('%(#10n', floatval($silo['goal']))."</td><td align=center>".$pct."</td><td align=center>".$listings[0]."</td><td align=center>$ends_in days</td></tr>";
+						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td align='center'>$silo_id</td><td align='center'><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_silo&id=$silo_id' target='_blank'>".$silo['name']."</a></td><td align='center'>".$silo['silo_type']."<td align='center'>".$silo['type']."</td><td align='center'>".$silo['employee_discount']."</td><td align='center'>".$admin['user_id']."<td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$admin['user_id']."' target='_blank'>".$admin['fname']." ".$admin['lname']."</a></td><td align='center'>".$admin['phone']."</td><td align='center'>".$admin['email']."</td><td align='center'>".money_format('%.0n', $silo['goal'])."</td><td align='center'>".$pct."%</td><td align='center'>".$listings[0]."</td><td align='center'>$ends_in days</td></tr>";
 					}
 					$html .= "</table>";
-					echo $html;										
+					echo $html;
+
+					$checkPending = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE status = 'pending'"));
+					if ($checkPending) {
+					echo "<h2>Pending silos (Pledge an item first)</h2>";
+					$silos = mysql_query("SELECT * FROM silos WHERE status = 'pending' ORDER BY silo_id");
+					$html = "<table id='alternate_table'><tr><th width='3%'></th><th width='4%' style='text-align: center'>Silo ID</th><th width='5%' style='text-align: center'>Admin ID</th><th width='10%' style='text-align: center'>Admin Name</th><th width='10%' style='text-align: center'>Admin Phone</th><th width='15%' style='text-align: center'>Admin E-mail</th><th width='5%' style='text-align: center'>Referer ID</th><th width='10%' style='text-align: center'>Referer Name</th><th width='10%' style='text-align: center'>Referer Phone</th><th width='15%' style='text-align: center'>Referer E-mail</th><th style='text-align: center'>Expires on</th></tr>";
+					while ($silo = mysql_fetch_array($silos)) {
+						$silo_id = $silo['silo_id'];						
+						$admin = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$silo['admin_id']));
+						$item = mysql_fetch_array(mysql_query("SELECT * FROM items WHERE silo_id = '$silo_id'"));
+						$refer = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$item[user_id]'"));
+						$end_date = strtotime($silo['end_date']); $exp_date = date('m/d/y h:i a', $end_date);	
+						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td align='center'>$silo_id</td><td align='center'>".$admin['user_id']."<td align='center'><a class='bluelink' href='".ACTIVE_URL."index.php?task=view_user&id=".$admin['user_id']."' target='_blank'>".$admin['fname']." ".$admin['lname']."</a></td><td align='center'>".$admin['phone']."</td><td align='center'>".$admin['email']."</td><td align='center'>".$refer['user_id']."</td><td align='center'>".$refer['fname']." ".$refer['lname']."</td><td align='center'>".$refer['phone']."</td><td align='center'>".$refer['email']."</td><td align='center'>$exp_date</td></tr>";
+					}
+					$html .= "</table>";
+					echo $html;
+					}							
 					
-					
+					$checkEnded = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE status = 'inert' OR status = 'completed'"));
+					if ($checkEnded) {
 					echo "<h2>Ended silos</h2>";
 					$today = date("Y-m-d")."";
 					$silos = mysql_query("SELECT * FROM silos INNER JOIN silo_categories USING (silo_cat_id) WHERE status = 'latent' OR status = 'completed' ORDER BY paid, id");
@@ -358,7 +425,7 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 						$opt = ""; $other_opt = "";
 						$opt .= '<option value="' . $paid . '">' . $paid . '</option>';
 						if ($paid == "no") { $other_opt .= '<option value="yes">yes</option>'; } else { $other_opt .= '<option value="no">no</option>'; }
-						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$silo['type']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['fname']." ".$admin['lname']."</a></td><td>".$admin['phone']."</td><td>".$admin['email']."</td><td align=right>".money_format('%(#10n', floatval($silo['goal']))."</td><td align=center>".$pct."</td><td align=center>".$listings[0]."</td><td align=center>";
+						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_silo&id=$silo_id' target='_blank'>".$silo['name']."</a></td><td>".$silo['type']."</td><td><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_user&id=".$admin['user_id']."' target='_blank'>".$admin['fname']." ".$admin['lname']."</a></td><td>".$admin['phone']."</td><td>".$admin['email']."</td><td align=right>".money_format('%(#10n', floatval($silo['goal']))."</td><td align=center>".$pct."</td><td align=center>".$listings[0]."</td><td align=center>";
 							$pur = mysql_fetch_array(mysql_query("SELECT expired_date  FROM item_purchase WHERE silo_id = '$silo_id' ORDER BY expired_date DESC LIMIT 1"));
 							$expired = strtotime($pur[0]);
 							$now = strtotime("now");
@@ -375,7 +442,8 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 						} else { $html .= "Pay after: ".$exp_date; }
 					}
 					$html .= "</table>";					
-					echo $html;									
+					echo $html;
+					}							
 					
 					echo "<br/><button type='submit' value='Delete' class='round'>Delete</button>";
 					echo "</form>";	
@@ -397,7 +465,7 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 						$s2 = mysql_fetch_row(mysql_query($sql));
 						$pct = round(floatval($s2[0])*100.0/floatval($silo['goal']),1);
 						$listings = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM items WHERE deleted_date = 0 AND silo_id=$silo_id"));
-						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='index.php?task=view_silo&id=$silo_id'>".$silo['name']."</a></td><td>".$silo['flagStatus']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$admin['user_id']."'>".$admin['fname']." ".$admin['lname']."</a></td><td align=center>";
+						$html .= "<tr><td><input type='checkbox' name='silos[]' value=$silo_id></td><td>$silo_id</td><td><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_silo&id=$silo_id' target='_blank'>".$silo['name']."</a></td><td>".$silo['flagStatus']."</td><td><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_user&id=".$admin['user_id']."' target='_blank'>".$admin['fname']." ".$admin['lname']."</a></td><td align=center>";
 						$html .= "<form action='' method='POST' name='unflag_".$silo_id."'>
 								<input type='hidden' name='task' value='unflag'>
 								<input type='hidden' name='silo_id' value='$silo_id'>
@@ -416,7 +484,7 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 						$item = mysql_fetch_array(mysql_query("SELECT * FROM items INNER JOIN item_categories USING (item_cat_id) WHERE item_id = '$getItem[item_id]' ORDER BY item_id"));
 						$item_id = $item['item_id'];
 						$mem = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = ".$item['user_id']));						
-						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td>#$item_id</td><td><a class='bluelink'  href='index.php?task=view_item&id=$item_id'>".$item['title']."</a></td><td>".$getItem['status']."</td><td><a class='bluelink'  href='index.php?task=view_user&id=".$mem['user_id']."'>".$mem['fname']." ".$mem['lname']."</a></td><td align=center>";
+						$html .= "<tr><td><input type='checkbox' name='items[]' value=$item_id></td><td>#$item_id</td><td><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_item&id=$item_id' target='_blank'>".$item['title']."</a></td><td>".$getItem['status']."</td><td><a class='bluelink'  href='".ACTIVE_URL."index.php?task=view_user&id=".$mem['user_id']."' target='_blank'>".$mem['fname']." ".$mem['lname']."</a></td><td align=center>";
 						$html .= "<form action='' method='POST' name='unflag_".$item_id."'>
 								<input type='hidden' name='task' value='item unflag'>
 								<input type='hidden' name='item_id' value='$item_id'>

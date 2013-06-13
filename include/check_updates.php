@@ -1,5 +1,6 @@
 <?php
 
+// Check if any sios have exceeded their goal or if the time has surpassed
 $silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND ((end_date <= NOW()) OR (goal <= collected))");
 	while ($silo = mysql_fetch_array($silo_check)) {
 		$silo_id_close = $silo['silo_id'];
@@ -9,6 +10,7 @@ $silo_check = mysql_query("SELECT silo_id FROM silos WHERE status = 'active' AND
 		$notif->SiloEnded($silo_id_close);
 	}
 
+// Check if there are any offers that are pending that haven't been declined/accepted
 $offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW() AND status = 'pending'");
 	if (mysql_num_rows($offerCheck) > 0) {
 		while ($offer = mysql_fetch_array($offerCheck)) {
@@ -18,6 +20,7 @@ $offerCheck = mysql_query("SELECT item_id FROM offers WHERE expired_date < NOW()
 		}
 	}
 
+// Check is there are any purchases that are pending that haven't been completed in the time frame and refund the user
 $purchaseCheck = mysql_query("SELECT item_id FROM item_purchase WHERE expired_date < NOW() AND status = 'pending'");
 	if (mysql_num_rows($purchaseCheck) > 0) {
 		while ($pur = mysql_fetch_array($purchaseCheck)) {
@@ -29,6 +32,7 @@ $purchaseCheck = mysql_query("SELECT item_id FROM item_purchase WHERE expired_da
 		}
 	}
 
+// Check if the familiarity index is active or -- then check it if it needs to suspend any silos/items
 if (FAM_INDEX_KILL == "on") {
 	$lowFamIndexCheck = mysql_query("SELECT silo_id FROM flag_radar WHERE status = 'vouch' AND expired_date < NOW()");
 	if (mysql_num_rows($lowFamIndexCheck) > 0) {
@@ -41,6 +45,7 @@ if (FAM_INDEX_KILL == "on") {
 	}
 }
 
+// Check and send out the 24 hour e-mail if the user hasn't gotten it yet
 $email24HourCheck = mysql_query("SELECT user_id, email FROM users WHERE info_emails < 2 AND joined_date + INTERVAL 1 DAY <= NOW()");
 $num24Hour = mysql_num_rows($email24HourCheck);
 	if ($num24Hour > 0) {
@@ -63,6 +68,7 @@ $num24Hour = mysql_num_rows($email24HourCheck);
 		}
 	}
 
+// Check and send out the 36 hour e-mail if the user hasn't gotten it yet
 $email36HourCheck = mysql_query("SELECT user_id, email FROM users WHERE info_emails < 3 AND joined_date + INTERVAL 36 HOUR <= NOW()");
 $num36Hour = mysql_num_rows($email36HourCheck);
 	if ($num36Hour > 0) {
@@ -90,6 +96,35 @@ $num36Hour = mysql_num_rows($email36HourCheck);
 		$message .= "Zackery West <br><br> CEO, ".SITE_NAME." LLC";
 		email_with_template($user[email], $subject, $message);
 		mysql_query("UPDATE users SET info_emails = 3 WHERE user_id = '$user[user_id]'");
+		}
+	}
+
+// Check and Send to requested silos that have expired and not been created
+$pendingSiloCheck = mysql_query("SELECT silo_id, admin_id FROM silos WHERE status = 'pending' AND end_date <= NOW()");
+$numPendingSilos = mysql_num_rows($pendingSiloCheck);
+	if ($numPendingSilos > 0) {
+		while ($silo = mysql_fetch_array($pendingSiloCheck)) {
+		$admin = new User($silo['admin_id']);
+		$item = mysql_fetch_array(mysql_query("SELECT item_id, title, user_id FROM items WHERE silo_id = '$silo[silo_id]'"));
+		$refer = new User($item['user_id']);
+		
+		$subjectAdmin = "Pending silo deleted";
+		$messageAdmin = "<h3>Your pending silo has been removed</h3>";
+		$messageAdmin .= "Since you did not respond within 2 weeks, the silo that was pending in your name has been removed. You will no longer be able to use the item that was pledged for your silo, but you can still create a new silo at any time.";
+		$messageAdmin .= "You will not receive any more notifications from ".SITE_NAME." if you chose not to create a silo. We thank you for your interest with us!";
+		email_with_template($admin->email, $subjectAdmin, $messageAdmin);
+
+		$subjectRefer = "Pending item deleted";
+		$messageRefer = "<h3>Your item has been removed</h3>";
+		$messageRefer .= "Since the silo administator, with the e-mail <b>".$admin->email."</b>, did not respond within 2 weeks, the silo that was pending with your pledged item has been removed. Although your item didn't get pledged to this silo, you can still re-pledge your item at any time to a different silo.";
+		$messageRefer .= "Thanks for trying to help promote ".SITE_NAME."! We appreciate your support and we wish you the best.";
+		email_with_template($refer->email, $subjectRefer, $messageRefer);
+
+		$delFeed = mysql_query("DELETE FROM feed WHERE item_id = '$silo[silo_id]'");
+		$delItem = mysql_query("DELETE FROM items WHERE item_id = '$item[item_id]'");
+		$delSilo = mysql_query("DELETE FROM silos WHERE silo_id = '$silo[silo_id]'");
+		$delMemb = mysql_query("DELETE FROM silo_membership WHERE user_id = '$refer->user_id'");
+		$delVouch = mysql_query("DELETE FROM vouch WHERE user_id = '$refer->user_id'");
 		}
 	}
 ?>
