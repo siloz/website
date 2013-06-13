@@ -107,8 +107,8 @@ function hide_flag_box(){
 				if (!$flag_count) { $fCount = "no flags"; } elseif ($flag_count == 1) { $fCount = "1 flag"; } else { $fCount = $fCount = $flag_count." flags"; }
 				if (!$tax_ded) { $tax = "<b><u>not</u></b>"; }
 				$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
-				$pctV = $vouchTotal/($silo->getTotalItems());
-				$pctVouch = round($pctV * 100); 
+				$pctV = $vouchTotal/($silo->getTotalMembers());
+				$pctVouch = round($pctV * 100);
 				$friend_count = $silo->getAdminFCount();
 			?>
 			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?=$pctVouch?>% (<?=$vouchTotal?> members) of those who pledged items to this silo either know, or have researched, this Administrator - or both!</div>

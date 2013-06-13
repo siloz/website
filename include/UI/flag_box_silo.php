@@ -96,7 +96,7 @@ function hide_flag_box_silo(){
 				if (!$flag_count) { $fCount = "no flags"; } elseif ($flag_count == 1) { $fCount = "1 flag"; } else { $fCount = $fCount = $flag_count." flags"; }
 				if (!$tax_ded) { $tax = "<b><u>not</u></b>"; }
 				$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
-				$pctV = $vouchTotal/($silo->getTotalItems());
+				$pctV = $vouchTotal/($silo->getTotalMembers());
 				$pctVouch = round($pctV * 100);
 				$friend_count = $silo->getAdminFCount();
 			?>
