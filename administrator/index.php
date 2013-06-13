@@ -1,6 +1,6 @@
 <?php
-	//ini_set("include_path", "/var/www/vhosts/siloz.com/httpdocs/");
-	ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website/"); 
+	ini_set("include_path", "/var/www/vhosts/siloz.com/httpdocs/");
+	//ini_set("include_path", "/var/www/vhosts/stage.james.siloz.com/httpdocs/website/"); 
 	require_once("include/autoload.class.php");
 	require_once('utils.php');
 	require_once('config.php');
