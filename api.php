@@ -16,7 +16,7 @@
 		 	"<npreq:apirequest  xmlns:npreq='http://www.libertydata.net/api/apirequest'> 
 		 	 <npreq:requestercredentials> 
 		 	  <npreq:login>zackery.n.west@gmail.com</npreq:login>
-		 	  <npreq:password>P@ssword3343</npreq:password> 
+		 	  <npreq:password>P@ssword2014</npreq:password> 
 		 	 </npreq:requestercredentials> 
 		 	 <npreq:version>1</npreq:version> 
 		 	 <npreq:SearchByEIN> 

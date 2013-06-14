@@ -36,7 +36,7 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 						
 						$c_user_id = $current_user['user_id'];
 					?>
-			<a href='index.php?task=view_silo&id=<?=$silo->id;?>'><img src="<?php echo ACTIVE_URL.'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
+			<a href='silos/<?=$silo->shortname?>'><img src="<?php echo ACTIVE_URL.'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width='250px' class="siloImg"/>
 			<div class="siloImgOverlay">
 			<div class="progress-bg"><div class="progress-bar" style="width: <?=$pct?>%; <?=$radius?>"></div></div>
 			goal: $<?=number_format($silo->goal)?> (<?=$pct?>%)
@@ -51,13 +51,21 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<?=$silo->getDaysLeft();?>
 			<div style="padding-top: 10px;"></div>
 		<?php if (!$tax_ded) { $tax = "<b><u>not</u></b>"; } ?>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>Purpose: <?=$silo->getPurpose();?></div></b>
+		<?php if ($silo->silo_type == "public") { ?>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>Organization purpose: <?=$silo->org_purpose?></div></b>
+		<?php } ?>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>Silo purpose: <?=$silo->silo_purpose?></div></b>
 			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt; text-align: left"><b>This Administrator has <?=$tax?> provided an EIN number for this fundraiser, and donations are <?=$tax?> tax-deductable.</div></b>
 		</td>
 	</tr>
 	<tr class="infoSpacer"></tr>
 	<tr>
 		<td class="siloInnerInfo<?=$closed_silo?>">
+			<?php if ($silo->silo_type == "public") { ?>
+				Organization name: <?=$silo->org_name?> <br> <br>
+			<?php } else { ?>
+				Relationship to beneficiary: <?=$silo->title?> <br><br>
+			<?php } ?>
 			<span class="floatL">
 				<img src="<?php echo ACTIVE_URL.'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
 				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "javascript:popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);"; } else { echo "javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);"; }?>">Email Admin.</a>

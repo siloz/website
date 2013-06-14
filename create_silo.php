@@ -78,7 +78,8 @@ else {
 		$silo_cat_id = param_post('silo_cat_id');
 		$start_date = $today;				
 		$goal = param_post('goal');
-		$purpose = param_post('purpose');
+		$org_purpose = param_post('org_purpose');
+		$silo_purpose = param_post('silo_purpose');
 		$employee_discount = param_post('employee_discount');
 
 		$ein = ($verified == 1) ? $ein : '0';
@@ -130,8 +131,17 @@ else {
 		if (strlen(trim($phone_number)) == 0) {
 			$err .= "Phone number must not be empty. <br/>";
 		}
-		if (strlen(trim($purpose)) > 250) {
+		if ($org_purpose == '' && $silo_type == "public") {
+			$err .= "Please enter an organization purpose.<br/>";
+		}
+		elseif (strlen(trim($org_purpose)) > 250) {
 			$err .= "The organization purpose is more than 250 characters.<br/>";
+		}
+		if ($silo_purpose == '') {
+			$err .= "Please enter a silo purpose.<br/>";
+		}
+		elseif (strlen(trim($silo_purpose)) > 250) {
+			$err .= "The silo purpose is more than 250 characters.<br/>";
 		}
 		if (strlen(trim($end_date)) > 0 && strlen(trim($start_date)) > 0) {
 			if (strtotime($end_date) - strtotime($start_date) > 30*24*60*60) {
@@ -324,14 +334,20 @@ else {
 
 		</script>
 
-<div class="spacer"></div>
-<div class="spacer"></div>
+<span class="greyFont">
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Create a <?=ucfirst($silo_type)?> Silo</span>
+</div>
+
+<div class="headingPad"></div><br>
 
 <?php
 if ($success && $filename) {
 ?>
 	<center>
-				<h1>Create a Silo</h1>
 		To finish creating your silo, please crop the image you uploaded below:<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$Silo->id?>.jpg" id="cropbox" />
@@ -356,14 +372,7 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 
 <form enctype="multipart/form-data"  name="create_silo" class="create_account_form" method="POST">
 	<input type="hidden" name="task" value="create_silo"/>
-		
-	<div class="create_account_form" style="width: 500px">
-		<table style="margin:auto">
-			<tr>
-				<td colspan="2" align="center">
-					<h1>Create a <?=ucfirst($silo_type)?> Silo</h1>
-				</td>
-			</tr>
+		<table align="center" style="margin:auto; width: 500px;">
 			<tr>
 				<td colspan=2 align="left">
 					<?php
@@ -408,7 +417,7 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 					<button type="button" onclick="verify_ein();">Verify EIN</button>
 					<script>
 					function verify_ein() {
-						$.post(<?php echo "'".API_URL."'"; ?>, 
+						$.post(<?php echo "'".API_URL."'"; ?>,
 							{	
 								request: 'verify_ein',
 								ein: document.getElementById('ein').value
@@ -483,9 +492,16 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				<td>Goal <font color='red'>*</font></td>
 				<td><input type="text" name="goal" style="width : 150px" value='<?php echo $goal; ?>'/> USD</td>			
 			</tr>
+
+<?php if ($silo_type == "public") { ?>
 			<tr>
-				<td>Organization and fundraiser purpose <font color='red'>*</font></td>
-				<td><textarea name="purpose" style="width : 300px; height: 50px"/><?php echo $purpose; ?></textarea></td>			
+				<td>Organization purpose <font color='red'>*</font></td>
+				<td><textarea name="org_purpose" style="width : 300px; height: 50px"/><?php echo $org_purpose; ?></textarea></td>			
+			</tr>
+<?php } ?>
+			<tr>
+				<td>Silo purpose <font color='red'>*</font></td>
+				<td><textarea name="silo_purpose" style="width : 300px; height: 50px"/><?php echo $silo_purpose; ?></textarea></td>			
 			</tr>
 			<tr>			
 				<td>Photo <font color='red'>*</font></td>
@@ -519,8 +535,9 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				</td>
 			</tr>
 		</table>
-	</div>
 </form>
 <?php
 }
 ?>
+
+</span>

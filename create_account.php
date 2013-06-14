@@ -73,16 +73,21 @@ include("include/timeout.php");
 <?php
 if (!$success) {
 ?>
+
+<span class="greyFont">
+
+<div class="headingPad"></div>
+
+<div class="userNav" align="center">
+	<span class="accountHeading">Create a <?=SITE_NAME?> Account</span>
+</div>
+
+<div class="headingPad"></div><br>
+
 <form enctype="multipart/form-data"  name="create_account" class="create_account_form" method="POST">
 	<input type="hidden" name="task" value="create_account"/>
 	<input type="hidden" name="action" value="<?php echo param_get('action');?>">
-	<div class="create_account_form" style="width: 400px">
-	<table style="margin:auto">
-		<tr>
-			<td colspan="2" align="center">
-				<h1>Create a <?=SITE_NAME?> Account</h1>
-			</td>
-		</tr>
+	<table align="center" style="margin:auto; width: 400px">
 		<tr>
 			<td colspan=2 align="center">
 				<?php
@@ -134,7 +139,6 @@ if (!$success) {
 			</td>
 		</tr>
 	</table>
-	</div>
 </form>
 
 <?php
@@ -142,7 +146,6 @@ if (!$success) {
 if ($success && $filename) {
 ?>
 	<center>
-				<h1>Create a <?=SITE_NAME?> Account</h1>
 		To complete you account creation, please crop the image you uploaded below:<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$User->id?>.jpg" id="cropbox" />
@@ -164,20 +167,15 @@ if ($success && $filename) {
 elseif ($success && !$filename) { $crop = "true"; }
 if ($crop == "true") {
 ?>
-	<div class="create_account_form" style="width: 400px">
-	<table style="margin:auto">
-		<tr>
-			<td colspan="2" align="center">
-				<h1>Create a <?=SITE_NAME?> Account</h1>
-			</td>
-		</tr>
+	<table align="center" style="margin:auto; width: 400px">
 		<tr>
 			<td>
 				<center><font color='red'><b>An activation link has been sent to your e-mail address. Please click on it to finish your registration!</b></font></center>
 			</td>
 		</tr>
 	</table>
-	</div>
 <?php
 }
 ?>
+
+</span>

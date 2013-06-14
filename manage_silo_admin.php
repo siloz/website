@@ -32,7 +32,8 @@
 			$shortname = trim(param_post('shortname'));
 			$address = param_post('address');
 			$org_name = param_post('org_name');
-			$purpose = param_post('purpose');
+			$org_purpose = param_post('org_purpose');
+			$silo_purpose = param_post('silo_purpose');
 			$phone_number = param_post('phone_number');
 			
 			if (strlen(trim($name)) == 0) {
@@ -398,10 +399,20 @@ function postToFeed() {
 							<td colspan=2><br/></td>
 						</tr>
 						
+			<?php if ($Silo->silo_type == "public") { ?>
+						
 						<tr>
-							<td colspan=2><b>Organization and fundraiser purpose: </b>
+							<td colspan=2><b>Organization purpose: </b>
 							<?php
-								echo $silo->purpose;
+								echo $Silo->org_purpose;
+							?>
+							</td>
+						</tr>
+			<?php } ?>
+						<tr>
+							<td colspan=2><b>Silo purpose: </b>
+							<?php
+								echo $Silo->silo_purpose;
 							?>
 							</td>
 						</tr>

@@ -29,7 +29,8 @@ if($goal){$Silo->goal = $goal;}
 if($status){$Silo->status = $status;}
 if($admin_notice){$Silo->admin_notice = $admin_notice;}
 if($description){$Silo->description = $description;}
-if($purpose){$Silo->purpose = $purpose;}
+if($org_purpose){$Silo->org_purpose = $org_purpose;}
+if($silo_purpose){$Silo->silo_purpose = $silo_purpose;}
 if(!$filename && !$success){ $Silo->photo_file = "default.png"; }
 if($employee_discount){ $Silo->employee_discount = "$employee_discount"; }
 if (param_post('publish') == 'Publish') { $Silo->silo_type = $silo_type; }

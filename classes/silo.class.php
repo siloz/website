@@ -25,7 +25,8 @@ class Silo {
 	public $created_date;
 	public $last_update;
 	public $goal;
-	public $purpose;
+	public $org_purpose;
+	public $silo_purpose;
 	public $photo_file;
 	public $employee_discount;
 	public $silo_cat_id;
@@ -71,7 +72,8 @@ class Silo {
 		$this->created_date = $res['created_date'];
 		$this->last_update = strtotime($res['last_update']);
 		$this->goal = $res['goal'];
-		$this->purpose = $res['purpose'];
+		$this->org_purpose = $res['org_purpose'];
+		$this->silo_purpose = $res['silo_purpose'];
 		$this->photo_file = $res['photo_file'];
 		$this->employee_discount = $res['employee_discount'];
 		$this->flag_radar_id = $res['flag_radar_id'];
@@ -208,7 +210,11 @@ class Silo {
 	public function getPurpose() {
 		$order   = array("\r\n", "\n", "\r");
 		$replace = '<br />';
-		return str_replace($order, $replace, html_entity_decode($this->purpose));
+		if ($this->silo_type == "public") {
+			return str_replace($order, $replace, html_entity_decode($this->org_purpose));
+		} else {
+			return str_replace($order, $replace, html_entity_decode($this->silo_purpose));
+		}
 	}
 	
 	public function getDescription() {
@@ -227,12 +233,12 @@ class Silo {
 	}
 	
 	public function getLink() {
-		return "index.php?task=view_silo&id=".$this->id;
+		return "silos/".$this->shortname;
 	}
 	
 	public function getPreview() {
 		$admin = $this->getAdmin();
-		$html = "<a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";
+		$html = "<a href='silos/".$this->shortname."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";
 		$html .= "<div style='height: 325px; overflow: hidden;'>";
 		$html .= "<table>";
 		$html .= "<tr><td colspan=2 align=center><div style='color: #2f8dcb; font-weight: bold; font-size:12px; margin-bottom: 5px;'>".$this->name."</div></td></tr>";
@@ -273,8 +279,8 @@ class Silo {
 		
 		if ($daysleft > 1){ $dayplural = "Days"; } else { $dayplural = "Day"; }
 														
-		$cell = "<div class='plateSilo span2' id=silo_".$this->id."><a href='index.php?task=view_silo&id=".$this->id."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
-		$cell .= "<div style='text-align: center; height: 40px'><a href='index.php?task=view_silo&id=".$this->id."'><b>".$this->getShortTitle(30)."</b></a></div><center><img height=126px width=168px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
+		$cell = "<div class='plateSilo span2' id=silo_".$this->id."><a href='silos/".$this->shortname."' onmouseover=highlight_silo('".$this->id."') onmouseout=unhighlight_silo('".$this->id."')>";				
+		$cell .= "<div style='text-align: center; height: 40px'><a href='silos/".$this->shortname."'><b>".$this->getShortTitle(30)."</b></a></div><center><img height=126px width=168px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; color: #000;'><div style='color: #f60'><b>Goal: </b>$".round($this->goal)."</div><span>$daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 	
@@ -298,9 +304,9 @@ class Silo {
 			$cell .= " first_element";
 		}
 		
-		$cell .= "' id=silo_".$this->id." onclick='window.location = \"index.php?task=view_silo&id=".$this->id."\"'>";				
+		$cell .= "' id=silo_".$this->id." onclick='window.location = \"silos/".$this->shortname."\"'>";				
 		$cell .= "<div style='display: table; margin-left: -1px; height: 40px; #position: relative; overflow: hidden; width: 100%;'><div style='#position: absolute; #top: 50%;display: table-cell; vertical-align: top; text-align: center;'>
-				<a href='index.php?task=view_silo&id=".$this->id."'><b>".$this->getShortTitle(30)."</b></a></div></div><center><img height=136px width=181px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='".$goalClass."'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
+				<a href='silos/".$this->shortname."'><b>".$this->getShortTitle(30)."</b></a></div></div><center><img height=136px width=181px src='uploads/silos/".$this->photo_file."?".$this->last_update."' style='margin-left: -4px; margin-bottom: 3px'></center><div style='text-align: center; class='blue'><b>Goal:</b> <span class='".$goalClass."'>$".round($this->goal)."</span> &nbsp; &nbsp; &nbsp; $daysleft $dayplural Left</span></a></div></div>";							
 		return $cell;
 	}
 
@@ -362,7 +368,8 @@ class Silo {
 			."`latitude` = '".mysql_real_escape_string($this->latitude)."', "
 			."`start_date` = '".mysql_real_escape_string($this->start_date)."', "
 			."`goal` = '".mysql_real_escape_string($this->goal)."', "
-			."`purpose` = '".mysql_real_escape_string($this->purpose)."', "
+			."`org_purpose` = '".mysql_real_escape_string($this->org_purpose)."', "
+			."`silo_purpose` = '".mysql_real_escape_string($this->silo_purpose)."', "
 			."`status` = '".mysql_real_escape_string($this->status)."', "
 			."`photo_file` = '".mysql_real_escape_string($this->photo_file)."', "
 			."`employee_discount` = '".mysql_real_escape_string($this->employee_discount)."', "
@@ -380,7 +387,7 @@ class Silo {
 
 	private function InsertNEW(){
 		$sql = mysql_query("INSERT INTO silos (admin_id, name, shortname, silo_cat_id, silo_type, org_name, ein, issue_receipts, 
-					title, phone_number, address, longitude, latitude, start_date, goal, purpose, photo_file, employee_discount,
+					title, phone_number, address, longitude, latitude, start_date, goal, org_purpose, silo_purpose, photo_file, employee_discount,
 					flag_radar_id, schedule_end_date, end_date) 
 			VALUES (
 				'".mysql_real_escape_string($this->admin_id)."',
@@ -398,7 +405,8 @@ class Silo {
 				'".mysql_real_escape_string($this->latitude)."',
 				'".mysql_real_escape_string($this->start_date)."',
 				'".mysql_real_escape_string($this->goal)."',
-				'".mysql_real_escape_string($this->purpose)."',
+				'".mysql_real_escape_string($this->org_purpose)."',
+				'".mysql_real_escape_string($this->silo_purpose)."',
 				'".mysql_real_escape_string($this->photo_file)."',
 				'".mysql_real_escape_string($this->employee_discount)."',
 				'".mysql_real_escape_string($this->flag_radar_id)."',
@@ -418,7 +426,7 @@ class Silo {
 			."(`admin_id`,`name`,`shortname`,`silo_cat_id`,`silo_type`,`paypal_account`,`financial_account`,"
 			."`bank_name`,`bank_account_number`,`bank_routing_number`,`org_name`,`ein`,"
 			."`issue_receipts`,`title`,`phone_number`,`address`,`longitude`,`latitude`,"
-			."`start_date`,`goal`,`purpose`,`photo_file`,`employee_discount`,"
+			."`start_date`,`goal`,`org_purpose`,`silo_purpose`,`photo_file`,`employee_discount`,"
 			."`flag_radar_id`,`end_date`,`created_date`,`status`) "
 			."VALUES "
 			."("
@@ -442,7 +450,8 @@ class Silo {
 				."'".mysql_real_escape_string($this->latitude)."',"
 				."'".mysql_real_escape_string($this->start_date)."',"
 				."'".mysql_real_escape_string($this->goal)."',"
-				."'".mysql_real_escape_string($this->purpose)."',"
+				."'".mysql_real_escape_string($this->org_purpose)."',"
+				."'".mysql_real_escape_string($this->silo_purpose)."',"
 				."'".mysql_real_escape_string($this->photo_file)."',"
 				."'".mysql_real_escape_string($this->employee_discount)."',"
 				."'".mysql_real_escape_string($this->flag_radar_id)."',"

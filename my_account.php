@@ -303,10 +303,12 @@ if ($_SESSION['is_logged_in'] != 1) { ?>
 
 	$updatemsg = "Your account has been updated!";
 
-	if ($fb_upd) { $updatemsg = "Your account has been updated using Facebook!"; }
-	elseif ($linkedin_upd) { $updatemsg = "Your account has been updated using LinkedIn!"; }
-
 	if (!$fname || !$lname || !$address || !$phone || !$photo_file) { $addInfo_account = true; }
+
+	if ($fb_upd && !$addInfo_account) { $updatemsg = "Your account has been updated using Facebook!"; } 
+	elseif ($fb_upd && $redirect) { $updatemsg = "Your account has been updated using Facebook. You'll be redirected once the rest of your information is completed."; }
+	if ($linkedin_upd && !$addInfo_account) { $updatemsg = "Your account has been updated using LinkedIn!"; }
+	elseif ($linkedin_upd && $redirect) { $updatemsg = "Your account has been updated using LinkedIn. You'll be redirected once the rest of your information is completed."; }
 
 	if ($redirect && !$addInfo_account && !$filename) {
 		if ($redirect_id) { $redirect_id = "&id=".$redirect_id; }
@@ -461,7 +463,7 @@ die;
 						</tr>
 						<tr>
 							<td><b>Address</b> </td>
-							<td><input type="text" name="address" style="width : 200px" value='<?php echo $address; ?>'/></td>
+							<td><input type="text" name="address" style="width : 200px" value='<?php echo $address; ?>' /></td>
 						</tr>
 						<tr>
 							<td><b>Zip code</b> </td>

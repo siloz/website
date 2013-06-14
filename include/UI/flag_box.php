@@ -123,7 +123,7 @@ function hide_flag_box(){
 	</tr>
 			<?php if($flag_box_type === "silo"){ ?>
 	<tr>
-		<td style="padding-top: 5px" width="45%" align="center">
+		<td style="padding-top: 5px" width="50%" align="center">
 			<span class="voucherText<?=$closed_silo?>">This silo has <?=$fCount?></span>
 		</td>
 	<?php if ($isAdmin) { ?>
