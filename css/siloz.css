@@ -703,14 +703,21 @@ div.plate_pending a {
 }
 
 .plateItem {
-	border-radius: 8px;     
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	border-radius: 4px;     
     	border: 1px solid lightgray;
 	width: 140px;
 	height: 160px;	
 	padding: 0px 4px;
 	color: #0F5684;
 	font-size: 9pt;
-	background: #EEF7FC;
 	font-family: Arial, Helvetica,sans-serif;
 	margin-left: 13px;
 	margin-bottom: 13px;
@@ -727,7 +734,7 @@ div.plateItemOLD {
 	-webkit-box-shadow: 2px 2px 5px grey;
 	box-shadow: 2px 2px 5px grey;
 
-    	border-radius: 8px;     
+    	border-radius: 4px;     
     	border: 1px solid lightgray;
 	width: 140px;
 	height: 155px;	
@@ -741,6 +748,18 @@ div.plateItemOLD {
 }
 
 .plateItem:hover {
+   	background-color: #f4f4f4; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f4f4f4));
+   	background-image: -webkit-linear-gradient(top, #fff, #f4f4f4); 
+   	background-image:    -moz-linear-gradient(top, #fff, #f4f4f4);
+   	background-image:     -ms-linear-gradient(top, #fff, #f4f4f4);
+   	background-image:      -o-linear-gradient(top, #fff, #f4f4f4);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
 	cursor: pointer;
 	background-color: #fff;
 }
@@ -753,14 +772,21 @@ div.plateItemOLD {
 }
 
 .plateSilo {
-    	border-radius: 8px;     
+   	background-color: #f4f4f4; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f4f4f4));
+   	background-image: -webkit-linear-gradient(top, #fff, #f4f4f4); 
+   	background-image:    -moz-linear-gradient(top, #fff, #f4f4f4);
+   	background-image:     -ms-linear-gradient(top, #fff, #f4f4f4);
+   	background-image:      -o-linear-gradient(top, #fff, #f4f4f4);
+
+    	border-radius: 4px;     
    	border: 1px solid lightgrey;
 	width: 173px;
-	height: 198px;	
-	padding: 0px 4px;
+	height: 188px;	
+	padding: 10px 4px;
 	color: #0F5684;
 	font-size: 9pt;
-	background: #FFF;
 	font-family: Arial, Helvetica,sans-serif;
 	margin-left: 13px;
 	margin-bottom: 13px;
@@ -771,19 +797,38 @@ div.plateItemOLD {
 }
 
 .plateSilo:hover {
+   	background-color: #EEF7FC; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
+   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
+   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
+   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
 	cursor: pointer;
 	background-color: #EEF7FC;
 }
 
 .plateSilo_disaster {
-    	border-radius: 8px;     
+   	background-color: #f4f4f4; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f4f4f4));
+   	background-image: -webkit-linear-gradient(top, #fff, #f4f4f4); 
+   	background-image:    -moz-linear-gradient(top, #fff, #f4f4f4);
+   	background-image:     -ms-linear-gradient(top, #fff, #f4f4f4);
+   	background-image:      -o-linear-gradient(top, #fff, #f4f4f4);
+
+    	border-radius: 4px;     
    	border: 1px solid lightgrey;
 	width: 173px;
-	height: 198px;	
-	padding: 0px 4px;
+	height: 188px;	
+	padding: 10px 4px;
 	color: #fe5300;
 	font-size: 9pt;
-	background: #FFF;
 	font-family: Arial, Helvetica,sans-serif;
 	margin-left: 13px;
 	margin-bottom: 13px;
@@ -798,9 +843,21 @@ div.plateItemOLD {
 .plateSilo_disaster:hover a { color: #FFF; }
 
 .plateSilo_disaster:hover {
+   	background-color: #fe5300; 
+   	background-image: url(images/fallback-gradient.png); 
+   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fe5300), to(#fe5300));
+   	background-image: -webkit-linear-gradient(top, #fe5300, #fe5300); 
+   	background-image:    -moz-linear-gradient(top, #fe5300, #fe5300);
+   	background-image:     -ms-linear-gradient(top, #fe5300, #fe5300);
+   	background-image:      -o-linear-gradient(top, #fe5300, #fe5300);
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
 	cursor: pointer;
-	background-color: #fe5300;
 	color: #FFF;
+   	border: 1px solid #fe5300;
 }
 
 div.item_row {
