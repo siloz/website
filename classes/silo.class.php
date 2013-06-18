@@ -103,10 +103,10 @@ class Silo {
 
 	function getShortTitle($len) {
 		if (strlen($this->name) > $len) {
-			return substr($this->name, 0, $len)."..";
+			return "<b>".substr($this->name, 0, $len)."..</b>";
 		}
 		else {
-			return $this->name;
+			return "<b>".$this->name."</b>";
 		}		
 	}
 	
@@ -199,12 +199,16 @@ class Silo {
 		return $total;
 	}
 
-	public function getRunTime() {
-		$sql = "SELECT DATEDIFF(end_date, created_date) AS days FROM silos WHERE silo_id = ".$this->silo_id."";
+	public function getDayIncrement() {
+		if ($this->status == "active") {
+			$sql = "SELECT DATEDIFF(CURDATE(), created_date) AS days FROM silos WHERE silo_id = ".$this->silo_id."";
+		} else {
+			$sql = "SELECT DATEDIFF(end_date, created_date) AS days FROM silos WHERE silo_id = ".$this->silo_id."";
+		}
 		$res = mysql_fetch_array(mysql_query($sql));
 		$days = $res['days'];
-		if ($days < 8) { $runtime = 1; } elseif ($days > 7 && $days < 21) { $runtime = 2; } else { $runtime = 3; }
-		return $runtime;
+		$dayInc = $days / 7;
+		return ceil($dayInc);
 	}
 
 	public function getPurpose() {

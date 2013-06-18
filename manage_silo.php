@@ -364,7 +364,7 @@
 	<table width="100%" style="border-spacing: 0px;">
 		<tr>
 			<td>
-				<?php echo $Silo->getTitle(); ?>
+				<?php echo $Silo->getShortTitle(45); ?>
 			</td>
 			<td align="center" style="font-size: 8pt; font-weight: bold">
 				<?php

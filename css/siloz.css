@@ -926,6 +926,12 @@ div.first_element {
 	width: 250px;
 }
 
+.siloFlyer {
+    	border-radius: 4px;     
+   	border: 1px solid #2f8dcb;	
+	padding: 30px;
+}
+
 .progress-bg {
 	background: #fff;
 	border-radius: 4px;
@@ -1030,30 +1036,42 @@ div.first_element {
 	font-size: 10pt;
 }
 
-.splash-shop, .splash-donate {
-	float: left;
-	background: url(../images/splash-buttons.png) no-repeat;
-	width: 340px;
-	height: 83px;
-}
-
 .splash-shop {
-	background-position: 0px -82px;
-	margin-left: 5px;
-	margin-right: -5px;
-	padding-right: 15px;
+	float: left;
+	background-color: #2f8dcb;
+	width: 325px;
+	height: 75px;
+    	color: #fff;
+    	border-radius: 4px;
+	text-align: center;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+	margin: 5px 25px 10px 3px;
 }
 
 .splash-donate {
-	background-position: 0px 0px;
-	margin-left: -2px;
-	margin-right: 2px;
-	padding-right: 15px;
+	float: left;
+	background-color: #fe5300;
+	width: 325px;
+	height: 75px;
+    	color: #fff;
+    	border-radius: 4px;
+	text-align: center;
+
+	-moz-box-shadow: 2px 2px 5px grey;
+	-webkit-box-shadow: 2px 2px 5px grey;
+	box-shadow: 2px 2px 5px grey;
+
+	margin: 5px 25px 15px 3px;
 }
 
 .splash-create {
 	background-color: #fff;
-	width: 375px;
+	width: 650px;
+	height: 75px;
     	color: grey;
     	font-size: 9pt;
     	font-weight: normal;
@@ -1071,10 +1089,7 @@ div.first_element {
 .splash-pledge {
 	float: right;
 	background-color: #fe5300;
-	width: 375px;
-    	color: #fff;
-    	font-size: 9pt;
-	font-weight: normal;
+	width: 100px;
     	border-radius: 4px;
     	padding: 5px;
 	margin-left: 3px;
@@ -1090,7 +1105,7 @@ div.first_element {
 	cursor: pointer;
 }
 
-.splashText-shop {
+.splashText {
 	text-align: left;
 	margin-top: 10px;
 	margin-bottom: -20px;
@@ -1098,15 +1113,6 @@ div.first_element {
 	font-size: 20pt;
 	font-weight: bold;
 	text-align: center;
-}
-
-.splashText-donate {
-	text-align: left;
-	margin-top: 10px;
-	margin-bottom: -20px;
-	color: #2f8dcb;
-	font-size: 20pt;
-	font-weight: bold;
 }
 
 .mail-aol, .mail-gmail, .mail-hotmail, .mail-yahoo {
@@ -2067,18 +2073,8 @@ margin-left: 5px;
 }
 
 .slider-select {
-	background: #2F8ECB;
-	border-radius: 8px;
-	color: #fff;
-	margin: 0 15px;
-	padding: 10px;
+	padding-right: 25px;
 }
-
-.slider-select:hover {
-	opacity: .8;
-	cursor: pointer;
-}
-
 
 .sliderText {
 	color: #2F8ECB;

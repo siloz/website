@@ -138,6 +138,11 @@ class User {
 		$name = $this->fname." ".$this->lname;
 		return $name;
 	}
+
+	public function getLocation() {
+		$loc = $this->city.", ".$this->state;
+		return $loc;
+	}
 	
 	public function Save(){
 		if($this->id){return $this->Update();}

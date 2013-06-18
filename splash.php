@@ -31,15 +31,22 @@
 </div>
 
 <div id="slider-options">
-	view these silo types: <span class="slider-select" id="view-all">public and private</span> <a onclick="popup_show('silo_types', 'silo_types_drag', 'silo_types_exit', 'screen-center', 0, 0);">what's the difference?</a>
+	<span class="slider-select">now viewing: public and private silo types</span> <a onclick="popup_show('silo_types', 'silo_types_drag', 'silo_types_exit', 'screen-center', 0, 0);">what's the difference?</a>
 </div>
 
 
 <div id="action_call" class="row">
 	<!-- shop button -->
 	<div class="row">
-		<div class="splash-shop" onClick="window.location = 'items'"></div>
-		<div class="splashText-shop">buy items whose sale helps a silo</div>
+		<table class="splash-shop" onClick="window.location = 'items'">
+		<tr>
+			<td width="25%"></td>
+			<td><img src="images/btn-cart.png" width="45" height="34"></img></td>
+			<td class="splashText" style="color: #FFF;">shop</td>
+			<td width="25%"></td>
+		</tr>
+		</table>
+		<div class="splashText" style="text-align: left;">buy items whose sale helps a silo</div>
 		<p class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
 		<span class="blue"><a onclick="popup_show('items_sold', 'items_sold_drag', 'items_sold_exit', 'screen-center', 0, 0);"><b>how Voucher/Key works</b></a></span>
 		</p>
@@ -47,8 +54,15 @@
 
 	<!-- donate button -->
 	<div class="row">
-		<div class="splash-donate" onClick="window.location = 'silos'"></div>
-		<div class="splashText-donate">sell items to benefit a public silo</div>
+		<table class="splash-donate" onClick="window.location = 'silos'">
+		<tr>
+			<td width="8%"></td>
+			<td><img src="images/btn-heart.png" width="44" height="33"></img></td>
+			<td class="splashText" style="color: #FFF;">donate items</td>
+			<td width="8%"></td>
+		</tr>
+		</table>
+		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
 		<p class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
 		<span class="blue"><a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a></span>
 		</p>
@@ -58,20 +72,16 @@
 	<div class="row">
 		<table class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
 		<tr>
-			<td class="splashText-shop">create a private/public silo</td>
+			<td class="splashText">create a private or a public silo</td>
 		</tr>
 		<tr>
-			<td>private silos keep 95%, public silos keep 90%.</td>
+			<td>private silos keep 95%, public silos are often tax-deductible.</td>
 		</tr>
 		</table>
-		<table class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
-		<tr>
-			<td class="splashText-shop" style="color: #FFF;">pledge first</td>
-		</tr>
-		<tr>
-			<td>notify someone who you think should start a silo.</td>
-		</tr>
-		</table>
+
+		<div class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
+			<span class="splashText" style="color: #FFF;">pledge <br> first</span>
+		</div>
 	</div>
 		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
 			<a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a>
@@ -263,22 +273,3 @@
 		<img src="images/items-sold.png"></img>
 	</div>
 </div>
-
-<!--
-<script type="text/javascript"> 
-$('.slider-select').click(function(){
-	if ($(this).html() === 'public and private') {
-		$(this).html('public');
-	} else if ($(this).html() === 'public') {
-		$(this).html('private');
-	} else if ($(this).html() === 'private') {
-		$(this).html('public and private');
-	}
-});
-
-$('#view-public').click(function(){
-	$('.slider-select').attr('id','view-private');
-	$('.slider-select').html('private');
-});
-</script>
--->

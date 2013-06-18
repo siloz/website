@@ -201,7 +201,7 @@
 	<table width="100%" style="border-spacing: 0px;">
 		<tr>
 			<td>
-				<?php echo $silo->getTitle(); ?>
+				<?php echo $Silo->getShortTitle(45); ?>
 			</td>
 			<td align="center" style="font-size: 8pt; font-weight: bold">
 				<?php
@@ -272,9 +272,9 @@ silo administration console
 	<table class="aconsole-section" width="100%" style="margin-top: 10px"><tr>
 		<td width="100px" align="left"><h3 align="left">member <br> growth</h3></td>
 		<td align="left">
-			<?php $runTime = $silo->getRunTime(); $totalM = $silo->getTotalMembersAC();
+			<?php $dayInc = $silo->getDayIncrement(); $totalM = $silo->getTotalMembersAC();
 			include "include/charts/charts.php";
-			echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart.php?silo_id=".$silo->silo_id."&run=".$runTime, 550, 150 ); ?>
+			echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart.php?silo_id=".$silo->silo_id."&days=".$dayInc, 550, 150 ); ?>
 		</td>
 	</tr></table>
 </td>
@@ -284,7 +284,7 @@ silo administration console
 	<table class="aconsole-section" width="100%" style="margin-top: 10px"><tr>
 		<td width="100px" align="left"><h3 align="left">item <br> growth</h3></td>
 		<td align="left">
-			<?php echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart-item.php?silo_id=".$silo->silo_id."&run=".$runTime, 550, 150 ); ?>
+			<?php echo InsertChart ( "include/charts/charts.swf", "include/charts/charts_library", "include/charts/aconsole-chart-item.php?silo_id=".$silo->silo_id."&days=".$dayInc, 550, 150 ); ?>
 		</td>
 	</tr></table>
 </td>

@@ -5,33 +5,41 @@ include '../../utils.php';
 $conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);	
 mysql_select_db(DB_NAME, $conn);
 
-$silo_id =  $_REQUEST['silo_id'];
-$runTime =  $_REQUEST['run'];
+$silo_id = $_REQUEST['silo_id'];
+$dayInc = $_REQUEST['days'];
 
-$cr_date = mysql_fetch_row(mysql_query("SELECT created_date FROM silos WHERE silo_id = '$silo_id'")); 
-$created = $cr_date[0];
+$date = mysql_fetch_array(mysql_query("SELECT created_date, DATEDIFF(end_date, created_date) AS days FROM silos WHERE silo_id = '$silo_id'")); 
+$created = $date['created_date'];
+$endDays = $date['days'];
 $now = strtotime("now");
 
-$i = 1 * $runTime;
-$upto = $i * 7;
-while ($i <= $upto) {
-	$add = "date_add('".$created."', interval ".$i." day)";
-	$var = "d".$i;
+$i=1;
+while ($i <= 6) {
+	$dayVar = "day".$i;
+	$curDays = $dayInc * $i;
+	if ($curDays > $endDays) { $curDays = $endDays; }
+	$$dayVar = $curDays;
+	$i++;
+}
+
+$n=1;
+while ($n <= 7) {
+	$curDays = $dayInc * $n;
+	if ($curDays > $endDays) { $curDays = $endDays; }
+
+	$add = "date_add('".$created."', interval ".$curDays." day)";
+	$var = "d".$n;
 	$$var = mysql_num_rows(mysql_query("SELECT * FROM silo_membership WHERE silo_id = '$silo_id' AND joined_date < $add AND removed_date = 0"));
-	$new = $i + $runTime;
+
+	$new = $curDays + $dayInc;
 	$new_date = strtotime($created . " +".$new." day");
-	if ($new_date > $now) { $max = $$var + 1; break; } else { $i = $i + $runTime; }
+	if ($new_date > $now) { $max = $$var + 1; break; } else { $n++; }
 }
 
 if ($max < 6) { $max = 6; }
 
-if ($runTime == 1) {
-	$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 1","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7" ), array ( "Region A",0,$d1,$d2,$d3,$d4,$d5,$d6,$d7 ) );
-} elseif ($runTime == 2) {
-	$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 2","Day 4","Day 6","Day 8","Day 10","Day 12","Day 14" ), array ( "Region A",0,$d2,$d4,$d6,$d8,$d10,$d12,$d14 ) );
-} else {
-	$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day 3","Day 6","Day 9","Day 12","Day 15","Day 18","Day 21" ), array ( "Region A",0,$d3,$d6,$d9,$d12,$d15,$d18,$d21 ) );
-}
+$chart[ 'chart_data' ] = array ( array ( "","Silo Start","Day ".$day1,"Day ".$day2,"Day ".$day3,"Day ".$day4,"Day ".$day5,"Day ".$day6,"Day ".$endDays ), array ( "Region A",0,$d1,$d2,$d3,$d4,$d5,$d6,$d7 ) );
+
 
 $chart[ 'axis_category' ] = array ( 'size'=>11, 'color'=>"3A3A3A", 'font'=>"arial", 'bold'=>true, 'skip'=>0 ,'orientation'=>"horizontal" ); 
 //$chart[ 'axis_ticks' ] = array ( 'value_ticks'=>true, 'category_ticks'=>true, 'major_thickness'=>2, 'minor_thickness'=>1, 'minor_count'=>1, 'major_color'=>"000000", 'minor_color'=>"222222" ,'position'=>"outside" );

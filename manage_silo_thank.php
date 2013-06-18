@@ -238,7 +238,7 @@
 	<table width="100%" style="border-spacing: 0px;">
 		<tr>
 			<td>
-				<?php echo $silo->getTitle(); ?>
+				<?php echo $Silo->getShortTitle(45); ?>
 			</td>
 			<td width="450px" style="font-size: 10pt; font-weight: bold" align="right">
 				<a href="index.php?task=manage_silo_thank" class="<?php if (param_get('task') == 'manage_silo_thank') { echo "orange"; } else { echo "blue"; } ?>">thank members</a>
