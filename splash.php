@@ -40,7 +40,7 @@
 	<div class="row">
 		<table class="splash-shop" onClick="window.location = 'items'">
 		<tr>
-			<td width="81px"></td>
+			<td width="86px"></td>
 			<td><img src="images/btn-cart.png" width="45" height="34"></img></td>
 			<td class="splashText" style="color: #FFF;">shop</td>
 			<td width="81px"></td>
@@ -56,7 +56,7 @@
 	<div class="row">
 		<table class="splash-donate" onClick="window.location = 'silos'">
 		<tr>
-			<td width="26px"></td>
+			<td width="40px"></td>
 			<td><img src="images/btn-heart.png" width="44" height="33"></img></td>
 			<td class="splashText" style="color: #FFF;">donate items</td>
 			<td width="26px"></td>
