@@ -61,7 +61,7 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 	<tr class="infoSpacer"></tr>
 	<tr>
 		<td class="siloInnerInfo<?=$closed_silo?>">
-			<table><tr>
+			<table width="100%"><tr>
 			<?php if ($silo->silo_type == "public") { ?>
 				<td style="padding-bottom: 10px;">Organization name: <?=$silo->org_name?></td>
 			<?php } else { ?>
