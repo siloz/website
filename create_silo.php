@@ -346,7 +346,7 @@ else {
 
 <div class="headingPad"></div><br>
 
-<?php if ($silo_type == "private") { ?>
+<?php if ($silo_type == "private" && !param_post('publish')) { ?>
 	<script type="text/javascript">
 		$(document).ready(function () {
         		javascript:popup_show('prv_email', 'prv_email_drag', 'prv_email_exit', 'screen-center', 0, 0);
