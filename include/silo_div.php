@@ -61,11 +61,15 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 	<tr class="infoSpacer"></tr>
 	<tr>
 		<td class="siloInnerInfo<?=$closed_silo?>">
+			<table><tr>
 			<?php if ($silo->silo_type == "public") { ?>
-				Organization name: <?=$silo->org_name?> <br> <br>
+				<td style="padding-bottom: 10px;">Organization name: <?=$silo->org_name?></td>
 			<?php } else { ?>
-				Relationship to beneficiary: <?=$silo->title?> <br><br>
+				<td style="padding-bottom: 10px;">Relationship to beneficiary: <?=$silo->title?></td>
 			<?php } ?>
+			</tr>
+
+			<tr><td <?php if ($silo->website) { echo 'style="padding-bottom: 10px;"'; } ?>>
 			<span class="floatL">
 				<img src="<?php echo ACTIVE_URL.'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
 				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "javascript:popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);"; } else { echo "javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);"; }?>">Email Admin.</a>
@@ -80,6 +84,14 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 				<?=$silo->phone_number?>
 			</span>
 			</div>
+			</td></tr>
+
+			<?php if ($silo->website) { ?>
+			<tr><td>
+				<a href="http://<?=$silo->website?>" target="_blank"><?=$silo->website?></a>
+			</td></tr>
+			<?php } ?>
+			</table>
 		</td>
 	</tr>
 	<tr class="infoSpacer"></tr>
@@ -99,3 +111,97 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 </table>
 
 <?php } ?>
+
+<div class="edit_item" id="edit_silo">
+	<div id="edit_silo_drag" style="float: right">
+		<img id="edit_silo_exit" src="images/close.png"/>
+	</div>
+
+	<div>
+
+<form enctype="multipart/form-data"  name="manage_silo_form" class="manage_silo_form" method="POST">
+		<input type="hidden" name="task" value="manage_silo"/>
+		
+		<table cellpadding="10px">
+			<tr>
+				<td align="center" valign="top" width="650px">
+					<img src="<?php echo 'uploads/silos/'.$Silo->photo_file.'?'.$Silo->last_update;?>" width="300px"/>
+					<br/><br/>
+					<b>Upload new photo: </b><input name="silo_photo" type="file" style="height: 24px" />
+					<br/><br/>
+
+					<table>
+						<tr>
+							<td valign="center" style="width: 120px;"><b>Silo Full Name: </b></td>
+							<td><input type="text" name="name" style="width : 300px" value='<?php echo $Silo->name; ?>'/></td>
+						</tr>
+						<tr>
+							<td valign="center"><b>Silo Short Name: </b></td>
+							<td><input type="text" name="shortname" style="width : 300px" value='<?php echo $Silo->shortname; ?>'/></td>
+						</tr>						
+						<tr>
+							<td>
+								<b>Address:</b>
+							</td>
+							<td>
+								<input type="text" name="address" style="width : 300px" value='<?php echo $Silo->address; ?>'/>
+							</td>
+						</tr>
+					<?php if ($silo->silo_type == "public") { ?>
+						<tr>
+							<td>
+								<b>Organization:</b><br/>
+							</td>
+							<td>
+								<input type="text" name="org_name" style="width : 300px" value='<?php echo $Silo->org_name; ?>'/>
+							</td>
+						</tr>
+					<?php } ?>					
+						<tr>
+							<td>
+								<b>Phone Number:</b>
+							</td>
+							<td>
+								<input type="text" name="phone_number" style="width : 150px" value='<?php echo $Silo->phone_number; ?>'/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>Website:</b>
+							</td>
+							<td>
+								<input type="text" name="website" style="width : 150px" value='<?php echo $Silo->website; ?>'/>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan=2><br/></td>
+						</tr>
+			<?php if ($Silo->silo_type == "public") { ?>
+						
+						<tr>
+							<td colspan=2><b>Organization purpose: </b>
+							<?php
+								echo $Silo->org_purpose;
+							?>
+							</td>
+						</tr>
+			<?php } ?>
+						<tr>
+							<td colspan=2><b>Silo purpose: </b>
+							<?php
+								echo $Silo->silo_purpose;
+							?>
+							</td>
+						</tr>
+					</table>
+					<br><br>
+
+					<button type="submit" name="update" value="Update">Update Silo</button>				
+				</td>				
+			</tr>
+		</table>
+	</form>
+
+	</div>
+</div>

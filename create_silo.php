@@ -74,6 +74,8 @@ else {
 		$org_name = param_post('org_name');		
 		$title = param_post('title');
 		$phone_number = param_post('phone_number');
+		$website = param_post('website');
+		$website = str_replace("https://", "", $website); $url = str_replace("http://", "", $website);
 		$address = param_post('address');
 		$silo_cat_id = param_post('silo_cat_id');
 		$start_date = $today;				
@@ -344,6 +346,14 @@ else {
 
 <div class="headingPad"></div><br>
 
+<?php if ($silo_type == "private") { ?>
+	<script type="text/javascript">
+		$(document).ready(function () {
+        		javascript:popup_show('prv_email', 'prv_email_drag', 'prv_email_exit', 'screen-center', 0, 0);
+		})
+	</script>
+<?php } ?>
+
 <?php
 if ($success && $filename) {
 ?>
@@ -473,7 +483,11 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 			<tr>
 				<td>Official telephone number <font color='red'>*</font></td>
 				<td><input type="text" name="phone_number" id="phone_number" style="width : 150px" value='<?php echo $phone_number; ?>'/></td>			
-			</tr>						
+			</tr>
+			<tr>
+				<td>Official website</td>
+				<td><input type="text" name="website" id="website" style="width : 150px" value='<?php echo $website; ?>'/></td>			
+			</tr>					
 			<tr>
 				<td>Duration <font color='red'>*</font></td>
 				<td class="create-silo">
@@ -538,6 +552,21 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 </form>
 <?php
 }
+
+$user = new User($user_id);
 ?>
+
+<div class="login" id="prv_email" style="width: 300px;">
+	<div id="prv_email_drag" style="float:right">
+		<img id="prv_email_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h3>PayPal E-mail</h3>
+		Since your silo is private, you will be paid out through PayPal. The e-mail address on your account will be the one that gets the PayPal payment. The e-mail address is: <br><br>
+		<b><?=$user->email?></b> <br><br>
+		If you would like the money to be sent to a different PayPal account, please change your e-mail in your account settings before your private silo ends. <br><br>
+		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('prv_email').style.display='none';">Continue</button>
+	</div>
+</div>
 
 </span>

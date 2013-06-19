@@ -35,6 +35,8 @@
 			$org_purpose = param_post('org_purpose');
 			$silo_purpose = param_post('silo_purpose');
 			$phone_number = param_post('phone_number');
+			$website = param_post('website');
+			$website = str_replace("https://", "", $website); $url = str_replace("http://", "", $website);
 			
 			if (strlen(trim($name)) == 0) {
 				$err = 'Silo name must not be empty.<br/>';		
@@ -340,94 +342,6 @@ function postToFeed() {
 
 
 <div style="padding-bottom: 10px;"></div>
-
-<div class="edit_item" id="edit_silo">
-	<div id="edit_silo_drag" style="float: right">
-		<img id="edit_silo_exit" src="images/close.png"/>
-	</div>
-
-	<div>
-
-<form enctype="multipart/form-data"  name="manage_silo_form" class="manage_silo_form" method="POST">
-		<input type="hidden" name="task" value="manage_silo"/>
-		
-		<table cellpadding="10px">
-			<tr>
-				<td align="center" valign="top" width="650px">
-					<img src="<?php echo 'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;?>" width="300px"/>
-					<br/><br/>
-					<b>Upload new photo: </b><input name="silo_photo" type="file" style="height: 24px" />
-					<br/><br/>
-
-					<table>
-						<tr>
-							<td valign="center" style="width: 120px;"><b>Silo Full Name: </b></td>
-							<td><input type="text" name="name" style="width : 300px" value='<?php echo $silo->name; ?>'/></td>
-						</tr>
-						<tr>
-							<td valign="center"><b>Silo Short Name: </b></td>
-							<td><input type="text" name="shortname" style="width : 300px" value='<?php echo $silo->shortname; ?>'/></td>
-						</tr>						
-						<tr>
-							<td>
-								<b>Address:</b>
-							</td>
-							<td>
-								<input type="text" name="address" style="width : 300px" value='<?php echo $silo->address; ?>'/>
-							</td>
-						</tr>
-					<?php if ($silo->silo_type == "public") { ?>
-						<tr>
-							<td>
-								<b>Organization:</b><br/>
-							</td>
-							<td>
-								<input type="text" name="org_name" style="width : 300px" value='<?php echo $silo->org_name; ?>'/>
-							</td>
-						</tr>
-					<?php } ?>					
-						<tr>
-							<td>
-								<b>Phone Number:</b>
-							</td>
-							<td>
-								<input type="text" name="phone_number" style="width : 150px" value='<?php echo $silo->phone_number; ?>'/>
-							</td>
-						</tr>
-
-						<tr>
-							<td colspan=2><br/></td>
-						</tr>
-						
-			<?php if ($Silo->silo_type == "public") { ?>
-						
-						<tr>
-							<td colspan=2><b>Organization purpose: </b>
-							<?php
-								echo $Silo->org_purpose;
-							?>
-							</td>
-						</tr>
-			<?php } ?>
-						<tr>
-							<td colspan=2><b>Silo purpose: </b>
-							<?php
-								echo $Silo->silo_purpose;
-							?>
-							</td>
-						</tr>
-					</table>
-					<br><br>
-
-					<button type="submit" name="update" value="Update">Update Silo</button>				
-				</td>				
-			</tr>
-		</table>
-	</form>
-
-	</div>
-</div>
-
 
 <div class="login" id="mail" style="width: 300px;">
 	<div id="mail_drag" style="float:right">

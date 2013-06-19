@@ -699,7 +699,7 @@ die;
 							<?php } elseif ($addInfo_full) { ?>
 								<button class="buttonBuyItem" onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">buy this item</button>
 							<?php } else { ?>
-								<button class="buttonBuyItem" onclick="window.location = 'index.php?task=payment&id=<?php echo $item->id;?>'">buy this item</button>
+								<button class="buttonBuyItem" onclick="popup_show('buy-notif', 'buy-notif_drag', 'buy-notif_exit', 'screen-center', 0, 0);">buy this item</button>
 							<?php } ?>
 						<table width="100%" style="padding-top: 5px"><tr>
 						<td width="155px">
@@ -939,6 +939,17 @@ window.onload = loadScript;
 		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
 		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
 		<a href="http://compose.mail.yahoo.com/?&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
+	</div>
+</div>
+
+<div class="login" id="buy-notif" style="width: 300px;">
+	<div id="buy-notif_drag" style="float:right">
+		<img id="buy-notif_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h3>Buying reminder</h3>
+		**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
+		<button onclick="window.location='index.php?task=payment&id=<?=$item->id;?>'">I agree</button>
 	</div>
 </div>
 

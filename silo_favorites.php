@@ -51,7 +51,9 @@ $qry = mysql_query("SELECT * FROM silo_membership WHERE user_id = '$user_id' ORD
 
 	echo $siloz_html;
 
-	if (!mysql_num_rows($qry)) { echo "You have not pledged any items towards a silo yet. Start donating now!"; }
+	if (!mysql_num_rows($qry)) { echo "You have not pledged any items towards a silo yet. To pledge an item to a silo, you have two options: <br> <br>
+					1) You can find a silo that interests you and click on the 'donate' button on that silo's page <br><br> or <br><br> 
+					2) You can pledge an item to a silo that has not been created yet by clicking <a class='blue' href='index.php?task=pledge_first'>here</a>. You must know someone who would be willing to start and manage a silo."; }
 ?>
 
 </td>

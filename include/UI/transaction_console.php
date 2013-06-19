@@ -266,3 +266,14 @@
 		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_offer_<?=$item_id?>').style.display='none';">Later</button>
 	</div>
 </div>
+
+<div class="login" id="buy-notif_<?=$item_id?>" style="width: 300px;">
+	<div id="buy-notif_<?=$item_id?>_drag" style="float:right">
+		<img id="buy-notif_<?=$item_id?>_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h3>Buying reminder</h3>
+		**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
+		<button onclick="window.location='index.php?task=payment&id=<?=$item_link;?>'">I agree</button>
+	</div>
+</div>

@@ -40,10 +40,10 @@
 	<div class="row">
 		<table class="splash-shop" onClick="window.location = 'items'">
 		<tr>
-			<td width="25%"></td>
+			<td width="81px"></td>
 			<td><img src="images/btn-cart.png" width="45" height="34"></img></td>
 			<td class="splashText" style="color: #FFF;">shop</td>
-			<td width="25%"></td>
+			<td width="81px"></td>
 		</tr>
 		</table>
 		<div class="splashText" style="text-align: left;">buy items whose sale helps a silo</div>
@@ -56,10 +56,10 @@
 	<div class="row">
 		<table class="splash-donate" onClick="window.location = 'silos'">
 		<tr>
-			<td width="8%"></td>
+			<td width="26px"></td>
 			<td><img src="images/btn-heart.png" width="44" height="33"></img></td>
 			<td class="splashText" style="color: #FFF;">donate items</td>
-			<td width="8%"></td>
+			<td width="26px"></td>
 		</tr>
 		</table>
 		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
@@ -75,7 +75,7 @@
 			<td class="splashText">create a private or a public silo</td>
 		</tr>
 		<tr>
-			<td>private silos keep 95%, public silos are often tax-deductible.</td>
+			<td style="padding-bottom: 5px;">private silos keep 95%, public silos are often tax-deductible.</td>
 		</tr>
 		</table>
 

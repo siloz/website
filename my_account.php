@@ -278,6 +278,7 @@ if ($_SESSION['is_logged_in'] != 1) { ?>
 			$last_update = strtotime($row['last_update']);
 			$photo_file = $row['photo_file'];
 			$valid_code = $row['validation_code'];
+			$activeItems = mysql_num_rows(mysql_query("SELECT * FROM items WHERE user_id = '$user_id' AND status = 'pledged' OR status = 'offer'"));
 		}
 
 		if ($redirect && (!param_post('task') == 'update_account')) { ?>
@@ -463,7 +464,18 @@ die;
 						</tr>
 						<tr>
 							<td><b>Address</b> </td>
+
+					<?php if ($activeItems) { ?>
+							<td>
+							<div id='adr_disabled' style="display:inline-block; position:relative;">
+							<input type="text" name="address" style="width : 200px" value='<?php echo $address; ?>' <?php if ($activeItems) { echo "disabled='disabled'"; } ?> />
+							 <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div>
+							</div>
+							</td>
+					<?php } else { ?>
 							<td><input type="text" name="address" style="width : 200px" value='<?php echo $address; ?>' /></td>
+					<?php } ?>
+
 						</tr>
 						<tr>
 							<td><b>Zip code</b> </td>
@@ -707,6 +719,10 @@ $("#linkedin").live('click', function() {
         }
      );
   }
+
+$("#adr_disabled").click(function() {
+       javascript:popup_show('adr-dis', 'adr-dis_drag', 'adr-dis_exit', 'screen-center', 0, 0);
+});
 </script>
 
 <div class="login" id="fb-confirm" style="width: 500px;">
@@ -730,5 +746,16 @@ $("#linkedin").live('click', function() {
 		When you Connect with LinkedIn, we will grab the information from your linkedin.com account and store your information in our own database. Your information will not be updated until you click the LinkedIn Connect button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
 		<button onclick="document.location='linkedin.php?user_id=<?=$user_id?>&redirect=<?=$redirect?>'">Continue and Connect with LinkedIn</button>
 		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('linkedin-confirm').style.display='none';">Cancel</button>
+	</div>
+</div>
+
+<div class="login" id="adr-dis" style="width: 300px;">
+	<div id="adr-dis_drag" style="float:right">
+		<img id="adr-dis_exit" src="images/close.png"/>
+	</div>
+	<div>
+		<h3>You cannot change your address</h3>
+		Since you have items being actively listed, you cannot change your street address at this time. Changing the address on your account would interrupt the proccess for the buyers' of all of your items. Once all of your currently listed items have ended, you can change your address. <br><br>
+		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('adr-dis').style.display='none';">Okay</button>
 	</div>
 </div>

@@ -7,8 +7,11 @@ $(document).ready(function () {
     //Zero the idle timer on mouse movement.
     $(this).bind('mousemove keydown DOMMouseScroll mousewheel mousedown touchstart touchmove', function (e) {
         idleTime = 0;
+	 var isVisible = $('#timeout').is(':visible');
+	if (isVisible) {
   	 document.getElementById("timeout").style.display = "none";
   	 document.getElementById("overlay").style.display = "none";
+	}
     });
 })
 function timerIncrement() {

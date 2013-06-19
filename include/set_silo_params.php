@@ -19,6 +19,7 @@ if($verified){$Silo->verified = $verified;}
 if($issue_receipts){$Silo->issue_receipts = $issue_receipts;}
 if($title){$Silo->title = $title;}
 if($phone_number){$Silo->phone_number = $phone_number;}
+if($website){$Silo->website = $website;}
 if($address){$Silo->address = $address;}
 if($longitude){$Silo->longitude = $longitude;}
 if($latitude){$Silo->latitude = $latitude;}

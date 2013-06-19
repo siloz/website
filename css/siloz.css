@@ -1065,12 +1065,12 @@ div.first_element {
 	-webkit-box-shadow: 2px 2px 5px grey;
 	box-shadow: 2px 2px 5px grey;
 
-	margin: 5px 25px 15px 3px;
+	margin: 5px 25px 16px 3px;
 }
 
 .splash-create {
 	background-color: #fff;
-	width: 650px;
+	width: 645px;
 	height: 75px;
     	color: grey;
     	font-size: 9pt;
@@ -1089,10 +1089,11 @@ div.first_element {
 .splash-pledge {
 	float: right;
 	background-color: #fe5300;
-	width: 100px;
+	width: 111px;
     	border-radius: 4px;
     	padding: 5px;
 	margin-left: 3px;
+	margin-right: 5px;
 	text-align: center;
 
 	-moz-box-shadow: 2px 2px 5px grey;

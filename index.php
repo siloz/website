@@ -98,7 +98,6 @@ if (!isset($_SESSION['is_logged_in'])) {
 		if ($check) {
 			$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
 
-			$_SESSION['username'] = $user['username'];
 			$_SESSION['user_id'] = $user['user_id'];
 			$_SESSION['is_logged_in'] = 1;
 
