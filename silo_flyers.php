@@ -6,10 +6,6 @@
 	margin-bottom: 10px;
 	border-radius: 4px; 
 	border: 2px solid #2f8dcb;
-
-	-moz-box-shadow: 2px 2px 5px grey;
-	-webkit-box-shadow: 2px 2px 5px grey;
-	box-shadow: 2px 2px 5px grey;
     }
     </style>
 </head>

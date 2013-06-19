@@ -80,7 +80,7 @@
 		</table>
 
 		<div class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
-			<span class="splashText" style="color: #FFF;">pledge <br> first</span>
+			<span class="splashText" style="color: #FFF;">pledge<br>first</span>
 		</div>
 	</div>
 		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
