@@ -2,6 +2,10 @@
 	require_once("include/autoload.class.php");
 	require_once("include/check_updates.php");
 
+		$geoplugin = new geoPlugin();
+		$geoplugin->locate();
+		echo $geoplugin->city;
+
 //Ensure the page is supposed to be secured, otherwise redirect to non-secure link
 $secure_pages = array("", "payment", "my_account", "transaction_console");
 $current_page = param_get('task');
@@ -178,6 +182,8 @@ if (!isset($_SESSION['is_logged_in'])) {
 	if (param_get('name')) {
 		$rewrite = "../";
 	}
+
+print_r($_COOKIE);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 

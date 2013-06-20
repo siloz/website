@@ -1070,8 +1070,8 @@ div.first_element {
 
 .splash-create {
 	background-color: #fff;
-	width: 645px;
-	height: 75px;
+	width: 632px;
+	height: 64px;
     	color: grey;
     	font-size: 9pt;
     	font-weight: normal;
@@ -1107,9 +1107,15 @@ div.first_element {
 }
 
 .splashText {
-	text-align: left;
-	margin-top: 10px;
-	margin-bottom: -20px;
+	margin-top: 18px;
+	color: #2f8dcb;
+	font-size: 20pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+.splash-create_text {
+	margin-top: 6px;
 	color: #2f8dcb;
 	font-size: 20pt;
 	font-weight: bold;
@@ -2049,7 +2055,6 @@ margin-left: 5px;
 
 .action_text {
 	float: left;
-	margin-top: 30px;
 	color: gray;
 }
 

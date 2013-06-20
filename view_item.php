@@ -739,7 +739,9 @@ die;
 							<img height="40" width="40" src="images/facebook.jpg" class="fbHover" onclick='postToFeed();'/>
 						</td></tr>
 						<tr><td>
-							<?php if ($fav) { ?>
+							<?php if (!$_SESSION['is_logged_in']) { ?>
+								<button class="buttonItemPage" onclick="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">add to favorites
+							<?php } elseif ($fav) { ?>
 								<form method="post" action="">
 									<input type="hidden" name="user_id" value="<?=$user_id?>">
 									<input type="hidden" name="item_id" value="<?=$item->item_id?>">

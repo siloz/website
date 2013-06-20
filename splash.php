@@ -47,9 +47,9 @@
 		</tr>
 		</table>
 		<div class="splashText" style="text-align: left;">buy items whose sale helps a silo</div>
-		<p class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
+		<div class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
 		<span class="blue"><a onclick="popup_show('items_sold', 'items_sold_drag', 'items_sold_exit', 'screen-center', 0, 0);"><b>how Voucher/Key works</b></a></span>
-		</p>
+		</div>
 	</div>
 
 	<!-- donate button -->
@@ -63,14 +63,14 @@
 		</tr>
 		</table>
 		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
-		<p class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
+		<div class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
 		<span class="blue"><a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a></span>
-		</p>
+		</div>
 	</div>
 	
 	<!-- start silo button -->
 	<div class="row">
-		<table class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
+<!--		<table border=1 class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
 		<tr>
 			<td class="splashText">create a private or a public silo</td>
 		</tr>
@@ -78,6 +78,12 @@
 			<td style="padding-bottom: 5px;">private silos keep 95%, public silos are often tax-deductible.</td>
 		</tr>
 		</table>
+-->
+
+		<div class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
+			<div class="splash-create_text">create a private or a public silo</div>
+			<div>private silos keep 95%, public silos are often tax-deductible.</div>
+		</div>
 
 		<div class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
 			<span class="splashText" style="color: #FFF;">pledge<br>first</span>
