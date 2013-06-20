@@ -70,16 +70,6 @@
 	
 	<!-- start silo button -->
 	<div class="row">
-<!--		<table border=1 class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
-		<tr>
-			<td class="splashText">create a private or a public silo</td>
-		</tr>
-		<tr>
-			<td style="padding-bottom: 5px;">private silos keep 95%, public silos are often tax-deductible.</td>
-		</tr>
-		</table>
--->
-
 		<div class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
 			<div class="splash-create_text">create a private or a public silo</div>
 			<div>private silos keep 95%, public silos are often tax-deductible.</div>
