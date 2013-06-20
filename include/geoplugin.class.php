@@ -58,7 +58,11 @@ class geoPlugin {
 		global $_SERVER;
 		
 		if ( is_null( $ip ) ) {
-			$ip = $_SERVER['REMOTE_ADDR'];
+			$ipThruLoadBal = $_SERVER['REMOTE_ADDR'];
+			if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+    				$ipThruLoadBal = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+			}
+			$ip = $ipThruLoadBal;
 		}
 		
 		$host = str_replace( '{IP}', $ip, $this->host );
