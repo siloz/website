@@ -96,7 +96,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 		$old_token = $_COOKIE['remember_me_token'];
 		$check = mysql_num_rows(mysql_query("SELECT * FROM user_sessions WHERE user_id = '$user_id' AND token = '$old_token'"));
 		if ($check) {
-			$user = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
+			$user = mysql_fetch_array(mysql_query("SELECT user_id, admin FROM users WHERE user_id = '$user_id'"));
 
 			$_SESSION['user_id'] = $user['user_id'];
 			$_SESSION['is_logged_in'] = 1;
@@ -105,9 +105,9 @@ if (!isset($_SESSION['is_logged_in'])) {
 				$_SESSION['admin_access'] = true;
 			}
 
-			$token = new User();
-			$token = $token->randString(32);
-			$ip = getenv('REMOTE_ADDR');
+			$user = new User();
+			$token = $user->randString(32);
+			$ip = $user->getUserIP();
 
 			$updSess = mysql_query("UPDATE user_sessions SET token = '$token', ip = '$ip' WHERE user_id = '$user_id'");
 			setcookie( "remember_me_id", $user_id, strtotime( '+1 month' ) );
@@ -141,9 +141,9 @@ if (!isset($_SESSION['is_logged_in'])) {
 			}
 			if (isset($_POST['remember_me'])) {
 				$check = mysql_num_rows(mysql_query("SELECT * FROM user_sessions WHERE user_id = '$row[user_id]'"));
-				$token = new User();
-				$token = $token->randString(32);
-				$ip = getenv('REMOTE_ADDR');
+					$user = new User();
+					$token = $user->randString(32);
+					$ip = $user->getUserIP();
 
 				if (!$check) {
 					$newSess = mysql_query("INSERT INTO user_sessions (user_id, token, ip) VALUES ('$row[user_id]', '$token', '$ip')");

@@ -284,7 +284,16 @@ class User {
        		$randomString .= $characters[rand(0, strlen($characters) - 1)];
     		}
     		return $randomString;
-}
+	}
+
+// Gets IP, even if through proxy (or load balancer in siloz.com's case)
+	public function getUserIP() {
+		$ip = $_SERVER['REMOTE_ADDR'];
+		if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+    			$ip = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+		}
+    		return $ip;
+	}
 	
 }
 ?>
