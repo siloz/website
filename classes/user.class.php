@@ -211,6 +211,9 @@ class User {
 	}
 	
 	public function ValidateRegistration($id,$code){
+		$checkUser = mysql_num_rows(mysql_query("SELECT * FROM users WHERE id = '$id' AND validation_code = '$code'"));
+		$checkActive = mysql_num_rows(mysql_query("SELECT * FROM users WHERE id = '$id' AND validation_code < 0"));
+		if ($checkUser) {
 		$query = (
 			"UPDATE `users` SET `validation_code` = '-1', "
 			."`status` = 'active' "
@@ -219,7 +222,6 @@ class User {
 		);
 		error_log($query);
 		mysql_query($query);
-		if (mysql_affected_rows() >= 1) {
 			$subject = "Make a difference in your community, as a shopper, item donor, or silo administrator!";
 			$message = "<h2>Welcome to ".SITE_NAME."!</h2>";
 			$message .= "We want to thank you for creating an account with ".SITE_NAME."! We wanted to briefly tell you what you can expect as a user. ".SITE_NAME." allows local organizations to raise money by accepting donated items from local supporters.  Those items then appear for sale to the general public. <br><br>";
@@ -238,16 +240,10 @@ class User {
 			mysql_query("UPDATE users SET info_emails = 1 WHERE user_id = '$this->user_id'");
 
 			return "success";
-		}
-		else {
-			$query = (
-				"SELECT `activation_code` FROM `users` "
-				."WHERE `id` = '".mysql_real_escape_string($id)."' "
-				."AND `validation_code` = '-1'"
-			);
-			mysql_query($query);
-			if(mysql_affected_rows() >= 1){return "active";}
-			else{return false;}
+		} elseif ($checkActive) {
+			return "active";
+		} else {
+			return "incorrect";
 		}
 	}
 

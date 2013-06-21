@@ -76,7 +76,8 @@
 		</div>
 
 		<div class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
-			<span class="splashText" style="color: #FFF;">pledge<br>first</span>
+			<div class="splash-pledge_text">pledge first</div>
+			<div>we will notify your cause<br>to start a silo</div>
 		</div>
 	</div>
 		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">

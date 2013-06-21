@@ -1070,7 +1070,7 @@ div.first_element {
 
 .splash-create {
 	background-color: #fff;
-	width: 632px;
+	width: 583px;
 	height: 64px;
     	color: grey;
     	font-size: 9pt;
@@ -1089,9 +1089,13 @@ div.first_element {
 .splash-pledge {
 	float: right;
 	background-color: #fe5300;
-	width: 111px;
-    	border-radius: 4px;
+	width: 160px;
+	height: 66px;
+    	color: #fff;
+    	font-size: 9pt;
+    	font-weight: normal;
     	padding: 5px;
+    	border-radius: 4px;
 	margin-left: 3px;
 	margin-right: 5px;
 	text-align: center;
@@ -1117,6 +1121,12 @@ div.first_element {
 .splash-create_text {
 	margin-top: 6px;
 	color: #2f8dcb;
+	font-size: 20pt;
+	font-weight: bold;
+	text-align: center;
+}
+
+.splash-pledge_text {
 	font-size: 20pt;
 	font-weight: bold;
 	text-align: center;

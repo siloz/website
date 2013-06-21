@@ -132,36 +132,37 @@ if (!isset($_SESSION['is_logged_in'])) {
 			if ($row['validation_code'] < 0) {
 				$_SESSION['user_id'] = $row['user_id'];
 				$_SESSION['is_logged_in'] = 1;
-			}
-			else {
-				$headline = "ERROR: Your account is not activated yet. Please check your email!";
-			}
-			if ($row['admin'] == yes) {
-				$_SESSION['admin_access'] = true;
-			}
-			if (isset($_POST['remember_me'])) {
-				$check = mysql_num_rows(mysql_query("SELECT * FROM user_sessions WHERE user_id = '$row[user_id]'"));
-					$user = new User();
-					$token = $user->randString(32);
-					$ip = $user->getUserIP();
 
-				if (!$check) {
-					$newSess = mysql_query("INSERT INTO user_sessions (user_id, token, ip) VALUES ('$row[user_id]', '$token', '$ip')");
-					setcookie( "remember_me_id", $row['user_id'], strtotime( '+1 month' ) );
-					setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+				if ($row['admin'] == yes) {
+					$_SESSION['admin_access'] = true;
+				}
+				if (isset($_POST['remember_me'])) {
+					$check = mysql_num_rows(mysql_query("SELECT * FROM user_sessions WHERE user_id = '$row[user_id]'"));
+						$user = new User();
+						$token = $user->randString(32);
+						$ip = $user->getUserIP();
+
+					if (!$check) {
+						$newSess = mysql_query("INSERT INTO user_sessions (user_id, token, ip) VALUES ('$row[user_id]', '$token', '$ip')");
+						setcookie( "remember_me_id", $row['user_id'], strtotime( '+1 month' ) );
+						setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+					}
+					else {
+						$updSess = mysql_query("UPDATE user_sessions SET token = '$token', ip = '$ip' WHERE user_id = '$row[user_id]'");
+						setcookie( "remember_me_id", $row['user_id'], strtotime( '+1 month' ) );
+						setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+					}
 				}
 				else {
-					$updSess = mysql_query("UPDATE user_sessions SET token = '$token', ip = '$ip' WHERE user_id = '$row[user_id]'");
-					setcookie( "remember_me_id", $row['user_id'], strtotime( '+1 month' ) );
-					setcookie( "remember_me_token", $token, strtotime( '+1 month' ) );
+					$delSess = mysql_query("DELETE FROM user_sessions WHERE user_id = '$row[user_id]'");
+					setcookie( "remember_me_id", false, strtotime( '-1 month' ) );
+					setcookie( "remember_me_token", false, strtotime( '-1 month' ) );
 				}
 			}
 			else {
-				$delSess = mysql_query("DELETE FROM user_sessions WHERE user_id = '$row[user_id]'");
-				setcookie( "remember_me_id", false, strtotime( '-1 month' ) );
-				setcookie( "remember_me_token", false, strtotime( '-1 month' ) );
-			}
-		} 
+				$headline = "Your account is not activated. Please check your email!";
+			} 
+		}
 	}
 
 	if (param_get('task') == 'logout') {
@@ -283,10 +284,35 @@ if (!isset($_SESSION['is_logged_in'])) {
 		?>
 		<div id="main">
 			<?php
-			if ((count($_GET) == 0 && count($_POST) == 0) && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes") {
-				include('splash.php');
-			} 
-			else {
+				if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes") {
+					$splash = "true";
+				}
+
+				$task = param_get('task');
+				if ($task == '') 
+					$task = param_post('task');
+				$search = param_get('search');
+				if ($task == 'validate_registration') {
+					$User = new User(param_get('id'));
+					$code = param_get('code');
+					$activate = $User->ValidateRegistration($_REQUEST["id"],$code);
+					error_log("ACTIVATE: ".$activate);
+					if ($activate === "success"){
+						$headline = "Your account in now activated, please login!";
+					}
+					elseif ($activate === "active") {
+						$headline = "Your account was already activated, please login!";							
+					}
+					elseif ($activate === "incorrect") {
+						$headline = "Wrong confirmation code. Try again!";							
+					}
+					include('header.php');
+					include('search_item.php');
+				}
+				elseif ($splash) {
+					include('splash.php');
+				} 
+				else {
 			?>
 			<div id="header">
 				<?php
@@ -295,37 +321,13 @@ if (!isset($_SESSION['is_logged_in'])) {
 			</div>
 			<div id="main_body">				
 				<?php
-					$task = param_get('task');
-					if ($task == '') 
-						$task = param_post('task');
-					$search = param_get('search');
-					if ($task == 'validate_registration') {
-						$User = new User(param_get('id'));
-						$code = param_get('code');
-						$activate = $User->ValidateRegistration($_REQUEST["id"],$code);
-						error_log("ACTIVATE: ".$activate);
-						if ($activate === "success"){
-							$headline = "Your account in now activated, please login!";
-						}
-						else if ($activate === "active") {
-							$headline = "Your account was already activated, please login!";							
-						}
-						if ($headline != "")
-							echo "<div style='font-size: 14px; font-weight: bold; color: red; text-align: center'>$headline</div>";
-						include('search_item.php');
-					}
-					else if ($task != '') {
-						if ($headline != "") {
-							echo "<div style='font-size: 14px; font-weight: bold; color: red; text-align: center'>$headline</div>";
-						}
+					if ($task != '') {
 						include($task.'.php');
 					}
 					else {
-						if ($headline != "")
-							echo "<div style='font-size: 14px; font-weight: bold; color: red; text-align: center'>$headline</div>";
 						if ($search == 'silo') {
 							include('search_silo.php');
-						}							
+						}					
 						else if ($search == 'item') {
 							include('search_item.php');
 						}
@@ -341,13 +343,13 @@ if (!isset($_SESSION['is_logged_in'])) {
 			</div>
 			<?php
 			}
-			if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes"){} else { echo '<div id="push"></div>'; }
+			if ($splash){} else { echo '<div id="push"></div>'; }
 			?>
 		</div>
 		</div>
 			<div id="new-footer">
 				<?php
-					if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes") {
+					if ($splash) {
 					} 
 					else {
 						include('footer.php'); 

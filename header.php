@@ -174,16 +174,19 @@
 
 <form action='index.php' id="search_form" name="search_form">
 <div id="logo_container">
-	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>" style="text-decoration:none"><img src="<?=ACTIVE_URL?>images/logo-beta.png" width="289" height="62" /></a>			
+	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>" style="text-decoration:none"><img src="<?=ACTIVE_URL?>images/logo-beta.png" width="289" height="62" /></a>
 </div>
 
-<!-- <div align="right" style="margin-top: 100px; margin-right: 10px; font-size: 12px; line-height: 25px;">
-	Raise money by accepting items, pledged items - all online. Start a silo now!
-</div> -->
+<?php
+if ($headline != "")
+	$header = "<div style='font-size: 14px; font-weight: bold; color: red; text-align: center'>$headline</div>";
+?>
+
 <div id="status" align="right" style="width: 965px; margin-top: 45px; position: absolute; font-size: 8pt;">
 <?php
 	if ($_SESSION['admin_access']) {
-		$header = "<a href='".ACTIVE_URL."administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
+		$header = "<a href='".ACTIVE_URL."index.php?allow=yes' style='padding-right: 25px; text-decoration: none; color: grey'><b>Splash Page</b></a>";
+		$header .= "<a href='".ACTIVE_URL."administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
 	}
 
 	$qry = mysql_query("SELECT * FROM notifications WHERE user_id = '$user_id'");

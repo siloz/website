@@ -77,7 +77,7 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<div align="left">
 			<span class="infoDetails">
 				Administrator:<br>
-				<?=$admin_name?><br>
+				<a href="<?=ACTIVE_URL?>index.php?task=view_user&id=<?=$admin->id?>"><?=$admin_name?></a><br>
 				Official Address:<br>
 				<?=$silo->address?><br>
 				Telephone:<br>
