@@ -7,6 +7,17 @@
 	if (!$user['fname'] || !$user['lname'] || !$user['address'] || !$user['phone'] || !$user['photo_file']) { $addInfo_full = true; }
 ?>
 
+<script type="text/javascript">
+	function create_account_with_purpose() {
+		if (document.forms['login_form'].elements['purpose'].value == '') {
+			window.location.replace('index.php?task=create_account')
+		}
+		else {
+			window.location.replace('index.php?task=create_account&action='+document.forms['login_form'].elements['purpose'].value);	
+		}
+	}
+</script>
+
 <div id="top_menu">
 	<span class="gray"><?=$userLocation?></span>
 
@@ -82,7 +93,6 @@
 		<div id="login_status"></div>
 		<br/>
 		<button type="button" id="login_button">Login</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('login').style.display='none';">Cancel</button>
 	</form>
 	<script>
 		$("#login_button").click(function(event) {	

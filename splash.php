@@ -77,10 +77,12 @@
 			</div>
 		</a>
 
-		<div class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
-			<div class="splash-pledge_text">pledge first</div>
-			<div>we will notify your cause<br>to start a silo</div>
-		</div>
+		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
+			<div class="splash-pledge">
+				<div class="splash-pledge_text">pledge first</div>
+				<div>we will notify your cause<br>to start a silo</div>
+			</div>
+		</a>
 	</div>
 		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
 			<a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a>

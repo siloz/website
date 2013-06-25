@@ -1,10 +1,17 @@
 <?php
-include("include/timeout.php");
+//include("include/timeout.php");
 
-if ($_SESSION['is_logged_in'] != 1) {
-	echo "<script>create_silo_need_login();</script>";
-}
-elseif ($addInfo_full) {
+if ($_SESSION['is_logged_in'] != 1) { ?>
+	<script type="text/javascript">
+		$(document).ready(function () {
+   		 	if (!runCode) {
+        			$("#login").fancybox().trigger('click');
+				var runCode = true;
+			}
+		})
+	</script>
+<?php 
+} elseif ($addInfo_full) {
 	echo "<script>window.location = 'index.php?task=my_account&redirect=1';</script>";
 }
 else {
