@@ -72,7 +72,7 @@
 	?>
 			<a class="fancybox" href="#login"><span class="blue">login/create account</span></a>
 			<span class="blue separator">|</span>	
-			<a href="javascript:create_silo_need_login();"><span class="blue">start a silo</span></a>
+			<a class="fancybox" href="#login"><span class="blue">start a silo</span></a>
 	<?php
 		}
 	?>

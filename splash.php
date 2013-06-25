@@ -70,10 +70,12 @@
 	
 	<!-- start silo button -->
 	<div class="row">
-		<div class="action splash-create" onClick="window.location = '<?php if (!$user_id) { echo "javascript:create_silo_need_login();"; } else { echo "index.php?task=create_silo"; } ?>'">
-			<div class="splash-create_text">create a private or a public silo</div>
-			<div>private silos keep 95%, public silos are often tax-deductible.</div>
-		</div>
+		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
+			<div class="action splash-create">
+				<div class="splash-create_text">create a private or a public silo</div>
+				<div>private silos keep 95%, public silos are often tax-deductible.</div>
+			</div>
+		</a>
 
 		<div class="splash-pledge" onClick="window.location = 'index.php?task=pledge_first'">
 			<div class="splash-pledge_text">pledge first</div>
