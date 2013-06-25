@@ -7,21 +7,6 @@
 	if (!$user['fname'] || !$user['lname'] || !$user['address'] || !$user['phone'] || !$user['photo_file']) { $addInfo_full = true; }
 ?>
 
-<script type="text/javascript">
-	function create_silo_need_login() {
-       	$("#login").fancybox().trigger('click');
-	}
-	
-	function create_account_with_purpose() {
-		if (document.forms['login_form'].elements['purpose'].value == '') {
-			window.location.replace('index.php?task=create_account')
-		}
-		else {
-			window.location.replace('index.php?task=create_account&action='+document.forms['login_form'].elements['purpose'].value);	
-		}
-	}
-</script>
-
 <div id="top_menu">
 	<span class="gray"><?=$userLocation?></span>
 

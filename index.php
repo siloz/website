@@ -206,15 +206,15 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<link rel='stylesheet' type='text/css' href='<?=ACTIVE_URL?>include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
 		
 		<!-- Fancybox includes -->
-		<link rel="stylesheet" type="text/css" href="include/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" />
-		<link rel="stylesheet" type="text/css" href="include/fancybox/source/jquery.fancybox.css?v=2.1.0" media="screen" />
-		<link rel="stylesheet" type="text/css" href="include/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.3" />
-		<script type="text/javascript" src="include/fancybox/lib/jquery-1.8.0.min.js"></script>
-		<script type="text/javascript" src="include/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
-		<script type="text/javascript" src="include/fancybox/source/jquery.fancybox.js?v=2.1.0"></script>
-		<script type="text/javascript" src="include/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.3"></script>
-		<script type="text/javascript" src="include/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
-		<script type="text/javascript" src="include/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.3"></script>
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.css?v=2.1.0" media="screen" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.3" />
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/lib/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.js?v=2.1.0"></script>
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.3"></script>
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
+		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.3"></script>
 		<!-- End Fancybox includes	-->
 
 		<script type="text/javascript">
