@@ -1,13 +1,10 @@
 <?php
-//include("include/timeout.php");
+include("include/timeout.php");
 
 if ($_SESSION['is_logged_in'] != 1) { ?>
 	<script type="text/javascript">
 		$(document).ready(function () {
-   		 	if (!runCode) {
-        			$("#login").fancybox().trigger('click');
-				var runCode = true;
-			}
+        		$("#login").fancybox().trigger('click');
 		})
 	</script>
 <?php 
