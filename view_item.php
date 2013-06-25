@@ -425,219 +425,178 @@ die;
 ?>
 
 <div class="login" id="offer" style="width: 300px;">
-	<div id="offer_drag" style="float:right">
-		<img id="offer_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item->item_id?>">
-			<input type="hidden" name="buyer_id" value="<?=$user_id?>">
-			<input type="hidden" name="seller_id" value="<?=$item->user_id?>">
-			<h2>Enter your offer below:</h2>
-			$<input onclick=this.value="" type="text" value="0.00" name="amount">
-			<br/><br>	
-			<button type="submit" name="offer" value="send offer">Send offer</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+		<input type="hidden" name="buyer_id" value="<?=$user_id?>">
+		<input type="hidden" name="seller_id" value="<?=$item->user_id?>">
+		<h2>Enter your offer below:</h2>
+		$<input onclick=this.value="" type="text" value="0.00" name="amount">
+		<br/><br>	
+		<button type="submit" name="offer" value="send offer">Send offer</button>
+	</form>
 </div>
 
 <div class="login" id="offerp" style="width: 300px;">
-	<div id="offerp_drag" style="float:right">
-		<img id="offerp_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item->item_id?>">
-			<input type="hidden" name="buyer_id" value="<?=$user_id?>">
-			<input type="hidden" name="seller_id" value="<?=$item->user_id?>">
-			<h2><font color="FF642F">Offer: $<?=$offerAmount?></font></h2>
-			<h2>You are only allowed one offer per item. Are you sure you want to cancel it?</h2>
-			<br/><br>	
-			<button type="submit" name="offer" value="cancel">Yes, cancel my offer</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item->item_id?>">
+		<input type="hidden" name="buyer_id" value="<?=$user_id?>">
+		<input type="hidden" name="seller_id" value="<?=$item->user_id?>">
+		<h2><font color="FF642F">Offer: $<?=$offerAmount?></font></h2>
+		<h2>You are only allowed one offer per item. Are you sure you want to cancel it?</h2>
+		<br/><br>	
+		<button type="submit" name="offer" value="cancel">Yes, cancel my offer</button>
+	</form>
 </div>
 
 <div class="login" id="ioffer" style="width: 300px;">
-	<div id="ioffer_drag" style="float:right">
-		<img id="ioffer_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<?php if ($statusO == "pending") { ?>
+	<?php if ($statusO == "pending") { ?>
 		<h2>Another user has already sent an offer for this item. If the seller doesn't take any action, it will expire on <?=$offerExp?>. <br><br>
 		You can still purchase this item for the original asking price at any time.</h2>
-		<?php } elseif ($statusO == "accepted") { ?>
+	<?php } elseif ($statusO == "accepted") { ?>
 		<h2>Another user has made an offer and the seller has accepted it. No more offers will be able to be made for this item. <br><br>
 		You can still purchase this item at the seller's original asking price. Buy it soon!</h2>
-		<?php } ?>
-	</div>
+	<?php } ?>
 </div>
 
 <div class="login" id="dist" style="width: 300px;">
-	<div id="dist_drag" style="float:right">
-		<img id="dist_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>You are too far away from the seller. Please find an item closer to your current location.</h2>
-	</div>
+	<h2>You are too far away from the seller. Please find an item closer to your current location.</h2>
 </div>
 
 <div class="login" id="flagged" style="width: 300px;">
-	<div id="flagged_drag" style="float:right">
-		<img id="flagged_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>You have flagged this item already. You can only flag each item once.</h2>
-	</div>
+	<h2>You have flagged this item already. You can only flag each item once.</h2>
 </div>
 
 <div class="login" id="closed_silo" style="width: 300px;">
-	<div id="closed_silo_drag" style="float:right">
-		<img id="closed_silo_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>This function has been disabled because the silo is no longer active.</h2>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('closed_silo').style.display='none';">Okay</button>
-	</div>
+	<h2>This function has been disabled because the silo is no longer active.</h2>
 </div>
 
 <div class="contact_seller" id="contact_admin">
-	<div id="contact_admin_drag" style="float: right">
-		<img id="contact_admin_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form name="contact_admin_form" id="contact_admin_form" method="POST">
-			<h2>Contact Admin</h2>
-			<p>Silo <b><?php echo $silo->name; ?></b></p>
-			<div id="contact_admin_status"></div>			
-			<table>
-				<tr>
-					<td valign="top">
-						<b>Email</b>
-					</td>
-					<td>
-						<input type="text" name="contact_email" id="contact_email" onfocus="select();" style="width:300px;" 
-						value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Subject</b>
-					</td>
-					<td>
-						<input type="text" name="contact_subject" id="contact_subject" onfocus="select();" style="width:300px;"/>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Inquiry<br/>/Offer</b>
-					</td>
-					<td>
-						<textarea style='width: 300px; height: 200px' name="inquiry" id="inquiry"></textarea>
-					</td>
-				</tr>
-			</table>
-			<br/>			
-			<button type="button" id="contact_admin_button">Send</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_admin').style.display='none';">Cancel</button>
-		</form>
-		<script>
-			$("#contact_admin_button").click(function(event) {	
-				document.getElementById('overlay').style.display='none';
-				document.getElementById('contact_admin').style.display='none';
-				$.post(<?php echo "'".API_URL."'"; ?>, 
-					{	
-						request: 'email_silo_admin',
-						silo_id: <?php echo $silo->silo_id; ?>,
-						email: document.getElementById('contact_email').value,
-						subject: document.getElementById('contact_subject').value,
-						content: document.getElementById('inquiry').value
-					}, 
-					function (xml) {
-						$(xml).find('response').each(function (){
-							if ($(this).text() == 'successful') 
-								alert("Your inquiry has been sent!");
-							else
-								alert("Failed to send your inquiry!");
-							document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
-							document.getElementById('contact_subject').value = "";
-							document.getElementById('inquiry').value = "";							
-						});
-					}
-				);
-			});
-		</script>		
-	</div>
+	<form name="contact_admin_form" id="contact_admin_form" method="POST">
+		<h2>Contact Admin</h2>
+		<p>Silo <b><?php echo $silo->name; ?></b></p>
+		<div id="contact_admin_status"></div>			
+		<table>
+			<tr>
+				<td valign="top">
+					<b>Email</b>
+				</td>
+				<td>
+					<input type="text" name="contact_email" id="contact_email" onfocus="select();" style="width:300px;" 
+					value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Subject</b>
+				</td>
+				<td>
+					<input type="text" name="contact_subject" id="contact_subject" onfocus="select();" style="width:300px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Inquiry<br/>/Offer</b>
+				</td>
+				<td>
+					<textarea style='width: 300px; height: 200px' name="inquiry" id="inquiry"></textarea>
+				</td>
+			</tr>
+		</table>
+		<br/>			
+		<button type="button" id="contact_admin_button">Send</button>
+		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_admin').style.display='none';">Cancel</button>
+	</form>
+	<script>
+		$("#contact_admin_button").click(function(event) {	
+			document.getElementById('overlay').style.display='none';
+			document.getElementById('contact_admin').style.display='none';
+			$.post(<?php echo "'".API_URL."'"; ?>, 
+				{	
+					request: 'email_silo_admin',
+					silo_id: <?php echo $silo->silo_id; ?>,
+					email: document.getElementById('contact_email').value,
+					subject: document.getElementById('contact_subject').value,
+					content: document.getElementById('inquiry').value
+				}, 
+				function (xml) {
+					$(xml).find('response').each(function (){
+						if ($(this).text() == 'successful') 
+							alert("Your inquiry has been sent!");
+						else
+							alert("Failed to send your inquiry!");
+						document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
+						document.getElementById('contact_subject').value = "";
+						document.getElementById('inquiry').value = "";							
+					});
+				}
+			);
+		});
+	</script>		
 </div>
 
 <div class="contact_seller" id="contact_seller">
-	<div id="contact_seller_drag" style="float: right">
-		<img id="contact_seller_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form name="contact_seller_form" id="contact_seller_form" method="POST">
-			<h2>Contact Seller</h2>
-			<div id="contact_seller_status"></div>			
-			<table>
-				<tr>
-					<td valign="top">
-						<b>Email</b>
-					</td>
-					<td>
-						<input type="text" id="contact_email" style="width:300px;" 
-						value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Subject</b>
-					</td>
-					<td>
-						<input type="text" id="contact_subject" style="width:300px;"/>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Inquiry<br/>/Offer</b>
-					</td>
-					<td>
-						<textarea style='width: 300px; height: 200px' id="inquiry"></textarea>
-					</td>
-				</tr>
-			</table>
-			<br/>			
-			<button type="button" id="contact_seller_button">Send</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_seller').style.display='none';">Cancel</button>
-		</form>
-		<script>
-			$("#contact_seller_button").click(function(event) {	
-				$.post(<?php echo "'".API_URL."'"; ?>, 
-					{	
-						request: 'email_seller',
-						item_id: <?php echo "'$item_id'"; ?>,
-						email: $('#contact_email').val(),
-						subject: $('#contact_subject').val(),
-						content: $('#inquiry').val()
-					}, 
-					function (xml) {
-						$(xml).find('response').each(function (){
-							if ($(this).text() == 'successful') { 
-								document.getElementById('overlay').style.display='none';
-								document.getElementById('contact_seller').style.display='none';
-								
-								alert("Your inquiry has been sent!");								
-							}
-							else
-								alert("Failed to send your inquiry!");
-							document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
-							document.getElementById('contact_subject').value = "";
-							document.getElementById('inquiry').value = "";							
-						});
-					}
-				);
-			});
-		</script>		
-	</div>
+	<form name="contact_seller_form" id="contact_seller_form" method="POST">
+		<h2>Contact Seller</h2>
+		<div id="contact_seller_status"></div>			
+		<table>
+			<tr>
+				<td valign="top">
+					<b>Email</b>
+				</td>
+				<td>
+					<input type="text" id="contact_email" style="width:300px;" 
+					value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Subject</b>
+				</td>
+				<td>
+					<input type="text" id="contact_subject" style="width:300px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Inquiry<br/>/Offer</b>
+				</td>
+				<td>
+					<textarea style='width: 300px; height: 200px' id="inquiry"></textarea>
+				</td>
+			</tr>
+		</table>
+		<br/>			
+		<button type="button" id="contact_seller_button">Send</button>
+		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_seller').style.display='none';">Cancel</button>
+	</form>
+	<script>
+		$("#contact_seller_button").click(function(event) {	
+			$.post(<?php echo "'".API_URL."'"; ?>, 
+				{	
+					request: 'email_seller',
+					item_id: <?php echo "'$item_id'"; ?>,
+					email: $('#contact_email').val(),
+					subject: $('#contact_subject').val(),
+					content: $('#inquiry').val()
+				}, 
+				function (xml) {
+					$(xml).find('response').each(function (){
+						if ($(this).text() == 'successful') { 
+							document.getElementById('overlay').style.display='none';
+							document.getElementById('contact_seller').style.display='none';
+							
+							alert("Your inquiry has been sent!");								
+						}
+						else
+							alert("Failed to send your inquiry!");
+						document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
+						document.getElementById('contact_subject').value = "";
+						document.getElementById('inquiry').value = "";							
+					});
+				}
+			);
+		});
+	</script>		
 </div>
 
 <div class="spacer"></div>
@@ -689,73 +648,73 @@ die;
 						</div>
 
 				<?php if ($closed_silo) { echo "<div style='margin-top: 30px; text-align: center;'>The silo this item belongs to is closed. <br> Items in a closed silo are not interactive.</div>"; } 
-				elseif ($isSeller) { echo "<img height='40' width='40' src='images/facebook.jpg' class='fbHover' style='float: left; padding-top: 7px; padding-right: 5px;' onclick='postToFeed();'/> <a onclick=\"javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);\"><img src='images/mail-icon.png' width='55' height='55' style='float: left; padding-right: 5px;'></a> <span id='success' class='error'>".$updatemsg."</span> <div class='itemText' style='padding-top: 10px; text-align: center;'>You are the seller of this item. <br> Some functions are hidden.</div> <br> <button class='buttonEditItem' onclick=\"popup_show('editItem', 'editItem_drag', 'editItem_exit', 'screen-center', 0, 0);\">edit your item</button>"; } else { ?>
+				elseif ($isSeller) { echo "<img height='40' width='40' src='images/facebook.jpg' class='fbHover' style='float: left; padding-top: 7px; padding-right: 5px;' onclick='postToFeed();'/> <a class='fancybox' href='#mail'><img src='images/mail-icon.png' width='55' height='55' style='float: left; padding-right: 5px;'></a> <span id='success' class='error'>".$updatemsg."</span> <div class='itemText' style='padding-top: 10px; text-align: center;'>You are the seller of this item. <br> Some functions are hidden.</div> <br> <a class='fancybox' href='#editItem'><button class='buttonEditItem'>edit your item</button></a>"; } else { ?>
 
 						<div style="padding: 5px;"></div>
 							<?php if (!$_SESSION['is_logged_in']) {?>
-								<button class="buttonBuyItem" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">buy this item</button>
+								<a class='fancybox' href='#login'><button class="buttonBuyItem">buy this item
 							<?php } elseif ($isSeller) {} elseif (!$distBuyerSeller) { ?>
-								<button class="buttonBuyItem" onclick="popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">buy this item</button>
+								<a class='fancybox' href='#dist'><button>buy this item
 							<?php } elseif ($addInfo_full) { ?>
-								<button class="buttonBuyItem" onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">buy this item</button>
+								<a class='fancybox' href='#addInfo_item'><button class="buttonBuyItem">buy this item
 							<?php } else { ?>
-								<button class="buttonBuyItem" onclick="popup_show('buy-notif', 'buy-notif_drag', 'buy-notif_exit', 'screen-center', 0, 0);">buy this item</button>
-							<?php } ?>
+								<a class='fancybox' href='#buy-notif'><button class="buttonBuyItem">buy this item
+							<?php } ?> </button></a>
 						<table width="100%" style="padding-top: 5px"><tr>
 						<td width="155px">
 							<?php if (!$_SESSION['is_logged_in']) { ?>
-								<button class="buttonItemPage" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">make other offer
+								<a class='fancybox' href='#login'><button class="buttonItemPage">make other offer
 							<?php } elseif ($addInfo_full) { ?>
-								<button class="buttonItemPage" onclick="popup_show('addInfo_item', 'addInfo_item_drag', 'addInfo_item_exit', 'screen-center', 0, 0);">make other offer
+								<a class='fancybox' href='#addInfo_item'><button class="buttonItemPage">make other offer
 							<?php } elseif ($isSeller) {} elseif ($offerStatus == 'declined' || $offerStatus == 'canceled') { ?>
 								<button class="buttonItemPage" style="color: red;">offer <?=$offerStatus?>
 							<?php } elseif ($offerStatus == 'pending') { ?>
-								<button class="buttonItemPage offer" onclick="javascript:popup_show('offerp', 'offerp_drag', 'offerp_exit', 'screen-center', 0, 0);">offer pending
+								<a class='fancybox' href='#offerp'><button class="buttonItemPage offer">offer pending
 							<?php } elseif ($offerStatus == 'accepted') { ?>
 								<button class="buttonItemPage" style="color: green">offer accepted!
 							<?php } elseif ($itemOffer) { ?>
-								<button class="buttonItemPage" onclick="javascript:popup_show('ioffer', 'ioffer_drag', 'ioffer_exit', 'screen-center', 0, 0);">another offer pending
+								<a class='fancybox' href='#ioffer'><button class="buttonItemPage">another offer pending
 							<?php } elseif (!$distBuyerSeller) { ?>
-								<button class="buttonItemPage" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">make other offer
+								<a class='fancybox' href='#dist'><button class="buttonItemPage">make other offer
 							<?php } else { ?>
-								<button class="buttonItemPage" onclick="javascript:popup_show('offer', 'offer_drag', 'offer_exit', 'screen-center', 0, 0);">make other offer
-							<?php } ?></button>
+								<a class='fancybox' href='#offer'><button class="buttonItemPage">make other offer
+							<?php } ?> </button></a>
 						</td>
 						<td align="center" valign="middle" rowspan="2">
 							<?php if (!$_SESSION['is_logged_in']) { ?>
-								<div class="click_me flagItem" onclick="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
+								<a class='fancybox' href='#login'><div class="click_me flagItem"><img height="35px" src="img/flag.png" alt="Flag this item" />
 							<?php } elseif (!$distBuyerSeller) { ?>
-								<div class="click_me flagItem" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
+								<a class='fancybox' href='#dist'><div class="click_me flagItem"><img height="35px" src="img/flag.png" alt="Flag this item" />
 							<?php } elseif ($itemFlagged) { ?>
-								<div class="click_me flagItem" onclick="javascript:popup_show('flagged', 'flagged_drag', 'flagged_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
+								<a class='fancybox' href='#flagged'><div class="click_me flagItem"><img height="35px" src="img/flag.png" alt="Flag this item" />
 							<?php } elseif (!$isSeller || $closed_silo) { ?>
-								<div class="click_me flagItem" onclick="javascript:popup_show('flag_box', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><img height="35px" src="img/flag.png" alt="Flag this item" />
-							<?php } ?></div>
+								<a class='fancybox' href='#flag_box'><div class="click_me flagItem"><img height="35px" src="img/flag.png" alt="Flag this item" />
+							<?php } ?> </div></a>
 						</td>
 						<td style="padding-left: 7px" align="center" valign="middle" rowspan="2">
-							<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="images/mail-icon.png" width="55" height="55"></a>
+							<a class='fancybox' href='#mail'><img src="images/mail-icon.png" width="55" height="55"></a>
 						</td>
 						<td align="center" valign="middle" rowspan="2">
 							<img height="40" width="40" src="images/facebook.jpg" class="fbHover" onclick='postToFeed();'/>
 						</td></tr>
 						<tr><td>
 							<?php if (!$_SESSION['is_logged_in']) { ?>
-								<button class="buttonItemPage" onclick="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);">add to favorites
+								<a class='fancybox' href='#login'><button class="buttonItemPage">add to favorites</a>
 							<?php } elseif ($fav) { ?>
 								<form method="post" action="">
 									<input type="hidden" name="user_id" value="<?=$user_id?>">
 									<input type="hidden" name="item_id" value="<?=$item->item_id?>">
-									<button class="buttonItemPage" style="color: red;" type="submit" name="fav" value="remove from favorites">remove from favorites
+									<button class="buttonItemPage" style="color: red;" type="submit" name="fav" value="remove from favorites">remove from favorites</button>
 								</form>
 							<?php } elseif (!$distBuyerSeller) { ?>
-								<button class="buttonItemPage" onclick="javascript:popup_show('dist', 'dist_drag', 'dist_exit', 'screen-center', 0, 0);">add to favorites
+								<a class='fancybox' href='#dist'><button class="buttonItemPage">add to favorites</a>
 							<?php } else { ?>
 								<form method="post" action="">
 									<input type="hidden" name="user_id" value="<?=$user_id?>">
 									<input type="hidden" name="item_id" value="<?=$item->item_id?>">
-									<button class="buttonItemPage" type="submit" name="fav" value="add to favorites">add to favorites
+									<button class="buttonItemPage" type="submit" name="fav" value="add to favorites">add to favorites</button>
 								</form>
-							<?php } ?></button>
+							<?php } ?>
 						</td>
 						</tr></table>
 				<?php } ?>
@@ -920,118 +879,96 @@ window.onload = loadScript;
 </script>
 
 <div class="login" id="addInfo_item" style="width: 300px;">
-	<div id="addInfo_item_drag" style="float:right">
-		<img id="addInfo_item_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>Please complete your profile.</h2>
-		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
-		<button type="button" onclick="document.location='index.php?task=my_account&redirect=view_item&id=<?=$item->id?>'">Finish it now</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_item').style.display='none';">Later</button>
-	</div>
+	<h2>Please complete your profile.</h2>
+	You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
+	<button type="button" onclick="document.location='index.php?task=my_account&redirect=view_item&id=<?=$item->id?>'">Finish it now</button>
 </div>
 
 <div class="login" id="mail" style="width: 300px;">
-	<div id="mail_drag" style="float:right">
-		<img id="mail_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>Select your mail client:</h2>
-		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Check out this item on sìloz.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
-		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
-		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
-		<a href="http://compose.mail.yahoo.com/?&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
-	</div>
+	<h2>Select your mail client:</h2>
+	<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Check out this item on sìloz.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+	<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
+	<a href="https://mail.live.com/default.aspx?rru=compose&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
+	<a href="http://compose.mail.yahoo.com/?&subject=Check out this item on <?=SITE_NAME?>.com - its sale helps a cause (silo) in the community!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?>.com is a marketplace for items donated for community (as well as private) causes, or silos.  I thought you'd be interested in this item.%0D%0A%0D%0AItem: <?=ACTIVE_URL?>index.php?task=view_item%26id=<?=$item->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
 </div>
 
 <div class="login" id="buy-notif" style="width: 300px;">
-	<div id="buy-notif_drag" style="float:right">
-		<img id="buy-notif_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h3>Buying reminder</h3>
-		**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
-		<button onclick="window.location='index.php?task=payment&id=<?=$item->id;?>'">I agree</button>
-	</div>
+	<h3>Buying reminder</h3>
+	**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
+	<button onclick="window.location='index.php?task=payment&id=<?=$item->id;?>'">I agree</button>
 </div>
 
 <div class="edit_item" id="editItem" style="width: 800px">
-	<div id="editItem_drag" style="float: right">
-		<img id="editItem_exit" src="images/close.png"/>
-	</div>
-
-	<div>
-		<h2>Update Item</h2>
-		<p><font size="3">Please edit your item details below, and upload up to 4 images for your item.</font></p>
-		<?php
-			if (strlen($err) > 0) {
-				echo "<font color='red'><b>".$err."</b></font>";
-			}
-		?>						
-		<form enctype="multipart/form-data"  name="update_item" class="my_account_form" method="POST">
-			<table width="100%" cellpadding="10px" align="center">
-				<tr>
-					<td valign="top">
-						<table>
-							<tr>
-								<td><b>Listing Title</b> </td>
-								<td><input type="text" name="title" style="width : 300px" value='<?php echo $item->title; ?>'/></td>
-							</tr>		
-							<tr>
-								<td><b>Price</b> </td>
-								<td><input type="text" name="price" style="width : 100px" value='<?php echo $item->price; ?>'/></td>
-							</tr>
-							<tr>
-								<td><b>Category</b> </td>
-								<td>
-									<select name="item_cat_id" style="width: 300px">
-										<option value="">Select an Item type</option>
+	<h2>Update Item</h2>
+	<p><font size="3">Please edit your item details below, and upload up to 4 images for your item.</font></p>
+	<?php
+		if (strlen($err) > 0) {
+			echo "<font color='red'><b>".$err."</b></font>";
+		}
+	?>						
+	<form enctype="multipart/form-data"  name="update_item" class="my_account_form" method="POST">
+		<table width="100%" cellpadding="10px" align="center">
+			<tr>
+				<td valign="top">
+					<table>
+						<tr>
+							<td><b>Listing Title</b> </td>
+							<td><input type="text" name="title" style="width : 300px" value='<?php echo $item->title; ?>'/></td>
+						</tr>		
+						<tr>
+							<td><b>Price</b> </td>
+							<td><input type="text" name="price" style="width : 100px" value='<?php echo $item->price; ?>'/></td>
+						</tr>
+						<tr>
+							<td><b>Category</b> </td>
+							<td>
+								<select name="item_cat_id" style="width: 300px">
+									<option value="">Select an Item type</option>
 										<?php
-											$sql = "SELECT * FROM item_categories";
-											$res = mysql_query($sql);
-											while ($row = mysql_fetch_array($res)) {
-												if ($row['item_cat_id'] == $item->item_cat_id) {
-													echo "<option value='".$row['item_cat_id']."' selected>".$row['category']."</option>";
-												}
-												else {
-													echo "<option value='".$row['item_cat_id']."'>".$row['category']."</option>";
-												}
-											}							
-										?>							
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td><b>Description</b> </td>
-								<td><textarea name="description" style="width: 200px; height: 100px"><?php echo $item->description; ?></textarea></td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top">
-						<table>
-							<tr>
-								<td><b>Photo file 1</b> </td>
-								<td><input name="item_photo_1" type="file" style="width: 200px;height:20px;"/></td>
-							</tr>		
-							<tr>
-								<td><b>Photo file 2</b> </td>
-								<td><input name="item_photo_2" type="file" style="width: 200px;height:20px;"/></td>
-							</tr>		
-							<tr>
-								<td><b>Photo file 3</b> </td>
-								<td><input name="item_photo_3" type="file" style="width: 200px;height:20px;"/></td>
-							</tr>		
-							<tr>
-								<td><b>Photo file 4</b> </td>
-								<td><input name="item_photo_4" type="file" style="width: 200px;height:20px;"/></td>
-							</tr>
-						</table>
-						<br/>
-						<input type="hidden" name="item_id" value="<?=$item->id?>">
-						<button type="submit" name="item" value="Update">Update</button>
-					</td>
-				</tr>	
-			</table>	
-		</form>		
-	</div>
+										$sql = "SELECT * FROM item_categories";
+										$res = mysql_query($sql);
+										while ($row = mysql_fetch_array($res)) {
+											if ($row['item_cat_id'] == $item->item_cat_id) {
+												echo "<option value='".$row['item_cat_id']."' selected>".$row['category']."</option>";
+											}
+											else {
+												echo "<option value='".$row['item_cat_id']."'>".$row['category']."</option>";
+											}
+										}							
+									?>							
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><b>Description</b> </td>
+							<td><textarea name="description" style="width: 200px; height: 100px"><?php echo $item->description; ?></textarea></td>
+						</tr>
+					</table>
+				</td>
+				<td valign="top">
+					<table>
+						<tr>
+							<td><b>Photo file 1</b> </td>
+							<td><input name="item_photo_1" type="file" style="width: 200px;height:20px;"/></td>
+						</tr>		
+						<tr>
+							<td><b>Photo file 2</b> </td>
+							<td><input name="item_photo_2" type="file" style="width: 200px;height:20px;"/></td>
+						</tr>		
+						<tr>
+							<td><b>Photo file 3</b> </td>
+							<td><input name="item_photo_3" type="file" style="width: 200px;height:20px;"/></td>
+						</tr>		
+						<tr>
+							<td><b>Photo file 4</b> </td>
+							<td><input name="item_photo_4" type="file" style="width: 200px;height:20px;"/></td>
+						</tr>
+					</table>
+					<br/>
+					<input type="hidden" name="item_id" value="<?=$item->id?>">
+					<button type="submit" name="item" value="Update">Update</button>
+				</td>
+			</tr>	
+		</table>	
+	</form>		
 </div>

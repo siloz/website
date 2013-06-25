@@ -274,90 +274,75 @@
 ?>
 
 <div class="login" id="sold" style="width: 300px;">
-	<div id="sold_drag" style="float:right">
-		<img id="sold_exit" src="images/close.png"/>
-	</div>
-	<div>
-		This Item Has Been Sold!
-	</div>
+	This Item Has Been Sold!
 </div>
 
 <div class="login" id="pending" style="width: 300px;">
-	<div id="pending_drag" style="float:right">
-		<img id="pending_exit" src="images/close.png"/>
-	</div>
-	<div>
-		This Item Is Pending To Be Sold!
-	</div>
+	This Item Is Pending To Be Sold!
 </div>
 
 <div class="contact_seller" id="contact_admin">
-	<div id="contact_admin_drag" style="float: right">
-		<img id="contact_admin_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form name="contact_admin_form" id="contact_admin_form" method="POST">
-			<h2>Contact Admin</h2>
-			<p>Silo <b><?php echo $Silo->name; ?></b></p>
-			<div id="contact_admin_status"></div>			
-			<table>
-				<tr>
-					<td valign="top">
-						<b>Email</b>
-					</td>
-					<td>
-						<input type="text" name="contact_email" id="contact_email" onfocus="select();" style="width:300px;" 
-						value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Subject</b>
-					</td>
-					<td>
-						<input type="text" name="contact_subject" id="contact_subject" onfocus="select();" style="width:300px;"/>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Body</b>
-					</td>
-					<td>
-						<textarea style='width: 300px; height: 200px' name="inquiry" id="inquiry"></textarea>
-					</td>
-				</tr>
-			</table>
-			<br/>			
-			<button type="button" id="contact_admin_button">Send</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_admin').style.display='none';">Cancel</button>
-		</form>
-		<script>
-			$("#contact_admin_button").click(function(event) {	
-				document.getElementById('overlay').style.display='none';
-				document.getElementById('contact_admin').style.display='none';
-				$.post(<?php echo "'".API_URL."'"; ?>, 
-					{	
-						request: 'email_silo_admin',
-						silo_id: <?php echo $Silo->silo_id; ?>,
-						email: document.getElementById('contact_email').value,
-						subject: document.getElementById('contact_subject').value,
-						content: document.getElementById('inquiry').value
-					}, 
-					function (xml) {
-						$(xml).find('response').each(function (){
-							if ($(this).text() == 'successful') 
-								alert("Your inquiry has been sent!");
-							else
-								alert("Failed to send your inquiry!");
-							document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
-							document.getElementById('contact_subject').value = "";
-							document.getElementById('inquiry').value = "";							
-						});
-					}
-				);
-			});
-		</script>		
-	</div>
+	<form name="contact_admin_form" id="contact_admin_form" method="POST">
+		<h2>Contact Admin</h2>
+		<p>Silo <b><?php echo $Silo->name; ?></b></p>
+		<div id="contact_admin_status"></div>			
+		<table>
+			<tr>
+				<td valign="top">
+					<b>Email</b>
+				</td>
+				<td>
+					<input type="text" name="contact_email" id="contact_email" onfocus="select();" style="width:300px;" 
+					value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Subject</b>
+				</td>
+				<td>
+					<input type="text" name="contact_subject" id="contact_subject" onfocus="select();" style="width:300px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Body</b>
+				</td>
+				<td>
+					<textarea style='width: 300px; height: 200px' name="inquiry" id="inquiry"></textarea>
+				</td>
+			</tr>
+		</table>
+		<br/>			
+		<button type="button" id="contact_admin_button">Send</button>
+		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_admin').style.display='none';">Cancel</button>
+	</form>
+	<script>
+		$("#contact_admin_button").click(function(event) {	
+			document.getElementById('overlay').style.display='none';
+			document.getElementById('contact_admin').style.display='none';
+			$.post(<?php echo "'".API_URL."'"; ?>, 
+				{	
+					request: 'email_silo_admin',
+					silo_id: <?php echo $Silo->silo_id; ?>,
+					email: document.getElementById('contact_email').value,
+					subject: document.getElementById('contact_subject').value,
+					content: document.getElementById('inquiry').value
+				}, 
+				function (xml) {
+					$(xml).find('response').each(function (){
+						if ($(this).text() == 'successful') 
+							alert("Your inquiry has been sent!");
+						else
+							alert("Failed to send your inquiry!");
+						document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
+						document.getElementById('contact_subject').value = "";
+						document.getElementById('inquiry').value = "";							
+					});
+				}
+			);
+		});
+	</script>		
 </div>
 
 <div class="headingPad"></div>
@@ -388,7 +373,7 @@
 			<span style="padding: 0 5px;">|</span>
 			<a href="index.php?task=manage_silo_admin" class="<?php if (param_get('task') == 'manage_silo_admin') { echo "orange"; } else { echo "blue"; } ?>">view statistics and promote</a>
 			<span style="padding: 0 5px;">|</span>
-			<a onclick="popup_show('edit_silo', 'edit_silo_drag', 'edit_silo_exit', 'screen-center', 0, 0);populate_silo_info('<?=$silo_id?>');" class="blue">edit silo</a>
+			<a class="fancybox" href="#edit_silo">edit silo</a>
 			</td>
 		</tr>
 	</table>
@@ -784,11 +769,5 @@ window.onload = loadScript;
 <div style="padding-bottom: 10px;"></div>
 
 <div class="login" id="closed_silo" style="width: 300px;">
-	<div id="closed_silo_drag" style="float:right">
-		<img id="closed_silo_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>This function has been disabled because the silo is no longer active.</h2>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('closed_silo').style.display='none';">Okay</button>
-	</div>
+	<h2>This function has been disabled because the silo is no longer active.</h2>
 </div>

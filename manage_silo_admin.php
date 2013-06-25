@@ -226,7 +226,7 @@
 			<span style="padding: 0 5px;">|</span>
 			<a href="index.php?task=manage_silo_admin" class="<?php if (param_get('task') == 'manage_silo_admin') { echo "orange"; } else { echo "blue"; } ?>">view statistics and promote</a>
 			<span style="padding: 0 5px;">|</span>
-			<a onclick="popup_show('edit_silo', 'edit_silo_drag', 'edit_silo_exit', 'screen-center', 0, 0);populate_silo_info('<?=$silo_id?>');" class="blue">edit silo</a>
+			<a class="fancybox" href="#edit_silo">edit silo</a>
 		<?php } else { ?>
 		<?php if ($Silo->thanked == 0 && $Silo->paid == "yes") { ?>
 			<a href="index.php?task=manage_silo_thank" class="<?php if (param_get('task') == 'manage_silo_thank') { echo "orange"; } else { echo "blue"; } ?>">thank members</a>
@@ -299,7 +299,7 @@ silo administration console
 	<table width="100%" style="padding: 0 10px"><tr>
 		<td align="left" onclick="postToFeed();" class="onClick-link"><span class="greyFont"><b>post to Facebook</b></span> <div style="padding-top: 15px"></div> <center><img src="images/facebook.jpg"></img></center></b></span></td>
 		<td align="left" onclick="window.open('silo_flyers.php?id=<?=$silo->id?>');" class="onClick-link"><span class="greyFont"><b>print 1/4 page flyers</b></span> <div style="padding-top: 15px"></div> <center><img src="images/page-flyer.png" height="32"></img></center></b></span></td>
-		<td align="left" onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><span class="greyFont"><b>email contacts from your email</b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></img></center></b></span></td>
+		<td align="left"> <a class="fancybox" href="#mail"><span class="greyFont"><b>email contacts from your email</b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></img></center></b></span></a></td>
 		<td align="left" onclick="window.location='index.php?task=invite_promote';" class="onClick-link"><span class="greyFont"><b>email from <?=SITE_NAME?></b></span> <div style="padding-top: 15px"></div> <center><img src="images/mail-icon.png" width="32" height="32"></center></b></span></td>
 	</tr></table>
 </td>
@@ -344,14 +344,9 @@ function postToFeed() {
 <div style="padding-bottom: 10px;"></div>
 
 <div class="login" id="mail" style="width: 300px;">
-	<div id="mail_drag" style="float:right">
-		<img id="mail_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>Select your mail client:</h2>
-		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
-		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
-		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
-		<a href="http://compose.mail.yahoo.com/?&subject=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
-	</div>
+	<h2>Select your mail client:</h2>
+	<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+	<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
+	<a href="https://mail.live.com/default.aspx?rru=compose&subject=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
+	<a href="http://compose.mail.yahoo.com/?&subject=Please donate some items to help my silo (cause)!&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.%0D%0A%0D%0A I created a silo, and need your help. Please donate or buy an item to help the cause! You can also help by spreading the word about our silo.%0D%0A%0D%0A Our silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
 </div>

@@ -92,101 +92,79 @@
 ?>
 
 <div class="login" id="sold" style="width: 300px;">
-	<div id="sold_drag" style="float:right">
-		<img id="sold_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		This Item Has Been Sold!
-	</div>
+	This Item Has Been Sold!
 </div>
 
 <div class="login" id="pending" style="width: 300px;">
-	<div id="pending_drag" style="float:right">
-		<img id="pending_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		This Item Is Pending To Be Sold!
-	</div>
+	This Item Is Pending To Be Sold!
 </div>
 
 <div class="login" id="closed_silo" style="width: 300px;">
-	<div id="closed_silo_drag" style="float:right">
-		<img id="closed_silo_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		<h2>This function has been disabled because the silo is no longer active.</h2>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('closed_silo').style.display='none';">Okay</button>
-	</div>
+	<h2>This function has been disabled because the silo is no longer active.</h2>
 </div>
 
 
 <div class="contact_seller" id="contact_admin">
-	<div id="contact_admin_drag" style="float: right">
-		<img id="contact_admin_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		<form name="contact_admin_form" id="contact_admin_form" method="POST">
-			<h2>Contact Admin</h2>
-			<p>Silo <b><?php echo $silo->name; ?></b></p>
-			<div id="contact_admin_status"></div>			
-			<table>
-				<tr>
-					<td valign="top">
-						<b>Email</b>
-					</td>
-					<td>
-						<input type="text" name="contact_email" id="contact_email" onfocus="select();" style="width:300px;" 
-						value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Subject</b>
-					</td>
-					<td>
-						<input type="text" name="contact_subject" id="contact_subject" onfocus="select();" style="width:300px;"/>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<b>Body</b>
-					</td>
-					<td>
-						<textarea style='width: 300px; height: 200px' name="inquiry" id="inquiry"></textarea>
-					</td>
-				</tr>
-			</table>
-			<br/>			
-			<button type="button" id="contact_admin_button">Send</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_admin').style.display='none';">Cancel</button>
-		</form>
-		<script>
+	<form name="contact_admin_form" id="contact_admin_form" method="POST">
+		<h2>Contact Admin</h2>
+		<p>Silo <b><?php echo $silo->name; ?></b></p>
+		<div id="contact_admin_status"></div>			
+		<table>
+			<tr>
+				<td valign="top">
+					<b>Email</b>
+				</td>
+				<td>
+					<input type="text" name="contact_email" id="contact_email" onfocus="select();" style="width:300px;" 
+					value=<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?> >
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Subject</b>
+				</td>
+				<td>
+					<input type="text" name="contact_subject" id="contact_subject" onfocus="select();" style="width:300px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<b>Body</b>
+				</td>
+				<td>
+					<textarea style='width: 300px; height: 200px' name="inquiry" id="inquiry"></textarea>
+				</td>
+			</tr>
+		</table>
+		<br/>			
+		<button type="button" id="contact_admin_button">Send</button>
+	</form>
+	<script>
 			$("#contact_admin_button").click(function(event) {	
-				document.getElementById('overlay').style.display='none';
-				document.getElementById('contact_admin').style.display='none';
-				$.post(<?php echo "'".API_URL."'"; ?>, 
-					{	
-						request: 'email_silo_admin',
-						silo_id: <?php echo $silo->silo_id; ?>,
-						email: document.getElementById('contact_email').value,
-						subject: document.getElementById('contact_subject').value,
-						content: document.getElementById('inquiry').value
-					}, 
-					function (xml) {
-						$(xml).find('response').each(function (){
-							if ($(this).text() == 'successful') 
-								alert("Your inquiry has been sent!");
-							else
-								alert("Failed to send your inquiry!");
-							document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
-							document.getElementById('contact_subject').value = "";
-							document.getElementById('inquiry').value = "";							
-						});
-					}
-				);
-			});
-		</script>		
-	</div>
+			document.getElementById('overlay').style.display='none';
+			document.getElementById('contact_admin').style.display='none';
+			$.post(<?php echo "'".API_URL."'"; ?>, 
+				{	
+					request: 'email_silo_admin',
+					silo_id: <?php echo $silo->silo_id; ?>,
+					email: document.getElementById('contact_email').value,
+					subject: document.getElementById('contact_subject').value,
+					content: document.getElementById('inquiry').value
+				}, 
+				function (xml) {
+					$(xml).find('response').each(function (){
+						if ($(this).text() == 'successful') 
+							alert("Your inquiry has been sent!");
+						else
+							alert("Failed to send your inquiry!");
+						document.getElementById('contact_email').value = "<?php echo $_SESSION['is_logged_in'] != 1 ? "" : $current_user['email'];?>";
+						document.getElementById('contact_subject').value = "";
+						document.getElementById('inquiry').value = "";							
+					});
+				}
+			);
+		});
+	</script>		
 </div>
 
 <div class="headingPad"></div>
@@ -199,25 +177,25 @@
 	</td>
 	<td width="200px" style="padding-top: 5px;">
 		<?php if (!$closed_silo) { ?>
-			<a onclick="javascript:popup_show('mail', 'mail_drag', 'mail_exit', 'screen-center', 0, 0);"><img src="<?=ACTIVE_URL?>images/mail-icon.png" width="32" height="32"></a>
+			<a class='fancybox' href='#mail'><img src="<?=ACTIVE_URL?>images/mail-icon.png" width="32" height="32"></a>
 			<img src="<?=ACTIVE_URL?>images/facebook.jpg" onclick='postToFeed();'/>
 
 		<?php
 			} if ($closed_silo) {
 		?>
-			<button type="submit" style="margin-bottom: -6px" class="buttonDonations" onclick="popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>
+			<a class='fancybox' href='#closed_silo'><button type="submit" style="margin-bottom: -6px" class="buttonDonations" id="sell_on_siloz">donate items</button></a>
 		
 		<?php
 			}
 			elseif ($addInfo_full && $_SESSION['is_logged_in']) {
 		?>
-			<button type="submit" class="buttonDonations" onclick="popup_show('addInfo_donate', 'addInfo_donate_drag', 'addInfo_donate_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>
+			<a class='fancybox' href='#addInfo_donate'><button type="submit" class="buttonDonations" id="sell_on_siloz">donate items</button></a>
 	
 		<?php
 			}
 			elseif ($checkUser && $_SESSION['is_logged_in']) {
 		?>
-			<button type="submit" class="buttonDonations" onclick="alert('You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!')" id="sell_on_siloz">donate items</button>
+			<a class='fancybox' href='#rmSilo'><button type="submit" class="buttonDonations" id="sell_on_siloz">donate items</button></a>
 
 		<?php
 			}
@@ -234,7 +212,7 @@
 			else {
 		?>
 	<td>
-			<button type="submit" class="buttonDonations" onclick="popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);" id="sell_on_siloz">donate items</button>						
+			<a class='fancybox' href='#login'><button type="submit" class="buttonDonations" id="sell_on_siloz">donate items</button></a>					
 		<?php
 			}
 		?>
@@ -617,15 +595,9 @@ window.onload = loadScript;
 <div style="padding-bottom: 10px;"></div>
 
 <div class="login" id="addInfo_donate" style="width: 300px;">
-	<div id="addInfo_donate_drag" style="float:right">
-		<img id="addInfo_donate_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		<h2>Please complete your profile.</h2>
-		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
-		<button type="button" onclick="document.location='index.php?task=my_account&redirect=sell_on_siloz&id=<?=$silo->id?>'">Finish it now</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_donate').style.display='none';">Later</button>
-	</div>
+	<h2>Please complete your profile.</h2>
+	You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
+	<button type="button" onclick="document.location='index.php?task=my_account&redirect=sell_on_siloz&id=<?=$silo->id?>'">Finish it now</button>
 </div>
 
 
@@ -640,18 +612,13 @@ window.onload = loadScript;
 ?>
 		<script type="text/javascript">
 			$(document).ready(function () {
-        			javascript:popup_show('thank_you', 'thank_you_drag', 'thank_you_exit', 'screen-center', 0, 0);
+        			$("#thank_you").fancybox().trigger('click');
 			})
 		</script>
 
 <div class="greyFont" style="font-weight: bold">
 <div class="login" id="thank_you" style="width: 650px;">
-	<div id="thank_you_drag" style="float:right">
-		<img id="thank_you_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
 		This silo raised $<?=$siloInfo['collected']?>, and ended on <?=$ended_date?>. The silo administrator, <span class="blue"><?=$siloAdmin['fname']?> <?=$siloAdmin['lname']?></span>, started the 'Thank You' phase of this silo on <?=$thanked_date?>. Thanks to all who pledged items and donated funds!<br><br>
-
 <div class="row">
 	<div id="slider_frame">
 		<div id="slider">
@@ -685,21 +652,19 @@ window.onload = loadScript;
 <?php if ($siloThank['comments']) { ?>
 	<span style="font-weight: normal">Silo administrator comments:</span> "<?=$siloThank['comments']?>"
 <?php } ?>
-	</div>
 </div>
 </div>
 
 <?php } ?>
 
 <div class="login" id="mail" style="width: 300px;">
-	<div id="mail_drag" style="float:right">
-		<img id="mail_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>Select your mail client:</h2>
-		<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
-		<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
-		<a href="https://mail.live.com/default.aspx?rru=compose&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
-		<a href="http://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
-	</div>
+	<h2>Select your mail client:</h2>
+	<a href="http://webmail.aol.com/mail/compose-message.aspx?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-aol"><span style="padding-left: 20px">AOL</span></div></a>
+	<a href="https://mail.google.com/mail/?view=cm&fs=1&su=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-gmail"><span style="padding-left: 20px">Gmail</span></div></a>
+	<a href="https://mail.live.com/default.aspx?rru=compose&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos. I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-hotmail"><span style="padding-left: 20px">Hotmail, Live Mail, or Outlook</span></div></a>
+	<a href="http://compose.mail.yahoo.com/?&subject=Here's a worthy cause (silo) I thought you might want to help&body=Hey!%0D%0A%0D%0A<?=SITE_NAME?> is a marketplace for items donated for community (as well as private) causes, or silos.  I found a silo I thought you'd be interested in. Please donate or buy an item to help the cause!%0D%0A%0D%0A silo: <?=ACTIVE_URL?>index.php?task=view_silo%26id=<?=$silo->id?>" target="_blank" style="text-decoration: none" class="greyFont"><div class="mail-yahoo"><span style="padding-left: 20px">Yahoo Mail</span></div></a>
+</div>
+
+<div class="login" id="rmSilo" style="width: 300px;">
+	You cannot pledge anymore items to this silo because the administrator has removed you. Please find a different silo!
 </div>

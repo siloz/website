@@ -35,6 +35,16 @@ table {
 	opacity: 0;
 }
 
+.fancybox {
+	color: #2f8dcb;
+	text-decoration: none;
+}
+
+.fancybox:hover {
+	opacity: .8;
+	cursor: pointer;
+}
+
 .yes, .cancel {
 	margin-top: .5em;
 	margin-right: .5em;
@@ -99,7 +109,7 @@ html, body {
 	background-color: #fff;
 	display:none; 
 	z-index: 5;
-    border: 3px solid;    
+   	border: 3px solid;    
 	border-color: #f60;
 	padding: 10px;
 }

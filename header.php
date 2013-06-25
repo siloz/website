@@ -9,7 +9,7 @@
 
 <script type="text/javascript">
 	function create_silo_need_login() {
-		popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);
+       	$("#login").fancybox().trigger('click');
 	}
 	
 	function create_account_with_purpose() {
@@ -41,7 +41,7 @@
 	<?php
 			if ($addInfo_full) {
 	?>
-				<a href="javascript:popup_show('addInfo', 'addInfo_drag', 'addInfo_exit', 'screen-center', 0, 0);"><span class="blue">start a silo</span></a>
+				<a class="fancybox" href="#addInfo"><span class="blue">start a silo</span></a>
 				<span class="blue separator">|</span>
 	<?php
 			} elseif (mysql_num_rows($res) == 0) {
@@ -70,7 +70,7 @@
 	<?php
 		} else {
 	?>
-			<a href="javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);"><span class="blue">login/create account</span></a>
+			<a class="fancybox" href="#login"><span class="blue">login/create account</span></a>
 			<span class="blue separator">|</span>	
 			<a href="javascript:create_silo_need_login();"><span class="blue">start a silo</span></a>
 	<?php
@@ -78,86 +78,69 @@
 	?>
 	<div class="enterLocation" style="font-size: 9pt; color: red; padding-top: 7px;"><?=$locErr?></div>
 </div>
+
 <div class="login" id="login">
-	<div id="login_drag" style="float:right">
-		<img id="login_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		<form name="login_form" id="login_form" method="POST">
-			<input type="hidden" name="purpose" value=""/>
-			<h2>Login to your account</h2>
-			<table>
-				<tr>
-					<td>
-						<input type="text" name="email" id="email" onfocus="select();" placeholder="E-mail"/>
-					</td>
-					<td>
-						<input type="password" name="password" id="password" onfocus="select();"  placeholder="Password"/>
-					</td>
-				</tr>
-			</table>
-			<input type="checkbox" name="remember_me" value="yes" /> Keep me logged in for 1 month <br/>
-			<div id="login_status"></div>
-			<br/>
-			<button type="button" id="login_button">Login</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('login').style.display='none';">Cancel</button>
-		</form>
-		<script>
-			$("#login_button").click(function(event) {	
-				var un = document.getElementById('email').value;
-				var pw = document.getElementById('password').value;
-				var enc_pw = md5(pw);					
-				if (un == '' || pw == '') {
-					document.getElementById("login_status").innerHTML = "<font color='red'><b><br/>Error: Empty e-mail/password</b></font>";
-				}
-				else {
-					$.post(<?php echo "'".API_URL."'"; ?>, 
-						{	
-							request: 'login',
-							email: un, 
-							password: enc_pw
-						}, 
-						function (data) {
-							if (parseInt($(data).find('authenticated').text(), 10) == 1) {
-								document.getElementById('overlay').style.display='none';
-								document.getElementById('login').style.display='none';
-								document.getElementById("login_status").innerHTML = "";								
-								document.forms['login_form'].submit();
-							}						
-							else {
-								document.getElementById("login_status").innerHTML = "<font color='red'><b><br/>Error: Invalid e-mail/password</b></font>";
-								document.getElementById('password').value = "";								
-							}
-						}
-					);
-					
-				}
-			});
-		</script>
+	<form name="login_form" id="login_form" method="POST">
+		<input type="hidden" name="purpose" value=""/>
+		<h2>Login to your account</h2>
+		<table>
+			<tr>
+				<td>
+					<input type="text" name="email" id="email" onfocus="select();" placeholder="E-mail"/>
+				</td>
+				<td>
+					<input type="password" name="password" id="password" onfocus="select();"  placeholder="Password"/>
+				</td>
+			</tr>
+		</table>
+		<input type="checkbox" name="remember_me" value="yes" /> Keep me logged in for 1 month <br/>
+		<div id="login_status"></div>
 		<br/>
-		<hr/>
-<!--
-		<h2>Login with an Existing Account </h2>
-		<img src="images/facebook_logo.png"/>
-		<img src="images/google_logo.jpg"/>
-		<img src="images/amazon_logo.png"/>
-		<img src="images/paypal_logo.png"/>
-		<hr/>
--->		
-		<h2>Forgot your e-mail/password?</h2>
-		<a href="<?=ACTIVE_URL?>index.php?task=reset_password"><button>Reset Password</button></a>			
-		<br/><br/>
-		<hr/>
-		<h2>Create a <?=SITE_NAME?> Account</h2>
-		<button type="button" onclick="create_account_with_purpose()">Create Account</button>			
-	</div>
+		<button type="button" id="login_button">Login</button>
+		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('login').style.display='none';">Cancel</button>
+	</form>
+	<script>
+		$("#login_button").click(function(event) {	
+			var un = document.getElementById('email').value;
+			var pw = document.getElementById('password').value;
+			var enc_pw = md5(pw);					
+			if (un == '' || pw == '') {
+				document.getElementById("login_status").innerHTML = "<font color='red'><b><br/>Error: Empty e-mail/password</b></font>";
+			}
+			else {	
+				$.post(<?php echo "'".API_URL."'"; ?>, 
+					{	
+						request: 'login',
+						email: un, 
+						password: enc_pw
+					}, 
+					function (data) {
+						if (parseInt($(data).find('authenticated').text(), 10) == 1) {
+							document.getElementById('overlay').style.display='none';
+							document.getElementById('login').style.display='none';
+							document.getElementById("login_status").innerHTML = "";								
+							document.forms['login_form'].submit();
+						}						
+						else {
+							document.getElementById("login_status").innerHTML = "<font color='red'><b><br/>Error: Invalid e-mail/password</b></font>";
+							document.getElementById('password').value = "";								
+						}
+					}
+				);					
+			}
+		});
+	</script>
+	<br/>
+	<hr/>	
+	<h2>Forgot your e-mail/password?</h2>
+	<a href="<?=ACTIVE_URL?>index.php?task=reset_password"><button>Reset Password</button></a>			
+	<br/><br/>
+	<hr/>
+	<h2>Create a <?=SITE_NAME?> Account</h2>
+	<button type="button" onclick="create_account_with_purpose()">Create Account</button>			
 </div>
 
 <div class="login" id="location" style="width: 300px;">
-	<div id="location_drag" style="float:right">
-		<img id="location_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
 	<?php if (!$_SESSION['is_logged_in']) { ?>
 		<form action="" method="POST">
 			<input type="hidden" name="purpose" value=""/>
@@ -167,7 +150,6 @@
 			<button type="submit" name="location" value="Update-header">Update</button>
 		</form>
 	<?php } else { echo "<b>Your location was obtained through your account when you signed up. <br><br> To change your location, please update your account information.</b>"; } ?>
-	</div>
 </div>
 
 <?php 	if (isset($_SESSION['user_id'])) { $logo_redirect = "items"; } else { $logo_redirect = "index.php"; } ?>
@@ -179,7 +161,7 @@
 
 <?php
 if ($headline != "")
-	$header = "<div style='font-size: 14px; font-weight: bold; color: red; text-align: center'>$headline</div>";
+	$header = "<div class='blue' style='font-size: 14px; font-weight: bold; text-align: center'>$headline</div>";
 ?>
 
 <div id="status" align="right" style="width: 965px; margin-top: 45px; position: absolute; font-size: 8pt;">
@@ -310,13 +292,7 @@ $('form').submit(function(){
 
 
 <div class="login" id="addInfo" style="width: 300px;">
-	<div id="addInfo_drag" style="float:right">
-		<img id="addInfo_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-	</div>
-	<div>
-		<h2>Please complete your profile.</h2>
+	<h2>Please complete your profile.</h2>
 		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
-		<button type="button" onclick="document.location='index.php?task=my_account&redirect=create_silo'">Finish it now</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo').style.display='none';">Later</button>
-	</div>
+	<button type="button" onclick="document.location='index.php?task=my_account&redirect=create_silo'">Finish it now</button>
 </div>

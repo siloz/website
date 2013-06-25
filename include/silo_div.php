@@ -72,7 +72,7 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<tr><td <?php if ($silo->website) { echo 'style="padding-bottom: 10px;"'; } ?>>
 			<span class="floatL">
 				<img src="<?php echo ACTIVE_URL.'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
-				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "javascript:popup_show('closed_silo', 'closed_silo_drag', 'closed_silo_exit', 'screen-center', 0, 0);"; } else { echo "javascript:popup_show('contact_admin', 'contact_admin_drag', 'contact_admin_exit', 'screen-center', 0, 0);"; }?>">Email Admin.</a>
+				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "class='fancybox' href='#closed_silo'"; } else { echo "class='fancybox' href='#contact-admin'"; }?>">Email Admin.</a>
 			</span>
 			<div align="left">
 			<span class="infoDetails">
@@ -113,12 +113,6 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 <?php } ?>
 
 <div class="edit_item" id="edit_silo">
-	<div id="edit_silo_drag" style="float: right">
-		<img id="edit_silo_exit" src="images/close.png"/>
-	</div>
-
-	<div>
-
 <form enctype="multipart/form-data"  name="manage_silo_form" class="manage_silo_form" method="POST">
 		<input type="hidden" name="task" value="manage_silo"/>
 		
@@ -202,6 +196,4 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			</tr>
 		</table>
 	</form>
-
-	</div>
 </div>

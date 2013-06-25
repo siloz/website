@@ -244,7 +244,7 @@ class Item {
 		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
 		$title = (strlen($this->title) > 20) ? substr($this->title, 0, 20) . '...' : $this->title;
 
-		$cell = "<td><div class='plate'><a style='color: grey; text-decoration: none;' href='javascript:popup_show(\"sold\", \"sold_drag\", \"sold_exit\", \"screen-center\", 0, 0);'>";
+		$cell = "<td><div class='plate'><a class='fancybox' href='#sold' style='color: grey; text-decoration: none;'";
 		$cell .= "<img src='uploads/items/".$this->photo_file_1."?".$this->last_update."'>";
 		$cell .= "<div style='padding-bottom: 0px;'>".$title."</div>  <span class='blue'>$".$this->price."</span>";
 		$cell .= "</a></div></td>";
@@ -256,7 +256,7 @@ class Item {
 		if ($show) { $admin_name = $this->owner->fname; $admin_name .= "&nbsp;".$this->owner->lname; } else { $admin_name = $this->owner->fname; };
 		$title = (strlen($this->title) > 20) ? substr($this->title, 0, 20) . '...' : $this->title;
 
-		$cell = "<td><div class='plate'><a style='color: grey; text-decoration: none;' href='href='javascript:popup_show(\"pending\", \"pending_drag\", \"pending_exit\", \"screen-center\", 0, 0);'>";
+		$cell = "<td><div class='plate'><a class='fancybox' href='#pending' style='color: grey; text-decoration: none;'>";
 		$cell .= "<img src='uploads/items/".$this->photo_file_1."?".$this->last_update."'>";
 		$cell .= "<div style='padding-bottom: 0px;'>".$title."</div>  <span class='blue'>$".$this->price."</span>";
 		$cell .= "</a></div></td>";

@@ -203,34 +203,36 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<link href="<?=ACTIVE_URL?>themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
 	<?php } ?>
 
-		<link rel="stylesheet" href="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.css?v=2.1.0" type="text/css" media="screen" />
 		<link rel='stylesheet' type='text/css' href='<?=ACTIVE_URL?>include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery-1.9.0.min.js"></script>	
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery-ui-1.8.16.min.js"></script> 
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.pack.js?v=2.1.0"></script>			
-		<script type='text/javascript' src='<?=ACTIVE_URL?>include/OpenInviter/more_examples/js/jquery.fancybox-1.3.4.pack.js'></script>							
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/popup-window.js"></script>	  
-	    <script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.placeholder.js"></script>		
-	    <script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.jconfirmation.js"></script>				
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.truncator.js"></script>
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/infobubble-compiled.js"></script>	  								
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/util.js"></script>	
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/change_location.js"></script>
-	  	<script type="text/javascript">
-			$(document).ready(function() {
-		      	$('.max1500').truncate({max_length: 1500});			    
-		      	$('.max800').truncate({max_length: 800});			    
-		      	$('.max600').truncate({max_length: 600});			    
-		      	$('.max400').truncate({max_length: 400});			    		
-				$('.confirmation').jConfirmAction({question : "Are you sure to delete?", yesAnswer : "Yes", cancelAnswer : "No"});		
-			});
-	  	</script>
+		
+		<!-- Fancybox includes -->
+		<link rel="stylesheet" type="text/css" href="include/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" />
+		<link rel="stylesheet" type="text/css" href="include/fancybox/source/jquery.fancybox.css?v=2.1.0" media="screen" />
+		<link rel="stylesheet" type="text/css" href="include/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.3" />
+		<script type="text/javascript" src="include/fancybox/lib/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="include/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+		<script type="text/javascript" src="include/fancybox/source/jquery.fancybox.js?v=2.1.0"></script>
+		<script type="text/javascript" src="include/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.3"></script>
+		<script type="text/javascript" src="include/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
+		<script type="text/javascript" src="include/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.3"></script>
+		<!-- End Fancybox includes	-->
 
-		<script src="<?=ACTIVE_URL?>jCrop/js/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(".fancybox").fancybox({
+				'transitionIn'	:	'elastic',
+				'transitionOut'	:	'elastic',
+				'speedIn'		:	100, 
+				'speedOut'		:	100, 
+				'overlayShow'	:	false
+			});
+		</script>
+
+	    	<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.placeholder.js"></script>		
+		<script type="text/javascript" src="<?=ACTIVE_URL?>js/change_location.js"></script>
+
 		<script src="<?=ACTIVE_URL?>jCrop/js/jquery.Jcrop.js"></script>
 		<script src="<?=ACTIVE_URL?>js/md5.js"></script>
 		<link rel="stylesheet" href="<?=ACTIVE_URL?>jCrop/css/jquery.Jcrop.css" type="text/css" />
-		<link rel="stylesheet" href="<?=ACTIVE_URL?>demo_files/demos.css" type="text/css" />
 
     		<script src="<?=ACTIVE_URL?>themes/1/js-image-slider.js" type="text/javascript"></script>
 

@@ -1,9 +1,4 @@
 <div class="edit_item" id="editItem_<?=$item_id?>" style="width: 800px">
-	<div id="editItem_<?=$item_id?>_drag" style="float: right">
-		<img id="editItem_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-
-	<div>
 		<h2>Update Item</h2>
 		<p><font size="3">Please edit your item details below, and upload up to 4 images for your item.</font></p>
 		<?php
@@ -77,142 +72,91 @@
 					</td>
 				</tr>	
 			</table>	
-		</form>
-		<script>
-			$("#edit_item_button").click(function(event) {	
-				document.getElementById('overlay').style.display='none';
-				document.getElementById('editItem_<?=$item_id?>').style.display='none';
-			});
-		</script>		
-	</div>
+		</form>	
 </div>
 
 <div class="login" id="delItem_<?=$item_id?>" style="width: 300px;">
-	<div id="delItem_<?=$item_id?>_drag" style="float:right">
-		<img id="delItem_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<input type="hidden" name="user_id" value="<?=$user_id?>">
-			<h2>Are you sure you want to delete this item? All actions are final and cannot be reversed.</h2>
-			<br/><br>	
-			<button type="submit" name="item" value="Delete">Yes, delete this item</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<input type="hidden" name="user_id" value="<?=$user_id?>">
+		<h2>Are you sure you want to delete this item? All actions are final and cannot be reversed.</h2>
+		<br/><br>	
+		<button type="submit" name="item" value="Delete">Yes, delete this item</button>
+	</form>
 </div>
 
 <div class="login" id="decItem_<?=$item_id?>" style="width: 300px;">
-	<div id="decItem_<?=$item_id?>_drag" style="float:right">
-		<img id="decItem_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<input type="hidden" name="user_id" value="<?=$user_id?>">
-			<h2>Are you sure you want to decline this item?</h2>
-			<br/><br>	
-			<button type="submit" name="item" value="Decline">Yes, decline this item</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<input type="hidden" name="user_id" value="<?=$user_id?>">
+		<h2>Are you sure you want to decline this item?</h2>
+		<br/><br>	
+		<button type="submit" name="item" value="Decline">Yes, decline this item</button>
+	</form>
 </div>
 
 <div class="login" id="clearItem_<?=$item_id?>" style="width: 300px;">
-	<div id="clearItem_<?=$item_id?>_drag" style="float:right">
-		<img id="clearItem_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="id" value="<?=$id?>">
-			<h2>Clear this item from your transaction console?</h2>
-			<br><br>	
-			<button type="submit" name="item" value="Clear">Yes, clear it</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="id" value="<?=$id?>">
+		<h2>Clear this item from your transaction console?</h2>
+		<br><br>	
+		<button type="submit" name="item" value="Clear">Yes, clear it</button>
+	</form>
 </div>
 
 
 <div class="login" id="seller_clearItem_<?=$item_id?>" style="width: 300px;">
-	<div id="seller_clearItem_<?=$item_id?>_drag" style="float:right">
-		<img id="seller_clearItem_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="user_id" value="<?=$user_id?>">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<h2>Clear this item from your transaction console?</h2>
-			<br><br>	
-			<button type="submit" name="item" value="Seller Clear">Yes, clear it</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="user_id" value="<?=$user_id?>">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<h2>Clear this item from your transaction console?</h2>
+		<br><br>	
+		<button type="submit" name="item" value="Seller Clear">Yes, clear it</button>
+	</form>
 </div>
 
 <div class="login" id="acceptOffer_<?=$item_id?>" style="width: 300px;">
-	<div id="acceptOffer_<?=$item_id?>_drag" style="float:right">
-		<img id="acceptOffer_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<input type="hidden" name="seller_id" value="<?=$user_id?>">
-			<h2>Accept this offer? Once you accept it, this price will show up only for the user</h2>
-			<br/><br>	
-			<button type="submit" name="offer" value="Accept">Accept offer</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<input type="hidden" name="seller_id" value="<?=$user_id?>">
+		<h2>Accept this offer? Once you accept it, this price will show up only for the user</h2>
+		<br/><br>	
+		<button type="submit" name="offer" value="Accept">Accept offer</button>
+	</form>
 </div>
 
 <div class="login" id="decOffer_<?=$item_id?>" style="width: 300px;">
-	<div id="decOffer_<?=$item_id?>_drag" style="float:right">
-		<img id="decOffer_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<input type="hidden" name="seller_id" value="<?=$user_id?>">
-			<h2>Decline this offer?</h2>
-			<br/><br>	
-			<button type="submit" name="offer" value="Decline">Yes, decline offer</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<input type="hidden" name="seller_id" value="<?=$user_id?>">
+		<h2>Decline this offer?</h2>
+		<br/><br>	
+		<button type="submit" name="offer" value="Decline">Yes, decline offer</button>
+	</form>
 </div>
 
 <div class="login" id="mkOffer_<?=$item_id?>" style="width: 300px;">
-	<div id="mkOffer_<?=$item_id?>_drag" style="float:right">
-		<img id="mkOffer_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<input type="hidden" name="buyer_id" value="<?=$user_id?>">
-			<h2>Enter your offer below:</h2>
-			$<input onclick=this.value="" type="text" value="0.00" name="amount">
-			<br/><br>	
-			<button type="submit" name="offer" value="Make">Make offer</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<input type="hidden" name="buyer_id" value="<?=$user_id?>">
+		<h2>Enter your offer below:</h2>
+		$<input onclick=this.value="" type="text" value="0.00" name="amount">
+		<br/><br>	
+		<button type="submit" name="offer" value="Make">Make offer</button>
+	</form>
 </div>
 
 <div class="login" id="cancelOffer_<?=$item_id?>" style="width: 300px;">
-	<div id="cancelOffer_<?=$item_id?>_drag" style="float:right">
-		<img id="cancelOffer_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<input type="hidden" name="buyer_id" value="<?=$user_id?>">
-			<h2>Are you sure you want to cancel your offer? Once you cancel this offer, you cannot make another one for this item.</h2>
-			<br/><br>
-			<button type="submit" name="offer" value="Cancel">Yes, cancel my offer</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<input type="hidden" name="buyer_id" value="<?=$user_id?>">
+		<h2>Are you sure you want to cancel your offer? Once you cancel this offer, you cannot make another one for this item.</h2>
+		<br/><br>
+		<button type="submit" name="offer" value="Cancel">Yes, cancel my offer</button>
+	</form>
 </div>
 
 <div class="login" id="enterPK_<?=$item_id?>" style="width: 300px;">
-	<div id="enterPK_<?=$item_id?>_drag" style="float:right">
-		<img id="enterPK_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
 	<?php if ($attempts < 2) { ?>
 		<form action="" method="POST">
 			<input type="hidden" name="user_id" value="<?=$user_id?>">
@@ -225,55 +169,32 @@
 			<button type="submit" name="paykey" value="Enter">Submit sale</button>
 		</form>
 	<?php } else { echo "<h2>You have entered an incorrect PayKey twice. To complete this sale, please call our offices for further verification."; } ?>
-	</div>
 </div>
 
 <div class="login" id="rmFav_<?=$item_id?>" style="width: 300px;">
-	<div id="rmFav_<?=$item_id?>_drag" style="float:right">
-		<img id="rmFav_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form action="" method="POST">
-			<input type="hidden" name="user_id" value="<?=$user_id?>">
-			<input type="hidden" name="item_id" value="<?=$item_id?>">
-			<h2>Remove this item from your favorites?</h2>
-			<br/><br>	
-			<button type="submit" name="fav" value="Remove">Yes, remove item</button>
-		</form>
-	</div>
+	<form action="" method="POST">
+		<input type="hidden" name="user_id" value="<?=$user_id?>">
+		<input type="hidden" name="item_id" value="<?=$item_id?>">
+		<h2>Remove this item from your favorites?</h2>
+		<br/><br>	
+		<button type="submit" name="fav" value="Remove">Yes, remove item</button>
+	</form>
 </div>
 
 <div class="login" id="addInfo_<?=$item_id?>" style="width: 300px;">
-	<div id="addInfo_<?=$item_id?>_drag" style="float:right">
-		<img id="addInfo_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>Please complete your profile.</h2>
-		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
-		<button type="button" onclick="document.location='index.php?task=my_account&redirect=payment&id=<?=$id_item?>'">Finish it now</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_<?=$item_id?>').style.display='none';">Later</button>
-	</div>
+	<h2>Please complete your profile.</h2>
+	You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
+	<button type="button" onclick="document.location='index.php?task=my_account&redirect=payment&id=<?=$id_item?>'">Finish it now</button>
 </div>
 
 <div class="login" id="addInfo_offer_<?=$item_id?>" style="width: 300px;">
-	<div id="addInfo_offer_<?=$item_id?>_drag" style="float:right">
-		<img id="addInfo_offer_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h2>Please complete your profile.</h2>
-		You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
-		<button type="button" onclick="document.location='index.php?task=my_account&redirect=transaction_console'">Finish it now</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_offer_<?=$item_id?>').style.display='none';">Later</button>
-	</div>
+	<h2>Please complete your profile.</h2>
+	You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
+	<button type="button" onclick="document.location='index.php?task=my_account&redirect=transaction_console'">Finish it now</button>
 </div>
 
 <div class="login" id="buy-notif_<?=$item_id?>" style="width: 300px;">
-	<div id="buy-notif_<?=$item_id?>_drag" style="float:right">
-		<img id="buy-notif_<?=$item_id?>_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h3>Buying reminder</h3>
-		**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
-		<button onclick="window.location='index.php?task=payment&id=<?=$item_link;?>'">I agree</button>
-	</div>
+	<h3>Buying reminder</h3>
+	**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
+	<button onclick="window.location='index.php?task=payment&id=<?=$item_link;?>'">I agree</button>
 </div>

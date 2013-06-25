@@ -170,7 +170,7 @@ if ($crop == "true") {
 	<table align="center" style="margin:auto; width: 400px">
 		<tr>
 			<td>
-				<center><font color='red'><b>An activation link has been sent to your e-mail address. Please click on it to finish your registration!</b></font></center>
+				<center><span class='blue'><b>An activation link has been sent to your e-mail address. Please click on it to finish your registration!</b></font></center>
 			</td>
 		</tr>
 	</table>

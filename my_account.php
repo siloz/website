@@ -6,7 +6,7 @@
 if ($_SESSION['is_logged_in'] != 1) { ?>
 	<script type="text/javascript">
 		$(document).ready(function () {
-        		javascript:popup_show('login', 'login_drag', 'login_exit', 'screen-center', 0, 0);
+			$("#login").fancybox().trigger('click');
 		})
 	</script>
 <?php 
@@ -281,19 +281,31 @@ if ($_SESSION['is_logged_in'] != 1) { ?>
 			$activeItems = mysql_num_rows(mysql_query("SELECT * FROM items WHERE user_id = '$user_id' AND status = 'pledged' OR status = 'offer'"));
 		}
 
-		if ($redirect && (!param_post('task') == 'update_account')) { ?>
-			<script type="text/javascript">
-				$(document).ready(function () {
-        				javascript:popup_show('addInfo_message', 'addInfo_message_drag', 'addInfo_message_exit', 'screen-center', 0, 0);
-				})
-			</script>
-<?php 		} elseif ($valid_code == -1) { mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); ?>
-			<script type="text/javascript">
-				$(document).ready(function () {
-        				javascript:popup_show('new_account', 'new_account_drag', 'new_account_exit', 'screen-center', 0, 0);
-				})
-			</script>
-<?php 		}
+	if ($valid_code == -1) { $new_account = true; mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); }
+
+	if ($new_account && $redirect && (!param_post('task') == 'update_account')) { ?>
+		<script>
+			$(document).ready(function() {
+				$("#new_account").fancybox({
+  					afterClose: function() {
+						$("#addInfo_message").fancybox().trigger('click');
+					}
+				}).trigger('click');
+			});
+		</script>
+<?php } elseif ($redirect && (!param_post('task') == 'update_account')) { ?>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$("#addInfo_message").fancybox().trigger('click');
+			})
+		</script>
+<?php } elseif ($new_account) { ?>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$("#new_account").fancybox().trigger('click');
+			})
+		</script>
+<?php }
 
 			$data = mysql_fetch_array(mysql_query("SELECT * FROM users WHERE user_id = '$user_id'"));
 			$jdate = $data['joined_date'];
@@ -538,10 +550,10 @@ die;
 					$chkItems = mysql_num_rows(mysql_query("SELECT * FROM items WHERE user_id = '$user_id' AND (status = 'pledged' OR status = 'offer' OR status = 'pending')"));
 					$chkSilos = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE admin_id = '$user_id' AND (status = 'active' OR status = 'latent')"));
 					if (!$chkItems && !$chkSilos) { ?>
-					<a onclick="popup_show('delete_account', 'delete_account_drag', 'delete_account_exit', 'screen-center', 0, 0);"><font color="red"><strong>Delete account</strong></font></a>
+					<a class="fancybox" href="#delete_account"><font color="red"><strong>Delete account</strong></font></a>
 					<font color="grey">(this is not reversible, and cannot be performed with items pending or while a silo is open.)</font>
 					<?php } else { ?>
-					<a onclick="popup_show('keep_account', 'keep_account_drag', 'keep_account_exit', 'screen-center', 0, 0);"><font color="red"><strong>Delete account</strong></font></a>
+					<a class="fancybox" href="#keep_account"><font color="red"><strong>Delete account</strong></font></a>
 					<font color="grey">(this is not reversible, and cannot be performed with items pending or while a silo is open.)</font>
 					<?php } ?>
 				</td>
@@ -552,86 +564,50 @@ die;
 ?>
 
 <div class="login" id="delete_account" style="width: 300px;">
-	<div id="delete_account_drag" style="float:right">
-		<img id="delete_account_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form method="post" action="">
-			<h2>Are you sure you want to delete your account?</h2>
-			**All deletions are <strong>final</strong> and <strong>cannot</strong> be reversed!<br><br>
-			<input type="hidden" name="id" value="<?=$id?>">
-			<input type="hidden" name="user_id" value="<?=$user_id?>">
-			<button type="submit" name="delete" value="Delete account">Delete account</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('delete_account').style.display='none';">Cancel</button>
-		</form>
-	</div>
+	<form method="post" action="">
+		<h2>Are you sure you want to delete your account?</h2>
+		**All deletions are <strong>final</strong> and <strong>cannot</strong> be reversed!<br><br>
+		<input type="hidden" name="id" value="<?=$id?>">
+		<input type="hidden" name="user_id" value="<?=$user_id?>">
+		<button type="submit" name="delete" value="Delete account">Delete account</button>
+	</form>
 </div>
 
 <div class="login" id="keep_account" style="width: 300px;">
-	<div id="keep_account_drag" style="float:right">
-		<img id="keep_account_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<form method="post" action="">
-			<h2>You cannot delete your account due to active items and/or silos.</h2>
-			You are only allowed to delete your account once you have no items pledged or pending. You also cannot be assosciated with an active silo.<br><br>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('keep_account').style.display='none';">Okay</button>
-		</form>
-	</div>
+	<form method="post" action="">
+		<h2>You cannot delete your account due to active items and/or silos.</h2>
+		You are only allowed to delete your account once you have no items pledged or pending. You also cannot be assosciated with an active silo.<br><br>
+	</form>
 </div>
 
 <div class="login" id="new_account" style="width: 500px;">
-	<div id="new_account_drag" style="float:right">
-		<img id="new_account_exit" src="images/close.png"/>
-	</div>
-	<div>
-			<h2>Welcome to your <?=SITE_NAME?> account page!</h2>
-			We have worked around the clock to make your user experience as fast and fluent as possible. We try to make everything simple and easy as well.<br><br>
-			When you signed up, we only asked for your e-mail address and a password. By doing this, you can navigate through the site and view certain things you wouldn't be able to without creating an account.<br><br>
-			If you would like to create a silo, donate an item, or buy an item on <?=SITE_NAME?>, you will need to provide some more information about yourself. We will not ask for this information until we absolutely need it. At any time, you can complete this by filling out your profile or by connecting with Facebook or LinkedIn. All of this can be located under your account page.<br><br>
-			Our hope is to have each member help benefit a silo in some way, but we don't want to make it required, by any means.<br><br>
-			In the meantime, we hope you enjoy <?=SITE_NAME?>! If you have any questions, please look at the bottom of the page to help get started or to view the frequently asked questions.<br><br>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('new_account').style.display='none';">Go to my account</button>
-	</div>
+	<h2>Welcome to your <?=SITE_NAME?> account page!</h2>
+	We have worked around the clock to make your user experience as fast and fluent as possible. We try to make everything simple and easy as well.<br><br>
+	When you signed up, we only asked for your e-mail address and a password. By doing this, you can navigate through the site and view certain things you wouldn't be able to without creating an account.<br><br>
+	If you would like to create a silo, donate an item, or buy an item on <?=SITE_NAME?>, you will need to provide some more information about yourself. We will not ask for this information until we absolutely need it. At any time, you can complete this by filling out your profile or by connecting with Facebook or LinkedIn. All of this can be located under your account page.<br><br>
+	Our hope is to have each member help benefit a silo in some way, but we don't want to make it required, by any means.<br><br>
+	In the meantime, we hope you enjoy <?=SITE_NAME?>! If you have any questions, please look at the bottom of the page to help get started or to view the frequently asked questions.<br><br>
 </div>
 
 <div class="login" id="addInfo_message" style="width: 500px;">
-	<div id="addInfo_message_drag" style="float:right">
-		<?php if ($valid_code != -1) { ?>
-			<img id="addInfo_message_exit" src="images/close.png"/>
-		<?php } ?>
-	</div>
-	<div>
-			<h2>Completing your <?=SITE_NAME?> profile</h2>
-			In order to use <?=SITE_NAME?> at its fullest, you will need to fill out your profile completely.<br><br>
-			Below is a list of the specific details that you will need to complete:
-			<blockquote><b>
-			- First name <br>
-			- Last name <br>
-			- Address <br>
-			- Phone <br>
-			- Profile picture <br>
-			</b></blockquote>
-			Remember, you can always connect with Facebook or LinkedIn to get started right away without the hassle!<br><br>
-			Once you have finished, we will redirect you back to where you were.<br><br>
-		<?php if ($valid_code == -1) { mysql_query("UPDATE users SET validation_code = -2 WHERE user_id = '$user_id'"); ?>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_message').style.display='none'; javascript:popup_show('new_account', 'new_account_drag', 'new_account_exit', 'screen-center', 0, 0);">Next message</button>
-		<?php } else { ?>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('addInfo_message').style.display='none';">Continue to my account</button>
-		<?php } ?>
-	</div>
+	<h2>Completing your <?=SITE_NAME?> profile</h2>
+	In order to use <?=SITE_NAME?> at its fullest, you will need to fill out your profile completely.<br><br>
+	Below is a list of the specific details that you will need to complete:
+	<blockquote><b>
+	- First name <br>
+	- Last name <br>
+	- Address <br>
+	- Phone <br>
+	- Profile picture <br>
+	</b></blockquote>
+	Remember, you can always connect with Facebook or LinkedIn to get started right away without the hassle!<br><br>
+	Once you have finished, we will redirect you back to where you were.<br><br>
 </div>
 
 <div class="login" id="fb_connect" style="width: 500px;">
-	<div id="fb_connect_drag" style="float:right">
-		<img id="fb_connect_exit" src="images/close.png"/>
-	</div>
-	<div>
-			<h2>You are connected with Facebook!</h2>
-			You have successfully linked your Facebook profile with <?=SHORT_URL?>. If you would like to update your profile information, click the button below. Don't forget to click 'Update' afterwords.<br><br>
-			<button type="button" id="fb-update" onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb_connect').style.display='none';">Update profile now</button>
-			<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb_connect').style.display='none';">Later</button>
-	</div>
+	<h2>You are connected with Facebook!</h2>
+	You have successfully linked your Facebook profile with <?=SHORT_URL?>. If you would like to update your profile information, click the button below. Don't forget to click 'Update' afterwords.<br><br>
+	<button type="button" id="fb-update" onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb_connect').style.display='none';">Update profile now</button>
 </div>
 
 </span>
@@ -686,10 +662,10 @@ die;
   }(document));
 
 $("#fb").live('click', function() {
-       javascript:popup_show('fb-confirm', 'fb-confirm_drag', 'fb-confirm_exit', 'screen-center', 0, 0);
+	$("#fb-confirm").fancybox().trigger('click');
 });
 $("#linkedin").live('click', function() {
-       javascript:popup_show('linkedin-confirm', 'linkedin-confirm_drag', 'linkedin-confirm_exit', 'screen-center', 0, 0);
+	$("#linkedin-confirm").fancybox().trigger('click');
 });
 
   // Here we are just running a very simple test of the Graph API after login is successful. 
@@ -721,41 +697,23 @@ $("#linkedin").live('click', function() {
   }
 
 $("#adr_disabled").click(function() {
-       javascript:popup_show('adr-dis', 'adr-dis_drag', 'adr-dis_exit', 'screen-center', 0, 0);
+	$("#adr-dis").fancybox().trigger('click');
 });
 </script>
 
 <div class="login" id="fb-confirm" style="width: 500px;">
-	<div id="fb-confirm_drag" style="float:right">
-		<img id="fb-confirm_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h3>Please Read</h3>
-		When you Connect with Facebook, we will grab the information from your Facebook.com account and store your information in our own database. Your information will not be updated until you click the Facebook button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
-		<button onclick="testAPI();">Continue and Connect with Facebook</button>
-		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('fb-confirm').style.display='none';">Cancel</button>
-	</div>
+	<h3>Please Read</h3>
+	When you Connect with Facebook, we will grab the information from your Facebook.com account and store your information in our own database. Your information will not be updated until you click the Facebook button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
+	<button onclick="testAPI();">Continue and Connect with Facebook</button>
 </div>
 
 <div class="login" id="linkedin-confirm" style="width: 500px;">
-	<div id="linkedin-confirm_drag" style="float:right">
-		<img id="linkedin-confirm_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h3>Please Read</h3>
-		When you Connect with LinkedIn, we will grab the information from your linkedin.com account and store your information in our own database. Your information will not be updated until you click the LinkedIn Connect button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
-		<button onclick="document.location='linkedin.php?user_id=<?=$user_id?>&redirect=<?=$redirect?>'">Continue and Connect with LinkedIn</button>
-		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('linkedin-confirm').style.display='none';">Cancel</button>
-	</div>
+	<h3>Please Read</h3>
+	When you Connect with LinkedIn, we will grab the information from your linkedin.com account and store your information in our own database. Your information will not be updated until you click the LinkedIn Connect button again. Each silo needs the user's information at some point. We will <b>never</b> share or distribute any of your information. All of your personal information stays within our site, <?=SHORT_URL?>, at all times. Some of your information will be given to silo administrators and people that you buy an item from or sell an item to. If you click continue, below, you are agreeing and allowing us to store your information in our database for site-wide purposes.<br><br> 
+	<button onclick="document.location='linkedin.php?user_id=<?=$user_id?>&redirect=<?=$redirect?>'">Continue and Connect with LinkedIn</button>
 </div>
 
 <div class="login" id="adr-dis" style="width: 300px;">
-	<div id="adr-dis_drag" style="float:right">
-		<img id="adr-dis_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<h3>You cannot change your address</h3>
-		Since you have items being actively listed, you cannot change your street address at this time. Changing the address on your account would interrupt the proccess for the buyers' of all of your items. Once all of your currently listed items have ended, you can change your address. <br><br>
-		<button onclick="document.getElementById('overlay').style.display='none';document.getElementById('adr-dis').style.display='none';">Okay</button>
-	</div>
+	<h3>You cannot change your address</h3>
+	Since you have items being actively listed, you cannot change your street address at this time. Changing the address on your account would interrupt the proccess for the buyers' of all of your items. Once all of your currently listed items have ended, you can change your address. <br><br>
 </div>

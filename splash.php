@@ -7,7 +7,7 @@
 
 <div class="row top_row">
 	<h2 class="tagline">A marketplace for items donated for causes in your community
-	<span class="blue" style="font-size: 9pt;"><a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a></span>
+	<span class="blue" style="font-size: 9pt;"><a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a></span>
 </h2> 
 </div>
 
@@ -31,7 +31,7 @@
 </div>
 
 <div id="slider-options">
-	<span class="slider-select">now viewing: public and private silo types</span> <a onclick="popup_show('silo_types', 'silo_types_drag', 'silo_types_exit', 'screen-center', 0, 0);">what's the difference?</a>
+	<span class="slider-select">now viewing: public and private silo types</span> <a class="fancybox" href="images/silo-types.png" title="What's the difference?">what's the difference?</a>
 </div>
 
 
@@ -48,7 +48,7 @@
 		</table>
 		<div class="splashText" style="text-align: left;">buy items whose sale helps a silo</div>
 		<div class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
-		<span class="blue"><a onclick="popup_show('items_sold', 'items_sold_drag', 'items_sold_exit', 'screen-center', 0, 0);"><b>how Voucher/Key works</b></a></span>
+		<span class="blue"><a class="fancybox" href="images/items-sold.png" title="How items are sold"><b>how Voucher/Key works</b></a></span>
 		</div>
 	</div>
 
@@ -64,7 +64,7 @@
 		</table>
 		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
 		<div class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
-		<span class="blue"><a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a></span>
+		<span class="blue"><a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a></span>
 		</div>
 	</div>
 	
@@ -81,12 +81,12 @@
 		</div>
 	</div>
 		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
-			<a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><b>how <?=SITE_NAME?> works</b></a>
+			<a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a>
 		</div>
 </div>
 
 <div class="row">
-		<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
+		<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
 	
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' AND silo_type = 'public' ORDER BY distance LIMIT 5";
@@ -122,7 +122,7 @@
 </div>
 
 <div class="row">
-	<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(click to change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
+	<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
 
 	<?php
 		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
@@ -241,32 +241,5 @@
 		<div id="bottom_menu">
 			<a href="index.php?task=contact_us">contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">about</a> | <a href="index.php?task=tos">terms of use</a> | <a href="index.php#quick-start">get started!</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">faq</a> | <a href="index.php?task=stories"><?=SITE_NAME?> stories</a>
 		</div>
-	</div>
-</div>
-
-<div class="login" id="silo_types">
-	<div id="silo_types_drag" style="float:right">
-		<img id="silo_types_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<img src="images/silo-types.png"></img>
-	</div>
-</div>
-
-<div class="login" id="works">
-	<div id="works_drag" style="float:right">
-		<img id="works_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<img src="images/how-it-works.png"></img>
-	</div>
-</div>
-
-<div class="login" id="items_sold">
-	<div id="items_sold_drag" style="float:right">
-		<img id="items_sold_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<img src="images/items-sold.png"></img>
 	</div>
 </div>

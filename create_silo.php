@@ -349,7 +349,7 @@ else {
 <?php if ($silo_type == "private" && !param_post('publish')) { ?>
 	<script type="text/javascript">
 		$(document).ready(function () {
-        		javascript:popup_show('prv_email', 'prv_email_drag', 'prv_email_exit', 'screen-center', 0, 0);
+        		$("#prv_email").fancybox().trigger('click');
 		})
 	</script>
 <?php } ?>
@@ -557,16 +557,10 @@ $user = new User($user_id);
 ?>
 
 <div class="login" id="prv_email" style="width: 300px;">
-	<div id="prv_email_drag" style="float:right">
-		<img id="prv_email_exit" src="images/close.png"/>
-	</div>
-	<div>
 		<h3>PayPal E-mail</h3>
 		Since your silo is private, you will be paid out through PayPal. The e-mail address on your account will be the one that gets the PayPal payment. The e-mail address is: <br><br>
 		<b><?=$user->email?></b> <br><br>
 		If you would like the money to be sent to a different PayPal account, please change your e-mail in your account settings before your private silo ends. <br><br>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('prv_email').style.display='none';">Continue</button>
-	</div>
 </div>
 
 </span>

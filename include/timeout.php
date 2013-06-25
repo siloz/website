@@ -9,15 +9,14 @@ $(document).ready(function () {
         idleTime = 0;
 	 var isVisible = $('#timeout').is(':visible');
 	if (isVisible) {
-  	 document.getElementById("timeout").style.display = "none";
-  	 document.getElementById("overlay").style.display = "none";
+		$.fancybox.close();	
 	}
     });
 })
 function timerIncrement() {
     idleTime = idleTime + 1;
     if (idleTime > 1) { // 2 minutes
-        javascript:popup_show('timeout', 'timeout_drag', 'timeout_exit', 'screen-center', 0, 0);
+        $("#timeout").fancybox().trigger('click');
     }
 
     if (idleTime > 2) { // 3 minutes
@@ -27,10 +26,5 @@ function timerIncrement() {
 </script>
 
 <div class="login" id="timeout" style="width: 300px;">
-	<div id="timeout_drag" style="float:right">
-		<img id="timeout_exit" src="images/close.png"/>
-	</div>
-	<div>
-		<font color="red" size="3"><b>You have been inactive for over two minutes. <br><br> You will be redirected if inactivity continues.</b></font>
-	</div>
+	<font color="red" size="3"><b>You have been inactive for over two minutes. <br><br> You will be redirected if inactivity continues.</b></font>
 </div>

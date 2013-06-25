@@ -27,14 +27,11 @@ function submit_flag_silo(flag_id){
 	    	};
 	$("#flag_box_silo_display").load(url,params);
 }
+
 function show_flag_box_silo(){
 	$("#flag_box_silo").show();	
 }
-function hide_flag_box_silo(){
-	$('#flag_box_silo').hide();
-	popup_exit('flag_box_silo', 'login_silo_drag', 'login_silo_exit', 'screen-center', 0, 0);
 
-}
 </script>
 <style type="text/css">
 	#silo_security_text .blue{
@@ -120,16 +117,20 @@ function hide_flag_box_silo(){
 		<td style="padding-top: 17px; padding-bottom: 13px" align="center">
 			You're the admin.
 	<?php } elseif ($siloFlagged) { ?>
-		<td style="padding-top: 17px" align="center" class="click_me" onclick="javascript:popup_show('flagged_silo', 'flagged_silo_drag', 'flagged_silo_exit', 'screen-center', 0, 0);">
-			<span class="voucherText<?=$closed_silo?>"><b>Silo flagged</b></font></span>
-			<div class="floatR"><img height="20px" src="<?=ACTIVE_URL?>img/flag.png" alt="Flag this item" /></div>
+		<td style="padding-top: 17px" align="center" class="click_me">
+			<a class='fancybox' href='#flagged_silo'>
+				<span class="voucherText<?=$closed_silo?>"><b>Silo flagged</b></font></span>
+				<div class="floatR"><img height="20px" src="<?=ACTIVE_URL?>img/flag.png" alt="Flag this item" /></div>
+			</a>
 	<?php } elseif ($closed_silo) { ?>
 		<td style="padding-top: 17px" align="center">
 		<br>
 	<?php } else { ?>
-			<td style="padding-top: 17px" align="center" class="click_me" onclick="javascript:popup_show('flag_box_silo', 'login_silo_drag', 'login_silo_exit', 'screen-center', 0, 0);">
-			<span class="voucherText<?=$closed_silo?>"><b>Flag this silo</b></font></span>
-			<div class="floatR"><img height="20px" src="<?=ACTIVE_URL?>img/flag.png" alt="Flag this item" /></div>
+			<td style="padding-top: 17px" align="center" class="click_me">
+			<a class='fancybox' href='#flag_box_silo'>
+				<span class="voucherText<?=$closed_silo?>"><b>Flag this silo</b></font></span>
+				<div class="floatR"><img height="20px" src="<?=ACTIVE_URL?>img/flag.png" alt="Flag this item" /></div>
+			</a>
 	<?php } ?>
 
 		</td>
@@ -139,18 +140,15 @@ function hide_flag_box_silo(){
 <table class="flag_box" id="flag_box_silo">
 	<tr>
 		<td id="flag_box_silo_display">
-			<div id="login_silo_drag" style="float:right">
-				<img onclick="hide_flag_box_silo();" id="login_silo_exit" src="<?=ACTIVE_URL?>images/close.png"/>
-			</div>
-				<img  src="<?=ACTIVE_URL?>img/flag.png" />
-				<h1>Reasons for Flagging this <?php echo ucfirst($flag_box_type); ?></h1>
-				<ul>
-					<?php foreach($flag_ids as $x){ 
-						$Flag->Populate($x);
-					?>
-					<li><a onclick="submit_flag_silo(<?php echo $Flag->id; ?>);" href="javascript: void(0);"><?php echo $Flag->type; ?></a></li>
-					<?php } ?>
-				</ul>
+			<img  src="<?=ACTIVE_URL?>img/flag.png" />
+			<h1>Reasons for Flagging this <?php echo ucfirst($flag_box_type); ?></h1>
+			<ul>
+				<?php foreach($flag_ids as $x){ 
+					$Flag->Populate($x);
+				?>
+				<li><a onclick="submit_flag_silo(<?php echo $Flag->id; ?>);" href="javascript: void(0);"><?php echo $Flag->type; ?></a></li>
+				<?php } ?>
+			</ul>
 		</td>
 	</tr>
 </table>
