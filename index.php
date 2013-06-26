@@ -188,13 +188,15 @@ if (!isset($_SESSION['is_logged_in'])) {
       xmlns:fb="https://www.facebook.com/2008/fbml">
 	<head>
 		<title><?=TAG_LINE?></title>
+		<meta name="description" content="siloz or <?=SITE_NAME?> is a marketplace for items donated for causes in your community, private and public. People list items out of their homes, and don't have to move them to a parking lot or field. We allow churches, mosques, synagogues, schools, local non-profits, public university student unions or student groups, civic organizations and neighborhood organizations to raise money. Donations are often tax-deductible. Moreover, a person can hold a private, unlisted, fundraiser (called a 'silo'), and raise money without the public">
+		<meta name="keywords" content="silent auction, donate your vehicle to charity, donate my vehicle to charity, donate my boat to charity, donate for a tax-deduction, crowdfunding, crowd-funding, raise money, fundraising, fund-raising, tax-deductible donation, tax-deductible, rummage sale, church rummage sale, school rummage sale, rummage sale fundraiser, rummage sale fundraising, donation to 510 c 3, charitable deduction, irs deduction, car wash fundraiser, bake sale fundraiser, candy bar sale fundraiser, alternative fundraising, charitable concerts, neighborhood block parties, crowd-sourcing, crowdsourcing, wedding fund, policeman's fund, firefighter's fund, civic fundraising, neighborhood fundraising, public university fundraising, youth sports fundraiser, youth soccer fundraiser, youth baseball fundraiser, little league fundraiser, little league fundraising, alternative to indiegogo, alternative to kickstarter, alternative to rockethub, alternative to wepay, alternative to gofundme">
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 		<link rel="shortcut icon" href="<?=ACTIVE_URL?>favicon.ico?v=6" />
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz.css" />	
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />	
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />	
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />
 		<link rel="stylesheet" tyle="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
 
 	<?php if (param_get('task') == 'view_silo') { ?> 
