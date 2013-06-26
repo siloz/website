@@ -11,12 +11,13 @@
 }
 
 .quick_start h2 {
-	color: #ffb380;
+	color: #fe5300;
 	font-size: 12pt;
 }
 
 .quick_start a {
 	color: #ffb380;
+	\* color: #ffb380; *\
 	font-size: 12pt;
 	text-decoration: none;
 }

@@ -2,12 +2,24 @@
 	<?php
 		include('header.php');
 		include_once("include/GoogleAnalytics.php");
-	?>
+
+		if (param_get('ref') == "start") { ?>
+			<script>
+			$(document).ready(function (){
+				$("#learn-more").remove();
+				$("#quick-start").toggle("slow");
+         			$('html, body').animate({
+               			scrollTop: $("#quick-start").offset().top
+         			}, 1000);
+			});
+			</script>
+<?php } ?>
+
 </div>
 
 <div class="row top_row">
 	<h2 class="tagline">A marketplace for items donated for causes in your community
-	<span class="blue" style="font-size: 9pt;"><a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a></span>
+	<span class="blue" style="font-size: 9pt;"><a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a></span>
 </h2> 
 </div>
 
@@ -31,7 +43,7 @@
 </div>
 
 <div id="slider-options">
-	<span class="slider-select">now viewing: public and private silo types</span> <a class="fancybox" href="images/silo-types.png" title="What's the difference?">what's the difference?</a>
+	<span class="slider-select">now viewing: public and private silo types</span> <a class="fancybox" href="images/silo-types.png" title="Explanation of the difference between public and private silos">what's the difference?</a>
 </div>
 
 
@@ -48,7 +60,7 @@
 		</table>
 		<div class="splashText" style="text-align: left;">buy items whose sale helps a silo</div>
 		<div class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
-		<span class="blue"><a class="fancybox" href="images/items-sold.png" title="How items are sold"><b>how Voucher/Key works</b></a></span>
+		<span class="blue"><a class="fancybox" href="images/items-sold.png" title="The graphic, above, shows you how the buying, selling, and payment process works"><b>how Voucher/Key works</b></a></span>
 		</div>
 	</div>
 
@@ -64,7 +76,7 @@
 		</table>
 		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
 		<div class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
-		<span class="blue"><a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a></span>
+		<span class="blue"><a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a></span>
 		</div>
 	</div>
 	
@@ -85,7 +97,7 @@
 		</a>
 	</div>
 		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
-			<a class="fancybox" href="images/how-it-works.png" title="How it works"><b>how <?=SITE_NAME?> works</b></a>
+			<a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a>
 		</div>
 </div>
 
@@ -164,86 +176,96 @@
 	?>
 </div>
 
-<div id="quick-start"></div>
 
 <div id="footer_container" class="row">
-	<div id="quick_start_bg">
-		<table width="100%" class="quick_start">
-			<tr>
-			<td valign="top" width="47%">
-				<h2>What is <?=SITE_NAME?>?</h2>
-				<p>You could think of a silo as a rummage sale, online, to benefit a local cause, whether private or public.  We think <?=SITE_NAME?> is transparent, safe, and fun.  Everybody wins: Buyers get merchandise while helping local causes.  Those donating items often receive a tax-deduction for a sold item and silo administrators raise money without asking for cash!</p>
-				<h2>How Does <?=SITE_NAME?> Work?</h2>
-				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div> <a onclick="popup_show('works', 'works_drag', 'works_exit', 'screen-center', 0, 0);"><img src="images/how-it-works.png" width="452" height="321"></img></a>
-				<h2>How Do I Join A silo?</h2>
-				<p>You join a silo by pledging (donating) an item to a cause in your area.  That item then appears on the site, for sale to the local public.</p>
-				<h2>What Are The silo Types?</h2>
-				<p>There are two top-level silo types: <b>private</b> and <b>public</b>. Within each of these categories, there are many sub-types. <br><br>
-					<b><i>Private</i></b><br>
-					Only those invited (and not the general public) can see information about a private silo.<br><br>
-					<b><i>Public</i></b><br>
-					A public silo is visible to anyone on the site, and anybody can donate an item for one.
-					<div style="text-align: center">(click to enlarge)</div> 
-					<a onclick="popup_show('silo_types', 'silo_types_drag', 'silo_types_exit', 'screen-center', 0, 0);"><img src="images/silo-types.png" width="452" height="277"></img></a> <br><br>
-					Public silos must fall into one of the following categories: <br><br>
-					Religious Organization <br>
-					Public K-12 School (PTA, student group) <br>
-					Public University (student group, sorority/fraternity) <br>
-					Registered Non-Profit With a Presence and Outreach in a Given Region <br>
-					Civic Organization <br>
-					Neighborhood Organization (including an HOA) <br>
-					Youth Sports Organization (adult organizations are considered private) <br><br>
-					And must benefit the community and a public silo administrator must enjoy some leadership role with that organization.  
-				</p>
-				<h2>Are Donated Items Tax-Deductible?</h2>
-				<p>Only public silos may potentially issue tax-deductible receipts, if they can verify the 501(c)3 when they launch, or they help a public school.</p>
-			</td>
-			<td width="6%"></td>
-			<td valign="top" width="47%">
-				<h2>How Are Items Sold?</h2>
-				<p>Nothing is shipped on the site; you are only permitted to shop for items within a 75 mile radius of your address. <br><br>
-					1) Buyer pays online, with a credit/debit card, initiating a purchase. <br><br>
-					2) Buyer and seller are given each other's contact information (telephone and email address), and one week in which to transact a sale. <br><br>
-					Additionally, buyers are issued a one-time Voucher, which acts as cash, and sellers are issued a Voucher Key, which proves a Voucher is authentic. <br><br> 
-					3) If the buyer wishes to purchase the item, he/she provides the seller the Voucher.  The sale is considered 'closed' when the seller enters the buyer's Voucher into the site. <br><br>
-					At the end of a silo (1, 2, or 3 weeks), all the money from 'closed' sales are paid-out to a silo administrator through either PayPal (private silos) or an e-check (public silos).  This usually takes no more than a week.
-					<div style="text-align: center">(click to enlarge)</div> 
-					<a onclick="popup_show('items_sold', 'items_sold_drag', 'items_sold_exit', 'screen-center', 0, 0);"><img src="images/items-sold.png" width="452" height="321"></img></a> <br><br>
-					Note: If a seller enters the Voucher <?=SITE_NAME?> issued to the buyer into the site within the designated time, <?=SITE_NAME?> WILL NOT refund payment to the buyer, whether the item has actually been collected or not.  If the seller has not done so, <?=SITE_NAME?> WILL refund payment to the buyer, whether the item was actually collected or not. <br><br>
-					So, buyers should not provide a seller with a Voucher via email or over the telephone, or if they do not wish to collect an item.  Sellers should never accept a Voucher that does not match to their Voucher Key.  Contact us if you suspect any trickery!
-				</p>
-				<h2>What Are Some Good Private silo Applications?</h2>
-				<p>Private silos leverage existing, strong, social networks, and ask your supporters to donate items to a cause, which is kept private and not visible to the general public, who may only see items donated to your cause. <br><br>
-					Some very common needs for a private silo include: <br>
-					<table style="text-align: center" width="100%">
-						<tr><td>Family Reunion</td> <td>Medical or Legal Emergency</td></tr>
-						<tr><td>Meetup</td> <td>College Loans or Tuition</td></tr>					
-						<tr><td>Wedding or Honeymoon</td> <td>Graduation or Prom</td></tr>
-						<tr><td>Mother's Day or Father's Day</td> <td>A Birthday or Holiday Gift</td></tr>
-						<tr><td>An Anniversary</td> <td>Music or Film Project</td></tr>
-						<tr><td>Adult Sports League or Team</td> <td>Unforeseen Household Bill</td></tr>
-						<tr><td>Youth Education or Enrichment</td> <td>Down-Payment on a Car or Home</td></tr>
-					</table> <br>
-					Remember: money you collect from a private silo is income, and should be reported to the IRS.  
-				</p>
-				<h2>What Are Some Good Public silo Applications?</h2>
-				<p>Here are some great silo ideas: <br>
-					<table style="text-align: center" width="100%">
-						<tr><td>Neighborhood: Festival or Party</td> <td>K-12 Public Education: Class Trip</td></tr>
-						<tr><td>Local Youth Sports: Uniforms or Attire</td> <td>Civic: Commissioned Art</td></tr>					
-						<tr><td>K-12 Public Education: Graduation</td> <td>Neighborhood: Park or Playground</td></tr>
-						<tr><td>Religious: Charity or Outreach</td> <td>Civic: Library</td></tr>
-						<tr><td>Civic: Fireman's or Police Fund</td> <td>K-12 Public Education: Arts Programs</td></tr>
-						<tr><td>Public University: Fraternity or Sorority</td> <td>Public University: Scholarship</td></tr>
-						<tr><td>Neighborhood: Cleanup</td> <td>Local Youth Sports: Tournament Fees</td></tr>
-					</table>
-				</p>
-			</td>
-			</tr>
-		</table>
+	<div id="quick_start_bg" class="quick_start">
+		<h1 align="center" class="click_me" id="learn-more">Click Here to Learn More</h1>
+	<div style="display: none" id="quick-start">
+		<h2>What is <?=SITE_NAME?>?</h2>
+			<p><?=SITE_NAME?> is a marketplace for items donated to help local causes.  A 'silo' is a virtual rummage sale that benefits a local cause, which can be private or public.</p>
+		<h2>What Are The Benefits of an Online?</h2>
+			<p>Rummage sales are challenging to organize. They take time and energy to move items. Often there is not sufficient traffic to sell items, or donated items are not exactly 'hot'; they're unwanted items. <?=SITE_NAME?> allows for a transparent, fun, safe fundraiser, for members of groups and organizations. Everybody can see what everybody else donated, which translates to less junk.</p>
+			<p>We've provided promotional tools to everybody in your organization, to ensure your silo is a success. Best of all - you don't have to discard what doesn't sell, since people list items from their home!</p>
+		<h2>How Does It Work?</h2>
+			<table width="100%"><tr><td width="400px">
+				<p>1) A silo administrator starts a silo, and uses Facebook, email, and off-line tools (1/4 page flyers) to promote it.</p>
+				<p>2) Others join by pledging and selling items through the site. They can also promote a silo, getting more donations and buyers!</p>
+				<p>3) After a silo ends (1, 2, or 3 weeks), we send the money raised (90% for public silos, 95% for private silos, paid via PayPal) to the silo administrator.</p>
+				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
+			</td><td align="center">
+				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div>
+				<a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"> <img src="images/how-it-works.png" width="421" height="300"></img></a>
+			</td></tr></table>
+		<h2>What Types of silos Are There?</h2>
+			<p>There are two top-level silo types: <span class="orange"><b>private</b></span> and <span class="orange"><b>public</b></span>. While items donated to benefit any silo are always visible on the site, private silos themselves are unlisted. This means you must have been invited (provided a link) to ever see one. Public silos must belong to the following classes:</p>
+			<table width="100%"><tr><td width="400px">
+				<p>1) Religious Organization (church, synagogue, etc.), 2) Public University (student group, sorority/fraternity), 3) Registered Non-Profit (with a presence and outreach in a given region), 4) Civic Organization, 5) Neighborhood Organization (including an HOA), 6) Youth Sports Organization (adult organizations are considered private), 7) Public K-12 School (PTA, student group)</p>
+				<p>A silo can only be begun by a person belonging to these groups, and enjoying a leadership position. We verify this.</p>
+				<p><?=SITE_NAME?> has created a class of disaster relief silo, which we run. These are always authorized by the benefiting organization. Contact us for more information.  </p>
+				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
+			</td><td align="center">
+				<div style="margin-top: -5px;">(click to enlarge)</div>
+				<a class="fancybox" href="images/silo-types.png" title="Explanation of the difference between public and private silos"><img src="images/silo-types.png" width="490" height="300"></img></a>
+			</td></tr></table>
+			<p>Anybody over age 14 can create a silo, if it doesn't conflict with our mission statement of change through goodwill, inclusiveness, respect and legality.</p>
+			<table width="100%"><tr>
+				<td colspan="3"><p><i>Private silo Examples</i></p></td>
+			</tr><tr>
+				<td align="center"><p>Family Reunion<br>Unforeseen Household Bill<br>Wedding or Honeymoon<br>Mother's Day or Father's Day</p></td>
+				<td align="center"><p>Music or Film Project<br>Youth Education or Training<br>An Anniversary<br>Down-Payment on a Car or Home</p></td>
+				<td align="center"><p>Medical or Legal Emergency<br>College Loans or Tuition<br>Graduation or Prom<br>A Birthday or Holiday Gift</p></td>
+			</tr></table>
+			<p>Remember: money you collect from a private silo is income, and should be reported to the IRS.</p>
+			<table width="100%"><tr>
+				<td colspan="3"><p><i>Public silo Examples</i></p></td>
+			</tr><tr>
+				<td align="center"><p>Neighborhood: Festival or Party<br>Local Youth Sports: Uniforms or Attire<br>K-12 Public Education: Graduation<br>Religious: Charity or Outreach<br>Civic: Fireman's or Police Fund</p></td>
+				<td align="center"><p>Neighborhood: Cleanup<br>Public University: Fraternity or Sorority<br>K-12 Public Education: Arts Programs<br>Public University: Scholarship<br>Local Youth Sports: Tournament Fees</p></td>
+				<td align="center"><p>K-12 Public Education: Class Trip<br>Civic: Commissioned Art<br>Neighborhood: Park or Playground<br>Civic: Library<br>Religious: Guest Speaker</p></td>
+			</tr></table>
+		<h2>Are Donated Items Tax-Deductible?</h2>
+			<p>Only public silos may potentially issue tax-deductible receipts, if they can verify the 501(c)3 when they launch, or they help a public school. Qualifying public silos are marked, on their page.</p>
+		<h2>How Are Items Sold?</h2>
+			<table width="100%"><tr><td width="400px">
+				<p>We have a new way to buy/sell things online. It's safe and easy. We call it "Voucher/Key"</p>
+				<p>Local items are paid for through the site, but picked up (or declined) in-person, using a Voucher, which acts like cash. Sellers have a Voucher Key that proves a buyer's Voucher is authentic, and the two parties have a week to transact a sale.</p>
+				<p>The sale is considered 'closed' when the seller enters the buyer's Voucher into the site. That's how we know you got your item! If a seller doesn't enter a buyer's Voucher within a week, or if a buyer 'declines' an item from his Transaction Console, we refund 95% of the money he/she paid.</p>
+				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
+			</td><td align="center">
+				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div>
+				<a class="fancybox" href="images/items-sold.png" title="The graphic, above, shows you how the buying, selling, and payment process works"> <img src="images/items-sold.png" width="421" height="300"></img></a>
+			</td></tr></table>
+		<h2>What are the Benefits of Voucher/Voucher Key?</h2>
+			<table width="100%"><tr>
+				<td valign="top"><p>If you see it on our site - the item is there to purchase. No 'dead' ads.<br><br>Sellers know buyers are serious and have money<br><br>You can decline an item if it is not what you want</p></td>
+				<td valign="top"><p>Buyers can control whether they get their item or not.<br><br>No disputes as to whether an item was collected (no scammers)<br><br>Sellers are unlikely to misrepresent items, because they can be so easily declined</p></td>
+				<td valign="top"><p>You don't have to bring money to pick up your item<br><br>You receive 95% of your payment back, if you decline an item<br><br>We avoid settling disputes, keeping our overhead low, which we pass on to you!</p></td>
+			</tr></table>
+
+		<?php if (!isset($_SESSION['is_logged_in'])) { ?>
+			<a class="fancybox" href="index.php?task=create_account"><h1 align="center" class="click_me">Ready to go? Let's create an account now!</h1></a>
+		<?php } else { ?>
+			<a class="fancybox" href="items"><h1 align="center" class="click_me">Think you got it? Start looking for items to buy!</h1></a>
+		<?php } ?>
+
+		</div>
 
 		<div id="bottom_menu">
-			<a href="index.php?task=contact_us">contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">about</a> | <a href="index.php?task=tos">terms of use</a> | <a href="index.php#quick-start">get started!</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">faq</a> | <a href="index.php?task=stories"><?=SITE_NAME?> stories</a>
+			<a href="index.php?task=contact_us">contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">about</a> | <a href="index.php?task=tos">terms of use</a> | <a href="index.php?ref=start">get started!</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">faq</a> | <a href="index.php?task=stories"><?=SITE_NAME?> stories</a>
 		</div>
 	</div>
 </div>
+
+<script>
+$("#learn-more").click(function() {
+	$("#learn-more").remove();
+	$("#quick-start").toggle("slow");
+});
+$(document).ready(function (){
+    $("#learn-more").click(function (){
+         $('html, body').animate({
+               scrollTop: $("#quick-start").offset().top
+         }, 1000);
+    });
+});
+</script>
