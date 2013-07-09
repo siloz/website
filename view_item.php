@@ -504,7 +504,6 @@ die;
 		</table>
 		<br/>			
 		<button type="button" id="contact_admin_button">Send</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_admin').style.display='none';">Cancel</button>
 	</form>
 	<script>
 		$("#contact_admin_button").click(function(event) {	
@@ -567,7 +566,6 @@ die;
 		</table>
 		<br/>			
 		<button type="button" id="contact_seller_button">Send</button>
-		<button type="button" onclick="document.getElementById('overlay').style.display='none';document.getElementById('contact_seller').style.display='none';">Cancel</button>
 	</form>
 	<script>
 		$("#contact_seller_button").click(function(event) {	
@@ -643,18 +641,18 @@ die;
 						<div class="item-page-box">
 							Item ID: <?php echo $item->id;?> <br>
 							Listing <?php if ($closed_silo) { echo "expired"; } else { echo "expires"; } ?>:
-								<?php $end = strtotime($silo->end_date); $ended_date = date("M jS, Y", $end); echo $ended_date; ?> <br>
+								<?=$item->getFormattedEndDate();?> <br>
 							Seller: <a href="index.php?task=view_user&id=<?php echo $seller->id;?>"><font color="#2f8dcb"><?php echo $seller->fname?> (view other items)</font></a>
 						</div>
 
 				<?php if ($closed_silo) { echo "<div style='margin-top: 30px; text-align: center;'>The silo this item belongs to is closed. <br> Items in a closed silo are not interactive.</div>"; } 
-				elseif ($isSeller) { echo "<img height='40' width='40' src='images/facebook.jpg' class='fbHover' style='float: left; padding-top: 7px; padding-right: 5px;' onclick='postToFeed();'/> <a class='fancybox' href='#mail'><img src='images/mail-icon.png' width='55' height='55' style='float: left; padding-right: 5px;'></a> <span id='success' class='error'>".$updatemsg."</span> <div class='itemText' style='padding-top: 10px; text-align: center;'>You are the seller of this item. <br> Some functions are hidden.</div> <br> <a class='fancybox' href='#editItem'><button class='buttonEditItem'>edit your item</button></a>"; } else { ?>
+				elseif ($isSeller) { echo "<img height='40' width='40' src='images/facebook.jpg' class='fbHover' style='float: left; padding-top: 7px; padding-right: 5px;' onclick='postToFeed();'/> <a class='fancybox' href='#mail'><img src='images/mail-icon.png' width='55' height='55' style='float: left; padding-right: 5px;'></a> <span id='success' class='error'>".$updatemsg."</span> <div class='itemText' style='padding-top: 10px; text-align: center;'>You are the seller of this item. <br> Some functions are hidden.</div> <br> <a class='fancybox' href='#editItem'><button class='buttonEditItem'>edit your item</button></a> <br><br> <a class='fancybox' href='#craigslist'><div style='font-size: 11pt;'>Copy/Paste code to list on Craigslist!</div></a>"; } else { ?>
 
 						<div style="padding: 5px;"></div>
 							<?php if (!$_SESSION['is_logged_in']) {?>
 								<a class='fancybox' href='#login'><button class="buttonBuyItem">buy this item
 							<?php } elseif ($isSeller) {} elseif (!$distBuyerSeller) { ?>
-								<a class='fancybox' href='#dist'><button>buy this item
+								<a class='fancybox' href='#dist'><button class="buttonBuyItem">buy this item
 							<?php } elseif ($addInfo_full) { ?>
 								<a class='fancybox' href='#addInfo_item'><button class="buttonBuyItem">buy this item
 							<?php } else { ?>
@@ -707,7 +705,7 @@ die;
 									<button class="buttonItemPage" style="color: red;" type="submit" name="fav" value="remove from favorites">remove from favorites</button>
 								</form>
 							<?php } elseif (!$distBuyerSeller) { ?>
-								<a class='fancybox' href='#dist'><button class="buttonItemPage">add to favorites</a>
+								<a class='fancybox' href='#dist'><button class="buttonItemPage">add to favorites</button></a>
 							<?php } else { ?>
 								<form method="post" action="">
 									<input type="hidden" name="user_id" value="<?=$user_id?>">
@@ -726,8 +724,6 @@ die;
 							<div id='fb-root'></div>
 							<script src='https://connect.facebook.net/en_US/all.js'></script>
 							<?php
-								$url = ACTIVE_URL."index.php?task=view_item&id=".$item->id;
-								$photo_url = ACTIVE_URL.'uploads/items/'.$item->photo_file_1.'?'.$item->last_update;
 								$name = $item->title.": $".$item->price;
 								$caption = "Help Silo: ".$silo->name;
 								$description = substr($item->description, 0, 200)."...";
@@ -743,8 +739,8 @@ die;
 							  	function postToFeed() {
 							    	FB.ui({
 							      		method: 'feed',
-							      		link: "<?php echo $url; ?>",
-							      		picture: "<?php echo $photo_url; ?>",
+							      		link: "<?=$item->getUrl();?>",
+							      		picture: "<?=$item->getPhotoUrl();?>",
 							      		name: "<?php echo $name; ?>",
 										caption: "<?php echo $caption; ?>",
 							      		description: "<?php echo $description; ?>"
@@ -896,6 +892,74 @@ window.onload = loadScript;
 	<h3>Buying reminder</h3>
 	**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
 	<button onclick="window.location='index.php?task=payment&id=<?=$item->id;?>'">I agree</button>
+</div>
+
+
+<div class="login" id="craigslist" style="width: 600px;">
+
+<script type="text/javascript" src="js/zClip/jquery.zclip.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('button#craigslist-copy').zclip({
+        path:'js/zClip/ZeroClipboard.swf',
+	 copy:$('textarea#craigslist-html').val(),
+ 	 beforeCopy:function(){
+	 	$('#craigslist-html').trigger('click');
+	 },
+ 	 afterCopy:function(){
+	 	$('#copy-status').fadeIn().html('<a href="http://www.craigslist.org" style="text-decoration: none; color: green;" target="_blank">Copied to clipboard! Click here to go to Craigslist!');
+	 }
+    });
+});
+
+$('textarea#craigslist-html').focus(function() {
+    var $this = $(this);
+
+    $this.select();
+
+    window.setTimeout(function() {
+        $this.select();
+    }, 1);
+
+    // Work around WebKit's little problem
+    function mouseUpHandler() {
+        // Prevent further mouseup intervention
+        $this.off("mouseup", mouseUpHandler);
+        return false;
+    }
+
+    $this.mouseup(mouseUpHandler);
+});
+
+$('textarea#craigslist-html').keypress(function(e) {
+	return false;
+});
+</script>
+
+	<h2 style='color: #fe5300;'><?=$item->title?>, $<?=$item->price?></h2>
+	<h3>Copy and paste the code, below, to your local Craigslist.org listing</h3>
+	<textarea rows="10" cols="60" name="craigslist-html" id="craigslist-html">
+<a href="<?=$item->getUrl();?>">
+<?php
+	if ($item->photo_file_1 != '')
+		echo "<img src='".$item->getPhotoUrl()."' width=280px height=210px id='current_item_photo' /> &nbsp;&nbsp;";
+?>
+</a>
+<br><br>
+<font color="blue">
+	<b>Description:</b> <?=$item->description?> <br>
+	<b>Listing Expires:</b> <?=$item->getFormattedEndDate();?>
+</font>
+<br><br>
+<a href="<?=$item->getUrl();?>">
+	Click here to buy this item now via <?=SITE_NAME?>!
+</a>
+</textarea> 
+
+<br><br>
+	<button id="craigslist-copy">Copy to Clipboard</button> <br><br>
+	Remember to fill out the appropriate item title and price! <br><br>
+	<div id="copy-status" style="color: green;"></div>
 </div>
 
 <div class="edit_item" id="editItem" style="width: 800px">

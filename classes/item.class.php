@@ -164,6 +164,22 @@ class Item {
 		else if ($id == 4)
 			return $this->photo_file_4;
 	}
+
+	public function getFormattedEndDate() {
+		$end = strtotime($this->silo->end_date);
+		$end_date = date("M jS, Y", $end);
+		return $end_date;
+	}
+
+	public function getUrl() {
+		$url = ACTIVE_URL."index.php?task=view_item&id=".$this->id;
+		return $url;
+	}
+
+	public function getPhotoUrl() {
+		$photo_url = ACTIVE_URL.'uploads/items/'.$this->photo_file_1.'?'.$this->last_update;
+		return $photo_url;
+	}
 	
 	public static function getItems($silo_id, $order_by, $limit) {
 		$order_by_clause = "";

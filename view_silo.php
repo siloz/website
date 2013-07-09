@@ -13,7 +13,7 @@
 	} else { $view_track = "set"; }
 
 	if (!$id && !shortname) {
-		echo "<script>window.location = 'index.php';</script>";	
+		echo "<script>window.location = '".ACTIVE_URL."index.php';</script>";	
 	}	
 	else {
 		if ($shortname) {
@@ -23,7 +23,7 @@
 		$silo = new Silo($id);
 		$silo_id = $silo->silo_id;
 	if (!$silo_id) {
-		echo "<script>window.location = 'index.php';</script>";	
+		echo "<script>window.location = '".ACTIVE_URL."index.php';</script>";	
 	}
 		$today = date('Y-m-d')."";
 		$silo_ended = $silo->end_date < $today;
@@ -428,12 +428,6 @@
 
 		<div id='fb-root'></div>
 		<script src='https://connect.facebook.net/en_US/all.js'></script>
-		<?php
-			$url = ACTIVE_URL."index.php?task=view_silo&id=$silo->id";
-			$photo_url = ACTIVE_URL.'uploads/silos/'.$silo->photo_file.'?'.$silo->last_update;
-			$name = $silo->name;
-		?>
-
 		<script> 
 		 	FB.init({
 		            appId      : <?php echo "'".FACEBOOK_ID."'"; ?>,
@@ -444,9 +438,9 @@
 		  	function postToFeed() {
 		    	FB.ui({
 		      		method: 'feed',
-		      		link: "<?php echo $url; ?>",
-		      		picture: "<?php echo $photo_url; ?>",
-		      		name: "<?php echo $silo->type.' Silo: '.$name; ?>",
+		      		link: "<?=$item->getUrl();?>",
+		      		picture: "<?=$item->getPhotoUrl();?>",
+		      		name: "<?php echo $silo->type.' Silo: '.$silo->name; ?>",
 					caption: "<?=TAG_LINE?>",
 		      		description: "<?php echo $description; ?>"
 		    	});
@@ -597,7 +591,7 @@ window.onload = loadScript;
 <div class="login" id="addInfo_donate" style="width: 300px;">
 	<h2>Please complete your profile.</h2>
 	You have some information in your profile that has not been filled out yet. Please complete your profile. This will allow you to use the rest of <?=SITE_NAME?>.com <br><br>
-	<button type="button" onclick="document.location='index.php?task=my_account&redirect=sell_on_siloz&id=<?=$silo->id?>'">Finish it now</button>
+	<button type="button" onclick="document.location='<?=ACTIVE_URL?>index.php?task=my_account&redirect=sell_on_siloz&id=<?=$silo->id?>'">Finish it now</button>
 </div>
 
 

@@ -546,6 +546,7 @@ while ($item = mysql_fetch_array($qry)) {
 	$description = $item['description'];
 
 	$silo = new Silo($silo_id);
+	$item = new Item($item_id);
 	$end_date = strtotime($silo->end_date); $end = date('g:i a F j, Y', $end_date);
 
 	$cleared = mysql_num_rows(mysql_query("SELECT * FROM seller_cleared WHERE user_id = '$user_id' AND item_id = '$item_id'"));
@@ -596,6 +597,8 @@ while ($item = mysql_fetch_array($qry)) {
 <br><br>
 			<span class="greyFont"><b>Actions:</b></span><br>
 			<?=$actions?>
+			<div class="headingPad"></div>
+			<a class='fancybox' href='#craigslist_<?=$item_id?>'><div style='font-size: 10pt;'>Copy/Paste code to list on Craigslist!</div></a>
 		</td>
 	</tr>
 	</table>

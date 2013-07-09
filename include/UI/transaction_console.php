@@ -198,3 +198,70 @@
 	**Remember:  After your purchase has been completed, if the item gets declined, you will receive 95% of your money back. Click 'I agree' below to continue. <br><br>
 	<button onclick="window.location='index.php?task=payment&id=<?=$item_link;?>'">I agree</button>
 </div>
+
+<div class="login" id="craigslist_<?=$item_id?>" style="width: 600px;">
+
+<script type="text/javascript" src="js/zClip/jquery.zclip.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('button#craigslist-copy').zclip({
+        path:'js/zClip/ZeroClipboard.swf',
+	 copy:$('textarea#craigslist-html_<?=$item_id?>').val(),
+ 	 beforeCopy:function(){
+	 	$('#craigslist-html_<?=$item_id?>').trigger('click');
+	 },
+ 	 afterCopy:function(){
+	 	$('#copy-status_<?=$item_id?>').fadeIn().html('<a href="http://www.craigslist.org" style="text-decoration: none; color: green;" target="_blank">Copied to clipboard! Click here to go to Craigslist!');
+	 }
+    });
+});
+
+$('textarea#craigslist-html_<?=$item_id?>').focus(function() {
+    var $this = $(this);
+
+    $this.select();
+
+    window.setTimeout(function() {
+        $this.select();
+    }, 1);
+
+    // Work around WebKit's little problem
+    function mouseUpHandler() {
+        // Prevent further mouseup intervention
+        $this.off("mouseup", mouseUpHandler);
+        return false;
+    }
+
+    $this.mouseup(mouseUpHandler);
+});
+
+$('textarea#craigslist-html_<?=$item_id?>').keypress(function(e) {
+	return false;
+});
+</script>
+
+	<h2 style='color: #fe5300;'><?=$item->title?>, $<?=$item->price?></h2>
+	<h3>Copy and paste the code, below, to your local Craigslist.org listing</h3>
+	<textarea rows="10" cols="60" name="craigslist-html_<?=$item_id?>" id="craigslist-html_<?=$item_id?>">
+<a href="<?=$item->getUrl();?>">
+<?php
+	if ($item->photo_file_1 != '')
+		echo "<img src='".$item->getPhotoUrl()."' width=280px height=210px id='current_item_photo' /> &nbsp;&nbsp;";
+?>
+</a>
+<br><br>
+<font color="blue">
+	<b>Description:</b> <?=$item->description?> <br>
+	<b>Listing Expires:</b> <?=$item->getFormattedEndDate();?>
+</font>
+<br><br>
+<a href="<?=$item->getUrl();?>">
+	Click here to buy this item now via <?=SITE_NAME?>!
+</a>
+</textarea> 
+
+<br><br>
+	<button id="craigslist-copy">Copy to Clipboard</button> <br><br>
+	Remember to fill out the appropriate item title and price! <br><br>
+	<div id="copy-status_<?=$item_id?>" style="color: green;"></div>
+</div>

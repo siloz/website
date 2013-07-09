@@ -72,7 +72,7 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			<tr><td <?php if ($silo->website) { echo 'style="padding-bottom: 10px;"'; } ?>>
 			<span class="floatL">
 				<img src="<?php echo ACTIVE_URL.'uploads/members/'.$admin->photo_file.'?'.$admin->last_update;?>" class="siloImg" width='100px'/><br>
-				<a style="color: #2f8dcb;" class='buttonEmail' href="<?php if($closed_silo) { echo "class='fancybox' href='#closed_silo'"; } else { echo "class='fancybox' href='#contact-admin'"; }?>">Email Admin.</a>
+				<a style="color: #2f8dcb;" <?php if($closed_silo) { echo "class='fancybox buttonEmail' href='#closed_silo'"; } else { echo "class='fancybox buttonEmail' href='#contact_admin'"; }?>>Email Admin.</a>
 			</span>
 			<div align="left">
 			<span class="infoDetails">
