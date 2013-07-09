@@ -438,8 +438,8 @@
 		  	function postToFeed() {
 		    	FB.ui({
 		      		method: 'feed',
-		      		link: "<?=$item->getUrl();?>",
-		      		picture: "<?=$item->getPhotoUrl();?>",
+		      		link: "<?=$silo->getUrl();?>",
+		      		picture: "<?=$silo->getPhotoUrl();?>",
 		      		name: "<?php echo $silo->type.' Silo: '.$silo->name; ?>",
 					caption: "<?=TAG_LINE?>",
 		      		description: "<?php echo $description; ?>"

@@ -237,6 +237,16 @@ class Silo {
 			return $this->name;
 		}		
 	}
+
+	public function getUrl() {
+		$url = ACTIVE_URL."index.php?task=view_silo&id=".$this->id;
+		return $url;
+	}
+
+	public function getPhotoUrl() {
+		$photo_url = ACTIVE_URL.'uploads/silos/'.$this->photo_file.'?'.$this->last_update;
+		return $photo_url;
+	}
 	
 	public function getLink() {
 		return "silos/".$this->shortname;
