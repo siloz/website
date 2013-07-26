@@ -283,6 +283,7 @@ else {
 
 		mysql_query("UPDATE silos SET status = 'active', photo_file = '$id.jpg' WHERE id = '$id'");
 		
+		// If an user referred this silo admin -- send them an e-mail
 		if ($refer_id) {
 			$silo = new Silo($id);
 			$seller = new User($refer_id);
@@ -297,6 +298,22 @@ else {
 			$message .= "<a href='".ACTIVE_URL."index.php?task=view_silo&id=".$id."'>".ACTIVE_URL."index.php?task=view_silo&id=".$id."</a> <br><br>";
 			$message .= "Thank you for being an active member on ".SITE_NAME."!";
 			email_with_template($seller->email, $subject, $message);
+		}
+
+		// If admin setting is on
+		if (ADMIN_NOTIF == 'on') {
+			if (!$silo) { $silo = new Silo($id); }
+			$adminSub = "New silo on siloz.com!";
+			$adminMsg = "<h3>A new silo has been created on ".SITE_NAME."!</h3>";
+			$adminMsg .= "This silo is a <b>".ucfirst($silo->silo_type)."</b> silo.<br/><br/>";
+			$adminMsg .= "Silo title: <b>".$silo->getTitle()."</b><br><br>";
+			$adminMsg .= "Silo administrator: <b>".$silo->admin->getFullName()."</b><br><br>";
+			$adminMsg .= "This e-mail is sent everytime a new silo is created through the 'create_silo.php' page. To turn off these notifications, look in the config.php file.";
+				
+			$admin_emails = explode(',', ADMIN_NOTIF_EMAILS);
+			foreach ($admin_emails as $email) {
+				email_with_template($email, $adminSub, $adminMsg);
+			}
 		}
 	}
 	

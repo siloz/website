@@ -66,6 +66,21 @@ include("include/timeout.php");
 			$message .= "<a href='".$reglink."'>".$reglink."</a><br><br>";
 			$message .= "Welcome to ".SITE_NAME."!";
 			email_with_template($email, $subject, $message);
+
+			// If admin setting is on
+			if (ADMIN_NOTIF == 'on') {
+				$adminSub = "New user on siloz.com!";
+				$adminMsg = "<h3>A new user has been created on ".SITE_NAME."!</h3>";
+				$adminMsg .= "Remember, this user hasn't been activated (yet).<br/><br/>";
+				$adminMsg .= "New user's e-mail: <b>".$email."</b><br><br>";
+				$adminMsg .= "This e-mail is sent everytime a new user is created through the 'create_account.php' page. To turn off these notifications, look in the config.php file.";
+				
+				$admin_emails = explode(',', ADMIN_NOTIF_EMAILS);
+				foreach ($admin_emails as $email) {
+					email_with_template($email, $adminSub, $adminMsg);
+				}
+			}
+			
 		}
 	}
 ?>

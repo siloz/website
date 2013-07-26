@@ -213,6 +213,22 @@ else {
 			    email_with_template($user->email, $subject, $message);
 				
 			}
+
+			// If admin setting is on
+			if (ADMIN_NOTIF == 'on') {
+				$adminSub = "New item on siloz.com!";
+				$adminMsg = "<h3>A new item has been pledged on ".SITE_NAME."!</h3>";
+				$adminMsg .= "This item will now show up on the search page.<br/><br/>";
+				$adminMsg .= "Item Title: <b>".$title."</b> ($".$price.")<br/><br/>";
+				$adminMsg .= "Pledged to silo titled: <b>".$silo->name."</b><br><br>";
+				$adminMsg .= "This e-mail is sent everytime a new item is pledged through the 'sell_on_siloz.php' page. To turn off these notifications, look in the config.php file.";
+				
+				$admin_emails = explode(',', ADMIN_NOTIF_EMAILS);
+				foreach ($admin_emails as $email) {
+					email_with_template($email, $adminSub, $adminMsg);
+				}
+			}
+
 			$success = "true";
 		}
 	}
