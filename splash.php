@@ -201,7 +201,7 @@
 			<table width="100%"><tr><td width="400px">
 				<p>1) Religious Organization (church, synagogue, etc.), 2) Public University (student group, sorority/fraternity), 3) Registered Non-Profit (with a presence and outreach in a given region), 4) Civic Organization, 5) Neighborhood Organization (including an HOA), 6) Youth Sports Organization (adult organizations are considered private), 7) Public K-12 School (PTA, student group)</p>
 				<p>A silo can only be begun by a person belonging to these groups, and enjoying a leadership position. We verify this.</p>
-				<p><?=SITE_NAME?> has created a class of disaster relief silo, which we run. These are always authorized by the benefiting organization. Contact us for more information.  </p>
+				<p><?=SITE_NAME?> has created a class of official silos, which we run. These are always authorized by the benefiting organization. Contact us for more information.  </p>
 				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
 			</td><td align="center">
 				<div style="margin-top: -5px;">(click to enlarge)</div>

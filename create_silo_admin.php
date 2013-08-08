@@ -237,7 +237,7 @@ if ($_SESSION['is_logged_in'] != 1 || !in_array($user_id, $userArray)) {
 if ($success && $filename) {
 ?>
 	<center>
-				<h1>Create a Disaster Relief Silo</h1>
+				<h1>Create an Official Silo</h1>
 		To finish creating your silo, please crop the image you uploaded below:<br><br>
 		<!-- This is the image we're attaching Jcrop to -->
 		<img src="uploads/<?=$Silo->id?>.jpg" id="cropbox" />
@@ -267,7 +267,7 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 		<table style="margin:auto">
 			<tr>
 				<td colspan="2" align="center">
-					<h1>Create a Disaster Relief Silo</h1>
+					<h1>Create an Official Silo</h1>
 				</td>
 			</tr>
 			<tr>

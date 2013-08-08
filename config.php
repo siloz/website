@@ -7,12 +7,9 @@
 	define(DB_USERNAME, "admin");
 	define(DB_PASSWORD, "w@1kingded");
 	define(DB_HOST, "localhost");
-	define(DB_NAME, "siloz");
-	//define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
-	//define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
-	//define(API_URL, "/api.php");
-	define(ABS_PATH, "/var/www/vhosts/stage.james.siloz.com/httpdocs/");
-	define(ACTIVE_URL, "http".$secure."://stage.james.siloz.com/website/"); // **Don't forget slash at end** //
+	define(DB_NAME, "guest2_siloz");
+	define(ABS_PATH, "/var/www/vhosts/stage.guest2.siloz.com/httpdocs/");
+	define(ACTIVE_URL, "http".$secure."://stage.guest2.siloz.com/website/"); // **Don't forget slash at end** //
 	define(API_URL, "/website/api.php");
 	define(SHORT_URL, "siloz.com");
 	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
