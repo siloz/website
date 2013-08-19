@@ -1,183 +1,147 @@
-<div id="header">
-	<?php
-		include('header.php');
-		include_once("include/GoogleAnalytics.php");
-
-		if (param_get('ref') == "start") { ?>
-			<script>
-			$(document).ready(function (){
-				$("#learn-more").remove();
-				$("#quick-start").toggle("slow");
-         			$('html, body').animate({
-               			scrollTop: $("#quick-start").offset().top
-         			}, 1000);
-			});
-			</script>
-<?php } ?>
-
-</div>
-
-<div class="row top_row">
-	<h2 class="tagline">A marketplace for items donated for causes in your community
-	<span class="blue" style="font-size: 9pt;"><a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a></span>
-</h2> 
-</div>
-
-<div class="row">
-	<div id="slider_frame">
-		<div id="slider">
-			<img src="images/splash/field-trip.jpg" alt="<span class='sliderText'>Public silo:</span> Raise money for students' arts, sports, and extracurricular programs." />
-			<img src="images/splash/wedding.jpg" alt="<span class='sliderText'>Private silo:</span> Any family can create a private silo to fund a wedding, honeymoon, baby shower, anniversary, or family reunion." />
-			<img src="images/splash/firemens-fund.jpg" alt="<span class='sliderText'>Public silo:</span> Fund a civic cause, like a Fireman's or Policeman's fund, or a library." />
-			<img src="images/splash/college.jpg" alt="<span class='sliderText'>Private silo:</span> Cover a graduation gift, pay college tuition, or fund a year abroad, with items donated by a student's personal supporters." />
-			<img src="images/splash/neighborhood-cleanup.jpg" alt="<span class='sliderText'>Public silo:</span> Create a silo to keep your community clean, safe, and beautiful." />
-			<img src="images/splash/kid-medical.jpg" alt="<span class='sliderText'>Private silo:</span> A silo is a great way for a private group to cover emergency medical or legal expenses." />
-			<img src="images/splash/playground.jpg" alt="<span class='sliderText'>Public silo:</span> Create a silo to fund construction and cleanup projects in your immediate area." />
-			<img src="images/splash/vet-fees.jpg" alt="<span class='sliderText'>Private silo:</span> A silo can be used to cover the cost of an unexpected bill, such as for veterinary services." />
-			<img src="images/splash/religious.jpg" alt="<span class='sliderText'>Public silo:</span> Donate an item to a church, temple, mosque or synagogue, whose mission is to help others in your area." />
-			<img src="images/splash/artistic-project.jpg" alt="<span class='sliderText'>Private silo:</span> An artist, filmmaker, playwright or musician could leverage supporters to cover production costs, with a silo." />
-			<img src="images/splash/youth-sports.jpg" alt="<span class='sliderText'>Public silo:</span> Help a youth sports team cover officiating, field, tournament, awards ceremony, and uniform expenses." />
-			<img src="images/splash/big-purchase.jpg" alt="<span class='sliderText'>Private silo:</span> A family can rally to make a dream of enrichment come true for a young member. " />
-		</div>
-	</div>
-</div>
-
-<div id="slider-options">
-	<span class="slider-select">now viewing: public and private silo types</span> <a class="fancybox" href="images/silo-types.png" title="Explanation of the difference between public and private silos">what's the difference?</a>
-</div>
-
-
-<div id="action_call" class="row">
-	<!-- shop button -->
-	<div class="row">
-		<table class="splash-shop" onClick="window.location = 'items'">
-		<tr>
-			<td width="86px"></td>
-			<td><img src="images/btn-cart.png" width="45" height="34"></img></td>
-			<td class="splashText" style="color: #FFF;">shop</td>
-			<td width="81px"></td>
-		</tr>
-		</table>
-		<div class="splashText" style="text-align: left;">buy items whose sale helps a silo</div>
-		<div class="action_text">pay online and pick up items locally, with a Voucher &nbsp; 
-		<span class="blue"><a class="fancybox" href="images/items-sold.png" title="The graphic, above, shows you how the buying, selling, and payment process works"><b>how Voucher/Key works</b></a></span>
-		</div>
-	</div>
-
-	<!-- donate button -->
-	<div class="row">
-		<table class="splash-donate" onClick="window.location = 'silos'">
-		<tr>
-			<td width="40px"></td>
-			<td><img src="images/btn-heart.png" width="44" height="33"></img></td>
-			<td class="splashText" style="color: #FFF;">donate items</td>
-			<td width="26px"></td>
-		</tr>
-		</table>
-		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
-		<div class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
-		<span class="blue"><a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a></span>
-		</div>
-	</div>
-	
-	<!-- start silo button -->
-	<div class="row">
-		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
-			<div class="action splash-create">
-				<div class="splash-create_text">create a private or a public silo</div>
-				<div>private silos keep 95%, public silos are often tax-deductible.</div>
-			</div>
-		</a>
-
-		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
-			<div class="splash-pledge">
-				<div class="splash-pledge_text">pledge first</div>
-				<div>we will notify your cause<br>to start a silo</div>
-			</div>
-		</a>
-	</div>
-		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
-			<a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a>
-		</div>
-</div>
-
-<div class="row">
-		<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
-	
+<div id="billboard-container">
+	<div id="billboard">
 		<?php
-			$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' AND silo_type = 'public' ORDER BY distance LIMIT 5";
-			$tmp = mysql_query($sql);
+			include('header.php');
+			include_once("include/GoogleAnalytics.php");
 
-			$siloz_html = "<div class='row'><div class='span12'>";
-			
-			$num_siloz = 0;
-			
-			while ($s = mysql_fetch_array($tmp)) {
-				$silo = new Silo($s['id']);		
+			if (param_get('ref') == "start") {
+		?>
+
+		<script>
+		$(document).ready(function (){
+			$("#learn-more").remove();
+			$("#quick-start").toggle("slow");
+     			$('html, body').animate({
+           			scrollTop: $("#quick-start").offset().top
+     			}, 1000);
+		});
+		</script>
+
+		<?php } ?>
+
+		<h2 class="tagline">Fund a local cause<span>by purchasing or donating a wanted item.</span></h2>
+	</div>
+</div>
+<div id="billboard-boxes-container">
+	<div id="billboard-boxes">
+		<div id="shop-box" class="floatL mast-item" onclick="window.location='items'">
+			<h1>Shop local items</h1>
+			<span>buy items whose sale helps a silo</span>
+		</div>
+		<div id="donate-box" class="floatL mast-item" onclick="window.location='silos'">
+				<h1>Donate an item</h1>
+				<span>sell items to benefit a public silo</span>
+		</div>
+		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
+			<div id="create-box" class="floatL mast-item">
+				<h1>Create a silo</h1>
+				<span>public silos are often tax deductible</span>
+			</div>
+		</a>
+		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
+			<div id="pledge-box" class="floatL mast-item">
+				<h1>Pledge first</h1>
+				<span>we'll notify your cause to start a silo</span>
+			</div>
+		</a>
+	</div>
+</div>
+</div>
+</div>
+
+<div id="mast-container" class="clear">
+	<div class="row clear">
+			<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span>
+			<a href="silos" class="bold_text">view more</a></p>
+		
+			<?php
+				$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' AND silo_type = 'public' ORDER BY distance LIMIT 5";
+				$tmp = mysql_query($sql);
+
+				$siloz_html = "<div class='row'><div class='span12'>";
 				
-				if ($num_siloz % 5 == 0) {
-					$siloz_html .= "<div class='row item_row'>";
+				$num_siloz = 0;
+				
+				while ($s = mysql_fetch_array($tmp)) {
+					$silo = new Silo($s['id']);		
+					
+					if ($num_siloz % 5 == 0) {
+						$siloz_html .= "<div class='row item_row'>";
+					}
+					
+					$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
+					
+					if ($num_siloz % 5 == 4) {
+						$siloz_html .= "</div>";
+					}
+					
+					$num_siloz++;
 				}
 				
-				$siloz_html .= $silo->getSiloPlate($num_siloz % 5 == 0);
+				//if ($num_siloz % 5 < 4) {
+					//$siloz_html .= "</div>";
+				//}
 				
-				if ($num_siloz % 5 == 4) {
-					$siloz_html .= "</div>";
+				$siloz_html .= "</div></div>";
+				echo $siloz_html;
+			?>
+	</div>
+
+	<div class="row">
+		<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
+
+		<?php
+			$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
+			$tmp = mysql_query($sql);
+			$items_html = "<div class='row'><div class='span12'>";
+			
+			$num_items = 0;
+			
+			while ($item = mysql_fetch_array($tmp)) {
+				$it = new Item($item['id']);
+				
+				if ($num_items % 6 == 0) {
+					$items_html .= "<div class='row item_row'>";
 				}
 				
-				$num_siloz++;
+				$items[] = $it;	
+				$items_html .= $it->getItemPlate($num_items % 6 == 0);		
+
+				if ($num_items % 6 == 5) {
+					$items_html .= "</div>";
+				}
+				
+				$num_items++;
 			}
-			
-			//if ($num_siloz % 5 < 4) {
-				//$siloz_html .= "</div>";
+
+			//if ($num_items % 6 < 5) {
+			//	$items_html .= "</div>";
 			//}
 			
-			$siloz_html .= "</div></div>";
-			echo $siloz_html;
+			$items_html .= "</div></div>";
+
+			if ($num_items == 0) { $items_html = "<div class='greyFont' style='line-height: 155px; text-align: center'>There are currently no items being pledged in your area</div>"; }
+			
+			echo $items_html;
 		?>
+	</div>
 </div>
 
-<div class="row">
-	<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
-
-	<?php
-		$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
-		$tmp = mysql_query($sql);
-		$items_html = "<div class='row'><div class='span12'>";
-		
-		$num_items = 0;
-		
-		while ($item = mysql_fetch_array($tmp)) {
-			$it = new Item($item['id']);
-			
-			if ($num_items % 6 == 0) {
-				$items_html .= "<div class='row item_row'>";
-			}
-			
-			$items[] = $it;	
-			$items_html .= $it->getItemPlate($num_items % 6 == 0);		
-
-			if ($num_items % 6 == 5) {
-				$items_html .= "</div>";
-			}
-			
-			$num_items++;
-		}
-
-		//if ($num_items % 6 < 5) {
-		//	$items_html .= "</div>";
-		//}
-		
-		$items_html .= "</div></div>";
-
-		if ($num_items == 0) { $items_html = "<div class='greyFont' style='line-height: 155px; text-align: center'>There are currently no items being pledged in your area</div>"; }
-		
-		echo $items_html;
-	?>
+<div id="getting-started-collapsible">
+	<h1>Getting Started</h1>
+</div>
+<div id="getting-started">
+	lorem ipsum
 </div>
 
+<div id="faq-collapsible">
+	<h1>FAQ</h1>
+</div>
+<div id="faq">
+	lorem ipsum
+</div>
 
-<div id="footer_container" class="row">
+<!-- <div id="footer_container" class="row">
 	<div id="quick_start_bg" class="quick_start">
 		<h1 align="center" class="click_me" id="learn-more">Click Here to Learn More</h1>
 	<div style="display: none" id="quick-start">
@@ -250,22 +214,19 @@
 
 		</div>
 
-		<div id="bottom_menu">
-			<a href="index.php?task=contact_us">contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">about</a> | <a href="index.php?task=tos">terms of use</a> | <a href="index.php?ref=start">get started!</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">faq</a> | <a href="index.php?task=stories"><?=SITE_NAME?> stories</a>
-		</div>
+	
 	</div>
+</div> -->
+<div id="bottom_menu">
+	<a href="index.php?task=contact_us">Contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">About</a> | <a href="index.php?task=tos">Terms of Use</a> | <a href="index.php?ref=start">Get Started</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">FAQ</a> | <a href="index.php?task=stories"><?=SITE_NAME?> Stories</a>
+	<div id="logo-footer">&nbsp;</div>
 </div>
 
 <script>
-$("#learn-more").click(function() {
-	$("#learn-more").remove();
-	$("#quick-start").toggle("slow");
+$("#getting-started-collapsible").click(function() {
+	$("#getting-started").toggle("fast");
 });
-$(document).ready(function (){
-    $("#learn-more").click(function (){
-         $('html, body').animate({
-               scrollTop: $("#quick-start").offset().top
-         }, 1000);
-    });
+$("#faq-collapsible").click(function() {
+	$("#faq").toggle("fast");
 });
 </script>

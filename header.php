@@ -19,31 +19,27 @@
 </script>
 
 <div id="top_menu">
-	<span class="gray"><?=$userLocation?></span>
+	<!-- <span class="gray"><?=$userLocation?></span> -->
 
 	<?php if (!isset($_SESSION['user_id'])) {
-		echo "<span class='change_location gray'>change</span>";
+		//echo "<span class='change_location gray'>change</span>";
 		}
 	?>
-	<span class="blue separator">|</span>
 	<?php
 		if (isset($_SESSION['user_id'])) {
 			$user_id = $_SESSION['user_id'];
 			$sql = "SELECT * FROM silos WHERE admin_id = '$user_id' AND status != 'pending'";
 			$res = mysql_query($sql);
 	?>
-			<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">favorite silos</span></a>
-			<span class="blue separator">|</span>
+			<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">Favorite silos</span></a>
 	<?php
 			if ($addInfo_full) {
 	?>
-				<a class="fancybox" href="#addInfo"><span class="blue">start a silo</span></a>
-				<span class="blue separator">|</span>
+				<a class="fancybox" href="#addInfo"><span class="blue">Start a silo</span></a>
 	<?php
 			} elseif (mysql_num_rows($res) == 0) {
 	?>
-				<a href="<?=ACTIVE_URL?>index.php?task=create_silo"><span class="<?php if (param_get('task') == 'create_silo') { echo "orange"; } else { echo "blue"; } ?>">start a silo</span></a>
-				<span class="blue separator">|</span>
+				<a href="<?=ACTIVE_URL?>index.php?task=create_silo"><span class="<?php if (param_get('task') == 'create_silo') { echo "orange"; } else { echo "blue"; } ?>">Start a silo</span></a>
 	<?php
 			} else {
 		$sid = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id' AND status != 'pending'"));
@@ -52,23 +48,21 @@
 			
 			if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin' || param_get('task') == 'manage_silo_thank') { 
 		?>
-				<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span class="blue">view silo as user</span></a>
+				<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span class="blue">View silo as user</span></a>
 			<?php } else { ?>
-				<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="blue">manage silo</span></a>
+				<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="blue">Manage silo</span></a>
 			<?php } ?>
-				<span class="blue separator">|</span>
 	<?php
 			}
 	?>
-			<a href="https://www.<?=SHORT_URL?>/index.php?task=transaction_console"><span class="<?php if (param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">transactions</span></a>
-			<span class="blue separator">|</span>
-			<a href="https://www.<?=SHORT_URL?>/index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account') { echo "orange"; } else { echo "blue"; } ?>">my account</span></a>	
+			<a href="https://www.<?=SHORT_URL?>/index.php?task=transaction_console"><span class="<?php if (param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">Transactions</span></a>
+			<a href="https://www.<?=SHORT_URL?>/index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account') { echo "orange"; } else { echo "blue"; } ?>">My account</span></a>	
 	<?php
 		} else {
 	?>
-			<a class="fancybox" href="#login"><span class="blue">login/create account</span></a>
-			<span class="blue separator">|</span>	
-			<a class="fancybox" href="#login"><span class="blue">start a silo</span></a>
+			<a class="fancybox" href="#login"><span class="orange">Start a silo</span></a>
+			<a class="fancybox" href="#login"><span class="blue">Login/sign up</span></a>
+			
 	<?php
 		}
 	?>
@@ -150,8 +144,8 @@
 <?php 	if (isset($_SESSION['user_id'])) { $logo_redirect = "items"; } else { $logo_redirect = "index.php"; } ?>
 
 <form action='index.php' id="search_form" name="search_form">
-<div id="logo_container">
-	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>" style="text-decoration:none"><img src="<?=ACTIVE_URL?>images/logo-beta.png" width="289" height="62" /></a>
+<div id="logo-container">
+	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>"></a>
 </div>
 
 <?php
@@ -210,7 +204,7 @@ if ($sItems || $sSilos) {
 				near: <span class="blue"><span style="font-size: 10pt; font-weight: bold;"><?=$userLocation?></span>
 
 				<?php if (!isset($_SESSION['user_id'])) {
-					echo "<span class='change_location'>change</span>";
+					//echo "<span class='change_location'>change</span>";
 					}
 				?>
 

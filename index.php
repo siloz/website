@@ -194,10 +194,11 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<link rel="shortcut icon" href="<?=ACTIVE_URL?>favicon.ico?v=6" />
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />
-		<link rel="stylesheet" tyle="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
+		<link rel="stylesheet" type="text/css" href="css/siloz.css" />
+		<link rel="stylesheet" type="text/css" href="css/siloz_header.css" />
+		<link rel="stylesheet" type="text/css" href="css/siloz_footer.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:100"/>
 
 	<?php if (param_get('task') == 'view_silo') { ?> 
 		<link href="<?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />

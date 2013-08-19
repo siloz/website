@@ -147,7 +147,6 @@ select:focus {
     -khtml-border-radius: 10px;
     border-radius: 10px;     
     border-width: 0px;    
-	padding: 20px;
 }
 
 .login {
