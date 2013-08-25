@@ -103,6 +103,19 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			This silo was sanctioned by the benefiting organization. The amount raised (shown on this page), represents 90% of actual funds raised. Of the 10% not represented in the status bar, roughly 7.5% goes to <?=SHORT_URL?>, and rougly 2.5% goes to our payment gateway.</span><br><br>
 		<?php } else { ?>
 			Donate only to local causes that you know or have researched!</span><br><br>
+		<?php
+ 			$Vouch = new Vouch();
+ 			$Flag = new Flag();
+ 			$flag_ids = $Flag->GetIds();
+			$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
+			$pctV = $vouchTotal/($silo->getTotalMembers());
+			$pctVouch = round($pctV * 100);
+			$friend_count = $silo->getAdminFCount();
+		?>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt">A 'Familiarity Index' is a visual representation of a silo's likely legitimacy. <a class="fancybox" href="#learn-fam-index">(learn more)</a></div>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?php if ($friend_count) { echo "This Administrator is Facebook Connected with ".$friend_count." friends."; } else { echo "This Administrator is <b><u>not</u></b> connected with Facebook."; } ?></div>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt">This Administrator is <?php if(!$linkedin_con){ echo "<b><u>not</u></b>"; }?> connected with LinkedIn.</div>
+			<div class="voucherText<?=$closed_silo?>" style="font-size: 6pt">The 'Familiarity Index' is not a guarantee this silo is legitimate, and <?=SHORT_URL?> is not responsible, and is harmless and not liable, for fraud, misrepresentation, or other legal infractions committed by silo administrators. Read our Terms of Use and FAQ for more information.</div>
 		<?php include('include/UI/flag_box_silo.php'); } ?>
 			<center>Silo ID: <?=$silo->id?></center>
 		</div>
@@ -196,4 +209,9 @@ if ($silo->silo_type == "private" && !$showDiv) { ?>
 			</tr>
 		</table>
 	</form>
+</div>
+
+<div style="display: none; width: 400px; font-size: 10pt;" id="learn-fam-index">
+	<h3>How do we determine a silo's Familiarity Index?</h3>
+	We use a proprietary formula, based on the percentage of people who know or who have researched a silo, whether a silo administrator is Facebook or LinkedIn connected, and a variety of other factors we prefer to keep secret (so they cannot be circumvented), to compute our 'Familiarity Index'.  
 </div>

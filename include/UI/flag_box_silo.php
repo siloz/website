@@ -9,10 +9,6 @@
 
 $flag_box_type = "silo";
 
- $Vouch = new Vouch();
- $Flag = new Flag();
- $flag_ids = $Flag->GetIds();
-
 ?>
 <script type="text/javascript">
 function submit_flag_silo(flag_id){
@@ -92,13 +88,7 @@ function show_flag_box_silo(){
 				$flag_count = $Flag->GetSiloFlaggedCount($silo->silo_id);
 				if (!$flag_count) { $fCount = "no flags"; } elseif ($flag_count == 1) { $fCount = "1 flag"; } else { $fCount = $fCount = $flag_count." flags"; }
 				if (!$tax_ded) { $tax = "<b><u>not</u></b>"; }
-				$vouchTotal = $Vouch->GetHasPersonallyKnownCount($silo->silo_id) + $Vouch->GetHasResearchedCount($silo->silo_id);
-				$pctV = $vouchTotal/($silo->getTotalMembers());
-				$pctVouch = round($pctV * 100);
-				$friend_count = $silo->getAdminFCount();
 			?>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?=$pctVouch?>% (<?=$vouchTotal?> members) of those who pledged items to this silo either know, or have researched, this Administrator - or both!</div>
-			<div class="voucherText<?=$closed_silo?>" style="font-size: 10pt"><?php if ($friend_count) { echo "This Administrator is Facebook Connected with ".$friend_count." friends."; } else { echo "This Administrator is <b><u>not</u></b> Facebook Connected."; } ?></div>
 			<?php }elseif($flag_box_type === "item"){ 
 				$flag_count = $Flag->GetItemFlaggedCount($item->item_id);
 			?>

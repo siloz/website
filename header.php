@@ -76,7 +76,7 @@
 </div>
 
 <div class="login" id="login">
-	<form name="login_form" id="login_form" method="POST">
+	<form action="" name="login_form" id="login_form" method="POST">
 		<input type="hidden" name="purpose" value=""/>
 		<h2>Login to your account</h2>
 		<table>

@@ -82,14 +82,14 @@
 	
 	<!-- start silo button -->
 	<div class="row">
-		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
+		<a class='fancybox login-redirect' id='index.php?task=create_silo' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
 			<div class="action splash-create">
 				<div class="splash-create_text">create a private or a public silo</div>
 				<div>private silos keep 95%, public silos are often tax-deductible.</div>
 			</div>
 		</a>
 
-		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
+		<a class='fancybox login-redirect' id='index.php?task=pledge_first' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
 			<div class="splash-pledge">
 				<div class="splash-pledge_text">pledge first</div>
 				<div>we will notify your cause<br>to start a silo</div>
@@ -267,5 +267,9 @@ $(document).ready(function (){
                scrollTop: $("#quick-start").offset().top
          }, 1000);
     });
+});
+$('.login-redirect').click(function (){
+	var location = $(this).attr('id');
+	$('#login_form').get(0).setAttribute('action', location);
 });
 </script>
