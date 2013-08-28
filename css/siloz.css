@@ -39,6 +39,8 @@ h2 {
 	opacity: 0;
 }
 
+/* FancyBox Overrides */
+
 .fancybox {
 	color: #2f8dcb;
 	text-decoration: none;
@@ -69,11 +71,18 @@ html, body {
 	height: 100%;
 }
 
-#main {
-	/*min-height: 100%;*/
+#content-container {
 	height: auto !important;
 	height: 100%;
 	width: 100%;
+}
+
+#main {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	width: 975px;
+	margin: 0 auto;
 }
 
 #billboard-container {
@@ -110,7 +119,7 @@ html, body {
 	display: block;
 	font-size: 22px;
 	font-family: arial, sans-serif;
-	margin-top: 5px;
+	margin: 5px 0 0 2px;
 }
 
 #billboard-boxes-container {
@@ -164,20 +173,24 @@ html, body {
 	margin: 0 auto;
 }
 
+.mast-item:hover {
+	background: rgba(255,255,255,0.1);
+}
+
 #billboard-boxes #shop-box h1 {
-	background: url('/images/landing-sprite.png') -124px -130px no-repeat;
+	background: url('../images/landing-sprite.png') -124px -130px no-repeat;
 }
 
 #billboard-boxes #donate-box h1 {
-	background: url('/images/landing-sprite.png') -128px -172px no-repeat;
+	background: url('../images/landing-sprite.png') -128px -172px no-repeat;
 }
 
 #billboard-boxes #create-box h1 {
-	background: url('/images/landing-sprite.png') -126px -215px no-repeat;
+	background: url('../images/landing-sprite.png') -126px -215px no-repeat;
 }
 
 #billboard-boxes #pledge-box h1 {
-	background: url('/images/landing-sprite.png') -124px -130px no-repeat;
+	background: url('../images/landing-sprite.png') -124px -130px no-repeat;
 }
 
 #getting-started,
@@ -2017,12 +2030,10 @@ margin-left: 5px;
 
 .floatL {
 	float: left;
-	padding-top: 5px;
 }
 
 .floatR {
 	float: right;
-	padding-top: 5px;
 }
 
 .clear {
@@ -2127,7 +2138,7 @@ margin-left: 5px;
 
 .greyFont { 
 	color: #3A3A3A;
-	font-size: 11pt;
+	font-size: 15px;
 	font-weight: normal;
 }
 
@@ -2163,7 +2174,7 @@ margin-left: 5px;
 	padding-top: 10px;
 }
 #logo-container a {
-	background: url('/images/landing-sprite.png') -20px -14px no-repeat;
+	background: url('../images/landing-sprite.png') -20px -14px no-repeat;
 	display: block;
 	height: 60px;
 	width: 150px;
@@ -2239,13 +2250,33 @@ margin-left: 5px;
 	padding: 37px 0 0 0;
 	width: 975px;
 	margin: 0 auto;
+	text-indent: 30px;
+	background: url('../images/landing-sprite.png') no-repeat;
+	background-position: -95px -96px;
+}
+
+.collapsible-icon {
+	background-position: -95px -171px !important;
 }
 
 #getting-started,
 #faq {
-	padding: 30px 0;
+	padding: 20px 0 30px 0;
 	width: 975px;
+	line-height: 24px;
 	margin: 0 auto;
+}
+
+#getting-started h3,
+#faq h3 {
+	color: #2f8dcb; 
+	font-size: 28px; 
+	-webkit-font-smoothing: antialiased;
+	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
+	font-size: 26px;
+	font-weight: bold;
+	margin: 0;
+	padding-top: 18px;
 }
 /* Sliders */
 
@@ -2283,11 +2314,11 @@ margin-left: 5px;
 
 @font-face {
     font-family: 'robotothin';
-    src: url('/css/fonts/roboto-thin-webfont.eot');
-    src: url('/css/fonts/roboto-thin-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/css/fonts/roboto-thin-webfont.woff') format('woff'),
-         url('/css/fonts/roboto-thin-webfont.ttf') format('truetype'),
-         url('/css/fonts/roboto-thin-webfont.svg#robotothin') format('svg');
+    src: url('fonts/roboto-thin-webfont.eot');
+    src: url('fonts/roboto-thin-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/roboto-thin-webfont.woff') format('woff'),
+         url('fonts/roboto-thin-webfont.ttf') format('truetype'),
+         url('fonts/roboto-thin-webfont.svg#robotothin') format('svg');
     font-weight: normal;
     font-style: normal;
 }

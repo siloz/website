@@ -130,93 +130,59 @@
 <div id="getting-started-collapsible">
 	<h1>Getting Started</h1>
 </div>
-<div id="getting-started">
-	lorem ipsum
+<div id="getting-started" class="greyFont">
+	<h3>What is s&igrave;loz?</h3>
+	<p>s&igrave;loz is simple: Buyers purchase items donated by local sellers.  The proceeds go to a fundraiser, or 'silo'.</p>
+	<p>Traditional (off-line) rummage sale fundraisers are a headache to organize, and attract orphaned, unwanted items.</p>
+	<p>A silo can be started in minutes, by one person, and shared with others who will donate to, and promote (this process of spreading labor or cost is called crowd-sourcing) also, in a few minutes.  A silo costs nothing, up-front, and 10% (public) or 5% (private) of the money raised, afterward, making it at least 90% efficient.</p>
+
+	<h3>How do I donate?</h3>
+	<p>You join a silo by donating an item to a silo you support.  Buyers see the item on the site, and make payment to receive a Voucher (code word), which is provided to you when the buyer collects the item.</p>
+
+	<h3>How do I make a purchase?</h3>
+	<p>Everything on s&igrave;loz sells locally; nothing is shipped.  A buyer pays online and receives a Voucher (code word), that he or she provides to the seller, after inspecting and collecting an item.  Buyers are not permitted to buy items more than 75 miles away.</p>
+
+	<h3>Got it!  How do I get started?</h3>
+	<p>If you're a shopper, just shop!  You will only be permitted to make a purchase within a 75 mile radius of your address (which is kept hidden from others), because you have to pick up the item, and use your Voucher (that you receive when you make payment) to collect your item.</p>
+	<p>To donate, find a silo you like, and click the 'donate' button on its page.  We're getting started here, so remember to use our 'post to Craigslist' tool, so your item gets more chances to sell!</p>
+	<p>To start a silo, click the 'Create a Silo' button on our landing page, or anywhere at the top of any page.</p>
 </div>
 
 <div id="faq-collapsible">
 	<h1>FAQ</h1>
 </div>
-<div id="faq">
-	lorem ipsum
+<div id="faq" class="greyFont">
+	<h3>Buyers</h3>
+	<h4>Do I have to be near a seller to purchase an item? Can items be shipped?</h4>
+	<p>We believe a buyer should have the option to actually see and inspect an item before collecting it. Shipping would not permit that. We have designed the site so that you may only make payment for an item within a 75 mile radius of you.</p>
+	<h4>Can i decline an item after paying and inspecting it?</h4>
+	<p>You can decline an item you have made payment for, and receive 95% of your money back &ndash; provided you have not shared your Voucher with the seller. You may also decline an item by selecting 'decline' in your transaction console.</p>
+
+	<h3>Sellers (Donors)</h3>
+	<h4>What is 'Pledge First'?</h4>
+	<p>List your item, give us a name and an email address, and we'll contact that potential silo administrator, with a link to start a silo. If they use the link, your item will be the first item pledged to that silo.</p>
+	<h4>Do I have to be located near a given silo to donate items to it?</h4>
+	<p>You can donate to a silo that is not in your area. Think of a silo as a 'hub', and the people who donated items as 'spokes'. Only buyers in your area (near your spoke end) will be permitted to purchase your items.</p>
+	<h4>Do I have to physically move items I want to donate to some location?</h4>
+	<p>You do not have to move your item to donate it to a silo, you list it where it sits. Only local buyers will be able buy it.</p>
+	<h4>How can I ensure my item sells?</h4>
+	<p>Price your item low; also, promote it by using our 'post to Craigslist' feature, visible in your transaction console, or on the item's page.</p>
+
+	<h3>silo Administrators</h3>
+	<h4>What kinds of silos are there?</h4>
+	<p>A silo can be either public or private. Items for both public and private silos are visible on the site, so they can sell, but public silos &ndash; themselves &ndash; are visible on the site, which allows them to accept donated items from the general public. Private silos are not listed and are only visible by invitation only.</p>
+	<h4>Who can create a silo?</h4>
+	<p>Anybody over age 14 may create a private silo for a legal purpose. When the silo ends, we pay out 95% of the money raised via PayPal. To create a public silo, you must represent an organization with a presence and impact in a given community, which also falls into one of the following categories: 1) youth sports, 2) religious, 3) public education, 4) civic, 5) neighborhood, or 6) regional non-profit.</p>
+	<h4>May I create a public silo?</h4>
+	<p>Anybody over age 14 can create a private silo for any legal purpose. Public silos must 1) have an impact and presence in a community, and 2) fall neatly into one of the designated categories of public silo (below). 3) the person creating the silo must be a leader in said organization.</p>
+	<h4>How do I promote my silo?</h4>
+	<p>Promote your silo on- and off-line, using our digital tools (send promotional emails, post to Facebook), and by printing &frac14; page flyers.</p>
+	<h4>Are all public silos tax-deductible?</h4>
+	<p>Not all public silos are tax-deductible, but no private silos are. To qualify for the site to automatically issue tax-deductible receipts, you must be registered as a 501(c)3 with the IRS, be in good standing, and furnish a valid EIN.</p>
+	<h4>How are tax-deductions handled?</h4>
+	<p>If a silo qualifies, is a registered 501(c)3 who has furnished a valid EIN number), when a donated item's sale is complete, we email a tax-deductible receipt to the donor.</p>
 </div>
 
-<!-- <div id="footer_container" class="row">
-	<div id="quick_start_bg" class="quick_start">
-		<h1 align="center" class="click_me" id="learn-more">Click Here to Learn More</h1>
-	<div style="display: none" id="quick-start">
-		<h2>What is <?=SITE_NAME?>?</h2>
-			<p><?=SITE_NAME?> is a marketplace for items donated to help local causes.  A 'silo' is a virtual rummage sale that benefits a local cause, which can be private or public.</p>
-		<h2>What Are The Benefits of an Online?</h2>
-			<p>Rummage sales are challenging to organize. They take time and energy to move items. Often there is not sufficient traffic to sell items, or donated items are not exactly 'hot'; they're unwanted items. <?=SITE_NAME?> allows for a transparent, fun, safe fundraiser, for members of groups and organizations. Everybody can see what everybody else donated, which translates to less junk.</p>
-			<p>We've provided promotional tools to everybody in your organization, to ensure your silo is a success. Best of all - you don't have to discard what doesn't sell, since people list items from their home!</p>
-		<h2>How Does It Work?</h2>
-			<table width="100%"><tr><td width="400px">
-				<p>1) A silo administrator starts a silo, and uses Facebook, email, and off-line tools (1/4 page flyers) to promote it.</p>
-				<p>2) Others join by pledging and selling items through the site. They can also promote a silo, getting more donations and buyers!</p>
-				<p>3) After a silo ends (1, 2, or 3 weeks), we send the money raised (90% for public silos, 95% for private silos, paid via PayPal) to the silo administrator.</p>
-				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
-			</td><td align="center">
-				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div>
-				<a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"> <img src="images/how-it-works.png" width="421" height="300"></img></a>
-			</td></tr></table>
-		<h2>What Types of silos Are There?</h2>
-			<p>There are two top-level silo types: <span class="orange"><b>private</b></span> and <span class="orange"><b>public</b></span>. While items donated to benefit any silo are always visible on the site, private silos themselves are unlisted. This means you must have been invited (provided a link) to ever see one. Public silos must belong to the following classes:</p>
-			<table width="100%"><tr><td width="400px">
-				<p>1) Religious Organization (church, synagogue, etc.), 2) Public University (student group, sorority/fraternity), 3) Registered Non-Profit (with a presence and outreach in a given region), 4) Civic Organization, 5) Neighborhood Organization (including an HOA), 6) Youth Sports Organization (adult organizations are considered private), 7) Public K-12 School (PTA, student group)</p>
-				<p>A silo can only be begun by a person belonging to these groups, and enjoying a leadership position. We verify this.</p>
-				<p><?=SITE_NAME?> has created a class of official silos, which we run. These are always authorized by the benefiting organization. Contact us for more information.  </p>
-				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
-			</td><td align="center">
-				<div style="margin-top: -5px;">(click to enlarge)</div>
-				<a class="fancybox" href="images/silo-types.png" title="Explanation of the difference between public and private silos"><img src="images/silo-types.png" width="490" height="300"></img></a>
-			</td></tr></table>
-			<p>Anybody over age 14 can create a silo, if it doesn't conflict with our mission statement of change through goodwill, inclusiveness, respect and legality.</p>
-			<table width="100%"><tr>
-				<td colspan="3"><p><i>Private silo Examples</i></p></td>
-			</tr><tr>
-				<td align="center"><p>Family Reunion<br>Unforeseen Household Bill<br>Wedding or Honeymoon<br>Mother's Day or Father's Day</p></td>
-				<td align="center"><p>Music or Film Project<br>Youth Education or Training<br>An Anniversary<br>Down-Payment on a Car or Home</p></td>
-				<td align="center"><p>Medical or Legal Emergency<br>College Loans or Tuition<br>Graduation or Prom<br>A Birthday or Holiday Gift</p></td>
-			</tr></table>
-			<p>Remember: money you collect from a private silo is income, and should be reported to the IRS.</p>
-			<table width="100%"><tr>
-				<td colspan="3"><p><i>Public silo Examples</i></p></td>
-			</tr><tr>
-				<td align="center"><p>Neighborhood: Festival or Party<br>Local Youth Sports: Uniforms or Attire<br>K-12 Public Education: Graduation<br>Religious: Charity or Outreach<br>Civic: Fireman's or Police Fund</p></td>
-				<td align="center"><p>Neighborhood: Cleanup<br>Public University: Fraternity or Sorority<br>K-12 Public Education: Arts Programs<br>Public University: Scholarship<br>Local Youth Sports: Tournament Fees</p></td>
-				<td align="center"><p>K-12 Public Education: Class Trip<br>Civic: Commissioned Art<br>Neighborhood: Park or Playground<br>Civic: Library<br>Religious: Guest Speaker</p></td>
-			</tr></table>
-		<h2>Are Donated Items Tax-Deductible?</h2>
-			<p>Only public silos may potentially issue tax-deductible receipts, if they can verify the 501(c)3 when they launch, or they help a public school. Qualifying public silos are marked, on their page.</p>
-		<h2>How Are Items Sold?</h2>
-			<table width="100%"><tr><td width="400px">
-				<p>We have a new way to buy/sell things online. It's safe and easy. We call it "Voucher/Key"</p>
-				<p>Local items are paid for through the site, but picked up (or declined) in-person, using a Voucher, which acts like cash. Sellers have a Voucher Key that proves a buyer's Voucher is authentic, and the two parties have a week to transact a sale.</p>
-				<p>The sale is considered 'closed' when the seller enters the buyer's Voucher into the site. That's how we know you got your item! If a seller doesn't enter a buyer's Voucher within a week, or if a buyer 'declines' an item from his Transaction Console, we refund 95% of the money he/she paid.</p>
-				<p>After the silo administrator is paid, we invite the silo administrator send a 'Thank You' note.</p>
-			</td><td align="center">
-				<div style="margin-top: -15px; text-align: center">(click to enlarge)</div>
-				<a class="fancybox" href="images/items-sold.png" title="The graphic, above, shows you how the buying, selling, and payment process works"> <img src="images/items-sold.png" width="421" height="300"></img></a>
-			</td></tr></table>
-		<h2>What are the Benefits of Voucher/Voucher Key?</h2>
-			<table width="100%"><tr>
-				<td valign="top"><p>If you see it on our site - the item is there to purchase. No 'dead' ads.<br><br>Sellers know buyers are serious and have money<br><br>You can decline an item if it is not what you want</p></td>
-				<td valign="top"><p>Buyers can control whether they get their item or not.<br><br>No disputes as to whether an item was collected (no scammers)<br><br>Sellers are unlikely to misrepresent items, because they can be so easily declined</p></td>
-				<td valign="top"><p>You don't have to bring money to pick up your item<br><br>You receive 95% of your payment back, if you decline an item<br><br>We avoid settling disputes, keeping our overhead low, which we pass on to you!</p></td>
-			</tr></table>
-
-		<?php if (!isset($_SESSION['is_logged_in'])) { ?>
-			<a class="fancybox" href="index.php?task=create_account"><h1 align="center" class="click_me">Ready to go? Let's create an account now!</h1></a>
-		<?php } else { ?>
-			<a class="fancybox" href="items"><h1 align="center" class="click_me">Think you got it? Start looking for items to buy!</h1></a>
-		<?php } ?>
-
-		</div>
-
-	
-	</div>
-</div> -->
 <div id="bottom_menu">
 	<a href="index.php?task=contact_us">Contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">About</a> | <a href="index.php?task=tos">Terms of Use</a> | <a href="index.php?ref=start">Get Started</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">FAQ</a> | <a href="index.php?task=stories"><?=SITE_NAME?> Stories</a>
 	<div id="logo-footer">&nbsp;</div>
@@ -224,9 +190,11 @@
 
 <script>
 $("#getting-started-collapsible").click(function() {
-	$("#getting-started").toggle("fast");
+	$("#getting-started").slideToggle("fast");
+	$("#getting-started-collapsible h1").toggleClass("collapsible-icon");
 });
 $("#faq-collapsible").click(function() {
-	$("#faq").toggle("fast");
+	$("#faq").slideToggle("fast");
+	$("#faq-collapsible h1").toggleClass("collapsible-icon");
 });
 </script>
