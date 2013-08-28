@@ -73,19 +73,10 @@
 	<form name="login_form" id="login_form" method="POST">
 		<input type="hidden" name="purpose" value=""/>
 		<h2>Login to your account</h2>
-		<table>
-			<tr>
-				<td>
-					<input type="text" name="email" id="email" onfocus="select();" placeholder="E-mail"/>
-				</td>
-				<td>
-					<input type="password" name="password" id="password" onfocus="select();"  placeholder="Password"/>
-				</td>
-			</tr>
-		</table>
-		<input type="checkbox" name="remember_me" value="yes" /> Keep me logged in for 1 month <br/>
+		<input type="text" name="email" id="email" onfocus="select();" placeholder="E-mail"/>
+		<input type="password" name="password" id="password" onfocus="select();"  placeholder="Password"/>
+		<label id="remember-check"><input type="checkbox" name="remember_me" value="yes"/>Keep me logged in for 1 month</label><br/>
 		<div id="login_status"></div>
-		<br/>
 		<button type="button" id="login_button">Login</button>
 	</form>
 	<script>
