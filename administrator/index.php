@@ -348,7 +348,7 @@ if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') {
 						header('Location: '.$_SERVER['REQUEST_URI']);
 						exit;
 					}
-					echo "<br><a href='".ACTIVE_URL."index.php?task=create_silo_admin'>Create a Disaster Relief Silo</a>";
+					echo "<br><a href='".ACTIVE_URL."index.php?task=create_silo_admin'>Create an Official Silo</a>";
 					echo "<br/><form name='silos' id='silos' action='index.php?view=silos' onsubmit=\"return confirm('Delete these silo(s)?')\" method='post'>";
 					echo "<input type='hidden' name='delete' value='silos'>";
 					$checkRadar = mysql_num_rows(mysql_query("SELECT * FROM silos WHERE type = 'flagged'"));
