@@ -15,6 +15,9 @@
 	define(ACTIVE_URL, "http".$secure."://stage.james.siloz.com/website/"); // **Don't forget slash at end** //
 	define(API_URL, "/website/api.php");
 	define(SHORT_URL, "siloz.com");
+	define(ADMIN_NOTIF, "on"); // **Notify admin with new activity (accounts, items, & silos) - on/off** //
+	define(ADMIN_NOTIF_EMAILS, "zackery.n.west@gmail.com,robert@aronedesigns.com"); // **List of admin e-mails that will get notified .. Setting above must be 'on'** //
+		## Example => "ex1@ex.com,ex2@ex.com,test@test.com,zackery.n.west@gmail.com"
 	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
 	define(FAM_INDEX_KILL, "off"); // **Disable silos/items with low fam index scores - on/off** //
 	define(FACEBOOK_ID, "291023471032128");
