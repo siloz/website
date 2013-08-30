@@ -1,6 +1,15 @@
 <?php
 $updNotif = mysql_query("DELETE FROM notifications WHERE user_id = '$user_id'");
 
+if ($_SESSION['is_logged_in'] != 1) { ?>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#login").fancybox().trigger('click');
+		})
+	</script>
+<?php 
+	die; }
+
 //** UPDATED --> Voucher == PayKey, Voucher Key == PayLock **//
 
 if (param_post('item') == 'Delete') {
@@ -147,10 +156,7 @@ if (param_post('fav') == 'Remove') {
 // If item is updated
 	$err = "";
 
-	if ($_SESSION['is_logged_in'] != 1) {
-		echo "<script>window.location = 'index.php';</script>";
-	}
-	elseif (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
+	if (empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'on') { 
     		echo "<script>window.location = 'https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "';</script>";
     		exit();
 	}
