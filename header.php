@@ -18,56 +18,87 @@
 	}
 </script>
 
-<div id="top_menu">
-	<!-- <span class="gray"><?=$userLocation?></span> -->
+<div id="nav-container">
+	<div id="nav">
+		<div id="logo-container" class="floatL">
+			<a href="<?=ACTIVE_URL?><?=$logo_redirect?>"></a>
+		</div>
+		<div id="top_menu" class="floatR">
+			<span class="gray"><?=$userLocation?></span>
 
-	<?php if (!isset($_SESSION['user_id'])) {
-		//echo "<span class='change_location gray'>change</span>";
-		}
-	?>
-	<?php
-		if (isset($_SESSION['user_id'])) {
-			$user_id = $_SESSION['user_id'];
-			$sql = "SELECT * FROM silos WHERE admin_id = '$user_id' AND status != 'pending'";
-			$res = mysql_query($sql);
-	?>
-			<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">Favorite silos</span></a>
-	<?php
-			if ($addInfo_full) {
-	?>
-				<a class="fancybox" href="#addInfo"><span class="blue">Start a silo</span></a>
-	<?php
-			} elseif (mysql_num_rows($res) == 0) {
-	?>
-				<a href="<?=ACTIVE_URL?>index.php?task=create_silo"><span class="<?php if (param_get('task') == 'create_silo') { echo "orange"; } else { echo "blue"; } ?>">Start a silo</span></a>
-	<?php
-			} else {
-		$sid = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id' AND status != 'pending'"));
-		$Silo = new Silo($sid[0]);
-		$silo_id = $Silo->silo_id;
-			
-			if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin' || param_get('task') == 'manage_silo_thank') { 
-		?>
-				<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span class="blue">View silo as user</span></a>
-			<?php } else { ?>
-				<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="blue">Manage silo</span></a>
-			<?php } ?>
-	<?php
-			}
-	?>
-			<a href="https://www.<?=SHORT_URL?>/index.php?task=transaction_console"><span class="<?php if (param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">Transactions</span></a>
-			<a href="https://www.<?=SHORT_URL?>/index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account') { echo "orange"; } else { echo "blue"; } ?>">My account</span></a>	
-	<?php
-		} else {
-	?>
-			<a class="fancybox" href="#login"><span class="orange">Start a silo</span></a>
-			<a class="fancybox" href="#login"><span class="blue">Login/sign up</span></a>
-			
-	<?php
-		}
-	?>
-	<div class="enterLocation" style="font-size: 9pt; color: red; padding-top: 7px;"><?=$locErr?></div>
+			<?php if (!isset($_SESSION['user_id'])) {
+				echo "<span class='change_location gray'>change</span>";
+				}
+			?>
+			<?php
+				if (isset($_SESSION['user_id'])) {
+					$user_id = $_SESSION['user_id'];
+					$sql = "SELECT * FROM silos WHERE admin_id = '$user_id' AND status != 'pending'";
+					$res = mysql_query($sql);
+			?>
+					<a href="<?=ACTIVE_URL?>index.php?task=silo_favorites"><span class="<?php if (param_get('task') == 'silo_favorites') { echo "orange"; } else { echo "blue"; } ?>">Favorite silos</span></a>
+			<?php
+					if ($addInfo_full) {
+			?>
+						<a class="fancybox" href="#addInfo"><span class="blue">Start a silo</span></a>
+			<?php
+					} elseif (mysql_num_rows($res) == 0) {
+			?>
+						<a href="<?=ACTIVE_URL?>index.php?task=create_silo"><span class="<?php if (param_get('task') == 'create_silo') { echo "orange"; } else { echo "blue"; } ?>">Start a silo</span></a>
+			<?php
+					} else {
+				$sid = mysql_fetch_row(mysql_query("SELECT id FROM silos WHERE admin_id = '$user_id' AND status != 'pending'"));
+				$Silo = new Silo($sid[0]);
+				$silo_id = $Silo->silo_id;
+					
+					if (param_get('task') == 'manage_silo' || param_get('task') == 'manage_silo_admin' || param_get('task') == 'manage_silo_thank') { 
+				?>
+						<a href="<?=ACTIVE_URL?>index.php?task=view_silo&id=<?=$Silo->id?>"><span class="blue">View silo as user</span></a>
+					<?php } else { ?>
+						<a href="<?=ACTIVE_URL?>index.php?task=manage_silo"><span class="blue">Manage silo</span></a>
+					<?php } ?>
+			<?php
+					}
+			?>
+					<a href="https://www.<?=SHORT_URL?>/index.php?task=transaction_console"><span class="<?php if (param_get('task') == 'transaction_console') { echo "orange"; } else { echo "blue"; } ?>">Transactions</span></a>
+					<a href="https://www.<?=SHORT_URL?>/index.php?task=my_account"><span class="<?php if (param_get('task') == 'my_account') { echo "orange"; } else { echo "blue"; } ?>">My account</span></a>	
+			<?php
+				} else {
+			?>
+					<a class="fancybox" href="#login"><span class="orange">Start a silo</span></a>
+					<a class="fancybox" href="#login"><span class="blue">Login/sign up</span></a>
+					
+			<?php
+				}
+			?>
+
+
+			<?php
+				if ($_SESSION['admin_access']) {
+					$header = "<a href='".ACTIVE_URL."index.php?allow=yes' style='padding-right: 25px; text-decoration: none; color: grey'><b>Splash Page</b></a>";
+					$header .= "<a href='".ACTIVE_URL."administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
+				}
+
+				$qry = mysql_query("SELECT * FROM notifications WHERE user_id = '$user_id'");
+				$notif = mysql_fetch_array($qry);
+
+				if ($notif == 1) {
+					$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>1 new notification!</b></font></a></span>";
+				}
+				elseif ($notif > 1) {
+					$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
+				}
+
+				if ($_SESSION['is_logged_in']) {
+					$header .= "<span style='padding-right: 10px;'>Welcome back <b>".$fname." ".$lname."</b>!</span> <a href='".ACTIVE_URL."index.php?task=logout' class='status'>Logout</a>";
+				}
+				echo $header;
+				$is_search = array_key_exists('keywords', $_GET) || array_key_exists('zip_code', $_GET) || array_key_exists('category', $_GET) || array_key_exists('amount_min', $_GET) || array_key_exists('amount_max', $_GET);
+			?>
+					<div class="enterLocation" style="font-size: 9pt; color: red; padding-top: 7px;"><?=$locErr?></div>
+	</div>
 </div>
+<div id="nav-mast">&nbsp;</div>
 
 <div class="login" id="login">
 	<form name="login_form" id="login_form" method="POST">
@@ -135,39 +166,14 @@
 <?php 	if (isset($_SESSION['user_id'])) { $logo_redirect = "items"; } else { $logo_redirect = "index.php"; } ?>
 
 <form action='index.php' id="search_form" name="search_form">
-<div id="logo-container">
-	<a href="<?=ACTIVE_URL?><?=$logo_redirect?>"></a>
-</div>
+
 
 <?php
 if ($headline != "")
 	$header = "<div class='blue' style='font-size: 14px; font-weight: bold; text-align: center'>$headline</div>";
 ?>
 
-<div id="status" align="right" style="width: 965px; margin-top: 45px; position: absolute; font-size: 8pt;">
-<?php
-	if ($_SESSION['admin_access']) {
-		$header = "<a href='".ACTIVE_URL."index.php?allow=yes' style='padding-right: 25px; text-decoration: none; color: grey'><b>Splash Page</b></a>";
-		$header .= "<a href='".ACTIVE_URL."administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
-	}
 
-	$qry = mysql_query("SELECT * FROM notifications WHERE user_id = '$user_id'");
-	$notif = mysql_fetch_array($qry);
-
-	if ($notif == 1) {
-		$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>1 new notification!</b></font></a></span>";
-	}
-	elseif ($notif > 1) {
-		$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
-	}
-
-	if ($_SESSION['is_logged_in']) {
-		$header .= "<span style='padding-right: 10px;'>Welcome back <b>".$fname." ".$lname."</b>!</span> <a href='".ACTIVE_URL."index.php?task=logout' class='status'>Logout</a>";
-	}
-	echo $header;
-	$is_search = array_key_exists('keywords', $_GET) || array_key_exists('zip_code', $_GET) || array_key_exists('category', $_GET) || array_key_exists('amount_min', $_GET) || array_key_exists('amount_max', $_GET);
-?>
-</div>
 <div>
 <div style="clear: both;"></div>
 
@@ -180,7 +186,7 @@ if ($sItems || $sSilos) {
 
 <div class="spacer"></div>
 
-<table>
+<table id="sort-header">
 <tr>
 	<td class="<?php if ($sItems) { echo "sbSelected"; } else { echo "sb"; } ?>" onClick="document.location.href='<?=ACTIVE_URL?>items';" style="cursor:pointer;cursor:hand">
 		<a href="<?=ACTIVE_URL?>items">shop</a>

@@ -324,43 +324,38 @@ if (!isset($_SESSION['is_logged_in'])) {
 					include('header.php');
 				?>
 			</div>
-			<div id="main_body">				
-				<?php
-					if ($task != '') {
-						include($task.'.php');
-					}
-					else {
-						if ($search == 'silo') {
-							include('search_silo.php');
-						}					
-						else if ($search == 'item') {
-							include('search_item.php');
+			<div id="main-body-container">
+				<div id="main_body">				
+					<?php
+						if ($task != '') {
+							include($task.'.php');
 						}
 						else {
-							?>
-							<script type="text/javascript">
-								window.location = "items";
-							</script>
-							<?
+							if ($search == 'silo') {
+								include('search_silo.php');
+							}					
+							else if ($search == 'item') {
+								include('search_item.php');
+							}
+							else {
+								?>
+								<script type="text/javascript">
+									window.location = "items";
+								</script>
+								<?
+							}
 						}
-					}
-				?>				
-			</div>
-			<?php
-			}
-			if ($splash){} else { echo '<div id="push"></div>'; }
-			?>
-		</div>
-		</div>
-			<div id="new-footer">
+					?>				
+				</div>
 				<?php
-					if ($splash) {
-					} 
-					else {
-						include('footer.php'); 
 					}
+					if ($splash){} else { echo '<div id="push"></div>'; }
 				?>
+				<div id="new-footer"><?php if ($splash) {} else { include('footer.php'); } ?></div>
 			</div>
+		</div>
+		</div>
+
 	<script>
 	    $('input[placeholder], textarea[placeholder]').placeholder();
 	</script>		

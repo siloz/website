@@ -22,31 +22,33 @@
 		<h2 class="tagline">Fund a local cause<span>by purchasing or donating a wanted item.</span></h2>
 	</div>
 </div>
-<div id="billboard-boxes-container">
-	<div id="billboard-boxes">
-		<div id="shop-box" class="floatL mast-item" onclick="window.location='items'">
-			<h1>Shop local items</h1>
-			<span>buy items whose sale helps a silo</span>
-		</div>
-		<div id="donate-box" class="floatL mast-item" onclick="window.location='silos'">
-				<h1>Donate an item</h1>
-				<span>sell items to benefit a public silo</span>
-		</div>
-		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
-			<div id="create-box" class="floatL mast-item">
-				<h1>Create a silo</h1>
-				<span>public silos are often tax deductible</span>
+</div>
+	<div id="billboard-boxes-container">
+		<div id="billboard-boxes">
+			<div id="shop-box" class="floatL mast-item" onclick="window.location='items'">
+				<h1>Shop local items</h1>
+				<span>buy items whose sale helps a silo</span>
 			</div>
-		</a>
-		<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
-			<div id="pledge-box" class="floatL mast-item">
-				<h1>Pledge first</h1>
-				<span>we'll notify your cause to start a silo</span>
+			<div id="donate-box" class="floatL mast-item" onclick="window.location='silos'">
+					<h1>Donate an item</h1>
+					<span>sell items to benefit a public silo</span>
 			</div>
-		</a>
+			<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
+				<div id="create-box" class="floatL mast-item">
+					<h1>Create a silo</h1>
+					<span>public silos are often tax deductible</span>
+				</div>
+			</a>
+			<a class='fancybox' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
+				<div id="pledge-box" class="floatL mast-item">
+					<h1>Pledge first</h1>
+					<span>we'll notify your cause to start a silo</span>
+				</div>
+			</a>
+		</div>
 	</div>
-</div>
-</div>
+
+
 </div>
 
 <div id="mast-container" class="clear">
@@ -136,11 +138,15 @@
 	<p>Traditional (off-line) rummage sale fundraisers are a headache to organize, and attract orphaned, unwanted items.</p>
 	<p>A silo can be started in minutes, by one person, and shared with others who will donate to, and promote (this process of spreading labor or cost is called crowd-sourcing) also, in a few minutes.  A silo costs nothing, up-front, and 10% (public) or 5% (private) of the money raised, afterward, making it at least 90% efficient.</p>
 
+	<img alt="" src="images/123.png"/>
+
 	<h3>How do I donate?</h3>
 	<p>You join a silo by donating an item to a silo you support.  Buyers see the item on the site, and make payment to receive a Voucher (code word), which is provided to you when the buyer collects the item.</p>
 
 	<h3>How do I make a purchase?</h3>
 	<p>Everything on s&igrave;loz sells locally; nothing is shipped.  A buyer pays online and receives a Voucher (code word), that he or she provides to the seller, after inspecting and collecting an item.  Buyers are not permitted to buy items more than 75 miles away.</p>
+
+	<img alt="" src="images/123-2.png"/>
 
 	<h3>Got it!  How do I get started?</h3>
 	<p>If you're a shopper, just shop!  You will only be permitted to make a purchase within a 75 mile radius of your address (which is kept hidden from others), because you have to pick up the item, and use your Voucher (that you receive when you make payment) to collect your item.</p>
@@ -171,10 +177,77 @@
 	<h3>silo Administrators</h3>
 	<h4>What kinds of silos are there?</h4>
 	<p>A silo can be either public or private. Items for both public and private silos are visible on the site, so they can sell, but public silos &ndash; themselves &ndash; are visible on the site, which allows them to accept donated items from the general public. Private silos are not listed and are only visible by invitation only.</p>
+	<p><a class="fancybox" href="#slideshow">Click here to see some good silo ideas</a></p>
+	
+	<div id="slideshow">
+		<div id="slider_frame">
+			<div id="slider">
+				<img src="images/splash/field-trip.jpg" alt="<span class='sliderText'>Public silo:</span> Raise money for students' arts, sports, and extracurricular programs." />
+				<img src="images/splash/wedding.jpg" alt="<span class='sliderText'>Private silo:</span> Any family can create a private silo to fund a wedding, honeymoon, baby shower, anniversary, or family reunion." />
+				<img src="images/splash/firemens-fund.jpg" alt="<span class='sliderText'>Public silo:</span> Fund a civic cause, like a Fireman's or Policeman's fund, or a library." />
+				<img src="images/splash/college.jpg" alt="<span class='sliderText'>Private silo:</span> Cover a graduation gift, pay college tuition, or fund a year abroad, with items donated by a student's personal supporters." />
+				<img src="images/splash/neighborhood-cleanup.jpg" alt="<span class='sliderText'>Public silo:</span> Create a silo to keep your community clean, safe, and beautiful." />
+				<img src="images/splash/kid-medical.jpg" alt="<span class='sliderText'>Private silo:</span> A silo is a great way for a private group to cover emergency medical or legal expenses." />
+				<img src="images/splash/playground.jpg" alt="<span class='sliderText'>Public silo:</span> Create a silo to fund construction and cleanup projects in your immediate area." />
+				<img src="images/splash/vet-fees.jpg" alt="<span class='sliderText'>Private silo:</span> A silo can be used to cover the cost of an unexpected bill, such as for veterinary services." />
+				<img src="images/splash/religious.jpg" alt="<span class='sliderText'>Public silo:</span> Donate an item to a church, temple, mosque or synagogue, whose mission is to help others in your area." />
+				<img src="images/splash/artistic-project.jpg" alt="<span class='sliderText'>Private silo:</span> An artist, filmmaker, playwright or musician could leverage supporters to cover production costs, with a silo." />
+				<img src="images/splash/youth-sports.jpg" alt="<span class='sliderText'>Public silo:</span> Help a youth sports team cover officiating, field, tournament, awards ceremony, and uniform expenses." />
+				<img src="images/splash/big-purchase.jpg" alt="<span class='sliderText'>Private silo:</span> A family can rally to make a dream of enrichment come true for a young member. " />
+			</div>
+		</div>
+	</div>
+	
+	<table id="faq-table">
+		<tr>
+			<th></th>
+			<th>Public silo</th>
+			<th>Private silo</th>
+		</tr>
+		<tr>
+			<td>Who does it benefit?</td>
+			<td>General public</td>
+			<td>Private group</td>
+		</tr>
+		<tr>
+			<td>Who can create/run a silo?</td>
+			<td>Leader of a community organization</td>
+			<td>Anybody over age 14</td>
+		</tr>
+		<tr>
+			<td>Visible on the site to a non-member?</td>
+			<td>Yes</td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td>How is it promoted?</td>
+			<td>Invite and visible on site to general public</td>
+			<td>Promoted by invitation only</td>
+		</tr>
+		<tr>
+			<td>Tax-deductible donated items?</td>
+			<td>Possibly, with valid EIN for a 501(c)3</td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td>How is a silo administrator paid?</td>
+			<td>E-check or ACH (automatic clearing house)</td>
+			<td>PayPal</td>
+		</tr>
+		<tr>
+			<td>How much does a silo keep?</td>
+			<td>90%</td>
+			<td>95%</td>
+		</tr>
+	</table>
+
 	<h4>Who can create a silo?</h4>
 	<p>Anybody over age 14 may create a private silo for a legal purpose. When the silo ends, we pay out 95% of the money raised via PayPal. To create a public silo, you must represent an organization with a presence and impact in a given community, which also falls into one of the following categories: 1) youth sports, 2) religious, 3) public education, 4) civic, 5) neighborhood, or 6) regional non-profit.</p>
 	<h4>May I create a public silo?</h4>
 	<p>Anybody over age 14 can create a private silo for any legal purpose. Public silos must 1) have an impact and presence in a community, and 2) fall neatly into one of the designated categories of public silo (below). 3) the person creating the silo must be a leader in said organization.</p>
+	
+	<img alt="" src="images/types.png"/>
+
 	<h4>How do I promote my silo?</h4>
 	<p>Promote your silo on- and off-line, using our digital tools (send promotional emails, post to Facebook), and by printing &frac14; page flyers.</p>
 	<h4>Are all public silos tax-deductible?</h4>
@@ -184,8 +257,7 @@
 </div>
 
 <div id="bottom_menu">
-	<a href="index.php?task=contact_us">Contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">About</a> | <a href="index.php?task=tos">Terms of Use</a> | <a href="index.php?ref=start">Get Started</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">FAQ</a> | <a href="index.php?task=stories"><?=SITE_NAME?> Stories</a>
-	<div id="logo-footer">&nbsp;</div>
+	<a href="index.php?task=contact_us">Contact <?=SITE_NAME?></a> | <a href="index.php?task=about_us">About</a> | <a href="index.php?task=tos">Terms of Use</a> | <a href="index.php?ref=start">Get Started</a> | <a href="<?=ACTIVE_URL?>faq" target="_blank">Knowledgebase</a> | <a href="index.php?task=stories"><?=SITE_NAME?> Stories</a>
 </div>
 
 <script>

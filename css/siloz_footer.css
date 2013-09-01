@@ -38,14 +38,13 @@
 	line-height: 40px;
 	margin: 0 auto;
 	-webkit-font-smoothing: antialiased;
-	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
+	font-family: 'robotolight', 'Roboto', 'Arial', sans-serif;
 }
 
 #bottom_menu a {
 	text-decoration: none;
 	color: #222;
-	font-weight: bold;
-	font-size: 12px;
+	font-size: 15px;
 	padding: 5px;
 }
 

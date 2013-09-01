@@ -1,9 +1,36 @@
+#nav-container {
+	height: 80px;
+	width: 100%;
+}
+
+#nav-mast {
+	height: 80px;
+	width: 100%;
+	/*background: #ff642f;*/
+	z-index: -20;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#nav {
+	width: 975px;
+	margin: 0 auto;
+}
+
+#sort-header {
+	position: relative;
+	top: 10px;
+}
+
+#sort-header {
+
+}
+
 #top_menu {
-    float: right;
-	margin-top: 10px;
-	margin-right: 10px;
-	font-size: 11pt;
-	font-weight: bold;
+	position: relative;
+	top: 10px;
+	font-size: 12pt;
 }
 
 #top_menu span.separator {

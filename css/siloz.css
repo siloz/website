@@ -21,6 +21,12 @@ h2 {
 	font-weight: normal;
 }
 
+#main-body-container {
+	min-height: 100%;
+	background: #fff;
+	position: relative;
+	top: 10px;
+}
 .placeholder {color: #aaa;}
 
 .question {
@@ -72,20 +78,9 @@ html, body {
 }
 
 #content-container {
-	height: auto !important;
+	/*height: auto !important;*/
 	height: 100%;
 	width: 100%;
-}
-
-#main {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	width: 975px;
-	margin: 0 auto;
-}
-
-#billboard-container {
 	background: #388df9;
 	background: -moz-linear-gradient(top,  #388df9 0%, #b1e1fc 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#388df9), color-stop(100%,#b1e1fc));
@@ -94,6 +89,23 @@ html, body {
 	background: -ms-linear-gradient(top,  #388df9 0%,#b1e1fc 100%);
 	background: linear-gradient(to bottom,  #388df9 0%,#b1e1fc 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#388df9', endColorstr='#b1e1fc',GradientType=0 );
+}
+
+#header {
+	min-height: 100%;
+	width: 975px;
+	margin: 0 auto;
+}
+
+#billboard-container {
+/*	background: #388df9;
+	background: -moz-linear-gradient(top,  #388df9 0%, #b1e1fc 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#388df9), color-stop(100%,#b1e1fc));
+	background: -webkit-linear-gradient(top,  #388df9 0%,#b1e1fc 100%);
+	background: -o-linear-gradient(top,  #388df9 0%,#b1e1fc 100%);
+	background: -ms-linear-gradient(top,  #388df9 0%,#b1e1fc 100%);
+	background: linear-gradient(to bottom,  #388df9 0%,#b1e1fc 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#388df9', endColorstr='#b1e1fc',GradientType=0 );*/
 	height: 790px;
 	width: 100%;
 }
@@ -105,8 +117,7 @@ html, body {
 }
 
 #billboard .tagline {
-	-webkit-font-smoothing: antialiased;
-	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
+	font-family: 'robotothin', 'Roboto', arial, sans-serif;
 	font-size: 46px;
 	letter-spacing: 1px;
 	position: relative;
@@ -117,9 +128,9 @@ html, body {
 
 #billboard .tagline span {
 	display: block;
-	font-size: 22px;
-	font-family: arial, sans-serif;
-	margin: 5px 0 0 2px;
+	font-size: 24px;
+	font-family: 'robotolight', arial, sans-serif;
+	margin: 0 0 0 2px;
 }
 
 #billboard-boxes-container {
@@ -161,11 +172,13 @@ html, body {
 	height: 198px;
 	width: 242px;
 	border-left: 1px solid rgba(255, 255, 255, 0.3);
+	padding-top: 9px;
 }
 
 #mast-container {
 	padding: 30px 0 0 0;
 	width: 100%;
+	background: #fff;
 }
 
 #mast-container .row {
@@ -178,11 +191,11 @@ html, body {
 }
 
 #billboard-boxes #shop-box h1 {
-	background: url('../images/landing-sprite.png') -124px -130px no-repeat;
+	background: url('../images/landing-sprite.png') -129px -130px no-repeat;
 }
 
 #billboard-boxes #donate-box h1 {
-	background: url('../images/landing-sprite.png') -128px -172px no-repeat;
+	background: url('../images/landing-sprite.png') -132px -170px no-repeat;
 }
 
 #billboard-boxes #create-box h1 {
@@ -190,12 +203,32 @@ html, body {
 }
 
 #billboard-boxes #pledge-box h1 {
-	background: url('../images/landing-sprite.png') -124px -130px no-repeat;
+	background: url('../images/landing-sprite.png') -128px -316px no-repeat;
 }
 
 #getting-started,
 #faq {
 	display: none;
+}
+
+#faq-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#faq-table td {
+	border: 1px solid #ccc;
+	padding: 2px 20px 2px 9px;
+}
+
+#faq-table th {
+	font-weight: bold;
+	color: #ff642f;
+}
+
+#faq-table td:first-child {
+	font-weight: bold;
+	color: #2f8dcb;
 }
 
 #push {
@@ -205,7 +238,6 @@ html, body {
 #new-footer {
 	position: relative;
 	margin: -90px auto;
-	background-color: #fff;
 	width: 975px;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -213,6 +245,11 @@ html, body {
 
 #main_body {
 	margin: 0px;
+	min-height: 400px;
+}
+
+#main-body {
+	background: #fff;
 }
 
 #overlay {
@@ -360,6 +397,10 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 	color: #fff;
 }
 
+#slideshow {
+	display: none;
+}
+
 .searchBar {
    	background-color: #EEF7FC; 
    	background-image: url(images/fallback-gradient.png); 
@@ -389,13 +430,17 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 	opacity: .8
 }
 
+.searchBar select {
+	height: 34px;
+}
+
 .searchPage {
 	float: left;
 	margin-top: 5px;
 }
 
 .navBreak {
-	margin-top: 15px
+	/*margin-top: 15px*/
 }
 
 .navPad {
@@ -452,28 +497,16 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 }
 
 .searchOpt {
-   	background-color: #EEF7FC; 
-   	background-image: url(images/fallback-gradient.png); 
-   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
-   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
-   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
-   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
-   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
-   
-    	border: 1px solid lightgray;
-	color: grey;
-
-	height: 24px;
-	line-height: 24px;
+	color: #222;
+	height: 34px;
+	line-height: 31px;
 	font-size: 10pt;
 	font-weight: bold;
-	text-align: center;
 	text-decoration: none;
-	float: right;
-	margin-top: -7px;
-	padding: 0px 5px;
-	width: 350px;
-	margin-top: -10px;
+	padding: 0px 10px;
+	width: 340px;
+	position: relative;
+	left: 615px;
 }
 
 .searchOpt a {
@@ -486,22 +519,12 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 }
 
 .userNav {
-   	background-color: #EEF7FC; 
-   	background-image: url(images/fallback-gradient.png); 
-   	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#EEF7FC));
-   	background-image: -webkit-linear-gradient(top, #fff, #EEF7FC); 
-   	background-image:    -moz-linear-gradient(top, #fff, #EEF7FC);
-   	background-image:     -ms-linear-gradient(top, #fff, #EEF7FC);
-   	background-image:      -o-linear-gradient(top, #fff, #EEF7FC);
-
-    	border-radius: 8px;     
-    	border: 1px solid lightgray;
 	color: #2f8dcb;
-
-	padding: 10px;
+	padding: 15px 24px 4px 24px;
 	line-height: 20px;
-	font-size: 9pt;
+	font-size: 26px;
 	font-weight: bold;
+	font-family: 'robotothin', 'Roboto', 'Arial', 'sans-serif';
 }
 
 .userNav a {
@@ -513,7 +536,6 @@ a:link img, a:visited img, a:active img, a:hover img {border: 0px; opacity: 1 }
 }
 
 .accountHeading {
-	font-size: 14pt;
 	font-weight: bold;
 	color: #2f8dcb;
 }
@@ -1880,6 +1902,7 @@ div.rounded_box {
     -khtml-border-radius: 0px;
     border-radius: 0px;     
     padding: 2px;
+    width: 246px;
 }
 div.create_account_form input {
 	background: #fff;
@@ -2061,7 +2084,7 @@ margin-left: 5px;
 }
 
 .spacer {
-	padding-top: 10px;
+	padding-top: 25px;
 }
 
 .change_location {
@@ -2175,7 +2198,7 @@ margin-left: 5px;
 #logo-container a {
 	background: url('../images/landing-sprite.png') -20px -14px no-repeat;
 	display: block;
-	height: 60px;
+	height: 45px;
 	width: 150px;
 }
 
@@ -2211,21 +2234,19 @@ margin-left: 5px;
 #top_menu span {
 	color: #fff;
 	margin-left: 30px;
-	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
-	font-weight: bold;
+	font-family: 'robotolight', 'Roboto', 'Arial', sans-serif;
 }
 
 #top_menu .orange {
-	color: #ff642f;
+	color: #000;
 }
 
 .silos_header {
 	color: #222; 
 	font-size: 28px; 
 	-webkit-font-smoothing: antialiased;
-	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
-	font-size: 20px;
-	font-weight: bold;
+	font-family: 'robotolight', 'Roboto', 'Arial', sans-serif;
+	font-size: 23px;
 	margin-bottom: 0px;
 }
 
@@ -2243,9 +2264,9 @@ margin-left: 5px;
 	color: #fff; 
 	font-size: 28px; 
 	-webkit-font-smoothing: antialiased;
-	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
-	font-size: 20px;
-	font-weight: bold;
+	font-family: 'robotolight', 'Roboto', 'Arial', sans-serif;
+	font-size: 23px;
+	font-weight: normal !important;
 	padding: 37px 0 0 0;
 	width: 975px;
 	margin: 0 auto;
@@ -2319,6 +2340,17 @@ margin-left: 5px;
          url('fonts/roboto-thin-webfont.woff') format('woff'),
          url('fonts/roboto-thin-webfont.ttf') format('truetype'),
          url('fonts/roboto-thin-webfont.svg#robotothin') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'robotolight';
+    src: url('fonts/roboto-light-webfont.eot');
+    src: url('fonts/roboto-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/roboto-light-webfont.woff') format('woff'),
+         url('fonts/roboto-light-webfont.ttf') format('truetype'),
+         url('fonts/roboto-light-webfont.svg#robotolight') format('svg');
     font-weight: normal;
     font-style: normal;
 }
