@@ -53,8 +53,16 @@
 
 <div id="mast-container" class="clear">
 	<div class="row clear">
-			<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span>
-			<a href="silos" class="bold_text">view more</a></p>
+			<p class="silos_header">
+				Popular Silos Near
+				<span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;">
+					<?=$userLocation?>
+					<span class="floatR popular_links">
+						<span><?php if (!$_SESSION['is_logged_in']) echo 'Change location' ?></span>
+					</span>
+				</span>
+				<span class="floatR popular_links"><a href="silos">View more</a></span>
+			</p>
 		
 			<?php
 				$sql = "SELECT *, $sqlDist AS distance FROM silos WHERE status = 'active' AND silo_type = 'public' ORDER BY distance LIMIT 5";
@@ -90,7 +98,16 @@
 	</div>
 
 	<div class="row">
-		<p class="silos_header">Items for Sale Near <span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="items" class="bold_text">view more</a></p>
+		<p class="silos_header">
+			Items for Sale Near
+			<span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;">
+				<?=$userLocation?>
+				<span class="floatR popular_links">
+					<span><?php if (!$_SESSION['is_logged_in']) echo 'Change location' ?></span>
+				</span>
+			</span>
+			<span class="floatR popular_links"><a href="items">View more</a></span>
+		</p>
 
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
@@ -197,7 +214,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<table id="faq-table">
 		<tr>
 			<th></th>

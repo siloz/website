@@ -24,10 +24,10 @@
 			<a href="<?=ACTIVE_URL?><?=$logo_redirect?>"></a>
 		</div>
 		<div id="top_menu" class="floatR">
-			<span class="gray"><?=$userLocation?></span>
+			<div class="gray floatL"><?=$userLocation?></div>
 
 			<?php if (!isset($_SESSION['user_id'])) {
-				echo "<span class='change_location gray'>change</span>";
+				echo "<div id='location' class='floatL change_location gray'>(change)</div>";
 				}
 			?>
 			<?php
@@ -89,13 +89,17 @@
 					$header .= "<span id='notification'><a href='".ACTIVE_URL."index.php?task=transaction_console' style='padding-right: 20px; text-decoration: none'><font color='red'><b>".$notif['count']." new notifications!</b></font></a></span>";
 				}
 
-				if ($_SESSION['is_logged_in']) {
-					$header .= "<span style='padding-right: 10px;'>Welcome back <b>".$fname." ".$lname."</b>!</span> <a href='".ACTIVE_URL."index.php?task=logout' class='status'>Logout</a>";
-				}
-				echo $header;
 				$is_search = array_key_exists('keywords', $_GET) || array_key_exists('zip_code', $_GET) || array_key_exists('category', $_GET) || array_key_exists('amount_min', $_GET) || array_key_exists('amount_max', $_GET);
 			?>
-					<div class="enterLocation" style="font-size: 9pt; color: red; padding-top: 7px;"><?=$locErr?></div>
+			<div class="enterLocation" style="font-size: 9pt; color: red; padding-top: 7px;"><?=$locErr?></div>
+			<div class="floatR" id="session_links">
+				<?php
+					if ($_SESSION['is_logged_in']) {
+						$header .= "<div style='padding-right: 10px; display: inline'>Welcome back, <b>".$fname." ".$lname."</b>!</div> <a id='logout_link' href='".ACTIVE_URL."index.php?task=logout' class='status'>Logout</a>";
+					}
+				echo $header;
+				?>
+			</div>
 	</div>
 </div>
 <div id="nav-mast">&nbsp;</div>

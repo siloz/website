@@ -206,13 +206,13 @@ select:focus {
 }
 
 #login #email {
-	width: 190px;
+	width: 183px;
 	margin: 0 2px;
 }
 
 #login #password {
-	margin-left: 4px;
-	width: 190px;
+	margin-left: 1px;
+	width: 183px;
 }
 
 
