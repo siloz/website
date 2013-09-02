@@ -11,8 +11,8 @@
 	//define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
 	//define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
 	//define(API_URL, "/api.php");
-	define(ABS_PATH, "/var/www/vhosts/stage.james.siloz.com/httpdocs/");
-	define(ACTIVE_URL, "http".$secure."://stage.james.siloz.com/website/"); // **Don't forget slash at end** //
+	define(ABS_PATH, "/var/www/vhosts/stage.YOURUSERNAME.siloz.com/httpdocs/");
+	define(ACTIVE_URL, "http".$secure."://stage.YOURUSERNAME.siloz.com/website/"); // **Don't forget slash at end** //
 	define(API_URL, "/website/api.php");
 	define(SHORT_URL, "siloz.com");
 	define(ADMIN_NOTIF, "on"); // **Notify admin with new activity (accounts, items, & silos) - on/off** //
