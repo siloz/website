@@ -1,4 +1,5 @@
 <?php
+//DELETE THIS LINE NEXT TIME
 	header('content-type:text/xml');
 	echo '<?xml version="1.0" encoding="iso-8859-1" ?>';
 	include_once('config.php');
