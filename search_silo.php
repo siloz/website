@@ -263,6 +263,9 @@ function initialize() {
 
 	siloLat = <?=$silo->latitude?>;
 	siloLong = <?=$silo->longitude?>;
+
+/* This infowindow stopped working for some reason..
+
     var infowindow = new InfoBubble({
 		maxWidth: 200,
 		shadowStyle: 1,
@@ -274,6 +277,7 @@ function initialize() {
 		borderWidth: 0,
 		borderColor: '#2c2c2c'
     });
+*/
 
 	var siloLocation = new google.maps.LatLng(siloLat, siloLong);
 	var options = {

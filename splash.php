@@ -98,6 +98,7 @@
 	</div>
 
 	<div class="row">
+<<<<<<< HEAD
 		<p class="silos_header">
 			Items for Sale Near
 			<span <?php if (!$_SESSION['is_logged_in']) echo  'class = "s_change_location"' ?> style="color: #f60;">
@@ -109,6 +110,46 @@
 			<span class="floatR popular_links"><a href="items">View more</a></span>
 		</p>
 
+=======
+		<table class="splash-donate" onClick="window.location = 'silos'">
+		<tr>
+			<td width="40px"></td>
+			<td><img src="images/btn-heart.png" width="44" height="33"></img></td>
+			<td class="splashText" style="color: #FFF;">donate items</td>
+			<td width="26px"></td>
+		</tr>
+		</table>
+		<div class="splashText" style="text-align: left;">sell items to benefit a public silo</div>
+		<div class="action_text">many donated items are <b>tax deductible</b> &nbsp; 
+		<span class="blue"><a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a></span>
+		</div>
+	</div>
+	
+	<!-- start silo button -->
+	<div class="row">
+		<a class='fancybox login-redirect' id='index.php?task=create_silo' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=create_silo"; } ?>'>
+			<div class="action splash-create">
+				<div class="splash-create_text">create a private or a public silo</div>
+				<div>private silos keep 95%, public silos are often tax-deductible.</div>
+			</div>
+		</a>
+
+		<a class='fancybox login-redirect' id='index.php?task=pledge_first' href='<?php if (!$user_id) { echo "#login"; } else { echo "index.php?task=pledge_first"; } ?>'>
+			<div class="splash-pledge">
+				<div class="splash-pledge_text">pledge first</div>
+				<div>we will notify your cause<br>to start a silo</div>
+			</div>
+		</a>
+	</div>
+		<div class="blue" style="padding-top: 10px; text-align: center; font-size: 9pt;">
+			<a class="fancybox" href="images/how-it-works.png" title="The chart, above, demonstrates how <?=SITE_NAME?> works"><b>how <?=SITE_NAME?> works</b></a>
+		</div>
+</div>
+
+<div class="row">
+		<p class="silos_header">Popular Silos Near <span <?php if (!$_SESSION['is_logged_in']) echo 'class="s_change_location"' ?> style="color: #f60;"><?=$userLocation?> <?php if (!$_SESSION['is_logged_in']) echo  '<font size="1">(change)</font>' ?></span> <a href="silos" class="bold_text">view more</a></p>
+	
+>>>>>>> c85528a59e2f830f06b936cc99dc07f4c93b7743
 		<?php
 			$sql = "SELECT *, $sqlDist AS distance FROM items WHERE status = 'pledged' or status = 'offer' ORDER BY distance LIMIT 6";
 			$tmp = mysql_query($sql);
@@ -285,5 +326,9 @@ $("#getting-started-collapsible").click(function() {
 $("#faq-collapsible").click(function() {
 	$("#faq").slideToggle("fast");
 	$("#faq-collapsible h1").toggleClass("collapsible-icon");
+});
+$('.login-redirect').click(function (){
+	var location = $(this).attr('id');
+	$('#login_form').get(0).setAttribute('action', location);
 });
 </script>

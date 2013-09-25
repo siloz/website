@@ -289,7 +289,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 		?>
 		<div id="content-container">
 			<?php
-				if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes" || param_get('ref') == "start") {
+				if (count($_GET) == 0 && count($_POST) == 0 || param_get('allow') == "yes" || param_get('ref') == "start") {
 					$splash = "true";
 				}
 

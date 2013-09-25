@@ -105,7 +105,7 @@
 <div id="nav-mast">&nbsp;</div>
 
 <div class="login" id="login">
-	<form name="login_form" id="login_form" method="POST">
+	<form action="" name="login_form" id="login_form" method="POST">
 		<input type="hidden" name="purpose" value=""/>
 		<h2>Login to your account</h2>
 		<input type="text" name="email" id="email" onfocus="select();" placeholder="E-mail"/>
@@ -167,7 +167,9 @@
 	<?php } else { echo "<b>Your location was obtained through your account when you signed up. <br><br> To change your location, please update your account information.</b>"; } ?>
 </div>
 
-<?php 	if (isset($_SESSION['user_id'])) { $logo_redirect = "items"; } else { $logo_redirect = "index.php"; } ?>
+<?php 	//if (isset($_SESSION['user_id'])) { $logo_redirect = "items"; } else { $logo_redirect = "index.php"; }
+ 	$logo_redirect = "index.php";
+?>
 
 <form action='index.php' id="search_form" name="search_form">
 
@@ -177,6 +179,17 @@ if ($headline != "")
 	$header = "<div class='blue' style='font-size: 14px; font-weight: bold; text-align: center'>$headline</div>";
 ?>
 
+<<<<<<< HEAD
+=======
+<div id="status" align="right" style="width: 965px; margin-top: 45px; position: absolute; font-size: 8pt;">
+<?php
+	if ($_SESSION['admin_access']) {
+		$header .= "<a href='".ACTIVE_URL."administrator/' target='_blank' style='padding-right: 100px; text-decoration: none; color: grey'><b>Admin Panel</b></a>";
+	}
+
+	$qry = mysql_query("SELECT * FROM notifications WHERE user_id = '$user_id'");
+	$notif = mysql_fetch_array($qry);
+>>>>>>> c85528a59e2f830f06b936cc99dc07f4c93b7743
 
 <div>
 <div style="clear: both;"></div>
