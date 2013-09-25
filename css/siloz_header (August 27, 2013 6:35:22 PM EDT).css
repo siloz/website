@@ -1,36 +1,9 @@
-#nav-container {
-	height: 80px;
-	width: 100%;
-}
-
-#nav-mast {
-	height: 80px;
-	width: 100%;
-	/*background: #ff642f;*/
-	z-index: -20;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-#nav {
-	width: 975px;
-	margin: 0 auto;
-}
-
-#sort-header {
-	position: relative;
-	top: 10px;
-}
-
-#sort-header {
-
-}
-
 #top_menu {
-	position: relative;
-	top: 10px;
-	font-size: 12pt;
+    float: right;
+	margin-top: 10px;
+	margin-right: 10px;
+	font-size: 11pt;
+	font-weight: bold;
 }
 
 #top_menu span.separator {
@@ -116,11 +89,13 @@ input {
     -khtml-border-radius: 2px;  
     border-radius: 2px; 
     border: 1px solid lightgray;
-    background-color: #fff;
-	font-size: 14px;
-	height: 30px;
-	font-family: Arial, Helvetica,sans-serif;
-	padding-left: 8px;
+    background-color: #fff; 
+	color: grey;
+	font-size: 9pt;
+	font-weight: bold;
+	line-height: 15px;
+	height: 20px;
+	font-family: Arial, Helvetica,sans-serif; ;
 }
 
 input:hover {
@@ -172,53 +147,11 @@ select:focus {
     -khtml-border-radius: 10px;
     border-radius: 10px;     
     border-width: 0px;    
+	padding: 20px;
 }
 
 .login {
 	z-index: 100;
-	padding-bottom: 13px;
-}
-
-#login #remember-check {
-	display: block;
-	margin-top: 17px;
-}
-
-#login #remember-check input {
-	width: 13px;
-    height: 13px;
-    padding: 0;
-    margin: 0 5px 0 0;
-    vertical-align: bottom;
-    position: relative;
-    top: -1px;
-    *overflow: hidden;
-}
-
-#login h2 {
-	color: #222; 
-	font-size: 20px; 
-	-webkit-font-smoothing: antialiased;
-	font-family: 'robotothin', 'Roboto', 'Arial', sans-serif;
-	font-weight: bold;
-	margin: 16px 0;
-	padding-left: 2px;
-}
-
-#login #email {
-	width: 183px;
-	margin: 0 2px;
-}
-
-#login #password {
-	margin-left: 1px;
-	width: 183px;
-}
-
-
-#login input:focus,
-#login #password:focus {
-	border: 1px solid #2f8dcb;
 }
 
 .overlay_search_bar {

@@ -194,11 +194,10 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<link rel="shortcut icon" href="<?=ACTIVE_URL?>favicon.ico?v=6" />
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz_header.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz_footer.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
-		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:100"/>
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />
+		<link rel="stylesheet" tyle="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
 
 	<?php if (param_get('task') == 'view_silo') { ?> 
 		<link href="<?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />
@@ -287,7 +286,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 			setcookie('notice', '1');
 		}
 		?>
-		<div id="content-container">
+		<div id="main">
 			<?php
 				if (count($_GET) == 0 && count($_POST) == 0 && (!$_SESSION['is_logged_in']) || param_get('allow') == "yes" || param_get('ref') == "start") {
 					$splash = "true";
@@ -324,38 +323,43 @@ if (!isset($_SESSION['is_logged_in'])) {
 					include('header.php');
 				?>
 			</div>
-			<div id="main-body-container">
-				<div id="main_body">				
-					<?php
-						if ($task != '') {
-							include($task.'.php');
+			<div id="main_body">				
+				<?php
+					if ($task != '') {
+						include($task.'.php');
+					}
+					else {
+						if ($search == 'silo') {
+							include('search_silo.php');
+						}					
+						else if ($search == 'item') {
+							include('search_item.php');
 						}
 						else {
-							if ($search == 'silo') {
-								include('search_silo.php');
-							}					
-							else if ($search == 'item') {
-								include('search_item.php');
-							}
-							else {
-								?>
-								<script type="text/javascript">
-									window.location = "items";
-								</script>
-								<?
-							}
+							?>
+							<script type="text/javascript">
+								window.location = "items";
+							</script>
+							<?
 						}
-					?>				
-				</div>
-				<?php
 					}
-					if ($splash){} else { echo '<div id="push"></div>'; }
-				?>
-				<div id="new-footer"><?php if ($splash) {} else { include('footer.php'); } ?></div>
+				?>				
 			</div>
+			<?php
+			}
+			if ($splash){} else { echo '<div id="push"></div>'; }
+			?>
 		</div>
 		</div>
-
+			<div id="new-footer">
+				<?php
+					if ($splash) {
+					} 
+					else {
+						include('footer.php'); 
+					}
+				?>
+			</div>
 	<script>
 	    $('input[placeholder], textarea[placeholder]').placeholder();
 	</script>		
