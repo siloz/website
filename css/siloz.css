@@ -116,12 +116,16 @@ html, body {
 	width: 975px;
 }
 
-#billboard .tagline {
+#billboard .tagline img {
+	text-align: center;
+}
+
+#billboard .tagline .text {
 	font-family: 'robotothin', 'Roboto', arial, sans-serif;
 	font-size: 46px;
 	letter-spacing: 1px;
 	position: relative;
-	top: 160px;
+	top: 10px;
 	left: 40px;
 	color: #fff;
 }

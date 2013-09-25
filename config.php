@@ -1,7 +1,6 @@
 <?php
 	//Determine if user is using secure connection (https) or not. This will ensure everything is using a secure connection, if they are
 	if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) { $secure = "s"; }
-
 	define(SITE_NAME, "s&igrave;loz");
 	define(TAG_LINE, "s&igrave;loz - Comerce That Counts");
 	define(DB_USERNAME, "admin");

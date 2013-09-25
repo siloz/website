@@ -179,8 +179,6 @@ if ($headline != "")
 	$header = "<div class='blue' style='font-size: 14px; font-weight: bold; text-align: center'>$headline</div>";
 ?>
 
-<<<<<<< HEAD
-=======
 <div id="status" align="right" style="width: 965px; margin-top: 45px; position: absolute; font-size: 8pt;">
 <?php
 	if ($_SESSION['admin_access']) {
@@ -189,9 +187,9 @@ if ($headline != "")
 
 	$qry = mysql_query("SELECT * FROM notifications WHERE user_id = '$user_id'");
 	$notif = mysql_fetch_array($qry);
->>>>>>> c85528a59e2f830f06b936cc99dc07f4c93b7743
+?>
 
-<div>
+</div>
 <div style="clear: both;"></div>
 
 <?php 
