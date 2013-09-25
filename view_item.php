@@ -836,6 +836,16 @@ map.mapTypes.set('Styled', styledMapType);
 	$plate = str_replace("</td>", "",$plate);
 ?>
 
+    var marker = new google.maps.Marker({
+	       map: map,
+		animation: google.maps.Animation.DROP,
+		icon: 'images/map-marker.png',
+	      	position: myLocation
+    });
+    markers.push(marker);
+
+/* This infowindow stopped working for some reason..
+
     var infowindow = new InfoBubble({
 		maxWidth: 200,
 		shadowStyle: 1,
@@ -848,18 +858,12 @@ map.mapTypes.set('Styled', styledMapType);
 		borderColor: '#2c2c2c'
     });
 
-    var marker = new google.maps.Marker({
-	       map: map,
-		animation: google.maps.Animation.DROP,
-		icon: 'images/map-marker.png',
-	      	position: myLocation
-    });
-    markers.push(marker);
 
     infowindow.setOptions({
         content: "<?=$plate?>",
-        position: myLocation,
+        position: myLocation
     });
+*/
 
 }
 

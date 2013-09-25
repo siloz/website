@@ -202,7 +202,6 @@ if ($view == "map" && !$no_res) {
 
 <div id='map_canvas' class="map-canvas" style='width: 930px; height: 380px; margin: 20px 20px 0 20px;'></div>
 
-
 <br>
 
 <script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
@@ -251,6 +250,9 @@ function initialize() {
 
 	userLat = <?=$userLat?>;
 	userLong = <?=$userLong?>;
+
+/* This infowindow stopped working for some reason..
+
     var infowindow = new InfoBubble({
 		maxWidth: 200,
 		shadowStyle: 1,
@@ -258,10 +260,11 @@ function initialize() {
 		borderRadius: 4,
 		arrowSize: 10,
 		arrowPosition: 10,
-      	arrowStyle: 2,	          
+      		arrowStyle: 2,	          
 		borderWidth: 0,
 		borderColor: '#2c2c2c'
     });
+*/
 
 	var userLocation = new google.maps.LatLng(userLat, userLong);
 
