@@ -3,7 +3,7 @@ RewriteEngine On
 RewriteBase /
 RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
 RewriteCond %{HTTPS}s ^on(s)|
-RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteRule ^ http%1://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 RewriteRule ^([^/\.]+)/?s$ index.php?search=$1
 

@@ -6,11 +6,11 @@
 	define(DB_USERNAME, "admin");
 	define(DB_PASSWORD, "99Luftbal00ns!");
 	define(DB_HOST, "localhost");
-	define(DB_NAME, "siloz");
-	define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
-	define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
-	define(API_URL, "/api.php");
-	define(SHORT_URL, "siloz.com");
+	define(DB_NAME, "guest2_siloz");
+	define(ABS_PATH, "/var/www/vhosts/stage.guest2.siloz.com/httpdocs/");
+	define(ACTIVE_URL, "http".$secure."://www.stage.guest2.siloz.com/website/"); // **Don't forget slash at end** //
+	define(API_URL, "/website/api.php");
+	define(SHORT_URL, "stage.guest2.siloz.com");
 	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
 	define(FAM_INDEX_KILL, "off"); // **Disable silos/items with low fam index scores - on/off** //
 	define(FACEBOOK_ID, "291023471032128");
