@@ -1,0 +1,17 @@
+.row_search {
+	margin-left: -13px;
+	margin-top: 5px;
+}
+
+.row {
+	margin-left: 0px;
+}
+
+.top_row {
+	clear: both;
+}
+
+.span12 {
+	margin-left: 0px;
+	width: 100%;
+}

@@ -192,12 +192,19 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<meta name="keywords" content="silent auction, donate your vehicle to charity, donate my vehicle to charity, donate my boat to charity, donate for a tax-deduction, crowdfunding, crowd-funding, raise money, fundraising, fund-raising, tax-deductible donation, tax-deductible, rummage sale, church rummage sale, school rummage sale, rummage sale fundraiser, rummage sale fundraising, donation to 510 c 3, charitable deduction, irs deduction, car wash fundraiser, bake sale fundraiser, candy bar sale fundraiser, alternative fundraising, charitable concerts, neighborhood block parties, crowd-sourcing, crowdsourcing, wedding fund, policeman's fund, firefighter's fund, civic fundraising, neighborhood fundraising, public university fundraising, youth sports fundraiser, youth soccer fundraiser, youth baseball fundraiser, little league fundraiser, little league fundraising, alternative to indiegogo, alternative to kickstarter, alternative to rockethub, alternative to wepay, alternative to gofundme">
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 		<link rel="shortcut icon" href="<?=ACTIVE_URL?>favicon.ico?v=6" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_header.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/siloz_footer.css" />
-		<link rel="stylesheet" tyle="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
+	<?php 
+		if (count($_GET) == 0 && count($_POST) == 0 || param_get('allow') == "yes" || param_get('ref') == "start") {
+			$splash = "true";
+		} else {
+			$old_style = "_old";
+		}
+	?>
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/bootstrap.custom.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/siloz.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/siloz_header.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/siloz_footer.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/jquery-ui-1.8.16.css"/>
 
 	<?php if (param_get('task') == 'view_silo') { ?> 
 		<link href="<?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />
@@ -310,7 +317,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 					elseif ($activate === "incorrect") {
 						$headline = "Wrong confirmation code. Try again!";							
 					}
-					include('header.php');
+					include('header_old.php');
 					include('search_item.php');
 				}
 				elseif ($splash) {
@@ -320,7 +327,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 			?>
 			<div id="header">
 				<?php
-					include('header.php');
+					include('header_old.php');
 				?>
 			</div>
 			<div id="main_body">				

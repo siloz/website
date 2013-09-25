@@ -31,7 +31,7 @@
 <td width="49%" valign="top">
 
 <?php
-$qry = mysql_query("SELECT * FROM silo_membership WHERE user_id = '$user_id' ORDER BY joined_date ASC");
+$qry = mysql_query("SELECT * FROM silo_membership AS m LEFT JOIN silos AS s ON (m.silo_id = s.silo_id) WHERE m.user_id = '$user_id' AND s.status = 'active' ORDER BY m.joined_date ASC");
 
 	$siloz_html = "<div class='row_search'><div class='span12'><table>";
 	$i=0;
@@ -63,7 +63,7 @@ $qry = mysql_query("SELECT * FROM silo_membership WHERE user_id = '$user_id' ORD
 <td width="49%" valign="top">
 
 <?php
-$qry = mysql_query("SELECT * FROM silo_private WHERE user_id = '$user_id' ORDER BY date ASC");
+$qry = mysql_query("SELECT * FROM silo_private AS p LEFT JOIN silos AS s ON (p.silo_id = s.silo_id) WHERE p.user_id = '$user_id' AND s.status = 'active' ORDER BY p.date ASC");
 
 	$siloz_html = "<div class='row_search'><div class='span12'><table>";
 	$i=0;

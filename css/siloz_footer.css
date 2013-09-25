@@ -30,28 +30,33 @@
 }
 
 #bottom_menu {
+	position: relative;
+	top: 50px;
 	text-align: center;
-	color: #2f8ECB;
-	margin-top: 25px;
-	margin-left: -10px;
-	background: #fff;
-	width: 980px;
-	padding: 3px;	
-	height: 50px;
-	line-height: 50px;
-	font-weight: bold;
-	font-size: 11pt;
-	margin-bottom: -20px;
+	width: 975px;
+	height: 150px;
+	line-height: 40px;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	font-family: 'robotolight', 'Roboto', 'Arial', sans-serif;
 }
 
 #bottom_menu a {
 	text-decoration: none;
-	color: #2f8ECB;
-	font-weight: bold;
-	font-size: 11pt;
+	color: #222;
+	font-size: 15px;
 	padding: 5px;
 }
 
 #bottom_menu a:hover {
 	opacity: .8;
+}
+
+#logo-footer {
+	position: relative;
+	top: 30px;
+	background: url('/images/landing-sprite.png') -16px -85px no-repeat;
+	height: 50px;
+	width: 100px;
+	margin: 0 auto;
 }

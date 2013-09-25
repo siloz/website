@@ -517,6 +517,8 @@ function initialize() {
 	mapLat = <?=$mapLat?>;
 	mapLong = <?=$mapLong?>;
 
+/* This infowindow stopped working for some reason..
+
     var infowindow = new InfoBubble({
 		maxWidth: 200,
 		shadowStyle: 1,
@@ -528,6 +530,7 @@ function initialize() {
 		borderWidth: 0,
 		borderColor: '#2c2c2c'
     });
+*/
 
 	var mapLocation = new google.maps.LatLng(mapLat, mapLong);
 	var options = {
