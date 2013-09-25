@@ -177,6 +177,7 @@ if (!isset($_SESSION['is_logged_in'])) {
 	}
 
 	if (param_get('name')) {
+		// ** IMPORTANT -> used before all css/js includes for "/silos/" in order to get the proper path to the file..
 		$rewrite = "../";
 	}
 ?>
@@ -190,33 +191,33 @@ if (!isset($_SESSION['is_logged_in'])) {
 		<meta name="description" content="siloz or <?=SITE_NAME?> is a marketplace for items donated for causes in your community, private and public. People list items out of their homes, and don't have to move them to a parking lot or field. We allow churches, mosques, synagogues, schools, local non-profits, public university student unions or student groups, civic organizations and neighborhood organizations to raise money. Donations are often tax-deductible. Moreover, a person can hold a private, unlisted, fundraiser (called a 'silo'), and raise money without the public">
 		<meta name="keywords" content="silent auction, donate your vehicle to charity, donate my vehicle to charity, donate my boat to charity, donate for a tax-deduction, crowdfunding, crowd-funding, raise money, fundraising, fund-raising, tax-deductible donation, tax-deductible, rummage sale, church rummage sale, school rummage sale, rummage sale fundraiser, rummage sale fundraising, donation to 510 c 3, charitable deduction, irs deduction, car wash fundraiser, bake sale fundraiser, candy bar sale fundraiser, alternative fundraising, charitable concerts, neighborhood block parties, crowd-sourcing, crowdsourcing, wedding fund, policeman's fund, firefighter's fund, civic fundraising, neighborhood fundraising, public university fundraising, youth sports fundraiser, youth soccer fundraiser, youth baseball fundraiser, little league fundraiser, little league fundraising, alternative to indiegogo, alternative to kickstarter, alternative to rockethub, alternative to wepay, alternative to gofundme">
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<link rel="shortcut icon" href="<?=ACTIVE_URL?>favicon.ico?v=6" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz_header.css" />
-		<link rel="stylesheet" type="text/css" href="css/siloz_footer.css" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
+		<link rel="shortcut icon" href="<?=$rewrite?><?=ACTIVE_URL?>favicon.ico?v=6" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css/bootstrap.custom.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?>css/siloz.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?>css/siloz_header.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?>css/siloz_footer.css" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css/jquery-ui-1.8.16.css"/>
 		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:100"/>
 
 	<?php if (param_get('task') == 'view_silo') { ?> 
-		<link href="<?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />
+		<link href="<?=$rewrite?><?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />
 	<?php } else { ?>
-		<link href="<?=ACTIVE_URL?>themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
+		<link href="<?=$rewrite?><?=ACTIVE_URL?>themes/1/js-image-slider.css" rel="stylesheet" type="text/css" />
 	<?php } ?>
 
-		<link rel='stylesheet' type='text/css' href='<?=ACTIVE_URL?>include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
+		<link rel='stylesheet' type='text/css' href='<?=$rewrite?><?=ACTIVE_URL?>include/OpenInviter/more_examples/css/jquery.fancybox-1.3.4.css' media='screen' />
 		
 		<!-- Fancybox includes -->
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.css?v=2.1.0" media="screen" />
-		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.3" />
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/lib/jquery-1.8.0.min.js"></script>
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.js?v=2.1.0"></script>
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.3"></script>
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
-		<script type="text/javascript" src="<?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.3"></script>
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.6" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.css?v=2.1.0" media="screen" />
+		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.3" />
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/lib/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/jquery.fancybox.js?v=2.1.0"></script>
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.3"></script>
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.6"></script>
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>include/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.3"></script>
 		<!-- End Fancybox includes	-->
 
 		<script type="text/javascript">
@@ -229,14 +230,14 @@ if (!isset($_SESSION['is_logged_in'])) {
 			});
 		</script>
 
-	    	<script type="text/javascript" src="<?=ACTIVE_URL?>js/jquery.placeholder.js"></script>		
-		<script type="text/javascript" src="<?=ACTIVE_URL?>js/change_location.js"></script>
+	    	<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>js/jquery.placeholder.js"></script>		
+		<script type="text/javascript" src="<?=$rewrite?><?=ACTIVE_URL?>js/change_location.js"></script>
 
-		<script src="<?=ACTIVE_URL?>jCrop/js/jquery.Jcrop.js"></script>
-		<script src="<?=ACTIVE_URL?>js/md5.js"></script>
-		<link rel="stylesheet" href="<?=ACTIVE_URL?>jCrop/css/jquery.Jcrop.css" type="text/css" />
+		<script src="<?=$rewrite?><?=ACTIVE_URL?>jCrop/js/jquery.Jcrop.js"></script>
+		<script src="<?=$rewrite?><?=ACTIVE_URL?>js/md5.js"></script>
+		<link rel="stylesheet" href="<?=$rewrite?><?=ACTIVE_URL?>jCrop/css/jquery.Jcrop.css" type="text/css" />
 
-    		<script src="<?=ACTIVE_URL?>themes/1/js-image-slider.js" type="text/javascript"></script>
+    		<script src="<?=$rewrite?><?=ACTIVE_URL?>themes/1/js-image-slider.js" type="text/javascript"></script>
 
 		<?php
 			//SPECIAL REDIRECT CASES

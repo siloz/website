@@ -6,10 +6,10 @@
 	define(DB_USERNAME, "admin");
 	define(DB_PASSWORD, "99Luftbal00ns!");
 	define(DB_HOST, "localhost");
-	define(DB_NAME, "guest1_siloz");
-	define(ABS_PATH, "/var/www/vhosts/stage.guest1.siloz.com/httpdocs/");
-	define(ACTIVE_URL, "http".$secure."://stage.guest1.siloz.com/website/"); // **Don't forget slash at end** //
-	define(API_URL, "/website/api.php");
+	define(DB_NAME, "siloz");
+	define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
+	define(ACTIVE_URL, "http".$secure."://siloz.com/"); // **Don't forget slash at end** //
+	define(API_URL, "/api.php");
 	define(SHORT_URL, "siloz.com");
 	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
 	define(FAM_INDEX_KILL, "off"); // **Disable silos/items with low fam index scores - on/off** //
