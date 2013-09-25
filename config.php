@@ -8,7 +8,7 @@
 	define(DB_HOST, "localhost");
 	define(DB_NAME, "siloz");
 	define(ABS_PATH, "/var/www/vhosts/siloz.com/httpdocs/");
-	define(ACTIVE_URL, "http".$secure."://siloz.com/"); // **Don't forget slash at end** //
+	define(ACTIVE_URL, "http".$secure."://www.siloz.com/"); // **Don't forget slash at end** //
 	define(API_URL, "/api.php");
 	define(SHORT_URL, "siloz.com");
 	define(FLAG_KILL, "off"); // **Disable silos/items with too many flags - on/off** //
