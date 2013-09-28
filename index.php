@@ -199,12 +199,12 @@ if (!isset($_SESSION['is_logged_in'])) {
 			$old_style = "_old";
 		}
 	?>
-		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/bootstrap.custom.css" />
-		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/siloz.css" />
-		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/siloz_header.css" />
-		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/siloz_footer.css" />
-		<link rel="stylesheet" type="text/css" href="<?=$rewrite?><?=ACTIVE_URL?>css<?=$old_style?>/jquery-ui-1.8.16.css"/>
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css<?=$old_style?>/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css<?=$old_style?>/bootstrap.custom.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css<?=$old_style?>/siloz.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css<?=$old_style?>/siloz_header.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css<?=$old_style?>/siloz_footer.css" />
+		<link rel="stylesheet" type="text/css" href="<?=ACTIVE_URL?>css<?=$old_style?>/jquery-ui-1.8.16.css"/>
 
 	<?php if (param_get('task') == 'view_silo') { ?> 
 		<link href="<?=ACTIVE_URL?>themes/1/silo-slider.css" rel="stylesheet" type="text/css" />

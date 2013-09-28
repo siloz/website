@@ -134,7 +134,7 @@ class Item {
 	}
 	
 	function getItemPlate($first) {
-		if (strlen($this->title) < 22) { 
+		if (strlen($this->title) < 19) { 
 			$extraBreak = "<br>";
 		}
 

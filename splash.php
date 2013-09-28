@@ -149,13 +149,14 @@
 		?>
 	</div>
 </div>
+</div>
 
 <div id="getting-started-collapsible">
 	<h1>Getting Started</h1>
 </div>
 <div id="getting-started" class="greyFont">
-	<h3>What is s&igrave;loz?</h3>
-	<p>s&igrave;loz is simple: Buyers purchase items donated by local sellers.  The proceeds go to a fundraiser, or 'silo'.</p>
+	<h3>What is <?=SITE_NAME?>?</h3>
+	<p><?=SITE_NAME?> is simple: Buyers purchase items donated by local sellers.  The proceeds go to a fundraiser, or 'silo'.</p>
 	<p>Traditional (off-line) rummage sale fundraisers are a headache to organize, and attract orphaned, unwanted items.</p>
 	<p>A silo can be started in minutes, by one person, and shared with others who will donate to, and promote (this process of spreading labor or cost is called crowd-sourcing) also, in a few minutes.  A silo costs nothing, up-front, and 10% (public) or 5% (private) of the money raised, afterward, making it at least 90% efficient.</p>
 
@@ -165,7 +166,7 @@
 	<p>You join a silo by donating an item to a silo you support.  Buyers see the item on the site, and make payment to receive a Voucher (code word), which is provided to you when the buyer collects the item.</p>
 
 	<h3>How do I make a purchase?</h3>
-	<p>Everything on s&igrave;loz sells locally; nothing is shipped.  A buyer pays online and receives a Voucher (code word), that he or she provides to the seller, after inspecting and collecting an item.  Buyers are not permitted to buy items more than 75 miles away.</p>
+	<p>Everything on <?=SITE_NAME?> sells locally; nothing is shipped.  A buyer pays online and receives a Voucher (code word), that he or she provides to the seller, after inspecting and collecting an item.  Buyers are not permitted to buy items more than 75 miles away.</p>
 
 	<img alt="" src="images/123-2.png"/>
 

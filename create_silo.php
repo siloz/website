@@ -561,7 +561,8 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" align="center">
+				<td colspan="2" align="left">
+					<br><font color='red'>*</font><font size="1">Required fields</font>
 					<br><font size="1">**An employee ID is NOT required. Only available to a small number of silo administrators.</font>
 				</td>
 			</tr>

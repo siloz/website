@@ -30,7 +30,8 @@ if ($_SESSION['is_logged_in'] != 1 || !in_array($user_id, $userArray)) {
 		$start_date = $today;
 		$end_date = param_post('end_date');				
 		$goal = param_post('goal');
-		$purpose = param_post('purpose');
+		$org_purpose = param_post('org_purpose');
+		$silo_purpose = param_post('silo_purpose');
 
 		$ein = ($verified == 1) ? $ein : '0';
 		$issue_receipts = 1;
@@ -69,8 +70,17 @@ if ($_SESSION['is_logged_in'] != 1 || !in_array($user_id, $userArray)) {
 		if (strlen(trim($phone_number)) == 0) {
 			$err .= "Phone number must not be empty. <br/>";
 		}
-		if (strlen(trim($purpose)) > 250) {
+		if ($org_purpose == '' && $silo_type == "public") {
+			$err .= "Please enter an organization purpose.<br/>";
+		}
+		elseif (strlen(trim($org_purpose)) > 250) {
 			$err .= "The organization purpose is more than 250 characters.<br/>";
+		}
+		if ($silo_purpose == '') {
+			$err .= "Please enter a silo purpose.<br/>";
+		}
+		elseif (strlen(trim($silo_purpose)) > 250) {
+			$err .= "The silo purpose is more than 250 characters.<br/>";
 		}
 		if (strlen(trim($end_date)) == 0) {
 			$err .= "End date must not be empty. <br/>";
@@ -354,8 +364,12 @@ elseif ($success) { echo "<script>window.location = 'index.php?task=manage_silo'
 				<td><input type="text" name="goal" style="width : 150px" value='<?php echo $goal; ?>'/> USD</td>			
 			</tr>
 			<tr>
-				<td>Organization and fundraiser purpose <font color='red'>*</font></td>
-				<td><textarea name="purpose" style="width : 300px; height: 50px"/><?php echo $purpose; ?></textarea></td>			
+				<td>Organization purpose <font color='red'>*</font></td>
+				<td><textarea name="org_purpose" style="width : 300px; height: 50px"/><?php echo $org_purpose; ?></textarea></td>			
+			</tr>
+			<tr>
+				<td>Silo purpose <font color='red'>*</font></td>
+				<td><textarea name="silo_purpose" style="width : 300px; height: 50px"/><?php echo $silo_purpose; ?></textarea></td>			
 			</tr>
 			<tr>			
 				<td>Photo </td>
