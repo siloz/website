@@ -3,10 +3,13 @@
 	$redirect_id = param_get('id');
 	$linkedin_upd = param_get('connect');
 
-if ($_SESSION['is_logged_in'] != 1) { ?>
+if ($_SESSION['is_logged_in'] != 1) {
+echo "<script>window.location = '" . ACTIVE_URL . "';</script>";
+?>
 	<script type="text/javascript">
 		$(document).ready(function () {
 			$("#login").fancybox().trigger('click');
+			return false;
 		})
 	</script>
 <?php 
