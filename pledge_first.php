@@ -56,9 +56,9 @@ else {
 		if (strlen(trim($description)) > 500) {
 			$err .= "Please limit your description to 500 characters.<br>";
 		}
-		if ( (!$_FILES['item_photo_1']['name']) && (!$_FILES['item_photo_2']['name']) && (!$_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_4']['name']) ) {
-			$err .= "Please submit at least one image.<br>";
-		}
+//		if ( (!$_FILES['item_photo_1']['name']) && (!$_FILES['item_photo_2']['name']) && (!$_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_4']['name']) ) {
+//			$err .= "Please submit at least one image.<br>";
+//		}
 		if ( ($_FILES['item_photo_1']['name']) && ($_FILES['item_photo_3']['name']) && (!$_FILES['item_photo_2']['name']) ) {
 			$err .= "Please submit a second image for your item or remove the third image.<br>";
 		}
