@@ -93,7 +93,7 @@ print "$user_id <br> $redirect <br> $user->id <br> $user->firstName <br> $user->
 
 if (!$redirect) { $redirect = "my_account"; }
 
-header("Location: http://stage.james.siloz.com/website/index.php?task=$redirect&connect=linkedin");
+header("Location: <?=ACTIVE_URL?>index.php?task=$redirect&connect=linkedin");
 exit;
  
 function getAuthorizationCode() {
