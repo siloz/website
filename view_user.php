@@ -30,7 +30,7 @@
 
 <div class="userNav" align="center">
 	<span class="accountHeading">Items listed by <?php echo "<b><a href='index.php?task=view_user&id=".$user->id."'><u>".$user->fname."</u></a></b>";?></span><br>
-	<img src="uploads/members/<?=$view_user_id?>.jpg" width="100px" class="user-img">
+	<img src="uploads/members/<?=$user->photo_file?>" width="100px" class="user-img">
 </div>
 
 <div class="headingPad"></div><br>
